@@ -16,7 +16,7 @@ for (const n of units) contents.push((await import(`../../src/content/unit0${n}.
 for (const U of contents) for (const m of U.misconceptions) if (!MISCONCEPTIONS.some((x) => x.id === m.id)) MISCONCEPTIONS.push({ ...m, unit: U.n });
 for (const U of contents) Object.assign(GLOSSARY, U.glossary);
 
-const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP: Record<string, string> = { '1': '¹', '2': '²', '3': '³', '+': '⁺', '-': '⁻' };
+const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP: Record<string, string> = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '+': '⁺', '-': '⁻' };
 const L = (b: Bi | string) => (typeof b === 'string' ? b : b[lang]);
 const formula = (f: string) => {
   const m = /^(.*?)(\d?)([+-])$/.exec(f);
@@ -42,10 +42,10 @@ const misName = (id: string) => { const m = MISCONCEPTIONS.find((x) => x.id === 
 function question(it: Item, label: string) {
   q.push(`\n**[${it.id}] ${label}** ${plain(it.prompt)}`);
   if (it.format === 'why') q.push(T('  (Format: pick the best explanation.)', '  (Format: die beste Erklärung wählen.)'));
-  if (it.table) q.push(T(`  (A "Look it up in the table" button opens the periodic table with the "${it.table}" view.)`, `  (Ein Knopf „Im Periodensystem nachsehen“ öffnet das Periodensystem mit der Ansicht „${it.table}“.)`));
+  if (it.table) q.push(T(`  (A "Look it up in the table" button opens the periodic table with the "${it.table}" view.)`, `  (Ein Knopf „Im Periodensystem nachsehen“ öffnet das Periodensystem mit der passenden Ansicht.)`));
   if (it.kind === 'choice') {
     it.options.forEach((o, i) => q.push(`  ${letters[i]}. ${plain(o.text)}`));
-    if (it.withConfidence) q.push(T('  Confidence slider: 50 % (guessing) to 100 % (certain).', '  Sicherheitsregler: 50 % (geraten) bis 100 % (sicher).'));
+    if (it.withConfidence) q.push(T('  Confidence slider "How sure are you?": 50 % (guessing) to 100 % (certain).', '  Regler „Wie sicher bist du?“: 50 % (geraten) bis 100 % (sicher).'));
     const ci = it.options.findIndex((o) => o.correct);
     const traps = it.options.map((o, i) => (o.mis ? `${letters[i]} (${misName(o.mis)})` : '')).filter(Boolean);
     k.push(`- [${it.id}] ${T('Correct', 'Richtig')}: ${letters[ci]}. ${plain(it.explain)}`
@@ -57,7 +57,7 @@ function question(it: Item, label: string) {
     k.push(`- [${it.id}] ${T('Correct order', 'Richtige Reihenfolge')}: ${it.order.map(plain).join(' > ')}. ${plain(it.explain)}`);
   } else if (it.kind === 'estimate') {
     q.push(T(`  Slider from ${it.min} to ${it.max}${it.suffix} in steps of ${it.step}.`, `  Regler von ${it.min} bis ${it.max}${it.suffix} in Schritten von ${it.step}.`));
-    const close = Math.max(it.tolerance * 3, (it.max - it.min) * 0.06);
+    const close = +Math.max(it.tolerance * 3, (it.max - it.min) * 0.06, it.step).toFixed(2);
     k.push(`- [${it.id}] ${T('Answer', 'Lösung')}: ${it.answer}${it.suffix}. ${T(`"Spot on." within ±${it.tolerance}, "Close." within ±${close}, otherwise "Far off."`, `„Genau richtig.“ innerhalb ±${it.tolerance}, „Nah dran.“ innerhalb ±${close}, sonst „Weit daneben.“`)} ${plain(it.explain)}`
       + (it.near ?? []).map((nn) => ' ' + T(`Near ${nn.value} (±${nn.tol}) the app adds: `, `Nahe ${nn.value} (±${nn.tol}) ergänzt die App: `) + plain(nn.note)).join(''));
   } else if (it.kind === 'flaw') {
@@ -78,8 +78,8 @@ const table = (d: DataTable) => {
 };
 const showText = (s: Show) => {
   if (s.engine === 'atom') return T(`the Orbital Viewer shows ${s.charge ? 'an ion of ' : ''}element ${s.z}${s.charge ? ` with charge ${s.charge > 0 ? '+' : ''}${s.charge}` : ''}${s.view ? `, ${s.view} picture` : ''}${s.highlight ? `, ${s.highlight} highlighted` : ''}${s.pull ? `, ${s.pull} electrons pulled off with their energies as bars` : ''}${s.jump ? `, the ${s.jump[0]}→${s.jump[1]} jump played` : ''}${s.size ? ', drawn at measured size with its radius in pm' : ''}`,
-    `der Orbital-Betrachter zeigt ${s.charge ? 'ein Ion von ' : ''}Element ${s.z}${s.charge ? ` mit Ladung ${s.charge > 0 ? '+' : ''}${s.charge}` : ''}${s.view ? `, Darstellung ${s.view}` : ''}${s.highlight ? `, ${s.highlight} hervorgehoben` : ''}${s.pull ? `, ${s.pull} Elektronen abgezogen, ihre Energien als Balken` : ''}${s.jump ? `, der Sprung ${s.jump[0]}→${s.jump[1]}` : ''}${s.size ? ', in gemessener Größe mit Radius in pm' : ''}`);
-  if (s.engine === 'lattice') return T(`the Lattice Builder loads ${formula(s.salt)}${s.compare ? ` and compares it with ${formula(s.compare)} in the gauge` : ''}${s.mode ? ` (${s.mode})` : ''}${s.temp !== undefined ? ` at ${s.temp} °C` : ''}`, `der Gitterbaukasten lädt ${formula(s.salt)}${s.compare ? ` und vergleicht mit ${formula(s.compare)}` : ''}${s.mode ? ` (${s.mode})` : ''}${s.temp !== undefined ? ` bei ${s.temp} °C` : ''}`);
+    `der Orbital-Betrachter zeigt ${s.charge ? 'ein Ion von ' : ''}Element ${s.z}${s.charge ? ` mit Ladung ${s.charge > 0 ? '+' : ''}${s.charge}` : ''}${s.view ? `, Darstellung ${s.view === 'clouds' ? 'Orbitalwolken' : 'Schalen'}` : ''}${s.highlight ? `, ${s.highlight} hervorgehoben` : ''}${s.pull ? `, ${s.pull} Elektronen abgezogen, ihre Energien als Balken` : ''}${s.jump ? `, der Sprung ${s.jump[0]}→${s.jump[1]}` : ''}${s.size ? ', in gemessener Größe mit Radius in pm' : ''}`);
+  if (s.engine === 'lattice') return T(`the Lattice Builder loads ${formula(s.salt)}${s.compare ? ` and compares it with ${formula(s.compare)} in the gauge` : ''}${s.mode ? ` (${s.mode})` : ''}${s.temp !== undefined ? ` at ${s.temp} °C` : ''}`, `der Gitterbaukasten lädt ${formula(s.salt)}${s.compare ? ` und vergleicht mit ${formula(s.compare)}` : ''}${s.mode ? ` (${({ transfer: 'Ionen bilden', shift: 'Schicht verschieben', heat: 'erhitzen', neighbours: 'Nachbarn zeigen' } as Record<string, string>)[s.mode]})` : ''}${s.temp !== undefined ? ` bei ${s.temp} °C` : ''}`);
   return T(`the Charge Field shows the ${s.a}${s.order === 2 ? '=' : s.order === 3 ? '≡' : '–'}${s.b} bond`, `das Ladungsfeld zeigt die Bindung ${s.a}${s.order === 2 ? '=' : s.order === 3 ? '≡' : '–'}${s.b}`);
 };
 

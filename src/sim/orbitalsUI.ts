@@ -32,6 +32,7 @@ export class AtomUI {
   private shieldOut?: HTMLElement;
   private listeners = new Map<string, Set<Fn>>();
   private ionRow?: HTMLElement;
+  private viewNote?: HTMLElement;
   private jumpFn?: (a: number, b: number) => void;
   /** electrons pulled off so far (unit 3), with the energy each one cost */
   pulled: number[] = [];
@@ -52,7 +53,8 @@ export class AtomUI {
       const row = h('div', { class: 'chip-row', role: 'group', 'aria-label': L({ en: 'Picture', de: 'Darstellung' }) });
       const mk = (v: AtomView, label: { en: string; de: string }) => h('button', { class: 'chip', type: 'button', 'data-view': v, 'aria-pressed': String(this.stage.view === v), onclick: () => { this.stage.setView(v); row.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.view === v))); this.emit('view', v); } }, L(label));
       row.append(mk('shells', { en: 'Shells (Bohr picture)', de: 'Schalen (Bohr-Bild)' }), mk('clouds', { en: 'Orbital clouds', de: 'Orbitalwolken' }));
-      this.el.append(row);
+      this.viewNote = h('p', { class: 'muted small', style: 'margin:0' });
+      this.el.append(row, this.viewNote);
     }
     if (c.stepper) {
       const max = opts.maxZ ?? 36;
@@ -78,6 +80,7 @@ export class AtomUI {
     if (c.ionize) { this.iePanel = h('div', { class: 'panel ie-panel' }); this.el.append(this.iePanel); }
     if (c.spectrum) this.el.append(this.spectrumPanel());
     this.setElement(opts.start ?? 11);
+    this.syncViewChips();
   }
 
   on(evt: string, f: Fn) { if (!this.listeners.has(evt)) this.listeners.set(evt, new Set()); this.listeners.get(evt)!.add(f); }
@@ -171,7 +174,12 @@ export class AtomUI {
     if (r === null || r === undefined) return L({ en: 'size not measured', de: 'Größe nicht gemessen' });
     return q === 0 ? L({ en: `radius ${r} pm`, de: `Radius ${r} pm` }) : L({ en: `ion radius ${r} pm`, de: `Ionenradius ${r} pm` });
   }
-  private syncViewChips() { this.el.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.view === this.stage.view))); }
+  private syncViewChips() {
+    this.el.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.view === this.stage.view)));
+    if (this.viewNote) this.viewNote.textContent = this.stage.view === 'shells'
+      ? L({ en: 'The rings are a map of energy levels, not tracks the electrons travel along.', de: 'Die Ringe sind eine Karte der Energieniveaus, keine Bahnen, auf denen die Elektronen fliegen.' })
+      : L({ en: 'Each cloud is where an electron is likely to be found: inner shells faint, outer ones strong.', de: 'Jede Wolke zeigt, wo ein Elektron wahrscheinlich anzutreffen ist: innere Schalen blass, äußere kräftig.' });
+  }
 
   // ---------- shielding (unit 2) ----------
   private shieldingPanel(): HTMLElement {

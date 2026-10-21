@@ -203,7 +203,8 @@ function renderEstimate(item: EstimateItem, onDone: Done, opts: ItemOpts): HTMLE
     const v = +input.value;
     const err = Math.abs(v - item.answer);
     const correct = err <= item.tolerance + 1e-9;
-    const partial = !correct && err <= Math.max(item.tolerance * 3, (item.max - item.min) * 0.06);
+    // "close" is at least one slider step away, so an integer answer that is off by one counts as close
+    const partial = !correct && err <= Math.max(item.tolerance * 3, (item.max - item.min) * 0.06, item.step) + 1e-9;
     input.disabled = true; check.remove();
     // Estimates are graded by distance: spot on, close or far off. A value near another meaningful number gets a note.
     const verdict = correct ? L({ en: 'Spot on.', de: 'Genau richtig.' }) : partial ? L({ en: 'Close.', de: 'Nah dran.' }) : L({ en: 'Far off.', de: 'Weit daneben.' });

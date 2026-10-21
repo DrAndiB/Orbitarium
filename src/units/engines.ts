@@ -91,12 +91,14 @@ export const ENGINE_U3: UnitEngine = {
 // ---------- unit 4: ionic bonding ----------
 export const ENGINE_U4: UnitEngine = {
   explore(ctx, mark) {
-    const ui = ctx.lattice({ start: 'NaCl' });
+    // No "shift a layer" here: what a hammer blow does is predicted first, then shown (step 4).
+    const ui = ctx.lattice({ start: 'NaCl', controls: { shift: false } });
     const loaded = new Set<string>(['NaCl']);
     ui.on('salt', (id: string) => {
       loaded.add(id);
       if (loaded.has('NaCl') && loaded.has('MgO')) mark('compare');
       if (loaded.has('NaF') && loaded.has('NaI')) mark('size');
+      if (loaded.size >= 8) mark('all');
     });
     ui.on('transfer-start', () => mark('transfer'));
     ui.on('neighbours', () => mark('neighbours'));

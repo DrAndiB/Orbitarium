@@ -88,7 +88,7 @@ export function explainStep(body: HTMLElement, enable: () => void, unit: number,
     for (const idea of X.ideas) {
       const ticked = ticks.get(idea.id)!.checked, seen = hints.has(idea.id);
       const li = checkBox.querySelector(`li[data-id="${idea.id}"]`)!;
-      if (ticked && !seen) li.append(h('span', { class: 'hint' }, L({ en: 'I can\'t spot this in your words. Is it really there, or only in your head?', de: 'Das finde ich in deinem Text nicht. Steht es wirklich da oder nur im Kopf?' })));
+      if (ticked && !seen) li.append(h('span', { class: 'hint' }, L({ en: 'I couldn\'t find this in your words. If you said it your own way, keep the tick.', de: 'Das finde ich in deinem Text nicht. Wenn du es anders formuliert hast, lass das Häkchen stehen.' })));
       if (!ticked && seen) li.append(h('span', { class: 'hint' }, L({ en: 'Your text may already say this.', de: 'Dein Text sagt das vielleicht schon.' })));
     }
     const tickedIdeas = X.ideas.filter((i) => ticks.get(i.id)!.checked);

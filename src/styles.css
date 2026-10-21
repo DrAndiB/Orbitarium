@@ -514,3 +514,5 @@ body.sheet-open { overflow: hidden; }
 .atom-buttons.wrap .btn { flex: 1 1 40%; }
 .atom-size { font-size: 13px; color: var(--energy); font-variant-numeric: tabular-nums; }
 .other-units summary { cursor: pointer; color: var(--fog); padding: 6px 0; font-size: 15px; }
+.bond-delta { font-size: 12px; margin-top: 2px; max-width: 190px; margin-left: auto; }
+.wb-eq-more summary { cursor: pointer; color: var(--fog); font-size: 13px; padding: 4px 0; }

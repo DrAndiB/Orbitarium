@@ -17,7 +17,7 @@ const hints = salad ? new Set<string>() : ideaHints(text, X.ideas);
 if (salad) console.log(lang === 'de' ? 'Das liest sich wie eine Liste von Stichwörtern. Versuch es in ganzen Sätzen.' : 'This reads like a list of keywords. Try it in full sentences: saying how the ideas connect is what makes them stick.');
 X.ideas.forEach((i, n) => {
   const t = ticked.has(n), s = hints.has(i.id);
-  const hint = t && !s ? (lang === 'de' ? '  ↳ Das finde ich in deinem Text nicht. Steht es wirklich da oder nur im Kopf?' : "  ↳ I can't spot this in your words. Is it really there, or only in your head?")
+  const hint = t && !s ? (lang === 'de' ? '  ↳ Das finde ich in deinem Text nicht. Wenn du es anders formuliert hast, lass das Häkchen stehen.' : "  ↳ I couldn't find this in your words. If you said it your own way, keep the tick.")
     : !t && s ? (lang === 'de' ? '  ↳ Dein Text sagt das vielleicht schon.' : '  ↳ Your text may already say this.') : '';
   console.log(`  ${t ? '☑' : '☐'} ${n + 1}. ${L(i.idea)}${hint ? '\n' + hint : ''}`);
 });

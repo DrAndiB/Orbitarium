@@ -3,7 +3,7 @@
 import { BondStage, chiOf } from './bond';
 import { bondData } from '../content/bonds';
 import { h, s, clear } from '../ui/dom';
-import { L, num } from '../i18n';
+import { L, num, getLang } from '../i18n';
 import { buzz } from '../platform';
 import { touchElements } from '../model/learner';
 import type { Show } from '../content/unitTypes';
@@ -107,15 +107,16 @@ export class BondUI {
     this.hud.append(
       h('div', null, h('div', { class: 'wb-formula' }, name), h('div', { class: 'muted small' }, bondData(st.a, st.b, st.order) ? L(bondData(st.a, st.b, st.order)!.name) : L({ en: 'your own pair', de: 'dein eigenes Paar' }))),
       h('div', { class: 'bond-chi' },
-        h('div', null, `χ ${st.a} ${num(st.chiA, 2)} · χ ${st.b} ${num(st.chiBNow, 2)}${st.chiB !== null ? ' *' : ''}`),
-        h('div', { class: 'bond-dchi' }, `Δχ ${num(d, 2)} · ${L(BAND[st.band])}`)));
+        h('div', null, `${L({ en: 'electronegativity', de: 'EN' })} ${st.a} ${num(st.chiA, 2)} · ${st.b} ${num(st.chiBNow, 2)}${st.chiB !== null ? ' *' : ''}`),
+        h('div', { class: 'bond-dchi' }, `${L({ en: 'difference', de: 'ΔEN' })} ${num(d, 2)} · ${L(BAND[st.band])}`),
+        d >= 0.15 ? h('div', { class: 'bond-delta muted' }, st.band === 'ionic' ? L({ en: '+ and −: the electron has all but moved over', de: '+ und −: das Elektron ist fast ganz hinübergewandert' }) : L({ en: 'δ− slightly negative · δ+ slightly positive', de: 'δ− leicht negativ · δ+ leicht positiv' })) : null));
     this.drawScale(d);
     const len = st.length, data = bondData(st.a, st.b, st.order);
     this.facts.replaceChildren(
       h('div', null, h('span', { class: 'muted small' }, L({ en: 'bond length', de: 'Bindungslänge' })), h('strong', null, `${len.measured ? '' : '≈ '}${len.pm} pm`)),
       h('div', null, h('span', { class: 'muted small' }, L({ en: 'bond energy', de: 'Bindungsenergie' })), h('strong', null, data ? `${num(data.energy, 0)} kJ/mol` : '–')),
       h('div', null, h('span', { class: 'muted small' }, L({ en: 'ionic character', de: 'Ionencharakter' })), h('strong', null, `≈ ${num(st.ionic * 100, 0)} %`)));
-    if (this.dialOut) this.dialOut.textContent = `χ = ${num(st.chiBNow, 2)}`;
+    if (this.dialOut) this.dialOut.textContent = L({ en: num(st.chiBNow, 2), de: `EN = ${num(st.chiBNow, 2)}` });
     if (this.dialName) this.dialName.textContent = st.b;
   }
 
@@ -123,24 +124,26 @@ export class BondUI {
   private drawScale(d: number) {
     if (!this.scale) return;
     const W = 320, x = (v: number) => 10 + (Math.min(3.3, v) / 3.3) * (W - 20);
-    const svg = s('svg', { viewBox: `0 0 ${W} 64`, class: 'dchi-scale', role: 'img', 'aria-label': `Δχ ${d.toFixed(2)}` });
+    const svg = s('svg', { viewBox: `0 0 ${W} 62`, class: 'dchi-scale', role: 'img', 'aria-label': `${L({ en: 'difference', de: 'ΔEN' })} ${d.toFixed(2)}` });
     const zone = (a: number, b: number, fill: string, label: string) => {
       svg.append(s('rect', { x: x(a), y: 18, width: x(b) - x(a), height: 14, fill, rx: 3 }));
       svg.append(s('text', { x: (x(a) + x(b)) / 2, y: 13, 'text-anchor': 'middle', 'font-size': 11, fill: '#9aa3bf' }, label));
     };
     zone(0, 0.4, '#2e3a69', L(BAND.nonpolar)); zone(0.4, 1.8, '#46507e', L(BAND.polar)); zone(1.8, 3.3, '#6a5f86', L(BAND.ionic));
     for (const t of [0, 0.4, 1.8, 3.3]) svg.append(s('text', { x: x(t), y: 46, 'text-anchor': 'middle', 'font-size': 10, fill: '#6f7aa0' }, num(t, 1)));
+    // German textbooks often draw the ionic border at 1.7: mark it, so a learner sees both conventions
+    if (getLang() === 'de') { svg.append(s('line', { x1: x(1.7), x2: x(1.7), y1: 16, y2: 34, stroke: '#9aa3bf', 'stroke-width': 1, 'stroke-dasharray': '2 2' })); svg.append(s('text', { x: x(1.7), y: 58, 'text-anchor': 'middle', 'font-size': 9, fill: '#9aa3bf' }, 'Schulbuch 1,7')); }
     svg.append(s('path', { d: `M${x(d)} 34 l-7 12 h14 Z`, fill: '#ffc15e' }));
     svg.append(s('line', { x1: x(d), x2: x(d), y1: 16, y2: 34, stroke: '#ffc15e', 'stroke-width': 2.5 }));
     this.scale.replaceChildren(
-      h('div', { class: 'ob-head' }, h('strong', null, L({ en: 'Electronegativity difference, Δχ', de: 'Elektronegativitätsdifferenz, Δχ' })), h('span', { class: 'muted small' }, L({ en: 'the borders are rules of thumb', de: 'die Grenzen sind Faustregeln' }))),
+      h('div', { class: 'ob-head' }, h('strong', null, L({ en: 'Electronegativity difference (Δχ)', de: 'Elektronegativitätsdifferenz (ΔEN)' })), h('span', { class: 'muted small' }, L({ en: 'the borders are rules of thumb', de: 'die Grenzen sind Faustregeln; viele Schulbücher setzen sie bei 0,5 und 1,7' }))),
       svg);
   }
 
   private dialPanel(): HTMLElement {
     this.dialOut = h('strong');
     this.dialName = h('span');
-    this.dialIn = h('input', { type: 'range', min: '0.5', max: '4.5', step: '0.01', value: '3.16', 'aria-label': L({ en: 'What-if electronegativity of the right atom', de: 'Was-wäre-wenn-Elektronegativität des rechten Atoms' }) }) as HTMLInputElement;
+    this.dialIn = h('input', { type: 'range', min: '0.5', max: '4.5', step: '0.01', value: '3.16', 'aria-label': L({ en: 'What-if electronegativity of the right atom', de: 'Was-wäre-wenn-EN des rechten Atoms' }) }) as HTMLInputElement;
     this.dialIn.addEventListener('input', () => {
       this.stage.setChiB(+this.dialIn!.value);
       this.refresh();
@@ -150,7 +153,8 @@ export class BondUI {
     return h('div', { class: 'wb-equation' },
       h('label', { class: 'wb-eq-head' }, h('span', null, L({ en: 'What if ', de: 'Was, wenn ' }), this.dialName, L({ en: ' pulled harder or weaker?', de: ' stärker oder schwächer zöge?' })), this.dialOut),
       this.dialIn,
-      h('p', { class: 'wb-eq' }, L({ en: 'Cloud share ≈ ½ ± ½ × ionic character, with Pauling\'s estimate 1 − e^(−Δχ²/4). A model, not a measurement.', de: 'Anteil der Wolke ≈ ½ ± ½ × Ionencharakter, nach Paulings Schätzung 1 − e^(−Δχ²/4). Ein Modell, keine Messung.' })),
+      h('details', { class: 'wb-eq-more' }, h('summary', null, L({ en: 'How the cloud is drawn', de: 'Wie die Wolke gezeichnet wird' })),
+        h('p', { class: 'wb-eq' }, L({ en: 'Share of the cloud near the stronger-pulling atom ≈ ½ + ½ × ionic character, with Pauling\'s estimate of the ionic character, 1 − e^(−Δχ²/4). A model, not a measurement.', de: 'Anteil der Wolke beim stärker ziehenden Atom ≈ ½ + ½ × Ionencharakter, mit Paulings Schätzung des Ionencharakters, 1 − e^(−ΔEN²/4). Ein Modell, keine Messung.' }))),
       reset);
   }
 

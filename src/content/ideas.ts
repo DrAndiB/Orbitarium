@@ -18,23 +18,36 @@ export function looksLikeKeywordList(text: string): boolean {
  * Matching works clause by clause (so "row … shells" and "column … outer" must stay together), ignores
  * clauses that negate the idea, and treats curly and straight apostrophes alike.
  */
+// One spelling for charges in both the text and the patterns: "Mg²⁺" and "Mg2+" both become "mg2+",
+// "Cl⁻" and "Cl−" become "cl-". (En dashes in bond names such as "H–Cl" are left alone.)
+const SUP: Record<string, string> = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁺': '+', '⁻': '-', '−': '-' };
+const asciiCharges = (s: string) => s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻−]/g, (c) => SUP[c]);
+const reCache = new Map<RegExp, RegExp>();
+/** The same pattern with charges spelled in ASCII; a plus sign is escaped so it stays a literal. */
+function asciiRe(re: RegExp): RegExp {
+  let r = reCache.get(re);
+  if (!r) { r = new RegExp(re.source.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻−]/g, (c) => (c === '⁺' ? '\\+' : SUP[c])), re.flags); reCache.set(re, r); }
+  return r;
+}
+
 export function ideaHints(text: string, ideas: Idea[]): Set<string> {
-  const norm = text.toLowerCase().replace(/[’‘`´]/g, "'").replace(/\s+/g, ' ');
+  const norm = asciiCharges(text.toLowerCase().replace(/[’‘`´]/g, "'")).replace(/\s+/g, ' ');
   // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
   // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together.
-  const clauses = norm.split(/[.;:!?\n]|,\s(?!(?:der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where)\b)|\s(?:and|but|while|whereas|so|und|aber|während|sondern|deshalb|also)\s/).map((c) => c.trim()).filter(Boolean);
+  // Cause and effect stay together ("…, so …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
+  const clauses = norm.split(/[.;:!?\n]|,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because)\b)|\s(?:and|but|while|whereas|und|aber|während|sondern)\s(?!\d)/).map((c) => c.trim()).filter(Boolean);
   const hits = new Set<string>();
   for (const idea of ideas) {
     // A clause that states the opposite of the idea (e.g. "the shape depends on the number of atoms") rules it out.
-    if (idea.contra && clauses.some((c) => idea.contra!.en.test(c) || idea.contra!.de.test(c))) continue;
+    if (idea.contra && clauses.some((c) => asciiRe(idea.contra!.en).test(c) || asciiRe(idea.contra!.de).test(c))) continue;
     for (const c of clauses) {
-      const m = c.match(idea.en) ?? c.match(idea.de);
+      const m = c.match(asciiRe(idea.en)) ?? c.match(asciiRe(idea.de));
       if (!m) continue;
       const rest = c.slice(0, m.index) + ' ' + c.slice((m.index ?? 0) + m[0].length);
       if (NEG.test(rest)) continue;
       // A negation inside the match only counts when the idea itself is phrased that way ("can't see the lone pairs").
       const inner = new RegExp(NEG.source + '\\s+\\S+').exec(m[0]);
-      if (inner && !(idea.en.source + idea.de.source).includes(inner[0])) continue;
+      if (inner && !(asciiRe(idea.en).source + asciiRe(idea.de).source).includes(inner[0])) continue;
       hits.add(idea.id);
       break;
     }
