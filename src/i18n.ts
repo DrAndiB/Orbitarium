@@ -22,6 +22,10 @@ export function other(b: Bi): string { return lang === 'en' ? b.de : b.en; }
 export function num(n: number, digits = 1): string {
   return n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }
+/** A number with at most `max` decimals and no padding zeros: 35.45, not 35.450. */
+export function numTrim(n: number, max = 3): string {
+  return n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 0, maximumFractionDigits: max });
+}
 export function dateStr(iso: string): string {
   const d = new Date(iso + (iso.length === 10 ? 'T12:00:00' : ''));
   return d.toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'short' });

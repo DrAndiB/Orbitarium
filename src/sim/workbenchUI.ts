@@ -1,5 +1,5 @@
 // The Molecule Workbench as a screen component: 3D view, readouts and controls.
-import { Workbench, PRESETS, buildSpec, buildProblem, type MoleculeSpec, type Ligand } from './workbench';
+import { Workbench, PRESETS, buildSpec, buildProblem, electronsAround, type MoleculeSpec, type Ligand } from './workbench';
 import { h, chem, rich, termChip, clear } from '../ui/dom';
 import { L, num, getLang, type Bi } from '../i18n';
 import { buzz } from '../platform';
@@ -68,8 +68,8 @@ export class WorkbenchUI {
     if (c.leavesOut) this.el.appendChild(h('details', { class: 'wb-leaves-out' },
       h('summary', null, L({ en: 'What this model leaves out', de: 'Was dieses Modell weglässt' })),
       h('p', null, rich({
-        en: 'Electron pairs are treated as points on a sphere that push each other with an energy of w / r²; the exponent is a modelling choice, and λ ≈ 1.25 is fitted so that ammonia and water come out right. Real atoms also differ in size. Around a bigger central atom such as P or S, the bonding pairs sit further out and push each other less, so the lone pairs squeeze them more: {{PCl3}} measures 100° and {{H2S}} 92°, smaller than the model predicts. Double bonds push a little harder here (× 1.12) to stand in for their larger electron cloud.',
-        de: 'Elektronenpaare werden als Punkte auf einer Kugel behandelt, die sich mit der Energie w / r² abstoßen; der Exponent ist eine Modellwahl, und λ ≈ 1,25 ist so angepasst, dass Ammoniak und Wasser stimmen. Echte Atome sind außerdem verschieden groß. Um ein größeres Zentralatom wie P oder S sitzen die Bindungspaare weiter außen und drücken einander weniger, also stauchen die freien Paare sie stärker: {{PCl3}} misst 100° und {{H2S}} 92°, weniger als das Modell vorhersagt. Doppelbindungen drücken hier etwas stärker (× 1,12), stellvertretend für ihre größere Elektronenwolke.',
+        en: 'Each direction, a bond (single or double) or a lone pair, is treated as a point on a sphere; the points push each other with an energy of w / r²; the exponent is a modelling choice, and λ ≈ 1.25 is fitted so that ammonia and water come out right. Real atoms also differ in size. Around a bigger central atom such as P or S, the bonding pairs sit further out and push each other much less, so the lone pairs squeeze them more: {{PCl3}} measures 100° and {{H2S}} 92°, smaller than the model predicts. Double bonds push a little harder here (× 1.12) to stand in for their larger electron cloud.',
+        de: 'Jede Richtung, eine Bindung (einfach oder doppelt) oder ein freies Paar, wird als Punkt auf einer Kugel behandelt; die Punkte stoßen sich mit der Energie w / r² ab; der Exponent ist eine Modellwahl, und λ ≈ 1,25 ist so angepasst, dass Ammoniak und Wasser stimmen. Echte Atome sind außerdem verschieden groß. Um ein größeres Zentralatom wie P oder S sitzen die Bindungspaare weiter außen und drücken einander weniger, also stauchen die freien Paare sie stärker: {{PCl3}} misst 100° und {{H2S}} 92°, weniger als das Modell vorhersagt. Doppelbindungen drücken hier etwas stärker (× 1,12), stellvertretend für ihre größere Elektronenwolke.',
       })),
     ));
 
@@ -120,7 +120,7 @@ export class WorkbenchUI {
       this.readout.appendChild(h('div', { class: 'wb-polar' }, this.wb.isPolar()
         ? L({ en: 'polar molecule', de: 'polares Molekül' })
         : this.wb.hasPolarBonds() ? L({ en: 'nonpolar: pulls cancel', de: 'unpolar: Züge heben sich auf' }) : L({ en: 'nonpolar: bonds barely polar', de: 'unpolar: Bindungen kaum polar' })));
-      this.readout.appendChild(h('div', { class: 'wb-legend' }, h('i', { class: 'neg' }), 'δ−  ', h('i', { class: 'pos' }), 'δ+  ', h('span', { class: 'muted' }, L({ en: 'arrow points to δ−', de: 'Pfeil zeigt zu δ−' }))));
+      this.readout.appendChild(h('div', { class: 'wb-legend' }, h('i', { class: 'neg' }), 'δ−  ', h('i', { class: 'pos' }), 'δ+  ', h('span', { class: 'muted' }, L({ en: 'arrow points to δ−; colours as in textbook potential maps', de: 'Pfeil zeigt zu δ−; Farben wie in Potentialkarten im Lehrbuch' }))));
     }
   }
 
@@ -147,11 +147,16 @@ export class WorkbenchUI {
       if (!ligs.length) status.append(L({ en: 'Add at least one partner.', de: 'Füge mindestens einen Partner hinzu.' }));
       else if (!sp) {
         const why = buildProblem(center, ligs);
-        status.append(why === 'directions'
-          ? L({ en: `That needs more than four directions around ${center}. Such molecules exist (SF₄, PCl₅), but this workbench stops at four.`, de: `Das bräuchte mehr als vier Richtungen um ${center}. Solche Moleküle gibt es (SF₄, PCl₅), aber diese Werkbank hört bei vier auf.` })
-          : why === 'short'
-            ? L({ en: `${center} does not have enough outer electrons for all these bonds. Try fewer or single-bonded partners.`, de: `${center} hat nicht genug Außenelektronen für all diese Bindungen. Probiere weniger oder einfach gebundene Partner.` })
-            : L({ en: `With these partners one of ${center}'s outer electrons would be left unpaired. Add or remove one partner.`, de: `Mit diesen Partnern bliebe ein Außenelektron von ${center} ungepaart. Füge einen Partner hinzu oder nimm einen weg.` }));
+        const name = (z: string) => L(({ B: { en: 'Boron', de: 'Bor' }, C: { en: 'Carbon', de: 'Kohlenstoff' }, N: { en: 'Nitrogen', de: 'Stickstoff' }, O: { en: 'Oxygen', de: 'Sauerstoff' }, P: { en: 'Phosphorus', de: 'Phosphor' }, S: { en: 'Sulfur', de: 'Schwefel' } } as Record<string, { en: string; de: string }>)[z]);
+        const around = electronsAround(center, ligs);
+        const msg: Record<string, { en: string; de: string }> = {
+          directions: { en: `That needs more than four directions around ${center}. ${name(center)} is in period 3, so such molecules exist (SF₄, PCl₅), but this workbench stops at four.`, de: `Das bräuchte mehr als vier Richtungen um ${center}. ${name(center)} steht in Periode 3, solche Moleküle gibt es also (SF₄, PCl₅), aber diese Werkbank hört bei vier auf.` },
+          octet: { en: `${name(center)} is in period 2: its outer shell has room for only four electron pairs (an octet), and this would put ${around} electrons around it. One row down, sulfur and phosphorus can hold more; ${center} cannot.`, de: `${name(center)} steht in Periode 2: Seine Außenschale hat nur Platz für vier Elektronenpaare (ein Oktett), hier wären es ${around} Elektronen. Eine Reihe tiefer können Schwefel und Phosphor mehr aufnehmen, ${center} nicht.` },
+          incomplete: { en: `That leaves only ${around} electrons around ${center}, short of the eight it needs: not a stable molecule. Add partners${center === 'C' && ligs.length === 1 && ligs[0].el === 'O' ? '. (Real carbon monoxide has a triple bond, C≡O, which this builder cannot make.)' : '.'}`, de: `Damit hätte ${center} nur ${around} Elektronen um sich, weniger als die nötigen acht: kein stabiles Molekül. Füge Partner hinzu${center === 'C' && ligs.length === 1 && ligs[0].el === 'O' ? '. (Echtes Kohlenmonoxid hat eine Dreifachbindung, C≡O, die dieser Baukasten nicht bauen kann.)' : '.'}` },
+          short: { en: `${center} does not have enough outer electrons for all these bonds. Try fewer or single-bonded partners.`, de: `${center} hat nicht genug Außenelektronen für all diese Bindungen. Probiere weniger oder einfach gebundene Partner.` },
+          odd: { en: `With these partners one of ${center}'s outer electrons would be left unpaired. Add or remove one partner.`, de: `Mit diesen Partnern bliebe ein Außenelektron von ${center} ungepaart. Füge einen Partner hinzu oder nimm einen weg.` },
+        };
+        status.append(L(msg[why ?? 'odd']));
       }
       else {
         status.append(chem(sp.formula), ' · ', L({ en: `${sp.lonePairs} lone pair${sp.lonePairs === 1 ? '' : 's'} on ${center}`, de: `${sp.lonePairs} freie${sp.lonePairs === 1 ? 's Paar' : ' Paare'} an ${center}` }));

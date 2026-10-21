@@ -30,9 +30,9 @@ function puzzle(body: HTMLElement, enable: () => void) {
   const gap1 = L({ en: 'gap 1', de: 'Lücke 1' }), gap2 = L({ en: 'gap 2: asked', de: 'Lücke 2: gefragt' });
   body.append(h('h2', null, L(P.title)), h('p', null, rich(P.lead)),
     h('div', { class: 'data-card gap-card' },
-      h('p', { class: 'muted small', style: 'margin:0 0 8px' }, L({ en: 'Period 4 as Mendeleev saw it in 1871 (modern mass values, in u)', de: 'Periode 4, wie Mendelejew sie 1871 sah (heutige Massenwerte, in u)' })),
+      h('p', { class: 'muted small', style: 'margin:0 0 8px' }, L({ en: 'Period 4 in today\'s layout, as far as it was known in 1871 (modern mass values, in u)', de: 'Periode 4 im heutigen Aufbau, so weit sie 1871 bekannt war (heutige Massenwerte, in u)' })),
       h('div', { class: 'gap-row' }, P.row.map((x, i) => (i === 2 ? target(gap2) : i === 1 ? tile(x.s, x.m, gap1) : tile(x.s, x.m)))),
-      h('p', { class: 'muted small', style: 'margin:12px 0 8px' }, L({ en: 'Its column, group 14', de: 'Seine Spalte, Gruppe 14' })),
+      h('p', { class: 'muted small', style: 'margin:12px 0 8px' }, L({ en: 'Its column in today\'s table, group 14', de: 'Seine Spalte im heutigen Periodensystem, Gruppe 14' })),
       h('div', { class: 'gap-row col' }, P.column.map((x, i) => (i === 2 ? target(gap2) : tile(x.s, x.m))))),
     h('p', { class: 'lead' }, rich(P.clash)));
   body.append(renderItem(P.item, () => { body.append(h('p', { class: 'muted' }, rich(P.after))); enable(); }));
@@ -91,7 +91,7 @@ function predict(body: HTMLElement, enable: () => void, ctx: StepCtx) {
       next.addEventListener('click', () => { next.remove(); run(i + 1); });
       box.append(next);
       (r.correct ? table.el : box.lastElementChild ?? table.el).scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }));
+    }, { fold: true }));
   };
   run(0);
 }

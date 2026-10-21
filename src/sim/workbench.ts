@@ -23,6 +23,8 @@ const RADIUS: Record<string, number> = { H: 0.3, B: 0.46, C: 0.5, N: 0.48, O: 0.
 const ATOM_COLOR: Record<string, number> = { H: 0xe9e3d3, B: 0xc9a9a3, C: 0x5d6479, N: 0x93a6c9, O: 0xd2bfa6, F: 0xb2d6bf, P: 0xc79f72, S: 0xd8c879, Cl: 0x9fc79a, Br: 0xa98377 };
 
 export const COLORS = { electron: 0x5aa9ff, positive: 0xff6b6b, lonePair: 0xb48cff, energy: 0xffc15e, chalk: 0xece6d6 };
+/** Partial charges in the colours of textbook potential maps: red where electrons gather (δ−), blue where they are thin (δ+). */
+export const CHARGE = { minus: 0xff6b6b, plus: 0x5aa9ff };
 
 function spec(id: string, formula: string, center: string, ligs: [string, 1 | 2 | 3][], charge = 0, measured?: number): MoleculeSpec {
   const ligands = ligs.map(([el, order]) => ({ el, order }));
@@ -53,30 +55,54 @@ export const PRESETS: Record<string, MoleculeSpec> = {
   CH2Cl2: spec('CH2Cl2', 'CH2Cl2', 'C', [['H', 1], ['H', 1], ['Cl', 1], ['Cl', 1]]),
 };
 
-/** Why a combination cannot be built: the partners do not fit the outer electrons, or it needs more than four directions. */
-export function buildProblem(center: string, ligands: Ligand[]): 'short' | 'odd' | 'directions' | null {
+/** Atoms of period 2 have room for at most four electron pairs (an octet); boron is the known exception with three. */
+const PERIOD2 = new Set(['B', 'C', 'N', 'O']);
+export type BuildProblem = 'short' | 'odd' | 'octet' | 'incomplete' | 'directions';
+/** Electrons around the central atom: its own outer electrons plus one from the partner for each bond it shares. */
+export const electronsAround = (center: string, ligands: Ligand[]) => (VALENCE[center] ?? 0) + ligands.reduce((n, l) => n + l.order, 0);
+
+/** Why a combination cannot be built: the partners do not fit the outer electrons, break the octet, or need more than four directions. */
+export function buildProblem(center: string, ligands: Ligand[]): BuildProblem | null {
   const free = (VALENCE[center] ?? 0) - ligands.reduce((n, l) => n + l.order, 0);
   if (free < 0) return 'short';
   if (free % 2) return 'odd';
+  const around = electronsAround(center, ligands);
+  if (PERIOD2.has(center)) {
+    if (around > 8) return 'octet';
+    if (around < (center === 'B' ? 6 : 8)) return 'incomplete';
+  } else if (around < 8) return 'incomplete';
   if (ligands.length + free / 2 > 4) return 'directions';
   return null;
 }
 
+/** The formula as chemists write it, for the combinations the builder can make. */
+export function formulaFor(center: string, ligands: Ligand[]): string {
+  const counts = new Map<string, number>();
+  for (const l of ligands) counts.set(l.el + (l.order === 2 ? '=' : ''), (counts.get(l.el + (l.order === 2 ? '=' : '')) ?? 0) + 1);
+  const n = (k: string) => counts.get(k) ?? 0;
+  const part = (el: string, k: number) => (k ? el + (k > 1 ? k : '') : '');
+  const halogens = ['Br', 'Cl', 'F'].map((x) => part(x, n(x))).join('');
+  const onlyH = counts.size === 1 && n('H') > 0;
+  // Hydrides of groups 15–17 are written hydrogen last or first as usual: NH3, PH3, H2O, H2S.
+  if (onlyH) return ['O', 'S'].includes(center) ? part('H', n('H')) + center : center + part('H', n('H'));
+  if (center === 'O' && !n('O=')) return n('H') ? 'HO' + halogens : (halogens === 'F2' ? 'OF2' : halogens + 'O');  // HOCl, OF2, Cl2O
+  if (center === 'S' && !n('O=') && n('H') && halogens) return 'HS' + halogens;
+  if (n('O=')) {
+    if (center === 'C') return part('H', n('H')) + 'CO' + halogens;          // COCl2, HCOF
+    if (center === 'N') return n('H') ? 'HNO' : 'NO' + halogens;              // HNO, NOCl
+    return part('H', n('H')) + center + part('O', n('O=')) + halogens;        // SOCl2, SO2Cl2, POCl3
+  }
+  return center + part('H', n('H')) + halogens;
+}
 const signature = (center: string, ligands: Ligand[]) => center + ':' + ligands.map((l) => l.el + l.order).sort().join(',');
 
 export function buildSpec(center: string, ligands: Ligand[]): MoleculeSpec | null {
   const lp = lonePairsFor(center, ligands, 0);
-  if (lp === null || ligands.length === 0 || ligands.length + lp > 4) return null;
+  if (lp === null || ligands.length === 0 || buildProblem(center, ligands)) return null;
   // A known molecule is recognised by its composition, whatever order the slots were filled in.
   const known = Object.values(PRESETS).find((p) => !p.charge && signature(p.center, p.ligands) === signature(center, ligands));
   if (known) return known;
-  const counts = new Map<string, number>();
-  for (const l of ligands) counts.set(l.el, (counts.get(l.el) ?? 0) + 1);
-  const rest = [...counts.entries()].sort(([a], [b]) => (a === 'H' ? -1 : b === 'H' ? 1 : a.localeCompare(b))).map(([e, n]) => e + (n > 1 ? n : '')).join('');
-  // Hydrides of groups 16 and 17 are written hydrogen first: H2O, H2S, HCl.
-  const onlyH = counts.size === 1 && counts.has('H');
-  const formula = onlyH && ['O', 'S', 'F', 'Cl', 'Br'].includes(center) ? rest + center : center + rest;
-  return { id: 'custom', formula, center, ligands, lonePairs: lp };
+  return { id: 'custom', formula: formulaFor(center, ligands), center, ligands, lonePairs: lp };
 }
 
 type Domain = { kind: 'bond' | 'lone'; order: number; p: THREE.Vector3; lig?: Ligand };
@@ -367,9 +393,9 @@ export class Workbench {
     const polarView = this.showDipole && Math.abs(dchi) >= 0.15;
     const strength = Math.min(1, Math.abs(dchi) / 1.4);
     const base = new THREE.Color(0xcfc8b6);
-    // Half-bonds: the end near the more electronegative atom turns blue (δ−), the other red (δ+).
-    const nearCenter = polarView ? base.clone().lerp(new THREE.Color(dchi > 0 ? COLORS.positive : COLORS.electron), 0.25 + 0.6 * strength) : base;
-    const nearLig = polarView ? base.clone().lerp(new THREE.Color(dchi > 0 ? COLORS.electron : COLORS.positive), 0.25 + 0.6 * strength) : base;
+    // Half-bonds: the end near the more electronegative atom turns red (δ−), the other blue (δ+), as in potential maps.
+    const nearCenter = polarView ? base.clone().lerp(new THREE.Color(dchi > 0 ? CHARGE.plus : CHARGE.minus), 0.25 + 0.6 * strength) : base;
+    const nearLig = polarView ? base.clone().lerp(new THREE.Color(dchi > 0 ? CHARGE.minus : CHARGE.plus), 0.25 + 0.6 * strength) : base;
     for (const off of offsets) {
       for (const [half, col] of [[0, nearCenter], [1, nearLig]] as const) {
         const cyl = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, 0.5, 16), new THREE.MeshStandardMaterial({ color: col, roughness: 0.45 }));
@@ -417,12 +443,12 @@ export class Workbench {
     }
     const dir = v.clone().normalize();
     const len = 1.2 + Math.min(1.6, mag * 1.1);
-    const mat = new THREE.MeshStandardMaterial({ color: COLORS.electron, emissive: COLORS.electron, emissiveIntensity: 0.6, depthTest: false, transparent: true, opacity: 0.92 });
+    const mat = new THREE.MeshStandardMaterial({ color: COLORS.chalk, emissive: COLORS.chalk, emissiveIntensity: 0.35, depthTest: false, transparent: true, opacity: 0.92 });
     const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, len, 12), mat);
     shaft.position.y = 0;
     const head = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.32, 20), mat);
     head.position.y = len / 2 + 0.16;
-    const cross = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.34, 10), new THREE.MeshStandardMaterial({ color: COLORS.positive, emissive: COLORS.positive, emissiveIntensity: 0.5, depthTest: false, transparent: true }));
+    const cross = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.34, 10), new THREE.MeshStandardMaterial({ color: CHARGE.plus, emissive: CHARGE.plus, emissiveIntensity: 0.5, depthTest: false, transparent: true }));
     cross.rotation.z = Math.PI / 2;
     cross.position.y = -len / 2 + 0.18;
     const arrow = new THREE.Group();

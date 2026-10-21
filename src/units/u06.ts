@@ -36,13 +36,19 @@ function explore(body: HTMLElement, enable: () => void, ctx: StepCtx) {
   const lambdaNote = h('div');
   const rankBox = h('div');
   const tasks = taskList(E.tasks, () => { rankBox.append(renderItem(E.rank, () => enable())); });
-  const mark = (id: string) => { if (tasks.mark(id) && id === 'lambda') lambdaNote.replaceChildren(h('p', { class: 'muted small' }, rich(E.lambdaNote))); };
+  const countSeen = new Set<string>();
+  const mark = (id: string) => {
+    if (!tasks.mark(id)) return;
+    if (id === 'lambda') lambdaNote.replaceChildren(h('p', { class: 'muted small' }, rich(E.lambdaNote)));
+    if (id === 'count') lambdaNote.replaceChildren(h('p', { class: 'muted small' }, rich(E.countNote)));
+  };
   ui.on('toggle', (what: string, v: boolean) => {
     if (what === 'ignore' && v && ui.wb.current.lonePairs > 0) setTimeout(() => mark('wrong'), 1200);
   });
   ui.on('settled', () => {
     const sp = ui.wb.current;
     if (['CH4', 'NH3', 'H2O'].includes(sp.id)) { family.add(sp.id); if (family.size === 3) mark('family'); }
+    if (['CO2', 'BF3'].includes(sp.id)) { countSeen.add(sp.id); if (countSeen.size === 2) mark('count'); }
     if (ui.wb.ignoreLonePairs && sp.lonePairs > 0) mark('wrong');
     if (ui.wb.lambda <= 1.05 && sp.lonePairs > 0) mark('lambda');
     if (ui.wb.showDipole && ['H2O', 'CO2'].includes(sp.id)) { polar.add(sp.id); if (polar.size === 2) mark('polar'); }
@@ -86,7 +92,7 @@ function predict(body: HTMLElement, enable: () => void, ctx: StepCtx) {
       next.addEventListener('click', () => { next.remove(); run(i + 1); });
       box.append(next);
       (extra ?? stage).scrollIntoView({ behavior: 'smooth', block: extra ? 'start' : 'center' });
-    }));
+    }, { fold: true }));
   };
   run(0);
 }

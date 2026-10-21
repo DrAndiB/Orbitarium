@@ -7,7 +7,7 @@ import { MISCONCEPTIONS } from '../content/curriculum';
 import type { Item, ChoiceItem, RankItem, EstimateItem, FlawItem, Format } from '../content/items';
 import { buzz } from '../platform';
 import { openTable, createTable, tableIcon } from './ptable';
-import { byZ } from '../content/elements';
+import { byZ, outerElectrons } from '../content/elements';
 import type { OverlayId } from '../content/elements';
 
 /** "Look it up" link: questions point to the periodic table instead of expecting memorised data. */
@@ -30,6 +30,12 @@ export function locateQuestion(o: { id: string; prompt: Bi; answer: number[]; ov
     const correct = o.answer.includes(chosen);
     check.remove();
     table.select(o.answer[0]);
+    if (!correct) {
+      // Say what the tapped cell actually has, so the miss is informative.
+      const e = byZ(chosen), out = outerElectrons(e), n = e.sh.length;
+      const outs = out === null ? '' : L({ en: `, ${out} outer electron${out === 1 ? '' : 's'}`, de: `, ${out} Außenelektron${out === 1 ? '' : 'en'}` });
+      fb.appendChild(h('p', { class: 'muted small' }, L({ en: `You picked ${e.en.toLowerCase()}: ${n} shell${n === 1 ? '' : 's'}${outs}.`, de: `Du hast ${e.de} gewählt: ${n} Schale${n === 1 ? '' : 'n'}${outs}.` })));
+    }
     fb.appendChild(feedback(correct ? 'right' : 'miss', o.explain));
     recordAnswer({ item: o.id, concepts: o.concepts, correct, evidence: 'explain' });
     buzz(correct ? 'light' : 'medium');
@@ -41,7 +47,8 @@ export function locateQuestion(o: { id: string; prompt: Bi; answer: number[]; ov
 export interface Result { correct: boolean; partial?: boolean; conf?: number; }
 type Done = (r: Result) => void;
 /** showUnit: label the unit; review: a warm-up or rekindle answer; neutral: unscored first-contact questions. */
-export interface ItemOpts { showUnit?: boolean; review?: boolean; neutral?: boolean; }
+export interface ItemOpts { showUnit?: boolean; review?: boolean; neutral?: boolean; fold?: boolean; }
+/** fold: on a miss, fold the explanation away (an extra worked example follows instead). */
 
 const FORMAT: Record<Format, Bi> = {
   predict: { en: 'Predict and commit', de: 'Vorhersagen und festlegen' },
@@ -68,16 +75,16 @@ export function renderItem(item: Item, onDone: Done, opts: ItemOpts = {}): HTMLE
   }
 }
 
-interface FbOpts { mis?: string; sure?: boolean; neutral?: boolean; verdict?: string; notes?: Bi[] }
+interface FbOpts { mis?: string; sure?: boolean; neutral?: boolean; verdict?: string; notes?: Bi[]; fold?: boolean }
 function feedback(kind: 'right' | 'miss' | 'part', explain: Bi, o: FbOpts = {}): HTMLElement {
   const verdict = o.verdict ?? (o.neutral && kind !== 'right' ? L({ en: 'Here is the answer.', de: 'Das ist die Antwort.' }) : kind === 'right' ? t('correct') : kind === 'part' ? t('partly') : t('wrong'));
   const m = o.mis ? MISCONCEPTIONS.find((x) => x.id === o.mis) : undefined;
   return h('div', { class: 'feedback' + (o.neutral ? ' neutral' : kind === 'miss' ? ' miss' : kind === 'part' ? ' part' : ''), role: 'status' },
     h('strong', { class: 'verdict' }, verdict),
     ...(o.notes ?? []).map((n) => h('div', { class: 'fb-note' }, rich(n))),
-    h('div', null, rich(explain)),
+    o.fold && kind !== 'right' ? h('details', { class: 'fb-fold' }, h('summary', null, L({ en: 'The short explanation', de: 'Die kurze Erklärung' })), h('div', null, rich(explain))) : h('div', null, rich(explain)),
     o.sure && kind === 'miss' ? h('div', { class: 'sure-note' }, L({ en: 'You were sure about this one. Confident mistakes are the most useful ones to catch: this question will come back.', de: 'Hier warst du dir sicher. Selbstsichere Fehler lohnen sich am meisten: Diese Frage kommt wieder.' })) : null,
-    m ? h('div', { class: 'mis-note' }, L({ en: 'This is a known trap: ', de: 'Das ist eine bekannte Falle: ' }), L(m.name), L({ en: '. It goes into your misconception ledger.', de: '. Sie kommt in deine Liste der Fehlvorstellungen.' })) : null,
+    m ? h('div', { class: 'mis-note' }, L({ en: 'A common trap: ', de: 'Eine häufige Falle: ' }), L(m.name), L({ en: '. Lots of people fall into it. The app will bring it back on another day until it sticks.', de: '. Da tappen viele hinein. Die App bringt sie an einem anderen Tag wieder, bis es sitzt.' })) : null,
   );
 }
 
@@ -112,7 +119,7 @@ function renderChoice(item: ChoiceItem, onDone: Done, opts: ItemOpts): HTMLEleme
     const c = conf?.value();
     opts$.forEach((b, j) => { (b as HTMLButtonElement).disabled = true; if (item.options[j].correct) b.classList.add('right'); else if (j === chosen) b.classList.add('wrong'); });
     check.remove(); conf?.el.remove();
-    fb.appendChild(feedback(correct ? 'right' : 'miss', item.explain, { mis: correct ? undefined : o.mis, sure: (c ?? 0) >= 0.8, neutral: opts.neutral }));
+    fb.appendChild(feedback(correct ? 'right' : 'miss', item.explain, { mis: correct ? undefined : o.mis, sure: (c ?? 0) >= 0.8, neutral: opts.neutral, fold: opts.fold }));
     recordAnswer({ item: item.id, concepts: item.concepts, correct, conf: c, chosenMis: correct ? undefined : o.mis, targets: item.targets, evidence: item.evidence ?? (item.format === 'why' ? 'explain' : 'predict'), review: opts.review });
     buzz(correct ? 'light' : 'medium');
     onDone({ correct, conf: c });
@@ -219,10 +226,11 @@ function renderFlaw(item: FlawItem, onDone: Done, opts: ItemOpts): HTMLElement {
   check.addEventListener('click', () => {
     const correct = chosen === item.flaw;
     // Picking a later step that is false only because it follows from the slip earns partial credit.
-    const partial = !correct && !!item.alsoFalse?.includes(chosen);
+    const near = item.near?.find((x) => x.step === chosen);
+    const partial = !correct && (!!item.alsoFalse?.includes(chosen) || !!near);
     lines.forEach((b, j) => { (b as HTMLButtonElement).disabled = true; if (j === item.flaw) b.classList.add('right'); else if (j === chosen) b.classList.add(partial ? 'part' : 'wrong'); });
     check.remove();
-    const notes = partial ? [{ en: 'That step is false too, but only because it follows from an earlier slip. The question asks where the reasoning first goes wrong.', de: 'Dieser Schritt ist auch falsch, aber nur, weil er aus einem früheren Fehler folgt. Gefragt war, wo die Überlegung zuerst schiefgeht.' }] : [];
+    const notes = near ? [near.note] : partial ? [{ en: 'That step is false too, but only because it follows from an earlier slip. The question asks where the reasoning first goes wrong.', de: 'Dieser Schritt ist auch falsch, aber nur, weil er aus einem früheren Fehler folgt. Gefragt war, wo die Überlegung zuerst schiefgeht.' }] : [];
     fb.appendChild(feedback(correct ? 'right' : partial ? 'part' : 'miss', item.explain, { notes, neutral: opts.neutral }));
     recordAnswer({ item: item.id, concepts: item.concepts, correct, partial, chosenMis: correct || partial ? undefined : item.targets?.[0], targets: item.targets, evidence: item.evidence ?? 'transfer', review: opts.review });
     onDone({ correct, partial });

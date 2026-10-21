@@ -23,6 +23,8 @@ export function ideaHints(text: string, ideas: Idea[]): Set<string> {
   const clauses = norm.split(/[.;:!?\n]|,\s|\s(?:and|but|while|whereas|so|und|aber|während|sondern|deshalb|also)\s/).map((c) => c.trim()).filter(Boolean);
   const hits = new Set<string>();
   for (const idea of ideas) {
+    // A clause that states the opposite of the idea (e.g. "the shape depends on the number of atoms") rules it out.
+    if (idea.contra && clauses.some((c) => idea.contra!.en.test(c) || idea.contra!.de.test(c))) continue;
     for (const c of clauses) {
       const m = c.match(idea.en) ?? c.match(idea.de);
       if (!m) continue;

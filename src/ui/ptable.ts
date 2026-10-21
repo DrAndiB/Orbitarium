@@ -1,7 +1,7 @@
 // The interactive periodic table: overlays, search, element cards, optional 3D landscape.
 // Used as its own screen, as a pop-up from any unit step or question, and in the journal.
 import { h, s, clear, rich } from './dom';
-import { L, num, getLang, type Bi } from '../i18n';
+import { L, num, getLang, type Bi, numTrim } from '../i18n';
 import {
   ELEMENTS, byZ, search, OVERLAYS, overlayById, overlayColor, overlayRange, outerElectrons, ionText, typicalIons,
   prettyConfig, CAT_COLOR, CAT_NAME, BLOCK_COLOR, ROW_COLOR, CORE, CALCULATED_RADIUS, NO_STANDARD_MASS, type Element, type OverlayId,
@@ -148,7 +148,7 @@ export function createTable(opts: TableOptions = {}): TableHandle {
     } else if (o.id === 'outer') {
       legend.append(h('p', { class: 'muted small' }, L({ en: 'Main groups only: groups 1–2 and 13–18 count outer electrons (group 13 has 3, group 17 has 7). Helium has 2.', de: 'Nur Hauptgruppen: Gruppe 1–2 und 13–18 zählen Außenelektronen (Gruppe 13 hat 3, Gruppe 17 hat 7). Helium hat 2.' })));
     } else if (o.id === 'ion') {
-      legend.append(item('#ff6b6b', L({ en: 'positive ion (loses electrons)', de: 'positives Ion (gibt Elektronen ab)' })), item('#5aa9ff', L({ en: 'negative ion (gains electrons)', de: 'negatives Ion (nimmt Elektronen auf)' })), item('#1b2346', L({ en: 'no single typical ion', de: 'kein einzelnes typisches Ion' })));
+      legend.append(item('#5aa9ff', L({ en: 'positive ion (loses electrons)', de: 'positives Ion (gibt Elektronen ab)' })), item('#ff6b6b', L({ en: 'negative ion (gains electrons)', de: 'negatives Ion (nimmt Elektronen auf)' })), item('#1b2346', L({ en: 'no single typical ion', de: 'kein einzelnes typisches Ion' })));
     } else if (o.id === 'met') {
       legend.append(h('p', { class: 'muted small' }, L({ en: `${met.size} of 118 met so far in lessons and simulations.`, de: `Bisher ${met.size} von 118 in Lektionen und Simulationen begegnet.` })));
     } else {
@@ -160,7 +160,7 @@ export function createTable(opts: TableOptions = {}): TableHandle {
         h('span', null, fmt(hi))));
       if (o.id === 'chi') legend.append(h('p', { class: 'muted small' }, L({ en: 'Pauling scale. Grey cells have no value: noble gases rarely bond.', de: 'Pauling-Skala. Graue Felder haben keinen Wert: Edelgase binden kaum.' })));
       if (o.id === 'mass') legend.append(h('p', { class: 'muted small' }, L({ en: 'Average over the natural isotopes, in atomic mass units (u). One u is about the mass of one proton.', de: 'Mittelwert über die natürlichen Isotope, in atomaren Masseeinheiten (u). Ein u ist etwa die Masse eines Protons.' })));
-      if (o.id === 'mass') legend.append(h('p', { class: 'muted small' }, L({ en: 'Technetium, promethium and everything from polonium on (except thorium, protactinium and uranium) have no stable isotopes: their value is the mass number of the longest-lived one.', de: 'Technetium, Promethium und alles ab Polonium (außer Thorium, Protactinium und Uran) haben keine stabilen Isotope: Ihr Wert ist die Massenzahl des langlebigsten.' })));
+      if (o.id === 'mass') legend.append(h('p', { class: 'muted small' }, L({ en: 'Technetium, promethium and everything from polonium on have no stable isotopes. Most show the mass number of their longest-lived isotope, in brackets. Thorium, protactinium and uranium occur in nature with a fixed mix of isotopes, so they keep a real average.', de: 'Technetium, Promethium und alles ab Polonium haben keine stabilen Isotope. Die meisten zeigen die Massenzahl ihres langlebigsten Isotops, in Klammern. Thorium, Protactinium und Uran kommen in der Natur mit einer festen Isotopenmischung vor, deshalb behalten sie einen echten Mittelwert.' })));
       if (o.id === 'radius') legend.append(h('p', { class: 'muted small' }, L({ en: 'Empirical radii measured in compounds (Slater). Noble gases and astatine form almost no compounds, so theirs are calculated (Clementi) and run a little small.', de: 'Empirische Radien aus Verbindungen (Slater). Edelgase und Astat bilden kaum Verbindungen, ihre Werte sind berechnet (Clementi) und fallen etwas klein aus.' })));
     }
   }
@@ -221,7 +221,7 @@ export function createTable(opts: TableOptions = {}): TableHandle {
         row({ en: 'Typical ion', de: 'Typisches Ion' }, ionLine),
         NO_STANDARD_MASS.has(e.z)
           ? row({ en: 'Atomic mass', de: 'Atommasse' }, `[${Math.round(e.m)}]`, L({ en: 'mass number of the longest-lived isotope (no stable isotopes)', de: 'Massenzahl des langlebigsten Isotops (keine stabilen Isotope)' }))
-          : row({ en: 'Atomic mass', de: 'Atommasse' }, `${num(e.m, e.m >= 100 ? 0 : 3)} u`, L({ en: 'isotope average', de: 'Isotopen-Mittelwert' })),
+          : row({ en: 'Atomic mass', de: 'Atommasse' }, `${numTrim(e.m, e.m >= 100 ? 1 : 3)} u`, L({ en: 'isotope average', de: 'Isotopen-Mittelwert' })),
         row({ en: 'Electronegativity', de: 'Elektronegativität' }, e.chi === null ? '–' : num(e.chi, 2)),
         row({ en: 'Atom size', de: 'Atomgröße' }, e.r === null ? '–' : `${e.r} pm`, CALCULATED_RADIUS.has(e.z) ? L({ en: 'calculated radius', de: 'berechneter Radius' }) : L({ en: 'radius measured in compounds', de: 'in Verbindungen gemessener Radius' })),
         row({ en: '1st ionization energy', de: '1. Ionisierungsenergie' }, e.ie === null ? '–' : `${num(e.ie, 0)} kJ/mol`),

@@ -149,7 +149,7 @@ export function overlayColor(o: Overlay, e: Element, met?: Set<string>): { color
       const v = o.value!(e);
       if (v === null || v === undefined) return { color: null, t: 0 };
       if (v === 0) return { color: '#7d86a6', t: 0 };
-      return { color: mix(LOW, v > 0 ? '#ff6b6b' : '#5aa9ff', 0.35 + 0.65 * Math.min(1, Math.abs(v) / 3)), t: Math.min(1, Math.abs(v) / 3) };
+      return { color: mix(LOW, v > 0 ? '#5aa9ff' : '#ff6b6b', 0.35 + 0.65 * Math.min(1, Math.abs(v) / 3)), t: Math.min(1, Math.abs(v) / 3) };
     }
     default: {
       const v = o.value!(e);

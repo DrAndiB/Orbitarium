@@ -92,23 +92,22 @@ export function explainStep(body: HTMLElement, enable: () => void, unit: number,
       if (!ticked && seen) li.append(h('span', { class: 'hint' }, L({ en: 'Your text may already say this.', de: 'Dein Text sagt das vielleicht schon.' })));
     }
     const tickedIdeas = X.ideas.filter((i) => ticks.get(i.id)!.checked);
-    result.replaceChildren(
-      salad ? h('div', { class: 'feedback part' }, h('strong', { class: 'verdict' }, L({ en: 'This reads like a list of keywords.', de: 'Das liest sich wie eine Liste von Stichwörtern.' })),
-        h('div', null, L({ en: 'Try it in full sentences: saying how the ideas connect is what makes them stick.', de: 'Versuch es in ganzen Sätzen: Erst wer sagt, wie die Ideen zusammenhängen, behält sie.' }))) : '',
-      h('div', { class: 'feedback' + (tickedIdeas.length >= 3 ? '' : ' part') }, h('strong', { class: 'verdict' },
-        L({ en: `You ticked ${tickedIdeas.length} of ${X.ideas.length} key ideas.`, de: `Du hast ${tickedIdeas.length} von ${X.ideas.length} Kernideen abgehakt.` })),
-        h('div', null, L({ en: 'Now compare with a tightened version. If something is missing, revise your text: the version you save is the one you will see again.', de: 'Vergleiche jetzt mit einer geschärften Fassung. Fehlt etwas, überarbeite deinen Text: Die gespeicherte Fassung ist die, die du wiedersiehst.' }))),
-      h('h3', null, t('tightened')), h('blockquote', { class: 'quote' }, rich(X.tightened)),
-    );
-    if (prev) result.append(h('div', null, h('h4', null, `${t('yourLast')} (${dateStr(prev.date)})`), h('blockquote', { class: 'quote', style: 'border-color:var(--fog)' }, prev.text)));
+    const tight = h('div', { class: 'stack', hidden: true }, h('h3', null, t('tightened')), h('blockquote', { class: 'quote' }, rich(X.tightened)));
+    if (prev) tight.append(h('div', null, h('h4', null, `${t('yourLast')} (${dateStr(prev.date)})`), h('blockquote', { class: 'quote', style: 'border-color:var(--fog)' }, prev.text)));
     const revise = h('button', { class: 'btn ghost block', type: 'button' }, t('tryAgain'));
     revise.addEventListener('click', () => { ta.focus(); ta.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+    const show = h('button', { class: 'btn quiet block', type: 'button' }, L({ en: 'Show a tightened version', de: 'Eine geschärfte Fassung zeigen' }));
+    show.addEventListener('click', () => { tight.hidden = false; show.remove(); tight.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
     const save$ = h('button', { class: 'btn quiet block', type: 'button' }, t('saveTakeaway'));
     save$.addEventListener('click', () => {
       st.takeaways.push({ unit, date: today(), text: ta.value.trim().replace(/\s+/g, ' '), tightened: L(X.tightened) });
       save(); save$.disabled = true; save$.textContent = t('saved'); toast(t('saved'));
     });
-    result.append(revise, save$);
+    result.replaceChildren(
+      salad ? h('div', { class: 'feedback part' }, h('strong', { class: 'verdict' }, L({ en: 'This reads like a list of keywords.', de: 'Das liest sich wie eine Liste von Stichwörtern.' })),
+        h('div', null, L({ en: 'Try it in full sentences: saying how the ideas connect is what makes them stick.', de: 'Versuch es in ganzen Sätzen: Erst wer sagt, wie die Ideen zusammenhängen, behält sie.' }))) : '',
+      h('p', { class: 'muted' }, L({ en: 'If an idea is missing or only half there, revise your text first. Then compare it with a tightened version; the text you save is the one you will see again.', de: 'Fehlt eine Idee oder steht sie nur halb da, überarbeite zuerst deinen Text. Vergleiche ihn dann mit einer geschärften Fassung; der Text, den du speicherst, ist der, den du wiedersiehst.' })),
+      revise, show, tight, save$);
     // The self-check feeds memory only. "Can explain" is earned later, by explanation questions on another day.
     if (!recorded) {
       recorded = true;

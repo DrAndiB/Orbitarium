@@ -16,7 +16,8 @@ export interface RankItem extends Base { kind: 'rank'; order: Bi[]; mis?: string
 /** `near`: answers close to another meaningful value get a note saying what they match instead. */
 export interface EstimateItem extends Base { kind: 'estimate'; min: number; max: number; step: number; answer: number; tolerance: number; suffix: string; near?: { value: number; tol: number; note: Bi }[]; }
 /** `flaw` is the first wrong step; `alsoFalse` are later steps that are false only because they follow from it (partly right). */
-export interface FlawItem extends Base { kind: 'flaw'; lines: Bi[]; flaw: number; alsoFalse?: number[]; }
+export interface FlawItem extends Base { kind: 'flaw'; lines: Bi[]; flaw: number; alsoFalse?: number[]; near?: { step: number; note: Bi }[]; }
+/** `near`: steps that are not the slip but point at the right idea; they earn partial credit with their own note. */
 export type Item = ChoiceItem | RankItem | EstimateItem | FlawItem;
 
 const b = (en: string, de: string): Bi => ({ en, de });
@@ -204,7 +205,7 @@ export const BANK: Item[] = [
       { text: b('K²⁺ and Br⁻', 'K²⁺ und Br⁻'), mis: 'kbr-charges' },
       { text: b('K⁺ and Br²⁻', 'K⁺ und Br²⁻'), mis: 'kbr-charges' },
     ],
-    explain: b('K is [Ar] 4s¹: one cheap electron, and what is left has argon\'s configuration. Br needs exactly one to complete its octet.', 'K ist [Ar] 4s¹: ein billiges Elektron, und der Rest hat die Konfiguration von Argon. Br braucht genau eines für sein Oktett.') },
+    explain: b('Potassium has a single electron in its outer shell, far easier to remove than any of the electrons beneath it; what is left looks like argon. Bromine needs exactly one more for eight outer electrons, an [[octet]].', 'Kalium hat ein einzelnes Elektron in der äußeren Schale, viel leichter abzulösen als alle Elektronen darunter; was bleibt, sieht aus wie Argon. Brom braucht genau eines mehr für acht Außenelektronen, ein [[octet|Oktett]].') },
   { id: 'i3b', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-cliff'],
     prompt: b('Magnesium\'s successive [[ionization|ionization energies]]: 738, 1451, 7733, 10 543 kJ/mol. How many electrons does Mg give up easily?', 'Die aufeinanderfolgenden [[ionization|Ionisierungsenergien]] von Magnesium: 738, 1451, 7733, 10 543 kJ/mol. Wie viele Elektronen gibt Mg leicht ab?'),
     options: [{ text: b('1', '1') }, { text: b('2', '2'), correct: true }, { text: b('3', '3') }, { text: b('4', '4') }],
@@ -217,7 +218,7 @@ export const BANK: Item[] = [
   { id: 'i4b', unit: 4, kind: 'choice', format: 'odd', concepts: ['u4.transfer', 'u5.delta-chi'], table: 'category',
     prompt: b('Odd one out?', 'Was passt nicht dazu?'),
     options: [{ text: b('{{NaCl}}', '{{NaCl}}') }, { text: b('{{MgO}}', '{{MgO}}') }, { text: b('{{KBr}}', '{{KBr}}') }, { text: b('{{CCl4}}', '{{CCl4}}'), correct: true }],
-    explain: b('CCl₄ is covalent (Δχ ≈ 0.6). The other three are ionic lattices of a metal and a non-metal.', 'CCl₄ ist kovalent (Δχ ≈ 0,6). Die anderen drei sind Ionengitter aus Metall und Nichtmetall.') },
+    explain: b('CCl₄ is covalent: the electronegativity difference between C and Cl is only about 0.6. The other three are ionic lattices of a metal and a non-metal.', 'CCl₄ ist kovalent: Der Elektronegativitätsunterschied zwischen C und Cl beträgt nur etwa 0,6. Die anderen drei sind Ionengitter aus Metall und Nichtmetall.') },
   // Unit 5
   { id: 'i5a', unit: 5, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u5.delta-chi'],
     prompt: b('O–H: [[electronegativity]] 3.4 vs 2.2, so Δχ = 1.2. The bond is…', 'O–H: [[electronegativity]] 3,4 gegen 2,2, also Δχ = 1,2. Die Bindung ist…'),
@@ -226,7 +227,7 @@ export const BANK: Item[] = [
   { id: 'i5b', unit: 5, kind: 'rank', format: 'rank', concepts: ['u5.en'], table: 'chi',
     prompt: b('Rank the bonds by polarity, most polar first.', 'Ordne die Bindungen nach Polarität, die polarste zuerst.'),
     order: [b('H–F', 'H–F'), b('H–Cl', 'H–Cl'), b('H–Br', 'H–Br'), b('H–H', 'H–H')],
-    explain: b('Δχ: 1.8, 1.0, 0.8, 0. Electronegativity falls down group 17.', 'Δχ: 1,8; 1,0; 0,8; 0. Die Elektronegativität sinkt in Gruppe 17 nach unten.') },
+    explain: b('Electronegativity differences: 1.8, 1.0, 0.8 and 0. Electronegativity falls going down group 17, so each bond to hydrogen is a little less lopsided.', 'Elektronegativitätsunterschiede: 1,8; 1,0; 0,8 und 0. Die Elektronegativität sinkt in Gruppe 17 nach unten, also wird jede Bindung zum Wasserstoff etwas weniger einseitig.') },
   // Unit 6
   { id: 'i6a', unit: 6, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u6.lp-squeeze', 'u6.lp-count'], targets: ['lone-pairs-ignored', 'molecular-vs-electron-geometry'],
     prompt: b('{{NH3}} has three bonds. Its H–N–H [[bond-angle]] is about…', '{{NH3}} hat drei Bindungen. Sein H–N–H-[[bond-angle]] beträgt etwa…'),
