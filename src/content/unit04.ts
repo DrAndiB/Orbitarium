@@ -60,8 +60,8 @@ export const UNIT4: UnitContent = {
       { id: 'all', challenge: true, text: b('Load all eight salts. Which holds together most strongly, and does the melting point always follow the gauge?', 'Lade alle acht Salze. Welches hält am stärksten zusammen, und folgt der Schmelzpunkt immer der Anzeige?') },
     ] as ExploreTask[],
     notes: {
-      transfer: b('Sodium loses its whole third shell and shrinks from 180 to 102 pm; chlorine gains an electron and grows from 100 to 181 pm. In {{MgO}} two electrons move.',
-        'Natrium verliert seine ganze dritte Schale und schrumpft von 180 auf 102 pm; Chlor nimmt ein Elektron auf und wächst von 100 auf 181 pm. Bei {{MgO}} wandern zwei Elektronen.'),
+      transfer: b('Sodium loses its whole third shell and shrinks from 180 to 102 pm; chlorine gains an electron and grows (100 pm as a bonded atom, 181 pm as an ion; part of that jump is how the sizes are measured, unit 2). In {{MgO}} two electrons move.',
+        'Natrium verliert seine ganze dritte Schale und schrumpft von 180 auf 102 pm; Chlor nimmt ein Elektron auf und wächst (100 pm als gebundenes Atom, 181 pm als Ion; ein Teil des Sprungs kommt von der Art der Messung, Einheit 2). Bei {{MgO}} wandern zwei Elektronen.'),
       neighbours: b('Six, all of the opposite charge: above, below, left, right, in front and behind. Each of those has six neighbours of its own. No ion has a partner of its own: {{NaCl}} only tells you the ratio, one to one.',
         'Sechs, alle mit Gegenladung: oben, unten, links, rechts, vorne und hinten. Jeder davon hat wieder sechs Nachbarn. Kein Ion hat einen eigenen Partner: {{NaCl}} gibt nur das Verhältnis an, eins zu eins.'),
       compare: b('The charges multiply to 4 instead of 1, and the ions sit closer, 212 pm instead of 283 pm. The lattice energy is the energy it takes to pull the crystal completely apart into separate ions, given in kJ/mol like the ionization energies of unit 3: 3791 for {{MgO}} against 787 for {{NaCl}}.',

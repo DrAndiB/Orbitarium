@@ -109,13 +109,19 @@ export const IONIZATION: Record<number, number[]> = {
   19: [418.8, 3052, 4420, 5877, 7975, 9590], 20: [589.8, 1145.4, 4912.4, 6491, 8153, 10496],
 };
 
-/** Index of the biggest jump between successive ionization energies (the cliff), as the number of electrons before it. */
+/**
+ * The cliff: the number of electrons that come off before the first one from a full inner shell, i.e. the number of
+ * electrons in the outermost shell. Null when there is no inner shell (H, He) or when the cliff lies beyond the
+ * stored energies (O, F, Ne, S, Cl, Ar: only the first six are stored, and they have six or more outer electrons).
+ * For every element where it is reached, this is also the biggest jump in the series.
+ */
 export function cliffAfter(Z: number): number | null {
   const ie = IONIZATION[Z];
-  if (!ie || ie.length < 2) return null;
-  let best = 0, at = 0;
-  for (let i = 1; i < ie.length; i++) { const r = ie[i] / ie[i - 1]; if (r > best) { best = r; at = i; } }
-  return at;
+  if (!ie) return null;
+  const shells = shellCounts(groundConfig(Z)).filter((x) => x > 0);
+  if (shells.length < 2) return null;
+  const outer = shells[shells.length - 1];
+  return outer < ie.length ? outer : null;
 }
 
 // ---------- hydrogen: energy levels and light ----------

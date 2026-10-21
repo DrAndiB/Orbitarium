@@ -217,10 +217,19 @@ export class AtomUI {
     });
     if (!ies.length) svg.appendChild(s('text', { x: W / 2, y: H / 2, 'text-anchor': 'middle', 'font-size': 13, fill: '#9aa3bf' }, L({ en: 'Energy data for elements 1–20', de: 'Energiedaten für die Elemente 1–20' })));
     const total = this.pulled.reduce((a, b) => a + b, 0);
+    // When the stored energies contain no cliff, say why instead of letting the biggest small step look like one.
+    let noCliff: string | null = null;
+    if (ies.length && cliff === null) {
+      const shells = shellCounts(groundConfig(Z)).filter((x) => x > 0), outer = shells[shells.length - 1], name = getLang() === 'de' ? byZ(Z).de : byZ(Z).en;
+      noCliff = shells.length < 2
+        ? L({ en: `${name} has no inner shell, so there is no cliff: every electron comes from the first shell.`, de: `${name} hat keine innere Schale, also gibt es keinen Absturz: Jedes Elektron kommt aus der ersten Schale.` })
+        : L({ en: `No cliff among the first ${ies.length}: ${name} has ${outer} outer electrons, and the cliff would come only after all of them. Atoms like this usually gain electrons instead.`, de: `Kein Absturz unter den ersten ${ies.length}: ${name} hat ${outer} Außenelektronen, und der Absturz käme erst nach allen. Solche Atome nehmen meist stattdessen Elektronen auf.` });
+    }
     this.iePanel.replaceChildren(
       h('div', { class: 'ob-head' }, h('strong', null, L({ en: 'Pulling electrons off', de: 'Elektronen abziehen' })), h('span', { class: 'muted small' }, L({ en: 'kJ/mol for each electron, one after another', de: 'kJ/mol für jedes Elektron, eines nach dem anderen' }))),
       svg,
       h('p', { class: 'muted small', style: 'margin:4px 0 8px' }, this.pulled.length ? L({ en: `${this.pulled.length} pulled off, ${num(total, 0)} kJ/mol in all.`, de: `${this.pulled.length} abgezogen, insgesamt ${num(total, 0)} kJ/mol.` }) : L({ en: 'Nothing pulled off yet.', de: 'Noch nichts abgezogen.' })),
+      noCliff && this.pulled.length >= 2 ? h('p', { class: 'muted small', style: 'margin:0 0 8px' }, noCliff) : '',
       h('div', { class: 'atom-buttons' }, pull, reset));
   }
 
@@ -232,7 +241,7 @@ export class AtomUI {
     const cfg = ionize(groundConfig(Z), this.pulled.length);
     this.stage.setAtom(Z, cfg);
     this.refresh();
-    buzz(this.pulled.length - 1 === cliffAfter(Z) ? 'heavy' : 'light');
+    buzz(this.pulled.length - 1 === cliffAfter(Z) ? 'heavy' : 'light');  // only the true cliff
     this.emit('pulled', this.pulled.length, v);
   }
 

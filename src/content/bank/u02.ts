@@ -143,7 +143,7 @@ export const BANK_U2: Item[] = [
       { text: b('{{Na+}}: it has more protons, and protons take up room', '{{Na+}}: Es hat mehr Protonen, und Protonen brauchen Platz') },
       { text: b('About the same: only one electron moved', 'Etwa gleich: Nur ein Elektron hat den Platz gewechselt'), mis: 'ion-same-size' },
     ],
-    explain: b('{{Na+}} 102 pm, {{Cl-}} 181 pm. The order of the atoms flips in the ions: sodium loses its whole outer shell, chlorine\'s shell swells with one extra electron.', '{{Na+}} 102 pm, {{Cl-}} 181 pm. Die Reihenfolge der Atome kehrt sich bei den Ionen um: Natrium verliert seine ganze äußere Schale, die Schale von Chlor schwillt mit einem zusätzlichen Elektron an.') },
+    explain: b('{{Na+}} 102 pm, {{Cl-}} 181 pm. The order of the atoms flips in the ions: sodium loses its whole outer shell, chlorine\'s shell grows with one extra electron (part of the 100 → 181 pm jump is how the sizes are measured).', '{{Na+}} 102 pm, {{Cl-}} 181 pm. Die Reihenfolge der Atome kehrt sich bei den Ionen um: Natrium verliert seine ganze äußere Schale, die Schale von Chlor wächst mit einem zusätzlichen Elektron (ein Teil des Sprungs von 100 auf 181 pm kommt von der Art der Messung).') },
 
   // ---------- u2.isoelectronic ----------
   { id: 'i2q', unit: 2, kind: 'rank', format: 'rank', concepts: ['u2.isoelectronic'], targets: ['isoelectronic-same-size'],

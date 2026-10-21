@@ -109,7 +109,7 @@ export class BondUI {
       h('div', { class: 'bond-chi' },
         h('div', null, `${L({ en: 'electronegativity', de: 'EN' })} ${st.a} ${num(st.chiA, 2)} · ${st.b} ${num(st.chiBNow, 2)}${st.chiB !== null ? ' *' : ''}`),
         h('div', { class: 'bond-dchi' }, `${L({ en: 'difference', de: 'ΔEN' })} ${num(d, 2)} · ${L(BAND[st.band])}`),
-        d >= 0.15 ? h('div', { class: 'bond-delta muted' }, st.band === 'ionic' ? L({ en: '+ and −: the electron has all but moved over', de: '+ und −: das Elektron ist fast ganz hinübergewandert' }) : L({ en: 'δ− slightly negative · δ+ slightly positive', de: 'δ− leicht negativ · δ+ leicht positiv' })) : null));
+        d >= 0.15 ? h('div', { class: 'bond-delta muted' }, st.ionic >= 0.5 ? L({ en: 'δ− negative end · δ+ positive end: the pair sits mostly on one atom', de: 'δ− negatives Ende · δ+ positives Ende: Das Paar sitzt meist bei einem Atom' }) : L({ en: 'δ− slightly negative · δ+ slightly positive', de: 'δ− leicht negativ · δ+ leicht positiv' })) : null));
     this.drawScale(d);
     const len = st.length, data = bondData(st.a, st.b, st.order);
     this.facts.replaceChildren(

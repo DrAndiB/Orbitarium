@@ -264,7 +264,7 @@ export const UNIT3: UnitContent = {
     { id: 'ionization-releases-energy', name: b('Losing an electron to reach a full shell gives off energy', 'Ein Elektron abzugeben, um eine volle Schale zu erreichen, setzt Energie frei') },
     { id: 'ion-is-noble-gas', name: b('An ion with a noble gas\'s arrangement becomes that noble gas', 'Ein Ion mit Edelgaskonfiguration wird zu diesem Edelgas') },
     { id: 'ie-falls-across', name: b('Ionization energy falls across a period because atoms have more electrons to spare', 'Die Ionisierungsenergie sinkt in der Periode, weil die Atome mehr Elektronen übrig haben') },
-    { id: 'gain-lose-swapped', name: b('Losing and gaining swapped: metals lose electrons, non-metals gain them', 'Abgeben und Aufnehmen verwechselt: Metalle geben ab, Nichtmetalle nehmen auf') },
+    { id: 'gain-lose-swapped', name: b('Thinking non-metals lose electrons and metals gain them (it is the other way round)', 'Gedacht, Nichtmetalle geben Elektronen ab und Metalle nehmen welche auf (es ist umgekehrt)') },
   ],
 
   glossary: {

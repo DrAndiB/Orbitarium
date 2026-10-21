@@ -73,7 +73,7 @@ export const UNITS: UnitInfo[] = [
   ]),
   u(5, 2, 'Covalent bonds and electronegativity', 'Atombindung und Elektronegativität', 'Charge Field', 1, [
     c('u5.sharing', 'A covalent bond is a shared electron pair', 'Eine Atombindung ist ein gemeinsames Elektronenpaar'),
-    c('u5.bond-count', 'An atom forms as many bonds as it lacks electrons for an octet', 'Ein Atom bildet so viele Bindungen, wie ihm Elektronen zum Oktett fehlen'),
+    c('u5.bond-count', 'Each shared pair adds one to an atom\'s count; small atoms usually bond until they count eight', 'Jedes gemeinsame Paar zählt für beide Atome; kleine Atome binden meist, bis sie acht zählen'),
     c('u5.multiple-bonds', 'Double and triple bonds are shorter and stronger', 'Doppel- und Dreifachbindungen sind kürzer und stärker'),
     c('u5.en', 'Electronegativity pulls shared electrons', 'Elektronegativität zieht gemeinsame Elektronen'),
     c('u5.partial-charges', 'Unequal sharing leaves partial charges, δ+ and δ−', 'Ungleiches Teilen hinterlässt Teilladungen, δ+ und δ−'),

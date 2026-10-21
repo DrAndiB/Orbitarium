@@ -79,7 +79,8 @@ export class BondStage extends Stage3D {
       const lab = this.label(s, 0.42, '#121a33');
       lab.position.set(x, 0, 0);
       this.mol.add(lab);
-      const qt = Math.abs(charge) < 0.04 ? '' : this.band === 'ionic' ? (charge > 0 ? '+' : '−') : (charge > 0 ? 'δ+' : 'δ−');
+      // always partial charges: the scale is smooth, so the labels do not jump to full charges at a border
+      const qt = Math.abs(charge) < 0.04 ? '' : charge > 0 ? 'δ+' : 'δ−';
       if (qt) {
         const ql = this.label(qt, 0.42, charge > 0 ? '#8fc4ff' : '#ff9a9a');
         ql.position.set(x, r * 1.55 + 0.42, 0);
@@ -91,7 +92,7 @@ export class BondStage extends Stage3D {
     // sticks: one per shared pair
     const offs = this.order === 1 ? [0] : this.order === 2 ? [-0.11, 0.11] : [-0.16, 0, 0.16];
     for (const o of offs) {
-      const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, L, 12), new THREE.MeshStandardMaterial({ color: 0xcfc8b6, roughness: 0.6, transparent: true, opacity: this.band === 'ionic' ? 0.25 : 0.85 }));
+      const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, L, 12), new THREE.MeshStandardMaterial({ color: 0xcfc8b6, roughness: 0.6, transparent: true, opacity: 0.85 - 0.6 * this.ionic }));
       stick.rotation.z = Math.PI / 2;
       stick.position.y = o;
       this.mol.add(stick);
