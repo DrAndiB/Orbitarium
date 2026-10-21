@@ -8,7 +8,7 @@ const b = (en: string, de: string): Bi => ({ en, de });
 export const BANK_U1: Item[] = [
   // ---------- u1.levels-light ----------
   { id: 'i1d', unit: 1, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u1.levels-light'],
-    prompt: b('Hydrogen\'s energy levels are −13.6, −3.4, −1.5 and −0.85 eV (n = 1 to 4). Which drop gives off the most energy?', 'Die Energieniveaus von Wasserstoff liegen bei −13,6; −3,4; −1,5 und −0,85 eV (n = 1 bis 4). Welcher Sprung gibt am meisten Energie ab?'),
+    prompt: b('Hydrogen\'s energy levels are −13.6, −3.4, −1.5 and −0.85 eV (n = 1 to 4; eV, electronvolts, is a tiny energy unit for single atoms). Which drop gives off the most energy?', 'Die Energieniveaus von Wasserstoff liegen bei −13,6; −3,4; −1,5 und −0,85 eV (n = 1 bis 4; eV, Elektronenvolt, ist eine winzige Energieeinheit für einzelne Atome). Welcher Sprung gibt am meisten Energie ab?'),
     options: [
       { text: b('4 → 3', '4 → 3') },
       { text: b('3 → 2', '3 → 2') },
@@ -33,13 +33,13 @@ export const BANK_U1: Item[] = [
       { text: b('Neither: both have one outer electron', 'Keines: Beide haben ein Außenelektron') },
       { text: b('Drops in different elements cannot be compared', 'Sprünge in verschiedenen Elementen kann man nicht vergleichen') },
     ],
-    explain: b('Sodium. 589 nm is shorter than 671 nm, so each packet of sodium light carries more energy: about 2.1 eV against 1.8 eV. Same group, same one outer electron, but each element has its own ladder.', 'Natrium. 589 nm ist kürzer als 671 nm, also trägt jedes Paket Natriumlicht mehr Energie: etwa 2,1 eV gegen 1,8 eV. Gleiche Gruppe, gleich ein Außenelektron, aber jedes Element hat seine eigene Leiter.') },
+    explain: b('Sodium. 589 nm is shorter than 671 nm, so each photon of sodium light carries more energy: about 2.1 eV against 1.8 eV. Same group, same one outer electron, but each element has its own ladder.', 'Natrium. 589 nm ist kürzer als 671 nm, also trägt jedes Photon des Natriumlichts mehr Energie: etwa 2,1 eV gegen 1,8 eV. Gleiche Gruppe, gleich ein Außenelektron, aber jedes Element hat seine eigene Leiter.') },
   { id: 'i1g', unit: 1, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u1.levels-light'], mis: 'bigger-jump-redder', targets: ['bigger-jump-redder'],
     prompt: b('Rank hydrogen\'s lines by the size of the drop that makes them, biggest first.', 'Ordne die Linien von Wasserstoff nach der Größe des Sprungs, der sie erzeugt, den größten zuerst.'),
     order: [b('122 nm, ultraviolet', '122 nm, ultraviolett'), b('410 nm, violet', '410 nm, violett'), b('486 nm, blue-green', '486 nm, blaugrün'), b('656 nm, red', '656 nm, rot')],
     explain: b('The shorter the wavelength, the bigger the drop: 122 nm (2 → 1, 10.2 eV), 410 nm (6 → 2, 3.0 eV), 486 nm (4 → 2, 2.55 eV), 656 nm (3 → 2, 1.9 eV).', 'Je kürzer die Wellenlänge, desto größer der Sprung: 122 nm (2 → 1, 10,2 eV), 410 nm (6 → 2, 3,0 eV), 486 nm (4 → 2, 2,55 eV), 656 nm (3 → 2, 1,9 eV).') },
   { id: 'i1v', unit: 1, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u1.levels-light'], targets: ['any-energy'],
-    prompt: b('A lamp filled with sodium vapour is switched on, and its light is sent through a prism. You see…', 'Eine mit Natriumdampf gefüllte Lampe wird eingeschaltet, und ihr Licht geht durch ein Prisma. Du siehst…'),
+    prompt: b('A low-pressure sodium vapour lamp is switched on, and its light is sent through a prism. You see…', 'Eine Natriumdampf-Niederdrucklampe wird eingeschaltet, und ihr Licht geht durch ein Prisma. Du siehst…'),
     options: [
       { text: b('a full rainbow: its electrons can take any energy', 'einen vollen Regenbogen: Seine Elektronen können jede Energie annehmen'), mis: 'any-energy' },
       { text: b('a single white stripe', 'einen einzelnen weißen Streifen') },
@@ -52,7 +52,7 @@ export const BANK_U1: Item[] = [
   { id: 'i1c', unit: 1, kind: 'estimate', format: 'estimate', concepts: ['u1.shells'], targets: ['every-shell-eight'],
     prompt: b('How many electrons fit into shell 3?', 'Wie viele Elektronen passen in Schale 3?'),
     min: 2, max: 32, step: 1, answer: 18, tolerance: 0, suffix: '',
-    near: [{ value: 8, tol: 0, note: b('Eight is what shell 3 holds in argon, where row 3 ends. But shell 3 has room for 18: its 3d subshell takes ten more, from scandium to zinc.', 'Acht hat Schale 3 bei Argon, wo Zeile 3 endet. Schale 3 hat aber Platz für 18: Ihre 3d-Unterschale nimmt noch zehn auf, von Scandium bis Zink.') }],
+    near: [{ value: 8, tol: 0, note: b('Eight is what shell 3 holds in argon, where period 3 ends. But shell 3 has room for 18: its 3d subshell takes ten more, from scandium to zinc.', 'Acht hat Schale 3 bei Argon, wo die 3. Periode endet. Schale 3 hat aber Platz für 18: Ihre 3d-Unterschale nimmt noch zehn auf, von Scandium bis Zink.') }],
     explain: b('2n² with n = 3 gives 18: 2 in 3s, 6 in 3p, 10 in 3d.', '2n² mit n = 3 ergibt 18: 2 in 3s, 6 in 3p, 10 in 3d.') },
   { id: 'i1h', unit: 1, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u1.shells', 'u1.subshells'], targets: ['every-shell-eight'],
     prompt: b('Why does shell 2 hold 8 electrons but shell 3 hold 18?', 'Warum fasst Schale 2 acht Elektronen, Schale 3 aber 18?'),
@@ -98,9 +98,9 @@ export const BANK_U1: Item[] = [
       { text: b('Five d orbitals hold two electrons each, filled one element at a time', 'Fünf d-Orbitale fassen je zwei Elektronen, die Element für Element hinzukommen'), correct: true },
       { text: b('A single d orbital holds ten electrons', 'Ein einzelnes d-Orbital fasst zehn Elektronen') },
       { text: b('The d-block starts in shell 2, so it fits under the s-block', 'Der d-Block beginnt in Schale 2, also passt er unter den s-Block'), mis: 'd-in-shell-2' },
-      { text: b('It just happens that each row has ten metals', 'Es ergibt sich zufällig, dass jede Zeile zehn Metalle hat') },
+      { text: b('It just happens that each period has ten such metals', 'Es ergibt sich zufällig, dass jede Periode zehn solche Metalle hat') },
     ],
-    explain: b('A d subshell has five orbitals, and every orbital holds two electrons: ten places, so ten elements in a row of the d-block. The same logic gives the s-block 2 columns, the p-block 6 and the f-block 14.', 'Eine d-Unterschale hat fünf Orbitale, und jedes Orbital fasst zwei Elektronen: zehn Plätze, also zehn Elemente in einer Zeile des d-Blocks. Dieselbe Logik gibt dem s-Block 2 Spalten, dem p-Block 6 und dem f-Block 14.') },
+    explain: b('A d subshell has five orbitals, and every orbital holds two electrons: ten places, so ten elements in each period of the d-block. The same logic gives the s-block 2 columns, the p-block 6 and the f-block 14.', 'Eine d-Unterschale hat fünf Orbitale, und jedes Orbital fasst zwei Elektronen: zehn Plätze, also zehn Elemente in jeder Periode des d-Blocks. Dieselbe Logik gibt dem s-Block 2 Spalten, dem p-Block 6 und dem f-Block 14.') },
   { id: 'i1l', unit: 1, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u1.subshells'], table: 'block',
     prompt: b('The f-block is 14 columns wide. How many orbitals make up one f subshell?', 'Der f-Block ist 14 Spalten breit. Aus wie vielen Orbitalen besteht eine f-Unterschale?'),
     options: [
@@ -205,5 +205,5 @@ export const BANK_U1: Item[] = [
       { text: b('8', '8') },
       { text: b('17', '17') },
     ],
-    explain: b('Seven: the outer shell is shell 3, with 3s² and 3p⁵. That is why chlorine sits in group 17 and takes one more electron to make Cl⁻. 5 counts only the p electrons.', 'Sieben: Die äußere Schale ist Schale 3, mit 3s² und 3p⁵. Deshalb steht Chlor in Gruppe 17 und nimmt ein Elektron auf, um Cl⁻ zu bilden. 5 zählt nur die p-Elektronen.') },
+    explain: b('Seven: the outer shell is shell 3, with 3s² and 3p⁵. That is why chlorine sits in group 17 and takes one more electron to make Cl⁻. 5 counts only the p electrons.', 'Sieben: Die äußere Schale ist Schale 3, mit 3s² und 3p⁵. Deshalb steht Chlor in Gruppe 17 (VII. Hauptgruppe) und nimmt ein Elektron auf, um Cl⁻ zu bilden. 5 zählt nur die p-Elektronen.') },
 ];

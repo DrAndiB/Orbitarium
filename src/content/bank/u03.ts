@@ -20,7 +20,7 @@ export const BANK_U3: Item[] = [
   { id: 'i3d', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.ie-definition'],
     prompt: b('Aluminium\'s first three electrons all come from shell 3, yet they cost 578, 1817 and 2745 kJ/mol. Why does each cost more than the one before?', 'Die ersten drei Elektronen von Aluminium kommen alle aus Schale 3, kosten aber 578, 1817 und 2745 kJ/mol. Warum kostet jedes mehr als das vorige?'),
     options: [
-      { text: b('Each pull makes the atom bigger, so the rest are further away', 'Jeder Zug macht das Atom größer, also sind die übrigen weiter weg') },
+      { text: b('Each electron removed makes the atom bigger, so the rest are further away', 'Jedes abgezogene Elektron macht das Atom größer, also sind die übrigen weiter weg') },
       { text: b('The same nucleus now pulls on fewer electrons, and the ion is already positive', 'Derselbe Kern zieht jetzt an weniger Elektronen, und das Ion ist schon positiv'), correct: true },
       { text: b('The later electrons are heavier than the first', 'Die späteren Elektronen sind schwerer als das erste') },
       { text: b('The atom holds on harder because it wants to keep its last electrons', 'Das Atom hält fester, weil es seine letzten Elektronen behalten will') },
@@ -48,7 +48,7 @@ export const BANK_U3: Item[] = [
       { text: b('rises up to the middle of the row, then falls', 'Sie steigt bis zur Mitte der Periode und fällt dann') },
     ],
     explain: b('From 496 kJ/mol for sodium to 1521 for argon. Same outer shell, more protons each step, so a stronger net pull. The dips at aluminium and sulfur come from subshells: a new 3p subshell, then the first shared 3p box.',
-      'Von 496 kJ/mol bei Natrium bis 1521 bei Argon. Gleiche Außenschale, mit jedem Schritt mehr Protonen, also ein stärkerer Nettozug. Die Einbrüche bei Aluminium und Schwefel kommen von den Unterschalen: erst die neue 3p-Unterschale, dann das erste doppelt besetzte 3p-Kästchen.') },
+      'Von 496 kJ/mol bei Natrium bis 1521 bei Argon. Gleiche Außenschale, mit jedem Schritt mehr Protonen, also eine stärkere Anziehung durch den Kern. Die Einbrüche bei Aluminium und Schwefel kommen von den Unterschalen: erst die neue 3p-Unterschale, dann das erste doppelt besetzte 3p-Kästchen.') },
   { id: 'i3g', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.ie-trend'], targets: ['shielding-down-group'],
     prompt: b('The first ionization energy falls down group 1: lithium 520, sodium 496, potassium 419 kJ/mol. Why?', 'Die erste Ionisierungsenergie sinkt in Gruppe 1 nach unten: Lithium 520, Natrium 496, Kalium 419 kJ/mol. Warum?'),
     options: [
@@ -58,12 +58,12 @@ export const BANK_U3: Item[] = [
       { text: b('Potassium has fewer protons than lithium', 'Kalium hat weniger Protonen als Lithium') },
     ],
     explain: b('In the simple model of unit 2, the extra protons and the extra inner electrons cancel: the net pull on the outer electron stays about +1. What changes is distance, and further out means held less tightly.',
-      'Im einfachen Modell aus Einheit 2 heben sich die zusätzlichen Protonen und die zusätzlichen inneren Elektronen auf: Der Nettozug auf das Außenelektron bleibt etwa +1. Was sich ändert, ist der Abstand, und weiter außen heißt schwächer gehalten.') },
+      'Im einfachen Modell aus Einheit 2 heben sich die zusätzlichen Protonen und die zusätzlichen inneren Elektronen auf: Die effektive Kernladung, die das Außenelektron spürt, bleibt etwa +1. Was sich ändert, ist der Abstand, und weiter außen bedeutet schwächer gehalten.') },
   { id: 'i3h', unit: 3, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u3.ie-trend'],
     prompt: b('Rank by first ionization energy, highest first: argon, helium, potassium, neon.', 'Ordne nach erster Ionisierungsenergie, die höchste zuerst: Argon, Helium, Kalium, Neon.'),
     order: [b('helium', 'Helium'), b('neon', 'Neon'), b('argon', 'Argon'), b('potassium', 'Kalium')],
     explain: b('2372, 2081, 1521, 419 kJ/mol. Noble gases end their rows with the strongest pull, and each falls as the shells grow down the group. Potassium starts a new shell right after argon, so its single outer electron sits far out.',
-      '2372, 2081, 1521, 419 kJ/mol. Edelgase schließen ihre Perioden mit dem stärksten Zug ab, und jedes liegt tiefer, weil die Schalen in der Gruppe nach unten wachsen. Kalium beginnt direkt nach Argon eine neue Schale, sein einzelnes Außenelektron sitzt weit außen.') },
+      '2372, 2081, 1521, 419 kJ/mol. Edelgase schließen ihre Perioden mit der stärksten Anziehung durch den Kern ab, und jedes liegt tiefer, weil die Schalen in der Gruppe nach unten wachsen. Kalium beginnt direkt nach Argon eine neue Schale, sein einzelnes Außenelektron sitzt weit außen.') },
   { id: 'i3u', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-trend'], targets: ['ie-falls-across'],
     prompt: b('Lithium needs 520 kJ/mol to lose its outer electron. Fluorine sits at the other end of the same row. Its first ionization energy is…', 'Lithium braucht 520 kJ/mol, um sein Außenelektron abzugeben. Fluor steht am anderen Ende derselben Periode. Seine erste Ionisierungsenergie ist…'),
     options: [
@@ -72,7 +72,7 @@ export const BANK_U3: Item[] = [
       { text: b('higher, because nine protons pull on the same shell', 'größer, weil neun Protonen an derselben Schale ziehen'), correct: true },
     ],
     explain: b('1681 kJ/mol, more than three times lithium\'s 520. Same shell, but nine protons against three: in the simple model the net pull is about 7 against 1.',
-      '1681 kJ/mol, mehr als das Dreifache der 520 von Lithium. Gleiche Schale, aber neun Protonen gegen drei: Im einfachen Modell ist der Nettozug etwa 7 gegen 1.') },
+      '1681 kJ/mol, mehr als das Dreifache der 520 von Lithium. Gleiche Schale, aber neun Protonen gegen drei: Im einfachen Modell beträgt die effektive Kernladung etwa 7 gegen 1.') },
 
   // u3.ie-cliff
   { id: 'i3b', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-cliff'],
@@ -98,7 +98,7 @@ export const BANK_U3: Item[] = [
       { text: b('Sulfur', 'Schwefel') },
     ],
     explain: b('The cliff comes after the fourth (4356 → 16 091), so four outer electrons: group 14, which in period 3 is silicon. Silicon still shares its electrons rather than forming {{Si4+}}: four pulls would cost almost 10 000 kJ/mol.',
-      'Der Sprung kommt nach dem vierten (4356 → 16 091), also vier Außenelektronen: Gruppe 14, in Periode 3 ist das Silicium. Silicium teilt seine Elektronen trotzdem lieber, statt {{Si4+}} zu bilden: Vier Züge würden fast 10 000 kJ/mol kosten.') },
+      'Der Sprung kommt nach dem vierten (4356 → 16 091), also vier Außenelektronen: Gruppe 14, in Periode 3 ist das Silicium. Silicium teilt seine Elektronen trotzdem lieber, statt {{Si4+}} zu bilden: Die ersten vier Elektronen abzuziehen würde fast 10 000 kJ/mol kosten.') },
 
   // u3.ion-charges
   { id: 'i3a', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ion-charges'], targets: ['kbr-charges'], table: 'outer',
