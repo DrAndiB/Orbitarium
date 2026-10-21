@@ -10,6 +10,31 @@ export interface Term {
 
 // Every technical term that appears as a chip in content: [[id]] in a string.
 export const GLOSSARY: Record<string, Term> = {
+  period: {
+    en: 'period', de: 'Periode', unit: 0,
+    def: { en: 'A row of the periodic table. Its number is the number of electron shells.', de: 'Eine Zeile des Periodensystems. Ihre Nummer ist die Zahl der Elektronenschalen.' },
+  },
+  group: {
+    en: 'group', de: 'Gruppe', unit: 0,
+    def: { en: 'A column of the periodic table. Elements in one group behave alike.', de: 'Eine Spalte des Periodensystems. Elemente einer Gruppe verhalten sich ähnlich.' },
+    falseFriend: { en: 'German school books often say "Hauptgruppe I–VIII" (main groups 1–8); IUPAC numbers the columns 1–18.', de: 'Deutsche Schulbücher zählen oft „Hauptgruppe I–VIII“; die IUPAC nummeriert die Spalten 1–18.' },
+  },
+  'atomic-number': {
+    en: 'atomic number', de: 'Ordnungszahl', unit: 0,
+    def: { en: 'The number of protons in the nucleus, Z. It sets the order of the table.', de: 'Die Zahl der Protonen im Kern, Z. Sie bestimmt die Reihenfolge im Periodensystem.' },
+    falseFriend: { en: 'Also called "Kernladungszahl" (nuclear charge number) in German.', de: 'Heißt auch Kernladungszahl.' },
+  },
+  'atomic-mass': {
+    en: 'atomic mass', de: 'Atommasse', unit: 0,
+    def: { en: 'The average mass of an element\'s atoms, weighted by how common each isotope is, in u.', de: 'Die mittlere Masse der Atome eines Elements, gewichtet nach der Häufigkeit der Isotope, in u.' },
+  },
+  isotope: {
+    en: 'isotope', de: 'Isotop', unit: 0,
+    def: { en: 'Atoms of the same element with different numbers of neutrons.', de: 'Atome desselben Elements mit unterschiedlicher Neutronenzahl.' },
+  },
+  'noble-gas': { en: 'noble gas', de: 'Edelgas', unit: 0, def: { en: 'Group 18: full outer shell, so they hardly react.', de: 'Gruppe 18: volle Außenschale, daher reagieren sie kaum.' } },
+  halogen: { en: 'halogen', de: 'Halogen', unit: 0, def: { en: 'Group 17: one electron short of a full shell, very reactive.', de: 'Gruppe 17: ein Elektron fehlt zur vollen Schale, sehr reaktiv.' } },
+  'alkali-metal': { en: 'alkali metal', de: 'Alkalimetall', unit: 0, def: { en: 'Group 1 metals: one outer electron, which they give up easily.', de: 'Metalle der Gruppe 1: ein Außenelektron, das sie leicht abgeben.' } },
   orbital: {
     en: 'orbital', de: 'Orbital', unit: 1,
     def: { en: 'A region where an electron is likely to be found — a probability cloud, not a path.', de: 'Ein Bereich, in dem ein Elektron wahrscheinlich anzutreffen ist – eine Wahrscheinlichkeitswolke, keine Bahn.' },

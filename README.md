@@ -1,8 +1,10 @@
 # Orbitarium
 
 A planetarium for atoms: an offline chemistry learning app for Android, in English and German.
-This is **phase 0, the vertical slice** — unit 6 (lone pairs and shape) runs end to end on the
-Molecule Workbench, with the learner model, progress file and all 45 units on the map.
+Playable now: **unit 0** (the periodic table as a map) on the interactive periodic table, and
+**unit 6** (lone pairs and shape) on the Molecule Workbench, with the learner model, progress file
+and all 45 units on the map. The periodic table (overlays, element cards with a fun fact each, 3D
+landscape) is one tap away from every screen.
 
 ## How it fits together
 
@@ -76,12 +78,14 @@ cd android
 
 | Path | What it holds |
 | --- | --- |
-| `src/content/` | Curriculum (45 units), question bank, unit 6 content, glossary with false friends — all bilingual |
+| `src/content/` | Curriculum (units 0–45), question bank, unit 0 and 6 content, glossary with false friends, 118 elements with German names and fun facts — all bilingual |
+| `src/units/` | Step logic for each playable unit |
 | `src/model/` | FSRS memory model, learner model, local store, readable progress file |
 | `src/sim/` | Molecule Workbench: electron-pair physics (Three.js) and its controls |
 | `src/ui/` | Screens: sky, unit player, questions, lab, journal, settings, onboarding |
 | `android/` | Capacitor Android project (icons, splash, signing) |
 | `tools/make_icons.py` | Regenerates launcher icons and splash screens |
+| `tools/make_elements.py` | Regenerates the element data from Periodic-Table-JSON (numbers compiled from Wikipedia) |
 
 ## Content conventions
 

@@ -62,7 +62,7 @@ function finishImport(incoming: ReturnType<typeof parseProgress>['state']) {
 export function renderDiagnostic(root: HTMLElement) {
   const items = DIAGNOSTIC.map(itemById).filter(Boolean) as Item[];
   root.append(h('div', { class: 'topbar' }, h('h1', null, t('diagTitle'))),
-    h('p', { class: 'muted' }, L({ en: 'Six questions from units 1 to 8. Answer honestly and use the confidence slider: a confident wrong answer tells the app more than a guess.', de: 'Sechs Fragen aus den Einheiten 1 bis 8. Antworte ehrlich und nutze den Sicherheitsregler: Eine selbstsichere falsche Antwort verrät der App mehr als ein Rateversuch.' })));
+    h('p', { class: 'muted' }, L({ en: 'Seven questions from units 0 to 8. Answer honestly and use the confidence slider: a confident wrong answer tells the app more than a guess.', de: 'Sieben Fragen aus den Einheiten 0 bis 8. Antworte ehrlich und nutze den Sicherheitsregler: Eine selbstsichere falsche Antwort verrät der App mehr als ein Rateversuch.' })));
   const box = h('div');
   root.append(box);
   box.append(itemRun(items, (results) => {
@@ -71,7 +71,7 @@ export function renderDiagnostic(root: HTMLElement) {
     items.forEach((it, i) => { if (results[i]?.correct) covered.add(it.unit); });
     for (const u of covered) st.units[u] = { status: 'done', completedAt: today() };
     // Next unit: the first playable or lowest unit not yet covered.
-    const nextUnit = [1, 2, 3, 4, 5, 6].find((u) => !covered.has(u)) ?? 6;
+    const nextUnit = [0, 1, 2, 3, 4, 5, 6].find((u) => !covered.has(u)) ?? 6;
     st.units[nextUnit] = { status: 'next' };
     st.onboarded = true;
     save();

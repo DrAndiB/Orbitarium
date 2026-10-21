@@ -4,6 +4,9 @@ import { L, t, dateStr, num } from '../i18n';
 import { getState } from '../model/store';
 import { MISCONCEPTIONS } from '../content/curriculum';
 import { go } from '../router';
+import { createTable } from './ptable';
+import { byZ } from '../content/elements';
+import { onLeave } from './lifecycle';
 
 type Tab = 'takeaways' | 'misconceptions' | 'calibration' | 'elements' | 'equations';
 let current: Tab = 'takeaways';
@@ -68,28 +71,10 @@ function calibration(p: HTMLElement) {
     h('ul', { class: 'summary-list', style: 'margin-top:12px' }, bins.sort().map(([k, v]) => h('li', null, h('span', null, `${k}–${+k + 9} %`), h('span', null, L({ en: `right ${v.right} of ${v.n}`, de: `${v.right} von ${v.n} richtig` }))))));
 }
 
-const SYMBOLS = 'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'.split(' ');
-function place(z: number): [number, number] {
-  if (z === 1) return [0, 0]; if (z === 2) return [17, 0];
-  if (z <= 4) return [z - 3, 1]; if (z <= 10) return [z + 7, 1];
-  if (z <= 12) return [z - 11, 2]; if (z <= 18) return [z - 1, 2];
-  if (z <= 36) return [z - 19, 3]; if (z <= 54) return [z - 37, 4];
-  if (z <= 56) return [z - 55, 5]; if (z <= 71) return [z - 57 + 2, 8]; if (z <= 86) return [z - 72 + 3, 5];
-  if (z <= 88) return [z - 87, 6]; if (z <= 103) return [z - 89 + 2, 9]; return [z - 104 + 3, 6];
-}
 function elements(p: HTMLElement) {
-  const lit = new Set(getState().elements);
-  const c = 21, W = 18 * c + 4, H = 10 * c + 14;
-  const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, class: 'pt', role: 'img', 'aria-label': L({ en: `${lit.size} elements met`, de: `${lit.size} Elemente kennengelernt` }) });
-  SYMBOLS.forEach((sym, i) => {
-    const [x, y] = place(i + 1);
-    const g = s('g', { class: 'cell' + (lit.has(sym) ? ' lit' : '') });
-    const yy = y >= 8 ? y * c + 10 : y * c;
-    g.append(s('rect', { x: x * c + 2, y: yy + 2, width: c - 2, height: c - 2, rx: 3 }), s('text', { x: x * c + 2 + (c - 2) / 2, y: yy + 2 + (c - 2) / 2 + 4, 'text-anchor': 'middle' }, sym));
-    svg.append(g);
-  });
-  p.append(h('p', { class: 'muted small' }, t('elementsHelp')), svg,
-    h('p', { class: 'muted small', style: 'margin-top:10px' }, L({ en: `${lit.size} of 118 so far.`, de: `Bisher ${lit.size} von 118.` })));
+  const table = createTable({ overlay: 'met', overlays: ['met', 'category'] });
+  onLeave(() => table.dispose());
+  p.append(h('p', { class: 'muted small' }, t('elementsHelp')), table.el);
 }
 
 function slider(min: number, max: number, step: number, value: number, label: string, on: (v: number) => void) {
@@ -107,7 +92,7 @@ function equations(p: HTMLElement) {
   const cap = (n: number) => { capLbl.textContent = `n = ${n}`; capOut.textContent = String(2 * n * n); };
   // 2. Z_eff
   const zOut = h('span', { class: 'result' }), zLbl = h('span');
-  const zeff = (z: number) => { const core = z <= 2 ? 0 : z <= 10 ? 2 : 10; zLbl.textContent = `${SYMBOLS[z - 1]}: Z = ${z}, S = ${core}`; zOut.textContent = String(z - core); };
+  const zeff = (z: number) => { const core = z <= 2 ? 0 : z <= 10 ? 2 : 10; zLbl.textContent = `${byZ(z).s}: Z = ${z}, S = ${core}`; zOut.textContent = String(z - core); };
   // 3. Coulomb
   let q1 = 1, q2 = 1, r = 1;
   const cOut = h('span', { class: 'result' }), cLbl = h('span');

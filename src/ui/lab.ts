@@ -18,6 +18,9 @@ const COMING: { name: string; units: string; phase: number }[] = [
 
 export function renderLab(root: HTMLElement) {
   root.append(h('div', { class: 'topbar' }, h('h1', null, t('labTitle'))));
+  root.append(h('div', { class: 'panel', style: 'margin-bottom:16px' }, h('h3', null, L({ en: 'Periodic Table', de: 'Periodensystem' })),
+    h('p', { class: 'muted small' }, L({ en: 'Overlays, element cards and the 3D landscape, always open.', de: 'Ansichten, Elementkarten und die 3D-Landschaft, immer verfügbar.' })),
+    h('button', { class: 'btn quiet block', type: 'button', onclick: () => go('#/table') }, L({ en: 'Open the table', de: 'Periodensystem öffnen' }))));
   const done = getState().units[6]?.status === 'done';
   if (!done) {
     root.append(h('div', { class: 'panel' }, h('h3', null, 'Molecule Workbench'), h('p', { class: 'muted' }, t('labLocked')),

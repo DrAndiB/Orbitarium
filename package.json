@@ -1,6 +1,6 @@
 {
   "name": "orbitarium",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Orbitarium — interactive chemistry learning app (EN/DE), phase 0 vertical slice",
   "scripts": {
     "dev": "vite --host",

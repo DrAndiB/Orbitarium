@@ -6,6 +6,37 @@ import { recordAnswer } from '../model/learner';
 import { MISCONCEPTIONS } from '../content/curriculum';
 import type { Item, ChoiceItem, RankItem, EstimateItem, FlawItem, Format } from '../content/items';
 import { buzz } from '../platform';
+import { openTable, createTable, tableIcon } from './ptable';
+import { byZ } from '../content/elements';
+import type { OverlayId } from '../content/elements';
+
+/** "Look it up" link: questions point to the periodic table instead of expecting memorised data. */
+export function tableLink(overlay: OverlayId = 'category'): HTMLElement {
+  return h('button', { class: 'btn small quiet table-chip', type: 'button', onclick: () => openTable({ overlay }) },
+    tableIcon(), L({ en: 'Look it up in the table', de: 'Im Periodensystem nachsehen' }));
+}
+
+/** Locate question: tap the right element on the table. */
+export function locateQuestion(o: { id: string; prompt: Bi; answer: number[]; overlay?: OverlayId; explain: Bi; concepts: string[] }, onDone: Done): HTMLElement {
+  let chosen = 0;
+  const check = h('button', { class: 'btn block', type: 'button', disabled: true }, t('check'));
+  const picked = h('p', { class: 'muted small' }, L({ en: 'Nothing selected yet.', de: 'Noch nichts ausgewählt.' }));
+  const table = createTable({ pick: true, overlay: o.overlay ?? 'category', overlays: ['category', 'shells', 'outer'], onSelect: (z) => {
+    chosen = z; check.disabled = false;
+    picked.textContent = L({ en: `Selected: ${byZ(z).en} (${byZ(z).s})`, de: `Ausgewählt: ${byZ(z).de} (${byZ(z).s})` });
+  } });
+  const fb = h('div');
+  check.addEventListener('click', () => {
+    const correct = o.answer.includes(chosen);
+    check.remove();
+    table.select(o.answer[0]);
+    fb.appendChild(feedback(correct ? 'right' : 'miss', o.explain));
+    recordAnswer({ item: o.id, concepts: o.concepts, correct, evidence: 'explain' });
+    buzz(correct ? 'light' : 'medium');
+    onDone({ correct });
+  });
+  return h('div', { class: 'q' }, formatLabel('locate'), h('p', { class: 'q-prompt' }, rich(o.prompt)), table.el, picked, check, fb);
+}
 
 export interface Result { correct: boolean; partial?: boolean; }
 type Done = (r: Result) => void;
@@ -20,9 +51,10 @@ const FORMAT: Record<Format, Bi> = {
   draw: { en: 'Draw on it', de: 'Einzeichnen' },
   explain: { en: 'Explain back', de: 'Zurückerklären' },
   terms: { en: 'Term pairs', de: 'Begriffspaare' },
+  locate: { en: 'Find it on the map', de: 'Auf der Karte finden' },
 };
 export const formatLabel = (f: Format, unit?: number) =>
-  h('div', { class: 'q-format' }, L(FORMAT[f]) + (unit ? ` · ${L({ en: 'unit', de: 'Einheit' })} ${unit}` : ''));
+  h('div', { class: 'q-format' }, L(FORMAT[f]) + (unit !== undefined ? ` · ${L({ en: 'unit', de: 'Einheit' })} ${unit}` : ''));
 
 export function renderItem(item: Item, onDone: Done, opts: { showUnit?: boolean } = {}): HTMLElement {
   switch (item.kind) {
@@ -65,6 +97,7 @@ function renderChoice(item: ChoiceItem, onDone: Done, opts: { showUnit?: boolean
   const wrap = h('div', { class: 'q' },
     formatLabel(item.format, opts.showUnit ? item.unit : undefined),
     h('p', { class: 'q-prompt' }, rich(item.prompt)),
+    item.table ? tableLink(item.table) : null,
     h('div', { class: 'options', role: 'group' }, opts$),
     conf?.el, check, fb);
   check.addEventListener('click', () => {
@@ -141,6 +174,7 @@ function renderRank(item: RankItem, onDone: Done, opts: { showUnit?: boolean }):
     onDone({ correct, partial });
   });
   return h('div', { class: 'q' }, formatLabel(item.format, opts.showUnit ? item.unit : undefined), h('p', { class: 'q-prompt' }, rich(item.prompt)),
+    item.table ? tableLink(item.table) : null,
     h('p', { class: 'muted small' }, L({ en: 'Drag the rows, or use the arrows.', de: 'Zieh die Zeilen oder nutze die Pfeile.' })), list, check, fb);
 }
 
@@ -162,7 +196,7 @@ function renderEstimate(item: EstimateItem, onDone: Done, opts: { showUnit?: boo
     recordAnswer({ item: item.id, concepts: item.concepts, correct, partial, targets: item.targets, evidence: item.evidence ?? 'predict' });
     onDone({ correct, partial });
   });
-  return h('div', { class: 'q' }, formatLabel(item.format, opts.showUnit ? item.unit : undefined), h('p', { class: 'q-prompt' }, rich(item.prompt)), out, input, check, fb);
+  return h('div', { class: 'q' }, formatLabel(item.format, opts.showUnit ? item.unit : undefined), h('p', { class: 'q-prompt' }, rich(item.prompt)), item.table ? tableLink(item.table) : null, out, input, check, fb);
 }
 
 function renderFlaw(item: FlawItem, onDone: Done, opts: { showUnit?: boolean }): HTMLElement {

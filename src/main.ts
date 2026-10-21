@@ -10,6 +10,15 @@ import { leaveScreen } from './ui/lifecycle';
 import { renderHome } from './ui/home';
 import { renderPlayer, renderRekindle } from './ui/player';
 import { renderLab } from './ui/lab';
+import { createTable } from './ui/ptable';
+import { onLeave } from './ui/lifecycle';
+import { L } from './i18n';
+
+function renderTableScreen(root: HTMLElement) {
+  const table = createTable({ allow3d: true });
+  onLeave(() => table.dispose());
+  root.append(h('div', { class: 'topbar' }, h('h1', null, L({ en: 'Periodic table', de: 'Periodensystem' }))), table.el);
+}
 import { renderJournal } from './ui/journal';
 import { renderSettings } from './ui/settings';
 import { renderWelcome, renderDiagnostic } from './ui/onboarding';
@@ -22,6 +31,7 @@ const ICONS: Record<string, string> = {
   lab: 'M9 3h6M10 3v6l-5 9a2 2 0 001.8 3h10.4a2 2 0 001.8-3l-5-9V3M7.5 15h9',
   journal: 'M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 17a3 3 0 013-3h11M9 8h6',
   settings: 'M4 7h10M18 7h2M4 17h4M12 17h8M14 4v6M8 14v6',
+  table: 'M3 5h4v4H3zM17 5h4v4h-4zM3 9h4v4H3zM7 11h3v2H7zM10 11h4v2h-4zM14 11h3v2h-3zM17 9h4v4h-4zM3 13h18v4H3zM6 19h12',
 };
 function icon(name: string) {
   const svg = s('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 1.8, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' });
@@ -33,7 +43,7 @@ function nav(active: string) {
   const item = (id: string, href: string, label: string) =>
     h('a', { href, 'aria-current': active === id ? 'page' : null, onclick: (e: Event) => { e.preventDefault(); go(href); } }, icon(id), h('span', null, label));
   return h('nav', { class: 'nav', 'aria-label': 'Orbitarium' }, h('div', { class: 'nav-inner' },
-    item('sky', '#/', t('navSky')), item('lab', '#/lab', t('navLab')), item('journal', '#/journal', t('navJournal')), item('settings', '#/settings', t('navSettings'))));
+    item('sky', '#/', t('navSky')), item('table', '#/table', t('navTable')), item('lab', '#/lab', t('navLab')), item('journal', '#/journal', t('navJournal')), item('settings', '#/settings', t('navSettings'))));
 }
 
 function render() {
@@ -53,6 +63,7 @@ function render() {
       return;
     case 'unit': renderPlayer(root, Number(path[1])); return;
     case 'rekindle': renderRekindle(root, params); return;
+    case 'table': renderTableScreen(root); break;
     case 'lab': renderLab(root); break;
     case 'journal': renderJournal(root); break;
     case 'settings': renderSettings(root, render); break;

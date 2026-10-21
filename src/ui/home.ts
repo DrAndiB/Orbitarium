@@ -1,19 +1,20 @@
 // Home: the sky. Each unit is a star; brightness is memory today, size is understanding.
 import { h, s, clear, rich, plain } from './dom';
 import { L, t, dateStr, num } from '../i18n';
-import { UNITS, MODULES, unitByN } from '../content/curriculum';
+import { UNITS, MODULES, unitByN, moduleByN, PLAYABLE } from '../content/curriculum';
 import { getState, today } from '../model/store';
 import { unitMemory, unitLevel, dueConcepts, sessionsThisWeek, daysSinceLastSession, recall, nextReview } from '../model/learner';
 import { go } from '../router';
 
-// Module anchors on a 400 × 620 sky, from the bottom (atoms) up to organic reactions.
-const ANCHORS: [number, number][] = [[70, 560], [196, 528], [318, 488], [92, 430], [222, 392], [334, 338], [86, 282], [214, 236], [328, 170], [140, 96]];
+// Module anchors on a 400 × 660 sky: the map (unit 0) at the bottom, organic reactions at the top.
+const ANCHORS: Record<number, [number, number]> = { 0: [304, 596], 1: [70, 560], 2: [196, 528], 3: [318, 488], 4: [92, 430], 5: [222, 392], 6: [334, 338], 7: [86, 282], 8: [214, 236], 9: [328, 170], 10: [140, 96] };
 
 function unitPositions(): Map<number, [number, number]> {
   const pos = new Map<number, [number, number]>();
   for (const m of MODULES) {
     const units = UNITS.filter((u) => u.module === m.n);
-    const [ax, ay] = ANCHORS[m.n - 1];
+    const [ax, ay] = ANCHORS[m.n];
+    if (units.length === 1) { pos.set(units[0].n, [ax, ay]); continue; }
     units.forEach((u, i) => {
       const a = -2.4 + i * 1.1 + (m.n % 2 ? 0 : 0.5);
       const r = 18 + i * 7;
@@ -42,7 +43,7 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   // ----- the sky -----
   const pos = unitPositions();
   const celebrate = Number(params.get('lit') || 0);
-  const svg = s('svg', { class: 'sky', viewBox: '0 0 400 620', role: 'group', 'aria-label': L({ en: 'Map of all units', de: 'Karte aller Einheiten' }) }) as SVGSVGElement;
+  const svg = s('svg', { class: 'sky', viewBox: '0 0 400 660', role: 'group', 'aria-label': L({ en: 'Map of all units', de: 'Karte aller Einheiten' }) }) as SVGSVGElement;
   const defs = s('defs');
   const grad = s('radialGradient', { id: 'glow' }, s('stop', { offset: '0%', 'stop-color': '#ffc15e', 'stop-opacity': '0.65' }), s('stop', { offset: '100%', 'stop-color': '#ffc15e', 'stop-opacity': '0' }));
   defs.appendChild(grad);
@@ -50,9 +51,9 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   // faint background field, deterministic
   let seed = 7;
   const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
-  for (let i = 0; i < 70; i++) svg.appendChild(s('circle', { cx: (rnd() * 400).toFixed(1), cy: (rnd() * 620).toFixed(1), r: (0.4 + rnd() * 0.8).toFixed(2), fill: '#9aa3bf', opacity: (0.12 + rnd() * 0.2).toFixed(2) }));
+  for (let i = 0; i < 70; i++) svg.appendChild(s('circle', { cx: (rnd() * 400).toFixed(1), cy: (rnd() * 660).toFixed(1), r: (0.4 + rnd() * 0.8).toFixed(2), fill: '#9aa3bf', opacity: (0.12 + rnd() * 0.2).toFixed(2) }));
   // path between modules
-  for (let m = 1; m < MODULES.length; m++) {
+  for (let m = 0; m < MODULES.length - 1; m++) {
     const last = UNITS.filter((u) => u.module === m).at(-1)!;
     const first = UNITS.find((u) => u.module === m + 1)!;
     const [x1, y1] = pos.get(last.n)!, [x2, y2] = pos.get(first.n)!;
@@ -65,11 +66,11 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
       const lit = statusOf(units[i].n) !== 'not-started' && statusOf(units[i - 1].n) !== 'not-started';
       svg.appendChild(s('line', { x1, y1, x2, y2, stroke: lit ? '#c9c3b3' : '#2e3a69', 'stroke-width': lit ? 0.9 : 0.8, opacity: lit ? 0.55 : 1 }));
     }
-    const [ax, ay] = ANCHORS[m.n - 1];
+    const [ax, ay] = ANCHORS[m.n];
     const label = `${m.n} · ${L(m.name)}`;
     const tw = label.length * 6.1;
     const lx = Math.min(394 - tw / 2, Math.max(6 + tw / 2, ax));
-    svg.appendChild(s('text', { x: lx.toFixed(1), y: ay + 46, 'text-anchor': 'middle', fill: '#9aa3bf', 'font-size': 11.5, 'font-family': 'var(--sans)' }, label));
+    svg.appendChild(s('text', { x: lx.toFixed(1), y: ay + (UNITS.filter((u) => u.module === m.n).length === 1 ? 28 : 46), 'text-anchor': 'middle', fill: '#9aa3bf', 'font-size': 11.5, 'font-family': 'var(--sans)' }, label));
   }
   for (const u of UNITS) {
     const [x, y] = pos.get(u.n)!;
@@ -107,16 +108,23 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   const gap = daysSinceLastSession();
   if (gap !== null && gap >= st.settings.gapDays) todayBox.appendChild(h('div', { class: 'panel alert' }, h('p', null, t('gapAlert', { d: gap }))));
 
-  const u6 = unitByN(6);
-  const p6 = st.units[6];
-  const label = p6?.status === 'in-progress' ? t('resumeUnit', { n: 6 }) : p6?.status === 'done' ? t('replayUnit', { n: 6 }) : t('startUnit', { n: 6 });
+  // The recommended playable unit: the first one not done yet; otherwise offer replays.
+  const playable = PLAYABLE();
+  const pick = playable.find((n) => st.units[n]?.status !== 'done') ?? playable.at(-1)!;
+  const blurb: Record<number, { en: string; de: string }> = {
+    0: { en: 'About 20 minutes with the interactive periodic table: rows, columns, blocks, and a fun fact for every element.', de: 'Etwa 20 Minuten mit dem interaktiven Periodensystem: Zeilen, Spalten, Blöcke und eine kuriose Tatsache zu jedem Element.' },
+    6: { en: 'About 20 minutes, built around the Molecule Workbench.', de: 'Etwa 20 Minuten, gebaut um die Molekül-Werkbank.' },
+  };
+  const unitLabel = (n: number) => { const p = st.units[n]; return p?.status === 'in-progress' ? t('resumeUnit', { n }) : p?.status === 'done' ? t('replayUnit', { n }) : t('startUnit', { n }); };
+  const pu = unitByN(pick);
   todayBox.appendChild(h('div', { class: 'panel next-unit' },
     h('div', null,
-      h('div', { class: 'kicker' }, `${L({ en: 'Unit', de: 'Einheit' })} 6 · ${L(MODULES[1].name)} · ${t('playable')}`),
-      h('h2', null, L(u6.name)),
-      h('p', { class: 'muted small', style: 'margin:0' }, L({ en: 'About 20 minutes, built around the Molecule Workbench.', de: 'Etwa 20 Minuten, gebaut um die Molekül-Werkbank.' }))),
+      h('div', { class: 'kicker' }, `${L({ en: 'Unit', de: 'Einheit' })} ${pick} · ${L(moduleByN(pu.module).name)} · ${t('playable')}`),
+      h('h2', null, L(pu.name)),
+      h('p', { class: 'muted small', style: 'margin:0' }, L(blurb[pick] ?? blurb[6]))),
     h('span'),
-    h('button', { class: 'btn block', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/6') }, label)));
+    h('button', { class: 'btn block', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/' + pick) }, unitLabel(pick)),
+    ...playable.filter((n) => n !== pick).map((n) => h('button', { class: 'btn ghost block small', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/' + n) }, `${unitLabel(n)}: ${L(unitByN(n).name)}`))));
 
   if (due.length) todayBox.appendChild(h('button', { class: 'btn ghost block', type: 'button', onclick: () => go('#/rekindle') }, t('rekindle')));
 
@@ -145,7 +153,7 @@ function openSheet(n: number) {
   const statusWord = { done: t('covered'), next: t('next'), review: t('review'), 'in-progress': L({ en: 'In progress', de: 'Begonnen' }), 'not-started': t('notStarted') }[status];
   const conceptsSeen = u.concepts.filter((c) => st.concepts[c.id]);
   const sheet = h('div', { class: 'unit-sheet', role: 'dialog', 'aria-label': plain(u.name) },
-    h('p', { class: 'muted small', style: 'margin:0 0 4px' }, `${L({ en: 'Unit', de: 'Einheit' })} ${n} · ${L(MODULES[u.module - 1].name)} · ${statusWord}`),
+    h('p', { class: 'muted small', style: 'margin:0 0 4px' }, `${L({ en: 'Unit', de: 'Einheit' })} ${n} · ${L(moduleByN(u.module).name)} · ${statusWord}`),
     h('h2', null, rich(u.name)),
     h('p', { class: 'muted small' }, `${L({ en: 'Engine', de: 'Engine' })}: ${u.engine}`),
     mem !== null ? h('div', null,

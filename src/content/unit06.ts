@@ -149,6 +149,7 @@ export const UNIT6 = {
   } as FlawItem,
 
   explain: {
+    prompt: b('In your own words: what decides the shape of a molecule?', 'In eigenen Worten: Was bestimmt die Form eines Moleküls?'),
     ideas: [
       { id: 'repel', concept: 'u6.pairs-repel', idea: b('Electron pairs push each other as far apart as possible', 'Elektronenpaare stoßen sich so weit wie möglich voneinander ab'),
         en: /(repel|repuls|push|spread|far apart|avoid each other|away from each other)/i, de: /(abstoß|stoßen|stößt|drück|verteil|weit (weg|auseinander|voneinander)|ausweich|abstand)/i },

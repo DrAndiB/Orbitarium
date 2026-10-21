@@ -13,6 +13,7 @@ export interface UnitInfo {
 export interface ModuleInfo { n: number; name: Bi; }
 
 export const MODULES: ModuleInfo[] = [
+  { n: 0, name: { en: 'The map', de: 'Die Karte' } },
   { n: 1, name: { en: 'Atoms', de: 'Atome' } },
   { n: 2, name: { en: 'Bonding', de: 'Bindung' } },
   { n: 3, name: { en: 'Intermolecular forces', de: 'Zwischenmolekulare Kräfte' } },
@@ -30,6 +31,14 @@ const u = (n: number, module: number, en: string, de: string, engine: string, ph
   ({ n, module, name: { en, de }, engine, phase, concepts: concepts.length ? concepts : [c(`u${n}.core`, en, de)] });
 
 export const UNITS: UnitInfo[] = [
+  u(0, 0, 'The periodic table as a map', 'Das Periodensystem als Karte', 'Periodic Table', 0, [
+    c('u0.rows-shells', 'A row is a shell', 'Eine Zeile ist eine Schale'),
+    c('u0.columns-outer', 'A main-group column counts outer electrons', 'Eine Hauptgruppen-Spalte zählt Außenelektronen'),
+    c('u0.families', 'A column is a family that behaves alike', 'Eine Spalte ist eine Familie mit ähnlichem Verhalten'),
+    c('u0.blocks', 'Blocks show which orbitals are filling', 'Blöcke zeigen, welche Orbitale sich füllen'),
+    c('u0.core-elements', 'The core elements and where they sit', 'Die Kernelemente und wo sie stehen'),
+    c('u0.mass-average', 'Atomic mass is an isotope average', 'Die Atommasse ist ein Isotopen-Mittelwert'),
+  ]),
   u(1, 1, 'Shells and orbitals', 'Schalen und Orbitale', 'Orbital Viewer', 1, [
     c('u1.shells', 'Shells hold 2n² electrons', 'Schalen fassen 2n² Elektronen'),
     c('u1.orbit-vs-orbital', 'Orbitals are clouds, not paths', 'Orbitale sind Wolken, keine Bahnen'),
@@ -107,14 +116,19 @@ export const UNITS: UnitInfo[] = [
   u(44, 10, 'Esters and condensation', 'Ester und Kondensation', 'Molecule Workbench', 3),
   u(45, 10, 'Polymers and biomolecules', 'Polymere und Biomoleküle', 'Molecule Workbench', 3),
 ];
-UNITS[5].playable = true;
+for (const n of [0, 6]) unitByNumber(n).playable = true;
+function unitByNumber(n: number) { return UNITS.find((x) => x.n === n)!; }
 
 export const unitByN = (n: number) => UNITS.find((x) => x.n === n)!;
+export const moduleByN = (n: number) => MODULES.find((m) => m.n === n)!;
+export const PLAYABLE = () => UNITS.filter((u) => u.playable).map((u) => u.n);
 export const allConcepts = () => UNITS.flatMap((x) => x.concepts.map((cc) => ({ ...cc, unit: x.n })));
 export const conceptUnit = (id: string) => Number(id.split('.')[0].slice(1));
 
 export interface Misconception { id: string; name: Bi; unit: number; }
 export const MISCONCEPTIONS: Misconception[] = [
+  { id: 'mass-is-one-atom', unit: 0, name: { en: 'Atomic mass describes a single atom', de: 'Die Atommasse beschreibt ein einzelnes Atom' } },
+  { id: 'order-by-mass', unit: 0, name: { en: 'The table is ordered by mass', de: 'Das Periodensystem ist nach Masse geordnet' } },
   { id: 'bohr-orbits', unit: 1, name: { en: 'Bohr orbits vs quantum orbitals', de: 'Bohr-Bahnen statt Orbitalen' } },
   { id: 'd-in-shell-2', unit: 1, name: { en: 'd orbitals in shell 2', de: 'd-Orbitale in Schale 2' } },
   { id: 'kbr-charges', unit: 3, name: { en: 'KBr ion charges (K²⁺)', de: 'Ionenladungen in KBr (K²⁺)' } },
