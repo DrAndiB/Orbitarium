@@ -1,0 +1,33 @@
+{
+  "name": "orbitarium",
+  "version": "0.1.0",
+  "description": "Orbitarium — interactive chemistry learning app (EN/DE), phase 0 vertical slice",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "build:single": "vite build --mode single",
+    "preview": "vite preview --host",
+    "cap:sync": "npm run build && npx cap sync android",
+    "icons": "python tools/make_icons.py"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/share": "^8.0.3",
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource/young-serif": "^5.3.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "@types/three": "^0.186.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vite-plugin-singlefile": "^2.3.4"
+  },
+  "private": true,
+  "type": "module"
+}

@@ -1,0 +1,168 @@
+// Home: the sky. Each unit is a star; brightness is memory today, size is understanding.
+import { h, s, clear, rich, plain } from './dom';
+import { L, t, dateStr, num } from '../i18n';
+import { UNITS, MODULES, unitByN } from '../content/curriculum';
+import { getState, today } from '../model/store';
+import { unitMemory, unitLevel, dueConcepts, sessionsThisWeek, daysSinceLastSession, recall, nextReview } from '../model/learner';
+import { go } from '../router';
+
+// Module anchors on a 400 × 620 sky, from the bottom (atoms) up to organic reactions.
+const ANCHORS: [number, number][] = [[70, 560], [196, 528], [318, 488], [92, 430], [222, 392], [334, 338], [86, 282], [214, 236], [328, 170], [140, 96]];
+
+function unitPositions(): Map<number, [number, number]> {
+  const pos = new Map<number, [number, number]>();
+  for (const m of MODULES) {
+    const units = UNITS.filter((u) => u.module === m.n);
+    const [ax, ay] = ANCHORS[m.n - 1];
+    units.forEach((u, i) => {
+      const a = -2.4 + i * 1.1 + (m.n % 2 ? 0 : 0.5);
+      const r = 18 + i * 7;
+      pos.set(u.n, [ax + r * Math.cos(a), ay + r * Math.sin(a) * 0.8]);
+    });
+  }
+  return pos;
+}
+
+function statusOf(n: number) {
+  const st = getState();
+  const p = st.units[n];
+  if (p) return p.status;
+  return 'not-started';
+}
+
+export function renderHome(root: HTMLElement, params: URLSearchParams) {
+  const st = getState();
+  const hour = new Date().getHours();
+  const greet = hour < 11 ? t('homeGreetingMorning') : hour < 18 ? t('homeGreetingDay') : t('homeGreetingEvening');
+  const due = dueConcepts();
+  root.append(h('header', { class: 'greeting' },
+    h('h1', null, st.learner ? `${greet}, ${st.learner}` : greet),
+    h('p', { class: 'muted' }, due.length ? t('dueLine', { n: due.length }) : t('dueNone'))));
+
+  // ----- the sky -----
+  const pos = unitPositions();
+  const celebrate = Number(params.get('lit') || 0);
+  const svg = s('svg', { class: 'sky', viewBox: '0 0 400 620', role: 'group', 'aria-label': L({ en: 'Map of all units', de: 'Karte aller Einheiten' }) }) as SVGSVGElement;
+  const defs = s('defs');
+  const grad = s('radialGradient', { id: 'glow' }, s('stop', { offset: '0%', 'stop-color': '#ffc15e', 'stop-opacity': '0.65' }), s('stop', { offset: '100%', 'stop-color': '#ffc15e', 'stop-opacity': '0' }));
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+  // faint background field, deterministic
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+  for (let i = 0; i < 70; i++) svg.appendChild(s('circle', { cx: (rnd() * 400).toFixed(1), cy: (rnd() * 620).toFixed(1), r: (0.4 + rnd() * 0.8).toFixed(2), fill: '#9aa3bf', opacity: (0.12 + rnd() * 0.2).toFixed(2) }));
+  // path between modules
+  for (let m = 1; m < MODULES.length; m++) {
+    const last = UNITS.filter((u) => u.module === m).at(-1)!;
+    const first = UNITS.find((u) => u.module === m + 1)!;
+    const [x1, y1] = pos.get(last.n)!, [x2, y2] = pos.get(first.n)!;
+    svg.appendChild(s('line', { x1, y1, x2, y2, stroke: '#2e3a69', 'stroke-width': 1, 'stroke-dasharray': '2 5' }));
+  }
+  for (const m of MODULES) {
+    const units = UNITS.filter((u) => u.module === m.n);
+    for (let i = 1; i < units.length; i++) {
+      const [x1, y1] = pos.get(units[i - 1].n)!, [x2, y2] = pos.get(units[i].n)!;
+      const lit = statusOf(units[i].n) !== 'not-started' && statusOf(units[i - 1].n) !== 'not-started';
+      svg.appendChild(s('line', { x1, y1, x2, y2, stroke: lit ? '#c9c3b3' : '#2e3a69', 'stroke-width': lit ? 0.9 : 0.8, opacity: lit ? 0.55 : 1 }));
+    }
+    const [ax, ay] = ANCHORS[m.n - 1];
+    const label = `${m.n} · ${L(m.name)}`;
+    const tw = label.length * 6.1;
+    const lx = Math.min(394 - tw / 2, Math.max(6 + tw / 2, ax));
+    svg.appendChild(s('text', { x: lx.toFixed(1), y: ay + 46, 'text-anchor': 'middle', fill: '#9aa3bf', 'font-size': 11.5, 'font-family': 'var(--sans)' }, label));
+  }
+  for (const u of UNITS) {
+    const [x, y] = pos.get(u.n)!;
+    const status = statusOf(u.n);
+    const mem = unitMemory(u.n);
+    const lvl = unitLevel(u.n);
+    const g = s('g', { class: 'star', tabindex: 0, role: 'button', 'aria-label': `${L({ en: 'Unit', de: 'Einheit' })} ${u.n}: ${plain(u.name)}` });
+    if (mem !== null) {
+      const glowR = 8 + mem * 16;
+      g.appendChild(s('circle', { cx: x, cy: y, r: glowR, fill: 'url(#glow)', opacity: (0.25 + mem * 0.75).toFixed(2), class: u.n === celebrate ? 'celebrate' : '' }));
+      const core = 2.4 + lvl * 1.3;
+      g.appendChild(s('circle', { cx: x, cy: y, r: core, fill: '#ffe2a8', opacity: (0.35 + mem * 0.65).toFixed(2) }));
+    } else {
+      g.appendChild(s('circle', { cx: x, cy: y, r: status === 'next' ? 3 : 1.8, fill: '#9aa3bf', opacity: status === 'next' ? 0.9 : 0.45 }));
+    }
+    if (status === 'next' || (u.playable && status !== 'done')) {
+      const ring = s('circle', { cx: x, cy: y, r: 9, fill: 'none', stroke: '#ffc15e', 'stroke-width': 1.2, class: 'pulse' });
+      g.appendChild(ring);
+    }
+    if (u.playable) g.appendChild(s('circle', { cx: x, cy: y, r: 12.5, fill: 'none', stroke: '#b48cff', 'stroke-width': 1, 'stroke-dasharray': '2 3' }));
+    g.appendChild(s('circle', { class: 'halo', cx: x, cy: y, r: 14, fill: 'transparent' }));
+    g.addEventListener('click', () => openSheet(u.n));
+    g.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') { e.preventDefault(); openSheet(u.n); } });
+    svg.appendChild(g);
+  }
+  root.append(h('div', { class: 'sky-wrap' }, svg),
+    h('div', { class: 'sky-legend' },
+      h('span', null, h('i', { style: 'background:#ffe2a8' }), L({ en: 'bright = remembered', de: 'hell = erinnert' })),
+      h('span', null, h('i', { style: 'background:transparent;box-shadow:inset 0 0 0 1.5px #ffc15e' }), L({ en: 'ring = up next', de: 'Ring = als Nächstes' })),
+      h('span', null, h('i', { style: 'background:transparent;box-shadow:inset 0 0 0 1px #b48cff' }), L({ en: 'dashed = playable now', de: 'gestrichelt = jetzt spielbar' }))),
+    h('p', { class: 'muted small', style: 'margin-top:6px' }, t('skyHelp')));
+
+  // ----- today -----
+  const todayBox = h('section', { class: 'today', 'aria-label': L({ en: 'Today', de: 'Heute' }) });
+  const gap = daysSinceLastSession();
+  if (gap !== null && gap >= st.settings.gapDays) todayBox.appendChild(h('div', { class: 'panel alert' }, h('p', null, t('gapAlert', { d: gap }))));
+
+  const u6 = unitByN(6);
+  const p6 = st.units[6];
+  const label = p6?.status === 'in-progress' ? t('resumeUnit', { n: 6 }) : p6?.status === 'done' ? t('replayUnit', { n: 6 }) : t('startUnit', { n: 6 });
+  todayBox.appendChild(h('div', { class: 'panel next-unit' },
+    h('div', null,
+      h('div', { class: 'kicker' }, `${L({ en: 'Unit', de: 'Einheit' })} 6 · ${L(MODULES[1].name)} · ${t('playable')}`),
+      h('h2', null, L(u6.name)),
+      h('p', { class: 'muted small', style: 'margin:0' }, L({ en: 'About 20 minutes, built around the Molecule Workbench.', de: 'Etwa 20 Minuten, gebaut um die Molekül-Werkbank.' }))),
+    h('span'),
+    h('button', { class: 'btn block', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/6') }, label)));
+
+  if (due.length) todayBox.appendChild(h('button', { class: 'btn ghost block', type: 'button', onclick: () => go('#/rekindle') }, t('rekindle')));
+
+  const n = sessionsThisWeek(), target = st.settings.weeklyTarget;
+  const ring = s('svg', { viewBox: '0 0 64 64', width: 64, height: 64, 'aria-hidden': 'true' });
+  ring.appendChild(s('circle', { cx: 32, cy: 32, r: 26, fill: 'none', stroke: '#222d55', 'stroke-width': 7 }));
+  for (let i = 0; i < target; i++) {
+    const a0 = (i / target) * Math.PI * 2 - Math.PI / 2 + 0.08, a1 = ((i + 1) / target) * Math.PI * 2 - Math.PI / 2 - 0.08;
+    const p0 = [32 + 26 * Math.cos(a0), 32 + 26 * Math.sin(a0)], p1 = [32 + 26 * Math.cos(a1), 32 + 26 * Math.sin(a1)];
+    const large = a1 - a0 > Math.PI ? 1 : 0;
+    ring.appendChild(s('path', { d: `M${p0[0]} ${p0[1]} A26 26 0 ${large} 1 ${p1[0]} ${p1[1]}`, fill: 'none', stroke: i < n ? '#ffc15e' : '#2e3a69', 'stroke-width': 7, 'stroke-linecap': 'round' }));
+  }
+  todayBox.appendChild(h('div', { class: 'panel rhythm' }, ring,
+    h('div', null, h('h3', null, t('rhythmTitle')), h('p', { class: 'muted', style: 'margin:0' }, t('rhythmLine', { n, t: target })))));
+  root.append(todayBox);
+}
+
+function openSheet(n: number) {
+  const u = unitByN(n);
+  const st = getState();
+  const status = st.units[n]?.status ?? 'not-started';
+  const mem = unitMemory(n);
+  const lvl = unitLevel(n);
+  const close = () => { scrim.remove(); sheet.remove(); };
+  const scrim = h('div', { class: 'scrim', onclick: close });
+  const statusWord = { done: t('covered'), next: t('next'), review: t('review'), 'in-progress': L({ en: 'In progress', de: 'Begonnen' }), 'not-started': t('notStarted') }[status];
+  const conceptsSeen = u.concepts.filter((c) => st.concepts[c.id]);
+  const sheet = h('div', { class: 'unit-sheet', role: 'dialog', 'aria-label': plain(u.name) },
+    h('p', { class: 'muted small', style: 'margin:0 0 4px' }, `${L({ en: 'Unit', de: 'Einheit' })} ${n} · ${L(MODULES[u.module - 1].name)} · ${statusWord}`),
+    h('h2', null, rich(u.name)),
+    h('p', { class: 'muted small' }, `${L({ en: 'Engine', de: 'Engine' })}: ${u.engine}`),
+    mem !== null ? h('div', null,
+      h('div', { class: 'meter' }, h('span', null, t('memoryNow')), h('div', { class: 'bar' }, h('span', { style: `width:${Math.round(mem * 100)}%` })), h('span', null, `${Math.round(mem * 100)} %`)),
+      h('div', { class: 'meter' }, h('span', null, t('understanding')), h('div', { class: 'bar u' }, h('span', { style: `width:${Math.round((lvl / 4) * 100)}%` })), h('span', null, `${num(lvl, 1)}/4`))) : null,
+    conceptsSeen.length ? h('ul', { class: 'concept-list' }, conceptsSeen.map((c) => {
+      const nr = nextReview(c.id);
+      return h('li', null, h('span', null, rich(c.name)), h('span', null, `${Math.round(recall(c.id) * 100)} %${nr ? ' · ' + (nr <= today() ? L({ en: 'due', de: 'fällig' }) : dateStr(nr)) : ''}`));
+    })) : null,
+    u.playable
+      ? h('button', { class: 'btn block', type: 'button', onclick: () => { close(); go('#/unit/' + n); } }, status === 'done' ? t('replayUnit', { n }) : status === 'in-progress' ? t('resumeUnit', { n }) : t('startUnit', { n }))
+      : h('p', { class: 'muted' }, t('notBuilt', { p: u.phase })),
+    conceptsSeen.some((c) => recall(c.id) < 0.9) && !u.playable ? h('button', { class: 'btn ghost block', type: 'button', style: 'margin-top:10px', onclick: () => { close(); go('#/rekindle?unit=' + n); } }, L({ en: 'Rekindle this unit', de: 'Diese Einheit auffrischen' })) : null,
+    h('button', { class: 'link-btn', type: 'button', onclick: close, style: 'margin-top:8px' }, t('close')),
+  );
+  document.body.append(scrim, sheet);
+  (sheet.querySelector('button') as HTMLElement)?.focus();
+}
+
+export { clear };
