@@ -40,7 +40,7 @@ export const BANK_U3: Item[] = [
 
   // u3.ie-trend
   { id: 'i3f', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-trend'], targets: ['ie-falls-across'],
-    prompt: b('Going across period 3 from sodium to argon, the first ionization energy…', 'Wie ändert sich die erste Ionisierungsenergie entlang der Periode 3, von Natrium bis Argon?'),
+    prompt: b('Going across period 3 from sodium to argon, the first ionization energy…', 'Wie ändert sich die erste Ionisierungsenergie entlang der 3. Periode, von Natrium bis Argon?'),
     options: [
       { text: b('falls, because each atom has more electrons to spare', 'Sie sinkt, weil jedes Atom mehr Elektronen übrig hat'), mis: 'ie-falls-across' },
       { text: b('stays about the same, because all of them use shell 3', 'Sie bleibt etwa gleich, weil alle Schale 3 benutzen') },
@@ -50,7 +50,7 @@ export const BANK_U3: Item[] = [
     explain: b('From 496 kJ/mol for sodium to 1521 for argon. Same outer shell, more protons each step, so a stronger net pull. The dips at aluminium and sulfur come from subshells: a new 3p subshell, then the first shared 3p box.',
       'Von 496 kJ/mol bei Natrium bis 1521 bei Argon. Gleiche Außenschale, mit jedem Schritt mehr Protonen, also eine stärkere Anziehung durch den Kern. Die Einbrüche bei Aluminium und Schwefel kommen von den Unterschalen: erst die neue 3p-Unterschale, dann das erste doppelt besetzte 3p-Kästchen.') },
   { id: 'i3g', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.ie-trend'], targets: ['shielding-down-group'],
-    prompt: b('The first ionization energy falls down group 1: lithium 520, sodium 496, potassium 419 kJ/mol. Why?', 'Die erste Ionisierungsenergie sinkt in Gruppe 1 nach unten: Lithium 520, Natrium 496, Kalium 419 kJ/mol. Warum?'),
+    prompt: b('The first ionization energy falls down group 1: lithium 520, sodium 496, potassium 419 kJ/mol. Why?', 'Die erste Ionisierungsenergie sinkt in Gruppe 1 (I. Hauptgruppe) nach unten: Lithium 520, Natrium 496, Kalium 419 kJ/mol. Warum?'),
     options: [
       { text: b('Each step down adds a shell, so the outer electron sits further from the nucleus', 'Jeder Schritt nach unten bringt eine Schale dazu, also sitzt das Außenelektron weiter vom Kern entfernt'), correct: true },
       { text: b('The extra inner electrons shield more than the extra protons pull', 'Die zusätzlichen inneren Elektronen schirmen mehr ab, als die zusätzlichen Protonen ziehen'), mis: 'shielding-down-group' },
@@ -72,11 +72,11 @@ export const BANK_U3: Item[] = [
       { text: b('higher, because nine protons pull on the same shell', 'größer, weil neun Protonen an derselben Schale ziehen'), correct: true },
     ],
     explain: b('1681 kJ/mol, more than three times lithium\'s 520. Same shell, but nine protons against three: in the simple count the pull is about 7 against 1. That gives the direction, not the factor.',
-      '1681 kJ/mol, mehr als das Dreifache der 520 von Lithium. Gleiche Schale, aber neun Protonen gegen drei: In der einfachen Zählung beträgt die effektive Kernladung etwa 7 gegen 1. Das zeigt die Richtung, nicht den Faktor.') },
+      '1681 kJ/mol, mehr als das Dreifache der 520 von Lithium. Gleiche Schale, aber neun Protonen gegenüber drei: In der einfachen Zählung beträgt die effektive Kernladung etwa 7 gegenüber 1. Das zeigt die Richtung, nicht den Faktor.') },
 
   // u3.ie-cliff
   { id: 'i3b', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-cliff'],
-    prompt: b('Magnesium\'s successive [[ionization|ionization energies]]: 738, 1451, 7733, 10 543 kJ/mol. How many electrons does magnesium give up in its compounds?', 'Die aufeinanderfolgenden [[ionization|Ionisierungsenergien]] von Magnesium: 738, 1451, 7733, 10 543 kJ/mol. Wie viele Elektronen gibt Magnesium in seinen Verbindungen ab?'),
+    prompt: b('Magnesium\'s successive [[ionization|ionization energies]]: 738, 1451, 7733, 10 543 kJ/mol. How many electrons does magnesium give up in its compounds?', 'Die aufeinanderfolgenden [[ionization|Ionisierungsenergien]] von Magnesium: 738, 1451, 7733, 10 543 kJ/mol. Wie viele Elektronen gibt Magnesium in seinen Verbindungen ab?'),
     options: [{ text: b('1', '1') }, { text: b('2', '2'), correct: true }, { text: b('3', '3') }, { text: b('4', '4') }],
     explain: b('The cliff comes after the second electron (1451 → 7733): the third would have to come from the full neon-like core. So magnesium forms {{Mg2+}}.', 'Der Sprung kommt nach dem zweiten Elektron (1451 → 7733): Das dritte müsste aus dem vollen, neonartigen Rumpf kommen. Also bildet Magnesium {{Mg2+}}.') },
   { id: 'i3i', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.ie-cliff'],
@@ -90,15 +90,15 @@ export const BANK_U3: Item[] = [
     explain: b('Lithium is 2 · 1. The first electron sits in shell 2, shielded by two inner ones. The second would come from shell 1, close to the nucleus with nothing in between. No wanting involved, just distance and pull.',
       'Lithium ist 2 · 1. Das erste Elektron sitzt in Schale 2, abgeschirmt von zwei inneren. Das zweite käme aus Schale 1, nah am Kern, ohne etwas dazwischen. Kein Wollen, nur Abstand und Anziehung.') },
   { id: 'i3j', unit: 3, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u3.ie-cliff'], table: 'category',
-    prompt: b('An element in period 3 has these successive ionization energies: 787, 1577, 3232, 4356, 16 091 kJ/mol. Which element is it?', 'Ein Element der Periode 3 hat diese aufeinanderfolgenden Ionisierungsenergien: 787, 1577, 3232, 4356, 16 091 kJ/mol. Welches Element ist es?'),
+    prompt: b('An element in period 3 has these successive ionization energies: 787, 1577, 3232, 4356, 16 091 kJ/mol. Which element is it?', 'Ein Element der 3. Periode hat diese aufeinanderfolgenden Ionisierungsenergien: 787, 1577, 3232, 4356, 16 091 kJ/mol. Welches Element ist es?'),
     options: [
       { text: b('Aluminium', 'Aluminium') },
       { text: b('Silicon', 'Silicium'), correct: true },
       { text: b('Phosphorus', 'Phosphor') },
       { text: b('Sulfur', 'Schwefel') },
     ],
-    explain: b('The cliff comes after the fourth (4356 → 16 091), so four outer electrons: group 14, which in period 3 is silicon. Silicon still shares its electrons rather than forming {{Si4+}}: four pulls would cost almost 10 000 kJ/mol.',
-      'Der Sprung kommt nach dem vierten (4356 → 16 091), also vier Außenelektronen: Gruppe 14, in Periode 3 ist das Silicium. Silicium teilt seine Elektronen trotzdem lieber, statt {{Si4+}} zu bilden: Die ersten vier Elektronen abzuziehen würde fast 10 000 kJ/mol kosten.') },
+    explain: b('The cliff comes after the fourth (4356 → 16 091), so four outer electrons: group 14, which in period 3 is silicon. Silicon still shares its electrons rather than forming {{Si4+}}: four pulls would cost almost 10 000 kJ/mol.',
+      'Der Sprung kommt nach dem vierten (4356 → 16 091), also vier Außenelektronen: Gruppe 14 (IV. Hauptgruppe), in der 3. Periode ist das Silicium. Silicium teilt seine Elektronen trotzdem lieber, statt {{Si4+}} zu bilden: Die ersten vier Elektronen abzuziehen würde fast 10 000 kJ/mol kosten.') },
 
   // u3.ion-charges
   { id: 'i3a', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ion-charges'], targets: ['kbr-charges'], table: 'outer',
@@ -110,19 +110,19 @@ export const BANK_U3: Item[] = [
       { text: b('K⁺ and Br²⁻', 'K⁺ und Br²⁻'), mis: 'kbr-charges' },
     ],
     explain: b('Potassium has a single electron in its outer shell, far easier to remove than any of the electrons beneath it (419 against 3052 kJ/mol); what is left has argon\'s arrangement. Bromine has seven outer electrons; gaining one costs far less than losing seven, and {{Br-}} ends up with eight, an [[octet]].',
-      'Kalium hat ein einzelnes Elektron in der äußeren Schale, viel leichter abzulösen als alle Elektronen darunter (419 gegen 3052 kJ/mol); was bleibt, hat die Anordnung von Argon. Brom hat sieben Außenelektronen; eines aufzunehmen kostet weit weniger, als sieben abzugeben, und {{Br-}} hat danach acht, ein [[octet|Oktett]].') },
+      'Kalium hat ein einzelnes Elektron in der äußeren Schale, viel leichter abzulösen als alle Elektronen darunter (419 gegenüber 3052 kJ/mol); was bleibt, hat die Anordnung von Argon. Brom hat sieben Außenelektronen; eines aufzunehmen kostet weit weniger, als sieben abzugeben, und {{Br-}} hat danach acht, ein [[octet|Oktett]].') },
   { id: 'i3k', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.ion-charges', 'u3.ie-cliff'],
     prompt: b('Calcium\'s energies are 590, 1145 and 4912 kJ/mol for its first three electrons. Why does it form {{Ca2+}}, not {{Ca+}} or {{Ca3+}}?', 'Die Energien von Calcium für die ersten drei Elektronen sind 590, 1145 und 4912 kJ/mol. Warum bildet es {{Ca2+}} und nicht {{Ca+}} oder {{Ca3+}}?'),
     options: [
       { text: b('2+ is the largest charge any ion can carry', '2+ ist die größte Ladung, die ein Ion tragen kann') },
       { text: b('Its two outer electrons are paired, so they must leave together', 'Seine zwei Außenelektronen sind gepaart, also müssen sie zusammen gehen') },
       { text: b('It has two outer electrons; a third would come from the full shell below, costing about four times more', 'Es hat zwei Außenelektronen; ein drittes käme aus der vollen Schale darunter und kostete etwa viermal so viel'), correct: true },
-      { text: b('Calcium sits in period 2, which allows two charges', 'Calcium steht in Periode 2, die zwei Ladungen erlaubt') },
+      { text: b('Calcium sits in period 2, which allows two charges', 'Calcium steht in der 2. Periode, die zwei Ladungen erlaubt') },
     ],
     explain: b('Calcium is 2 · 8 · 8 · 2. Two electrons in shell 4 come off at 590 and 1145; the third would break into the argon-like core: 4912. {{Al3+}} shows that ions can carry more than 2+, and calcium is in period 4, group 2.',
-      'Calcium ist 2 · 8 · 8 · 2. Zwei Elektronen in Schale 4 lösen sich bei 590 und 1145; das dritte müsste aus dem argonartigen Rumpf kommen: 4912. {{Al3+}} zeigt, dass Ionen mehr als 2+ tragen können, und Calcium steht in Periode 4, Gruppe 2.') },
+      'Calcium ist 2 · 8 · 8 · 2. Zwei Elektronen in Schale 4 lösen sich bei 590 und 1145; das dritte müsste aus dem argonartigen Rumpf kommen: 4912. {{Al3+}} zeigt, dass Ionen mehr als 2+ tragen können, und Calcium steht in der 4. Periode, in Gruppe 2 (II. Hauptgruppe).') },
   { id: 'i3l', unit: 3, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u3.ion-charges', 'u3.gain-vs-lose'], targets: ['gain-lose-swapped'], table: 'outer',
-    prompt: b('Aluminium (group 13) reacts with oxygen (group 16). Which ions form?', 'Aluminium (Gruppe 13) reagiert mit Sauerstoff (Gruppe 16). Welche Ionen entstehen?'),
+    prompt: b('Aluminium (group 13) reacts with oxygen (group 16). Which ions form?', 'Aluminium (Gruppe 13, III. Hauptgruppe) reagiert mit Sauerstoff (Gruppe 16, VI. Hauptgruppe). Welche Ionen entstehen?'),
     options: [
       { text: b('{{Al+}} and {{O-}}', '{{Al+}} und {{O-}}') },
       { text: b('{{Al3-}} and {{O2+}}', '{{Al3-}} und {{O2+}}'), mis: 'gain-lose-swapped' },
@@ -190,10 +190,10 @@ export const BANK_U3: Item[] = [
       { text: b('Their outer electrons are too far from the nucleus to come off', 'Ihre Außenelektronen sind zu weit vom Kern entfernt, um sich zu lösen') },
       { text: b('Gaining electrons always gives off energy, losing them never does', 'Elektronen aufzunehmen setzt immer Energie frei, sie abzugeben nie') },
       { text: b('Non-metals have no outer electrons to lose', 'Nichtmetalle haben keine Außenelektronen, die sie abgeben könnten') },
-      { text: b('Losing six would cost over 40 000 kJ/mol; gaining two costs far less', 'Sechs abzugeben würde über 40 000 kJ/mol kosten; zwei aufzunehmen kostet weit weniger'), correct: true },
+      { text: b('Losing six would cost over 40 000 kJ/mol; gaining two costs far less', 'Sechs abzugeben würde über 40 000 kJ/mol kosten; zwei aufzunehmen kostet weit weniger'), correct: true },
     ],
-    explain: b('Oxygen\'s first six ionization energies add up to about 41 800 kJ/mol. Gaining two electrons costs a few hundred, because the second one is pushed away by {{O-}}, and the attraction between the ions pays that back. Gaining is not always downhill, but it is the far smaller bill.',
-      'Die ersten sechs Ionisierungsenergien von Sauerstoff ergeben zusammen etwa 41 800 kJ/mol. Zwei Elektronen aufzunehmen kostet einige hundert, weil {{O-}} das zweite abstößt, und die Anziehung zwischen den Ionen zahlt das zurück. Aufnehmen ist nicht immer energetisch günstig, aber die weit kleinere Rechnung.') },
+    explain: b('Oxygen\'s first six ionization energies add up to about 41 800 kJ/mol. Gaining two electrons costs a few hundred, because the second one is pushed away by {{O-}}, and the attraction between the ions pays that back. Gaining is not always downhill, but it is the far smaller bill.',
+      'Die ersten sechs Ionisierungsenergien von Sauerstoff ergeben zusammen etwa 41 800 kJ/mol. Zwei Elektronen aufzunehmen kostet einige hundert, weil {{O-}} das zweite abstößt, und die Anziehung zwischen den Ionen zahlt das zurück. Aufnehmen ist nicht immer energetisch günstig, aber die weit kleinere Rechnung.') },
   { id: 'i3t', unit: 3, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u3.gain-vs-lose', 'u3.ion-charges'], targets: ['gain-lose-swapped'],
     prompt: b('Magnesium burns in chlorine gas. Who gives electrons to whom, and which ions form?', 'Magnesium verbrennt in Chlorgas. Wer gibt wem Elektronen, und welche Ionen entstehen?'),
     options: [

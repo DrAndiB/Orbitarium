@@ -66,7 +66,7 @@ export const UNIT0 = {
           { text: b('the same, because both have one outer electron in group 1', 'gleich viel, weil beide ein Außenelektron in Gruppe 1 haben') },
         ],
         explain: b('403 kJ/mol. Rubidium has 18 more protons, but also 18 more inner electrons, so the net pull on the outer electron is about the same. What changes is distance: one shell further out, it is held less tightly and comes off more easily.',
-          '403 kJ/mol. Rubidium hat 18 Protonen mehr, aber auch 18 innere Elektronen mehr, also bleibt der Nettozug auf das Außenelektron etwa gleich. Was sich ändert, ist der Abstand: eine Schale weiter außen wird es schwächer gehalten und löst sich leichter.'),
+          '403 kJ/mol. Rubidium hat 18 Protonen mehr, aber auch 18 innere Elektronen mehr, also bleibt die effektive Kernladung für das Außenelektron etwa gleich. Was sich ändert, ist der Abstand: eine Schale weiter außen wird es schwächer gehalten und löst sich leichter.'),
       } as ChoiceItem,
       overlay: 'ie', select: 37,
       revealText: b('With the ionization overlay on, group 1 runs downhill from hydrogen to caesium. Rows explain it: each step down adds a shell. Francium ticks back up slightly, an effect of relativity: close to the heavy nucleus its 7s electron moves so fast that the orbital shrinks and holds it a little tighter.',
@@ -76,7 +76,7 @@ export const UNIT0 = {
         steps: [
           b('Lithium 520, sodium 496, potassium 419 kJ/mol: each step down group 1 costs less.', 'Lithium 520, Natrium 496, Kalium 419 kJ/mol: Jeder Schritt in Gruppe 1 nach unten kostet weniger.'),
           b('Each step down adds a shell, so the outer electron sits further from the nucleus.', 'Jeder Schritt nach unten bringt eine Schale dazu, also sitzt das Außenelektron weiter vom Kern entfernt.'),
-          b('Rubidium does have 18 more protons than potassium, but also 18 more inner electrons. The two cancel, so the net pull stays about the same; only the distance grows. Further out means held less tightly: 403 kJ/mol.', 'Rubidium hat zwar 18 Protonen mehr als Kalium, aber auch 18 innere Elektronen mehr. Beides hebt sich auf, der Nettozug bleibt etwa gleich; nur der Abstand wächst. Weiter außen heißt schwächer gehalten: 403 kJ/mol.'),
+          b('Rubidium does have 18 more protons than potassium, but also 18 more inner electrons. The two cancel, so the net pull stays about the same; only the distance grows. Further out means held less tightly: 403 kJ/mol.', 'Rubidium hat zwar 18 Protonen mehr als Kalium, aber auch 18 innere Elektronen mehr. Beides hebt sich auf, die effektive Kernladung bleibt etwa gleich; nur der Abstand wächst. Weiter außen bedeutet schwächer gehalten: 403 kJ/mol.'),
         ],
       },
     },
@@ -91,7 +91,7 @@ export const UNIT0 = {
           { text: b('{{SeH4}}', '{{SeH4}}') },
         ],
         explain: b('Group 16 means six outer electrons, two short of an octet, so two bonds: {{H2Se}}. A family shares its formulas.',
-          'Gruppe 16 heißt sechs Außenelektronen, zwei fehlen zum Oktett, also zwei Bindungen: {{H2Se}}. Eine Familie teilt ihre Formeln.'),
+          'Gruppe 16 bedeutet sechs Außenelektronen, zwei fehlen zum Oktett, also zwei Bindungen: {{H2Se}}. Eine Familie teilt ihre Formeln.'),
       } as ChoiceItem,
       overlay: 'outer', select: 34,
       revealText: b('Every element in the column shows 6 outer electrons. Hydrogen selenide really exists: a foul-smelling and very toxic gas.',
@@ -143,7 +143,7 @@ export const UNIT0 = {
     prompt: b('Tap the element with three shells and five outer electrons.', 'Tippe das Element mit drei Schalen und fünf Außenelektronen an.'),
     answer: [15],
     explain: b('Phosphorus: period 3 gives three shells, group 15 gives five outer electrons (2, 8, 5). It sits right below nitrogen.',
-      'Phosphor: Periode 3 heißt drei Schalen, Gruppe 15 heißt fünf Außenelektronen (2, 8, 5). Er steht direkt unter Stickstoff.'),
+      'Phosphor: Periode 3 bedeutet drei Schalen, Gruppe 15 bedeutet fünf Außenelektronen (2, 8, 5). Er steht direkt unter Stickstoff.'),
   },
 
   flaw: {
@@ -175,7 +175,7 @@ export const UNIT0 = {
         en: /(blocks?\b.{0,40}(orbital|\b[spdf]\b|fill)|orbital|trend|electronegativ|radius|atom size|ioni[sz]ation|subshell)/, de: /(block.{0,40}(orbital|\b[spdf]\b|füll)|orbital|trend|elektronegativ|\ben\b|radius|atomgröße|ionisier|unterschale)/ },
     ] as Idea[],
     tightened: b('Elements are lined up by atomic number, one proton at a time. The row tells you how many shells an atom has; in the main groups, the column tells you how many outer electrons it has, which is why a column behaves like a family. The blocks show which orbitals are filling, and properties such as electronegativity and atom size change in predictable trends across the map, with a few known bumps.',
-      'Die Elemente sind nach Ordnungszahl aufgereiht, ein Proton nach dem anderen. Die Zeile sagt, wie viele Schalen ein Atom hat; in den Hauptgruppen sagt die Spalte, wie viele Außenelektronen es hat – deshalb verhält sich eine Spalte wie eine Familie. Die Blöcke zeigen, welche Orbitale sich füllen, und Eigenschaften wie Elektronegativität und Atomgröße folgen über die Karte vorhersagbaren Trends, mit ein paar bekannten Ausreißern.'),
+      'Die Elemente sind nach Ordnungszahl aufgereiht, ein Proton nach dem anderen. Die Periode gibt an, wie viele Schalen ein Atom hat; in den Hauptgruppen gibt die Gruppe an, wie viele Außenelektronen es hat – deshalb verhält sich eine Spalte wie eine Familie. Die Blöcke zeigen, welche Orbitale sich füllen, und Eigenschaften wie Elektronegativität und Atomgröße folgen über die Karte vorhersagbaren Trends, mit ein paar bekannten Ausreißern.'),
   },
 
   terms: ['period', 'group', 'atomic-number', 'atomic-mass', 'noble-gas', 'alkali-metal'],

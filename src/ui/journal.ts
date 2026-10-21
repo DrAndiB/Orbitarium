@@ -1,6 +1,6 @@
 // Journal: takeaways, misconception ledger, calibration, elements met, equation notebook.
 import { h, s, clear, rich } from './dom';
-import { L, t, dateStr, num } from '../i18n';
+import { L, t, dateStr, num, getLang } from '../i18n';
 import { getState } from '../model/store';
 import { MISCONCEPTIONS } from '../content/curriculum';
 import { go } from '../router';
@@ -103,21 +103,21 @@ function equations(p: HTMLElement) {
   const dchi = () => {
     const d = Math.abs(a - b);
     const kind = d < 0.4 ? L({ en: 'nonpolar', de: 'unpolar' }) : d <= 1.8 ? L({ en: 'polar', de: 'polar' }) : L({ en: 'ionic', de: 'ionisch' });
-    dLbl.textContent = `χ = ${num(a, 2)} / ${num(b, 2)} · ${kind}`; dOut.textContent = num(d, 2);
+    dLbl.textContent = `${L({ en: 'χ', de: 'EN' })} = ${num(a, 2)} / ${num(b, 2)} · ${kind}`; dOut.textContent = num(d, 2);
   };
   cap(3); zeff(17); coul(); dchi();
   const card = (formula: Node | string, note: string, ...rows: Node[]) => h('div', { class: 'eq-card' }, h('div', { class: 'formula' }, formula), h('p', { class: 'muted small', style: 'margin:0' }, note), ...rows);
   p.append(
     card('2n²', L({ en: 'Electrons a shell can hold (unit 1)', de: 'Elektronen, die eine Schale fasst (Einheit 1)' }),
       h('div', { class: 'live' }, capLbl, capOut), slider(1, 4, 1, 3, 'n', cap)),
-    card(h('span', null, 'Z', h('sub', null, 'eff'), ' ≈ Z − S'), L({ en: 'Pull felt by an outer electron (unit 2)', de: 'Anziehung, die ein Außenelektron spürt (Einheit 2)' }),
+    card(h('span', null, 'Z', h('sub', null, 'eff'), ' ≈ Z − S'), L({ en: 'Effective nuclear charge felt by an outer electron (unit 2)', de: 'Effektive Kernladung, die ein Außenelektron spürt (Einheit 2)' }),
       h('div', { class: 'live' }, zLbl, zOut), slider(1, 18, 1, 17, 'Z', zeff)),
     card(h('span', null, 'E ∝ q', h('sub', null, '1'), 'q', h('sub', null, '2'), ' / r'), L({ en: 'Ionic attraction relative to NaCl (unit 4)', de: 'Ionische Anziehung relativ zu NaCl (Einheit 4)' }),
       h('div', { class: 'live' }, cLbl, cOut),
       lab('q₁', slider(1, 3, 1, 1, 'q1', (v) => { q1 = v; coul(); })), lab('q₂', slider(1, 3, 1, 1, 'q2', (v) => { q2 = v; coul(); })), lab('r', slider(0.8, 2, 0.05, 1, 'r', (v) => { r = v; coul(); }))),
-    card(h('span', null, 'Δχ = |χ', h('sub', null, 'A'), ' − χ', h('sub', null, 'B'), '|'), L({ en: 'Bond type from electronegativity (unit 5)', de: 'Bindungsart aus der Elektronegativität (Einheit 5)' }),
+    card(getLang() === 'en' ? h('span', null, 'Δχ = |χ', h('sub', null, 'A'), ' − χ', h('sub', null, 'B'), '|') : h('span', null, 'ΔEN = |EN(A) − EN(B)|'), L({ en: 'Bond type from electronegativity (unit 5)', de: 'Bindungsart aus der Elektronegativität (Einheit 5)' }),
       h('div', { class: 'live' }, dLbl, dOut),
-      lab('χ A', slider(0.7, 4, 0.01, a, 'χA', (v) => { a = v; dchi(); })), lab('χ B', slider(0.7, 4, 0.01, b, 'χB', (v) => { b = v; dchi(); }))),
+      lab(L({ en: 'χ A', de: 'EN A' }), slider(0.7, 4, 0.01, a, 'χA', (v) => { a = v; dchi(); })), lab(L({ en: 'χ B', de: 'EN B' }), slider(0.7, 4, 0.01, b, 'χB', (v) => { b = v; dchi(); }))),
     card(h('span', null, 'E = Σ w', h('sub', null, 'ij'), ' / r', h('sup', null, '2'), h('sub', null, 'ij')), L({ en: 'Electron-pair repulsion; λ ≈ 1.25 gives NH₃ its 107° (unit 6)', de: 'Elektronenpaarabstoßung; λ ≈ 1,25 ergibt die 107° von NH₃ (Einheit 6)' }),
       h('button', { class: 'btn small quiet', type: 'button', onclick: () => go('#/lab') }, L({ en: 'Try it in the lab', de: 'Im Labor ausprobieren' }))),
   );

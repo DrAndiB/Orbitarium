@@ -19,12 +19,16 @@ export function L(b: Bi | string): string { return typeof b === 'string' ? b : b
 export function other(b: Bi): string { return lang === 'en' ? b.de : b.en; }
 
 /** Number formatting follows the language: 104.5 vs 104,5. */
+/** Science style in both languages: no separator up to four digits (9921), a narrow space from five (26 700). */
+function group(s: string): string {
+  return s.replace(/^(-?)(\d{5,})/, (_, sign: string, d: string) => sign + d.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f'));
+}
 export function num(n: number, digits = 1): string {
-  return n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  return group(n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false }));
 }
 /** A number with at most `max` decimals and no padding zeros: 35.45, not 35.450. */
 export function numTrim(n: number, max = 3): string {
-  return n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 0, maximumFractionDigits: max });
+  return group(n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 0, maximumFractionDigits: max, useGrouping: false }));
 }
 export function dateStr(iso: string): string {
   const d = new Date(iso + (iso.length === 10 ? 'T12:00:00' : ''));
@@ -37,7 +41,7 @@ const UI: Record<string, Bi> = {
   navSky: { en: 'Sky', de: 'Himmel' },
   navTable: { en: 'Table', de: 'Tabelle' },
   navLab: { en: 'Lab', de: 'Labor' },
-  navJournal: { en: 'Journal', de: 'Journal' },
+  navJournal: { en: 'Journal', de: 'Lerntagebuch' },
   navSettings: { en: 'Settings', de: 'Einstellungen' },
   continue: { en: 'Continue', de: 'Weiter' },
   check: { en: 'Check', de: 'Prüfen' },
@@ -81,17 +85,17 @@ const UI: Record<string, Bi> = {
   stepExplain: { en: 'Explain back', de: 'Erklären' },
   stepWrap: { en: 'Wrap-up', de: 'Abschluss' },
   warmupIntro: { en: 'Questions from earlier units, picked because they are starting to fade. The more is fading, the longer the warm-up, up to eight.', de: 'Fragen aus früheren Einheiten – ausgewählt, weil sie zu verblassen beginnen. Je mehr verblasst, desto länger das Aufwärmen, höchstens acht.' },
-  exploreIntro: { en: 'Work through at least three of these. The checklist ticks itself as you go.', de: 'Bearbeite mindestens drei davon. Die Liste hakt sich von selbst ab.' },
+  exploreIntro: { en: 'Work through at least three of these. The checklist ticks itself as you go.', de: 'Bearbeite mindestens drei davon. Erledigte Aufgaben werden automatisch abgehakt.' },
   predictIntro: { en: 'Commit to an answer before the simulation shows you.', de: 'Lege dich fest, bevor die Simulation es zeigt.' },
   showIn3d: { en: 'Show in 3D', de: 'In 3D zeigen' },
   explainPrompt: { en: 'In your own words: what decides the shape of a molecule?', de: 'In eigenen Worten: Was bestimmt die Form eines Moleküls?' },
   explainPlaceholder: { en: 'Write two or three sentences, in English or German.', de: 'Zwei oder drei Sätze, auf Deutsch oder Englisch.' },
   explainCheck: { en: 'Check my explanation', de: 'Erklärung prüfen' },
   keyIdeas: { en: 'Key ideas', de: 'Kernideen' },
-  tightened: { en: 'A tightened version', de: 'Eine geschärfte Fassung' },
+  tightened: { en: 'A tightened version', de: 'Eine Musterformulierung' },
   yourLast: { en: 'Your takeaway last time', de: 'Deine letzte Kernaussage' },
-  saveTakeaway: { en: 'Save to journal', de: 'Im Journal speichern' },
-  saved: { en: 'Saved to journal', de: 'Im Journal gespeichert' },
+  saveTakeaway: { en: 'Save to journal', de: 'Im Lerntagebuch speichern' },
+  saved: { en: 'Saved to journal', de: 'Im Lerntagebuch gespeichert' },
   tryAgain: { en: 'Revise my text', de: 'Meinen Text überarbeiten' },
   readTonight: { en: 'Read tonight', de: 'Lesestoff für heute Abend' },
   lookFor: { en: 'Three things to look for', de: 'Drei Dinge, auf die du achten kannst' },
@@ -106,7 +110,7 @@ const UI: Record<string, Bi> = {
   centralAtom: { en: 'Central atom', de: 'Zentralatom' },
   partners: { en: 'Partners', de: 'Bindungspartner' },
   // Journal
-  journalTitle: { en: 'Journal', de: 'Journal' },
+  journalTitle: { en: 'Journal', de: 'Lerntagebuch' },
   tabTakeaways: { en: 'Takeaways', de: 'Kernaussagen' },
   tabMisconceptions: { en: 'Misconceptions', de: 'Fehlvorstellungen' },
   tabCalibration: { en: 'Calibration', de: 'Kalibrierung' },

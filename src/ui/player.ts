@@ -48,7 +48,7 @@ function header(unit: number, step: number, title: Bi): HTMLElement {
         h('button', { class: 'icon-btn', type: 'button', 'aria-label': L({ en: 'Leave the unit (progress is kept)', de: 'Einheit verlassen (Fortschritt bleibt)' }), onclick: () => go('#/') }, closeIcon()))),
     dots,
     h('p', { class: 'step-name' }, h('strong', null, t(STEPS[step])), ` · ${L({ en: 'step', de: 'Schritt' })} ${step + 1} ${L({ en: 'of', de: 'von' })} 7`,
-      h('span', { class: 'time-left' }, ` · ${L({ en: `about ${MINUTES.slice(step).reduce((a, b) => a + b, 0)} min left, saved after every step`, de: `noch etwa ${MINUTES.slice(step).reduce((a, b) => a + b, 0)} Min., gespeichert nach jedem Schritt` })}`)));
+      h('span', { class: 'time-left' }, ` · ${L({ en: `about ${MINUTES.slice(step).reduce((a, b) => a + b, 0)} min left, saved after every step`, de: `noch etwa ${MINUTES.slice(step).reduce((a, b) => a + b, 0)} Min. · wird nach jedem Schritt gespeichert` })}`)));
 }
 
 export function renderPlayer(root: HTMLElement, unit: number) {

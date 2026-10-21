@@ -11,7 +11,7 @@ const b = (en: string, de: string): Bi => ({ en, de });
 export const BANK_U5: Item[] = [
   // ---------- u5.delta-chi ----------
   { id: 'i5a', unit: 5, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u5.delta-chi'], targets: ['equal-sharing-always', 'polar-means-ions'],
-    prompt: b('O–H: [[electronegativity]] 3.44 against 2.20, a difference of 1.24. The bond is…', 'O–H: [[electronegativity]] 3,44 gegen 2,20, also ΔEN = 1,24. Die Bindung ist…'),
+    prompt: b('O–H: [[electronegativity]] 3.44 against 2.20, a difference of 1.24. The bond is…', 'O–H: [[electronegativity]] 3,44 gegenüber 2,20, also ΔEN = 1,24. Die Bindung ist…'),
     options: [
       { text: b('nonpolar covalent', 'unpolar kovalent'), mis: 'equal-sharing-always' },
       { text: b('polar covalent', 'polar kovalent'), correct: true },
@@ -27,7 +27,7 @@ export const BANK_U5: Item[] = [
       { text: b('The bands are exact, so the boiling point must be measured wrongly', 'Die Bereiche sind exakt, also ist der Siedepunkt falsch gemessen'), mis: 'bond-type-by-rule' },
       { text: b('The difference does not work for bonds with hydrogen', 'Die ΔEN funktioniert nicht für Bindungen mit Wasserstoff') },
     ],
-    explain: b('There is no wall at 1.8: other books use 1.7 or 2.0. HF is a strongly polar molecule (about 41 % ionic from its measured dipole), sitting where "polar" shades into "ionic".', 'Bei der Grenze steht keine Mauer: Die App nimmt 1,8, viele Schulbücher 1,7, andere 2,0. HF ist ein stark polares Molekül (aus dem gemessenen Dipol etwa 41 % ionisch), genau dort, wo „polar“ in „ionisch“ übergeht.') },
+    explain: b('There is no wall at 1.8: other books use 1.7 or 2.0. HF is a strongly polar molecule (about 41 % ionic from its measured dipole moment), sitting where "polar" shades into "ionic".', 'Bei der Grenze steht keine Mauer: Die App nimmt 1,8, viele Schulbücher 1,7, andere 2,0. HF ist ein stark polares Molekül (aus dem gemessenen Dipolmoment etwa 41 % ionisch), genau dort, wo „polar“ in „ionisch“ übergeht.') },
   { id: 'i5s', unit: 5, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u5.delta-chi'], targets: ['bond-type-by-rule', 'equal-sharing-always'], table: 'chi',
     prompt: b('Aluminium chloride: a metal and a non-metal, electronegativity 1.61 and 3.16. Predict how it behaves.', 'Aluminiumchlorid: ein Metall und ein Nichtmetall, EN 1,61 und 3,16. Sag voraus, wie es sich verhält.'),
     options: [
@@ -51,7 +51,7 @@ export const BANK_U5: Item[] = [
   { id: 'i5b', unit: 5, kind: 'rank', format: 'rank', concepts: ['u5.en'], table: 'chi', mis: 'en-bigger-atom', targets: ['en-bigger-atom'],
     prompt: b('Rank the bonds by polarity, most polar first.', 'Ordne die Bindungen nach Polarität, die polarste zuerst.'),
     order: [b('H–F', 'H–F'), b('H–Cl', 'H–Cl'), b('H–Br', 'H–Br'), b('H–H', 'H–H')],
-    explain: b('Electronegativity differences of 1.78, 0.96, 0.76 and 0. Electronegativity falls going down group 17, so each bond to hydrogen is a little less lopsided.', 'ΔEN = 1,78; 0,96; 0,76 und 0. Die EN sinkt in Gruppe 17 (VII. Hauptgruppe) nach unten, also wird jede Bindung zum Wasserstoff etwas weniger schief.') },
+    explain: b('Electronegativity differences of 1.78, 0.96, 0.76 and 0. Electronegativity falls going down group 17, so each bond to hydrogen is a little less lopsided.', 'ΔEN = 1,78; 0,96; 0,76 und 0. Die EN sinkt in Gruppe 17 (VII. Hauptgruppe) nach unten, also wird jede Bindung zum Wasserstoff etwas weniger polar.') },
   { id: 'i5l', unit: 5, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u5.en'], targets: ['en-bigger-atom'], table: 'chi',
     prompt: b('Fluorine and iodine are both in group 17. Which pulls harder on a shared pair?', 'Fluor und Iod stehen beide in Gruppe 17 (VII. Hauptgruppe). Welches zieht stärker an einem gemeinsamen Paar?'),
     options: [
@@ -60,7 +60,7 @@ export const BANK_U5: Item[] = [
       { text: b('Neither: same group, same pull', 'Keines: gleiche Gruppe, gleich starke Anziehung') },
       { text: b('Iodine: it has more electrons to attract with', 'Iod: Es hat mehr Elektronen, mit denen es anzieht'), mis: 'en-bigger-atom' },
     ],
-    explain: b('Fluorine, 3.98 against 2.66. Iodine\'s extra protons are matched by extra inner electrons, and its shared pair sits three shells further out, so the pull on it is weaker.', 'Fluor, EN 3,98 gegen 2,66. Den zusätzlichen Protonen des Iods stehen zusätzliche innere Elektronen gegenüber, und sein gemeinsames Paar sitzt drei Schalen weiter außen, also wird es schwächer angezogen.') },
+    explain: b('Fluorine, 3.98 against 2.66. Iodine\'s extra protons are matched by extra inner electrons, and its shared pair sits three shells further out, so the pull on it is weaker.', 'Fluor, EN 3,98 gegenüber 2,66. Den zusätzlichen Protonen des Iods stehen zusätzliche innere Elektronen gegenüber, und sein gemeinsames Paar sitzt drei Schalen weiter außen, also wird es schwächer angezogen.') },
   { id: 'i5m', unit: 5, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u5.en'], targets: ['en-bigger-atom'], table: 'chi',
     prompt: b('Electronegativity rises from lithium (0.98) to fluorine (3.98) across period 2. Why?', 'Die EN steigt in der 2. Periode von Lithium (0,98) bis Fluor (3,98). Warum?'),
     options: [
@@ -78,7 +78,7 @@ export const BANK_U5: Item[] = [
 
   // ---------- u5.sharing ----------
   { id: 'i5c', unit: 5, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u5.sharing', 'u5.bond-count'],
-    prompt: b('Each chlorine atom has seven outer electrons. In {{Cl2}} the two atoms share one pair. How many outer electrons does each chlorine now count around itself?', 'Jedes Chloratom hat sieben Außenelektronen. In {{Cl2}} teilen sich die zwei Atome ein Paar. Wie viele Außenelektronen zählt jedes Chlor jetzt um sich?'),
+    prompt: b('Each chlorine atom has seven outer electrons. In {{Cl2}} the two atoms share one pair. How many outer electrons does each chlorine now count around itself?', 'Jedes Chloratom hat sieben Außenelektronen. In {{Cl2}} teilen sich die zwei Atome ein Paar. Wie viele Außenelektronen hat jedes Chloratom jetzt, das gemeinsame Paar mitgezählt?'),
     options: [{ text: b('6', '6') }, { text: b('7', '7') }, { text: b('8', '8'), correct: true }, { text: b('14', '14') }],
     explain: b('Eight: its six unshared outer electrons plus the two in the shared pair. Both atoms count the shared pair, which is how sharing gives each of them an [[octet]].', 'Acht: seine sechs nicht geteilten Außenelektronen plus die zwei im gemeinsamen Paar. Beide Atome zählen das gemeinsame Paar mit, so kommt durch das Teilen jedes auf ein [[octet|Oktett]].') },
   { id: 'i5d', unit: 5, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u5.sharing'],
@@ -113,7 +113,7 @@ export const BANK_U5: Item[] = [
       { text: b('Only two of its electrons are in the outer shell', 'Nur zwei seiner Elektronen sitzen in der Außenschale') },
       { text: b('Oxygen is too small to fit more than two neighbours', 'Sauerstoff ist zu klein für mehr als zwei Nachbarn') },
     ],
-    explain: b('Each shared pair adds one electron to oxygen\'s count, so two pairs take it from six to eight, the octet arrangement, which for small atoms like oxygen is usually the lowest-energy way to bond. Its other four outer electrons stay as two lone pairs. The number of bonds counts the electrons missing from eight, not the outer ones.', 'Jedes gemeinsame Paar zählt bei Sauerstoff ein Elektron dazu, also bringen zwei Paare ihn von sechs auf acht, die Oktett-Anordnung, für kleine Atome wie Sauerstoff meist die energieärmste Art zu binden. Seine anderen vier Außenelektronen bleiben zwei freie Paare. Die Zahl der Bindungen zählt die Elektronen, die zur Acht fehlen, nicht die vorhandenen.') },
+    explain: b('Each shared pair adds one electron to oxygen\'s count, so two pairs take it from six to eight, an octet (the octet rule), which for small atoms like oxygen is usually the lowest-energy way to bond. Its other four outer electrons stay as two lone pairs. The number of bonds counts the electrons missing from eight, not the outer ones.', 'Jedes gemeinsame Paar zählt bei Sauerstoff ein Elektron dazu, also bringen zwei Paare ihn von sechs auf acht, ein Elektronenoktett (Oktettregel), für kleine Atome wie Sauerstoff meist die energieärmste Art zu binden. Seine anderen vier Außenelektronen bleiben zwei freie Elektronenpaare. Die Zahl der Bindungen zählt die Elektronen, die zur Acht fehlen, nicht die vorhandenen.') },
   { id: 'i5h', unit: 5, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u5.bond-count'], targets: ['bonds-equal-outer-electrons', 'group-number-literal'], table: 'outer',
     prompt: b('Sulfur sits below oxygen in group 16. Its compound with hydrogen is…', 'Schwefel steht in Gruppe 16 (VI. Hauptgruppe) unter Sauerstoff. Seine Verbindung mit Wasserstoff ist…'),
     options: [

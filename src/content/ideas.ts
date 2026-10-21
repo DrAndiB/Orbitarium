@@ -2,7 +2,7 @@
 import type { Idea } from './unit06';
 
 const NEG = /\b(not|no|never|nothing|neither|don't|doesn't|isn't|aren't|can't|cannot|won't|nicht|nichts|kein\w*|nie|weder)\b/;
-const FUNCTION_WORDS = /^(the|a|an|is|are|be|of|to|in|on|at|by|it|its|they|their|that|this|which|so|and|but|as|with|for|has|have|der|die|das|den|dem|des|ein|eine|einen|einer|eines|einem|ist|sind|und|aber|sich|zu|von|mit|im|in|am|es|sie|dass|weil|wird|werden|hat|haben|beim|bei|nach|vor|wie|nur|kein|keine|nicht|also|auf|für|aus|man|wenn|dann|deshalb|je|desto)$/;
+const FUNCTION_WORDS = /^(the|a|an|is|are|be|of|to|in|on|at|by|it|its|they|their|that|this|which|so|and|but|as|with|for|has|have|der|die|das|den|dem|des|ein|eine|einen|einer|eines|einem|ist|sind|und|aber|sich|zu|von|mit|im|in|am|es|sie|dass|weil|wird|werden|hat|haben|beim|bei|nach|vor|wie|nur|kein|keine|nicht|also|auf|für|aus|man|wenn|dann|deshalb|je|desto|zum|zur|um|er|ihm|ihn|ihr|ihre|ihren|sein|seine|seinen|seiner|dabei|damit|daher|so|oder|or|than|als|more|mehr|because|when|if|from|into|each|jedes|jede|jeder)$/;
 
 /** A run of terms with no sentence around them. Hints are pointless there; the learner is asked for sentences. */
 export function looksLikeKeywordList(text: string): boolean {

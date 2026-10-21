@@ -42,7 +42,7 @@ export function taskList(tasks: Task[], onReady: () => void): { el: HTMLElement;
     return true;
   };
   const intro = h('p', { class: 'muted small' }, keys.length
-    ? L({ en: 'The ones marked key unlock Continue; the others are there if you are curious. The list ticks itself as you go.', de: 'Die als wichtig markierten schalten „Weiter“ frei, die anderen sind für Neugierige. Die Liste hakt sich von selbst ab.' })
+    ? L({ en: 'Tasks marked key unlock Continue; the others are there if you are curious. Each task ticks itself once you have done it.', de: 'Die mit „wichtig“ markierten Aufgaben schalten „Weiter“ frei, die anderen sind für Neugierige. Erledigte Aufgaben werden automatisch abgehakt.' })
     : t('exploreIntro'));
   return { el: h('div', null, intro, list), mark, has: (id) => done.has(id) };
 }
@@ -96,7 +96,7 @@ export function explainStep(body: HTMLElement, enable: () => void, unit: number,
     if (prev) tight.append(h('div', null, h('h4', null, `${t('yourLast')} (${dateStr(prev.date)})`), h('blockquote', { class: 'quote', style: 'border-color:var(--fog)' }, prev.text)));
     const revise = h('button', { class: 'btn ghost block', type: 'button' }, t('tryAgain'));
     revise.addEventListener('click', () => { ta.focus(); ta.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
-    const show = h('button', { class: 'btn quiet block', type: 'button' }, L({ en: 'Show a tightened version', de: 'Eine geschärfte Fassung zeigen' }));
+    const show = h('button', { class: 'btn quiet block', type: 'button' }, L({ en: 'Show a tightened version', de: 'Musterformulierung zeigen' }));
     show.addEventListener('click', () => { tight.hidden = false; show.remove(); tight.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
     const save$ = h('button', { class: 'btn quiet block', type: 'button' }, t('saveTakeaway'));
     save$.addEventListener('click', () => {
@@ -106,7 +106,7 @@ export function explainStep(body: HTMLElement, enable: () => void, unit: number,
     result.replaceChildren(
       salad ? h('div', { class: 'feedback part' }, h('strong', { class: 'verdict' }, L({ en: 'This reads like a list of keywords.', de: 'Das liest sich wie eine Liste von Stichwörtern.' })),
         h('div', null, L({ en: 'Try it in full sentences: saying how the ideas connect is what makes them stick.', de: 'Versuch es in ganzen Sätzen: Erst wer sagt, wie die Ideen zusammenhängen, behält sie.' }))) : '',
-      h('p', { class: 'muted' }, L({ en: 'If an idea is missing or only half there, revise your text first. Then compare it with a tightened version; the text you save is the one you will see again.', de: 'Fehlt eine Idee oder steht sie nur halb da, überarbeite zuerst deinen Text. Vergleiche ihn dann mit einer geschärften Fassung; der Text, den du speicherst, ist der, den du wiedersiehst.' })),
+      h('p', { class: 'muted' }, L({ en: 'If an idea is missing or only half there, revise your text first. Then compare it with a tightened version; the text you save is the one you will see again.', de: 'Fehlt eine Idee oder steht sie nur halb da, überarbeite zuerst deinen Text. Vergleiche ihn dann mit einer Musterformulierung; den Text, den du speicherst, siehst du später wieder.' })),
       revise, show, tight, save$);
     // The self-check feeds memory only. "Can explain" is earned later, by explanation questions on another day.
     if (!recorded) {
@@ -121,7 +121,7 @@ export function explainStep(body: HTMLElement, enable: () => void, unit: number,
 
   next.addEventListener('click', () => {
     next.remove(); conf.el.remove();
-    const cmp = h('button', { class: 'btn block', type: 'button' }, L({ en: 'Compare with a tightened version', de: 'Mit einer geschärften Fassung vergleichen' }));
+    const cmp = h('button', { class: 'btn block', type: 'button' }, L({ en: 'Compare with a tightened version', de: 'Mit einer Musterformulierung vergleichen' }));
     cmp.addEventListener('click', () => { compare(); cmp.textContent = L({ en: 'Compare again', de: 'Erneut vergleichen' }); });
     checkBox.replaceChildren(
       h('h4', null, L({ en: 'Tick each idea your text really states', de: 'Hake jede Idee ab, die dein Text wirklich enthält' })),

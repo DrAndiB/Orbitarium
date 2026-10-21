@@ -223,7 +223,7 @@ export function createTable(opts: TableOptions = {}): TableHandle {
           ? row({ en: 'Atomic mass', de: 'Atommasse' }, `[${Math.round(e.m)}]`, L({ en: 'mass number of the longest-lived isotope (no stable isotopes)', de: 'Massenzahl des langlebigsten Isotops (keine stabilen Isotope)' }))
           : row({ en: 'Atomic mass', de: 'Atommasse' }, `${numTrim(e.m, e.m >= 100 ? 1 : 3)} u`, L({ en: 'isotope average', de: 'Isotopen-Mittelwert' })),
         row({ en: 'Electronegativity', de: 'Elektronegativität' }, e.chi === null ? '–' : num(e.chi, 2)),
-        row({ en: 'Atom size', de: 'Atomgröße' }, e.r === null ? '–' : `${e.r} pm`, CALCULATED_RADIUS.has(e.z) ? L({ en: 'calculated radius', de: 'berechneter Radius' }) : L({ en: 'radius measured in compounds', de: 'in Verbindungen gemessener Radius' })),
+        row({ en: 'Atomic radius', de: 'Atomradius' }, e.r === null ? '–' : `${e.r} pm`, CALCULATED_RADIUS.has(e.z) ? L({ en: 'calculated radius', de: 'berechneter Radius' }) : L({ en: 'radius measured in compounds', de: 'in Verbindungen gemessener Radius' })),
         row({ en: '1st ionization energy', de: '1. Ionisierungsenergie' }, e.ie === null ? '–' : `${num(e.ie, 0)} kJ/mol`),
         row({ en: 'At room temperature', de: 'Bei Raumtemperatur' }, phase, e.mp !== null ? `${L({ en: 'melts', de: 'schmilzt' })} ${num(e.mp, 0)} °C${e.bp !== null ? ` · ${L({ en: 'boils', de: 'siedet' })} ${num(e.bp, 0)} °C` : ''}` : undefined),
         row({ en: 'Electron configuration', de: 'Elektronenkonfiguration' }, prettyConfig(e.cfg)),

@@ -7,6 +7,7 @@ import type { Item } from '../../src/content/items';
 import type { UnitContent, Show, DataTable } from '../../src/content/unitTypes';
 import type { Extra, Reading } from '../../src/content/unit06';
 import type { Bi } from '../../src/i18n';
+import { byZ } from '../../src/content/elements';
 
 const lang = (process.argv[2] ?? 'en') as 'en' | 'de';
 const out = process.argv[3] ?? '.';
@@ -40,7 +41,10 @@ const left = (step: number) => T(` (header: "about ${MIN.slice(step).reduce((a, 
 const misName = (id: string) => { const m = MISCONCEPTIONS.find((x) => x.id === id); return m ? L(m.name) : id; };
 
 function question(it: Item, label: string) {
-  q.push(`\n**[${it.id}] ${label}** ${plain(it.prompt)}`);
+  // The app shows no label of its own when the prompt already starts with it ("Kurzer Check: …").
+  const head = label.replace(/\s*\((optional|freiwillig)\)/, '').replace(/[.:]$/, '');
+  if (head && plain(it.prompt).startsWith(head)) label = '';
+  q.push(`\n**[${it.id}]${label ? ' ' + label : ''}** ${plain(it.prompt)}`);
   if (it.format === 'why') q.push(T('  (Format: pick the best explanation.)', '  (Format: die beste Erklärung wählen.)'));
   if (it.table) q.push(T(`  (A "Look it up in the table" button opens the periodic table with the "${it.table}" view.)`, `  (Ein Knopf „Im Periodensystem nachsehen“ öffnet das Periodensystem mit der passenden Ansicht.)`));
   if (it.kind === 'choice') {
@@ -77,8 +81,9 @@ const table = (d: DataTable) => {
   d.rows.forEach((r) => P(row(r.cells) + (r.mystery ? T(' ← highlighted', ' ← hervorgehoben') : '')));
 };
 const showText = (s: Show) => {
-  if (s.engine === 'atom') return T(`the Orbital Viewer shows ${s.charge ? 'an ion of ' : ''}element ${s.z}${s.charge ? ` with charge ${s.charge > 0 ? '+' : ''}${s.charge}` : ''}${s.view ? `, ${s.view} picture` : ''}${s.highlight ? `, ${s.highlight} highlighted` : ''}${s.pull ? `, ${s.pull} electrons pulled off with their energies as bars` : ''}${s.jump ? `, the ${s.jump[0]}→${s.jump[1]} jump played` : ''}${s.size ? ', drawn at measured size with its radius in pm' : ''}`,
-    `der Orbital-Betrachter zeigt ${s.charge ? 'ein Ion von ' : ''}Element ${s.z}${s.charge ? ` mit Ladung ${s.charge > 0 ? '+' : ''}${s.charge}` : ''}${s.view ? `, Darstellung ${s.view === 'clouds' ? 'Orbitalwolken' : 'Schalen'}` : ''}${s.highlight ? `, ${s.highlight} hervorgehoben` : ''}${s.pull ? `, ${s.pull} Elektronen abgezogen, ihre Energien als Balken` : ''}${s.jump ? `, der Sprung ${s.jump[0]}→${s.jump[1]}` : ''}${s.size ? ', in gemessener Größe mit Radius in pm' : ''}`);
+  const who = (s.engine === 'atom') ? (() => { const e = byZ(s.z!); const nm = lang === "de" ? e.de : e.en; if (!s.charge) return T(`the ${nm} atom`, `ein ${nm}-Atom`); const ion = formula(`${e.s}${Math.abs(s.charge) > 1 ? Math.abs(s.charge) : ''}${s.charge > 0 ? '+' : '-'}`); return T(`the ion ${ion}`, `das Ion ${ion}`); })() : '';
+  if (s.engine === 'atom') return T(`the Orbital Viewer shows ${who}${s.view ? `, ${s.view} picture` : ''}${s.highlight ? `, ${s.highlight} highlighted` : ''}${s.pull ? `, ${s.pull} electrons pulled off with their energies as bars` : ''}${s.jump ? `, the ${s.jump[0]}→${s.jump[1]} jump played` : ''}${s.size ? ', drawn at measured size with its radius in pm' : ''}`,
+    `der Orbital-Betrachter zeigt ${who}${s.view ? `, Darstellung ${s.view === 'clouds' ? 'Orbitalwolken' : 'Schalen'}` : ''}${s.highlight ? `, ${s.highlight} hervorgehoben` : ''}${s.pull ? `, ${s.pull} Elektronen abgezogen, ihre Energien als Balken` : ''}${s.jump ? `, der Sprung ${s.jump[0]}→${s.jump[1]}` : ''}${s.size ? ', in gemessener Größe mit Radius in pm' : ''}`);
   if (s.engine === 'lattice') return T(`the Lattice Builder loads ${formula(s.salt)}${s.compare ? ` and compares it with ${formula(s.compare)} in the gauge` : ''}${s.mode ? ` (${({ transfer: 'makes the ions', shift: 'shifts a layer', heat: 'heats it', neighbours: 'shows the centre ion and its neighbours' } as Record<string, string>)[s.mode]})` : ''}${s.temp !== undefined ? ` at ${s.temp} °C` : ''}`, `der Gitterbaukasten lädt ${formula(s.salt)}${s.compare ? ` und vergleicht mit ${formula(s.compare)}` : ''}${s.mode ? ` (${({ transfer: 'Ionen bilden', shift: 'Schicht verschieben', heat: 'erhitzen', neighbours: 'Nachbarn zeigen' } as Record<string, string>)[s.mode]})` : ''}${s.temp !== undefined ? ` bei ${s.temp} °C` : ''}`);
   return T(`the Charge Field shows the ${s.a}${s.order === 2 ? '=' : s.order === 3 ? '≡' : '–'}${s.b} bond`, `das Ladungsfeld zeigt die Bindung ${s.a}${s.order === 2 ? '=' : s.order === 3 ? '≡' : '–'}${s.b}`);
 };

@@ -52,7 +52,7 @@ export class AtomUI {
     if (c.view) {
       const row = h('div', { class: 'chip-row', role: 'group', 'aria-label': L({ en: 'Picture', de: 'Darstellung' }) });
       const mk = (v: AtomView, label: { en: string; de: string }) => h('button', { class: 'chip', type: 'button', 'data-view': v, 'aria-pressed': String(this.stage.view === v), onclick: () => { this.stage.setView(v); row.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.view === v))); this.emit('view', v); } }, L(label));
-      row.append(mk('shells', { en: 'Shells (Bohr picture)', de: 'Schalen (Bohr-Bild)' }), mk('clouds', { en: 'Orbital clouds', de: 'Orbitalwolken' }));
+      row.append(mk('shells', { en: 'Shells (Bohr picture)', de: 'Schalenmodell' }), mk('clouds', { en: 'Orbital clouds', de: 'Orbitalwolken' }));
       this.viewNote = h('p', { class: 'muted small', style: 'margin:0' });
       this.el.append(row, this.viewNote);
     }
@@ -73,7 +73,7 @@ export class AtomUI {
           if (on) this.setElement(z); else this.setIon(z, q);
         } }, ionText(z, q)));
       }
-      this.el.append(h('div', { class: 'wb-build-label' }, L({ en: 'Make an ion (tap again for the atom)', de: 'Ein Ion bilden (nochmal tippen für das Atom)' })), this.ionRow);
+      this.el.append(h('div', { class: 'wb-build-label' }, L({ en: 'Make an ion (tap again to go back to the atom)', de: 'Ion bilden (noch einmal tippen: zurück zum Atom)' })), this.ionRow);
     }
     if (c.boxes) { this.boxPanel = h('div', { class: 'panel orbital-boxes', 'aria-live': 'polite' }); this.el.append(this.boxPanel); }
     if (c.shielding) this.el.append(this.shieldingPanel());
@@ -228,7 +228,7 @@ export class AtomUI {
     this.iePanel.replaceChildren(
       h('div', { class: 'ob-head' }, h('strong', null, L({ en: 'Pulling electrons off', de: 'Elektronen abziehen' })), h('span', { class: 'muted small' }, L({ en: 'kJ/mol for each electron, one after another', de: 'kJ/mol für jedes Elektron, eines nach dem anderen' }))),
       svg,
-      h('p', { class: 'muted small', style: 'margin:4px 0 8px' }, this.pulled.length ? L({ en: `${this.pulled.length} pulled off, ${num(total, 0)} kJ/mol in all.`, de: `${this.pulled.length} abgezogen, insgesamt ${num(total, 0)} kJ/mol.` }) : L({ en: 'Nothing pulled off yet.', de: 'Noch nichts abgezogen.' })),
+      h('p', { class: 'muted small', style: 'margin:4px 0 8px' }, this.pulled.length ? L({ en: `${this.pulled.length} ${this.pulled.length === 1 ? 'electron' : 'electrons'} pulled off, ${num(total, 0)} kJ/mol in all.`, de: `${this.pulled.length} ${this.pulled.length === 1 ? 'Elektron' : 'Elektronen'} abgezogen, insgesamt ${num(total, 0)} kJ/mol.` }) : L({ en: 'Nothing pulled off yet.', de: 'Noch nichts abgezogen.' })),
       noCliff && this.pulled.length >= 2 ? h('p', { class: 'muted small', style: 'margin:0 0 8px' }, noCliff) : '',
       h('div', { class: 'atom-buttons' }, pull, reset));
   }

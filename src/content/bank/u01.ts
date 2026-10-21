@@ -17,14 +17,14 @@ export const BANK_U1: Item[] = [
     ],
     explain: b('2 → 1: from −3.4 to −13.6 eV is a drop of 10.2 eV, far more than 4 → 2 (2.55 eV). The levels crowd together at the top, so the big drops all end on level 1. Its light is ultraviolet, 122 nm, invisible to the eye.', '2 → 1: von −3,4 auf −13,6 eV ist ein Sprung von 10,2 eV, weit mehr als 4 → 2 (2,55 eV). Oben rücken die Niveaus eng zusammen, also enden die großen Sprünge alle auf Niveau 1. Sein Licht ist ultraviolett, 122 nm, unsichtbar fürs Auge.') },
   { id: 'i1e', unit: 1, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u1.levels-light'], targets: ['any-energy'],
-    prompt: b('Why does glowing hydrogen give off only a few exact colours instead of a rainbow?', 'Warum gibt leuchtender Wasserstoff nur wenige genaue Farben ab statt eines Regenbogens?'),
+    prompt: b('Why does glowing hydrogen give off only a few exact colours instead of a rainbow?', 'Warum sendet leuchtender Wasserstoff nur wenige bestimmte Farben aus statt eines Regenbogens?'),
     options: [
       { text: b('Its electron can only sit on certain energy levels, so only certain drops are possible', 'Sein Elektron kann nur auf bestimmten Energieniveaus sitzen, also sind nur bestimmte Sprünge möglich'), correct: true },
       { text: b('Its electron loses energy little by little as it spirals towards the nucleus', 'Sein Elektron verliert nach und nach Energie, während es zum Kern hin kreist'), mis: 'any-energy' },
       { text: b('The hydrogen gas swallows every other colour of the rainbow', 'Das Wasserstoffgas schluckt alle anderen Farben des Regenbogens') },
       { text: b('Hydrogen atoms come in a few different sizes, one per colour', 'Wasserstoffatome gibt es in wenigen Größen, eine pro Farbe') },
     ],
-    explain: b('Fixed levels mean fixed drops, and each drop gives light of one wavelength. An electron that could lose energy gradually would give off every colour, a continuous rainbow.', 'Feste Niveaus heißen feste Sprünge, und jeder Sprung gibt Licht einer Wellenlänge. Ein Elektron, das nach und nach Energie verlieren könnte, gäbe alle Farben ab, einen durchgehenden Regenbogen.') },
+    explain: b('Fixed levels mean fixed drops, and each drop gives light of one wavelength. An electron that could lose energy gradually would give off every colour, a continuous rainbow.', 'Feste Niveaus bedeuten feste Sprünge, und zu jedem Sprung gehört Licht einer bestimmten Wellenlänge. Ein Elektron, das nach und nach Energie verlieren könnte, gäbe alle Farben ab, einen durchgehenden Regenbogen.') },
   { id: 'i1f', unit: 1, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u1.levels-light'], targets: ['bigger-jump-redder'],
     prompt: b('A lithium flame glows crimson (671 nm), a sodium flame yellow (589 nm). In which atom does the electron make the bigger drop?', 'Eine Lithiumflamme leuchtet karminrot (671 nm), eine Natriumflamme gelb (589 nm). In welchem Atom macht das Elektron den größeren Sprung?'),
     options: [
@@ -33,7 +33,7 @@ export const BANK_U1: Item[] = [
       { text: b('Neither: both have one outer electron', 'Keines: Beide haben ein Außenelektron') },
       { text: b('Drops in different elements cannot be compared', 'Sprünge in verschiedenen Elementen kann man nicht vergleichen') },
     ],
-    explain: b('Sodium. 589 nm is shorter than 671 nm, so each photon of sodium light carries more energy: about 2.1 eV against 1.8 eV. Same group, same one outer electron, but each element has its own ladder.', 'Natrium. 589 nm ist kürzer als 671 nm, also trägt jedes Photon des Natriumlichts mehr Energie: etwa 2,1 eV gegen 1,8 eV. Gleiche Gruppe, gleich ein Außenelektron, aber jedes Element hat seine eigene Leiter.') },
+    explain: b('Sodium. 589 nm is shorter than 671 nm, so each photon of sodium light carries more energy: about 2.1 eV against 1.8 eV. Same group, same one outer electron, but each element has its own ladder.', 'Natrium. 589 nm ist kürzer als 671 nm, also trägt jedes Photon des Natriumlichts mehr Energie: etwa 2,1 eV gegenüber 1,8 eV. Gleiche Gruppe, jeweils ein Außenelektron, aber jedes Element hat seine eigene Leiter.') },
   { id: 'i1g', unit: 1, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u1.levels-light'], mis: 'bigger-jump-redder', targets: ['bigger-jump-redder'],
     prompt: b('Rank hydrogen\'s lines by the size of the drop that makes them, biggest first.', 'Ordne die Linien von Wasserstoff nach der Größe des Sprungs, der sie erzeugt, den größten zuerst.'),
     order: [b('122 nm, ultraviolet', '122 nm, ultraviolett'), b('410 nm, violet', '410 nm, violett'), b('486 nm, blue-green', '486 nm, blaugrün'), b('656 nm, red', '656 nm, rot')],
@@ -46,7 +46,7 @@ export const BANK_U1: Item[] = [
       { text: b('a few bright lines at fixed places', 'einige helle Linien an festen Stellen'), correct: true },
       { text: b('nothing: only burning sodium gives off light', 'nichts: Nur brennendes Natrium leuchtet') },
     ],
-    explain: b('A few lines, led by the bright yellow pair at 589.0 and 589.6 nm. Sodium has its own ladder of levels, so it gives off its own set of colours, as hydrogen does.', 'Einige Linien, vorneweg das helle gelbe Paar bei 589,0 und 589,6 nm. Natrium hat seine eigene Leiter von Niveaus, also gibt es seinen eigenen Satz Farben ab, so wie Wasserstoff.') },
+    explain: b('A few lines, led by the bright yellow pair at 589.0 and 589.6 nm. Sodium has its own ladder of levels, so it gives off its own set of colours, as hydrogen does.', 'Einige Linien, vorneweg das helle gelbe Paar bei 589,0 und 589,6 nm. Natrium hat seine eigene Leiter von Niveaus, also sendet es seine eigenen Linien aus, so wie Wasserstoff.') },
 
   // ---------- u1.shells ----------
   { id: 'i1c', unit: 1, kind: 'estimate', format: 'estimate', concepts: ['u1.shells'], targets: ['every-shell-eight'],
@@ -62,7 +62,7 @@ export const BANK_U1: Item[] = [
       { text: b('Shell 3 is closer to the nucleus, which pulls more in', 'Schale 3 liegt näher am Kern, der mehr anzieht') },
       { text: b('Shell 3 is bigger, so the electrons can squeeze in', 'Schale 3 ist größer, also passen mehr Elektronen hinein') },
     ],
-    explain: b('Shell 2 has s and p (2 + 6 = 8). Shell 3 adds d (2 + 6 + 10 = 18). That is 2n²: each new shell brings one more kind of subshell.', 'Schale 2 hat s und p (2 + 6 = 8). Schale 3 bekommt dazu d (2 + 6 + 10 = 18). Das ist 2n²: Jede neue Schale bringt eine Sorte Unterschale mehr.') },
+    explain: b('Shell 2 has s and p (2 + 6 = 8). Shell 3 adds d (2 + 6 + 10 = 18). That is 2n²: each new shell brings one more kind of subshell.', 'Schale 2 hat s und p (2 + 6 = 8). Schale 3 bekommt dazu d (2 + 6 + 10 = 18). Das ist 2n²: Jede neue Schale bringt eine weitere Art von Unterschale mit.') },
   { id: 'i1i', unit: 1, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u1.shells'], targets: ['every-shell-eight'],
     prompt: b('Shells hold up to 2n² electrons. How many fit into shell 4?', 'Schalen fassen bis zu 2n² Elektronen. Wie viele passen in Schale 4?'),
     options: [
@@ -91,7 +91,7 @@ export const BANK_U1: Item[] = [
       { text: b('Only 2s', 'Nur 2s') },
       { text: b('2p and 2d', '2p und 2d'), mis: 'd-in-shell-2' },
     ],
-    explain: b('Shell n has n kinds of subshell, so shell 2 has s and p. d orbitals first appear in shell 3.', 'Schale n hat n Sorten Unterschalen, Schale 2 also s und p. d-Orbitale gibt es erst ab Schale 3.') },
+    explain: b('Shell n has n kinds of subshell, so shell 2 has s and p. d orbitals first appear in shell 3.', 'Schale n hat n Unterschalen, Schale 2 also s und p. d-Orbitale gibt es erst ab Schale 3.') },
   { id: 'i1k', unit: 1, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u1.subshells'], targets: ['d-in-shell-2'], table: 'block',
     prompt: b('Why is the d-block of the periodic table ten columns wide?', 'Warum ist der d-Block des Periodensystems zehn Spalten breit?'),
     options: [
@@ -140,7 +140,7 @@ export const BANK_U1: Item[] = [
     ],
     explain: b('The cloud is not a blurred photo of a path. An electron in an atom does not follow a path at all; the cloud shows where it is likely to be found. One orbital holds at most two electrons, not a crowd.', 'Die Wolke ist kein verwischtes Foto einer Bahn. Ein Elektron im Atom folgt überhaupt keiner Bahn; die Wolke zeigt, wo es wahrscheinlich anzutreffen ist. Ein Orbital fasst höchstens zwei Elektronen, keine Menge.') },
   { id: 'i1o', unit: 1, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u1.orbit-vs-orbital'], targets: ['bohr-orbits'],
-    prompt: b('A 1s orbital is often drawn as a sphere that holds the electron 90 % of the time. Where is the electron the other 10 %?', 'Ein 1s-Orbital wird oft als Kugel gezeichnet, in der das Elektron 90 % der Zeit ist. Wo ist es in den übrigen 10 %?'),
+    prompt: b('A 1s orbital is often drawn as a sphere that holds the electron 90 % of the time. Where is the electron the other 10 %?', 'Ein 1s-Orbital wird oft als Kugel gezeichnet, in der sich das Elektron mit 90 % Wahrscheinlichkeit aufhält. Wo ist es in den übrigen 10 %?'),
     options: [
       { text: b('Outside the sphere: the cloud has no sharp edge', 'Außerhalb der Kugel: Die Wolke hat keinen scharfen Rand'), correct: true },
       { text: b('Nowhere: it always runs along the sphere\'s surface', 'Nirgends: Es läuft immer auf der Kugeloberfläche'), mis: 'bohr-orbits' },
@@ -167,7 +167,7 @@ export const BANK_U1: Item[] = [
       { text: b('It doesn\'t: shell 3 has to fill first, so it goes into 3d', 'Tut es nicht: Schale 3 muss zuerst voll werden, also kommt es in 3d'), mis: 'fill-by-shell' },
       { text: b('3d orbitals do not exist until zinc', '3d-Orbitale gibt es erst ab Zink') },
     ],
-    explain: b('Electrons take the lowest free energy, and for potassium and calcium that is 4s. Shell 3 is not full at eight; its 3d places fill later, from scandium to zinc.', 'Elektronen nehmen die niedrigste freie Energie, und bei Kalium und Calcium ist das 4s. Schale 3 ist mit acht nicht voll; ihre 3d-Plätze füllen sich später, von Scandium bis Zink.') },
+    explain: b('Electrons take the lowest-energy free orbital, and for potassium and calcium that is 4s. Shell 3 is not full at eight; its 3d places fill later, from scandium to zinc.', 'Elektronen besetzen das energieärmste freie Orbital, und bei Kalium und Calcium ist das 4s. Schale 3 ist mit acht nicht voll; ihre 3d-Plätze füllen sich später, von Scandium bis Zink.') },
   { id: 'i1r', unit: 1, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u1.filling-order'], table: 'block',
     prompt: b('Calcium (Z = 20) is [Ar] 4s². Scandium has one electron more. Which subshell gets it?', 'Calcium (Z = 20) ist [Ar] 4s². Scandium hat ein Elektron mehr. Welche Unterschale bekommt es?'),
     options: [
@@ -176,7 +176,7 @@ export const BANK_U1: Item[] = [
       { text: b('3d', '3d'), correct: true },
       { text: b('5s', '5s') },
     ],
-    explain: b('3d. 4s is full with two, and the next place by energy is 3d, not 4p. Scandium starts the d-block; ten elements later, at zinc, 3d is full and gallium moves on to 4p.', '3d. 4s ist mit zwei voll, und der nächste Platz nach Energie ist 3d, nicht 4p. Scandium beginnt den d-Block; zehn Elemente später, bei Zink, ist 3d voll, und Gallium geht weiter zu 4p.') },
+    explain: b('3d. 4s is full with two, and the next place by energy is 3d, not 4p. Scandium starts the d-block; ten elements later, at zinc, 3d is full and gallium moves on to 4p.', '3d. 4s ist mit zwei voll, und der energetisch nächste freie Platz ist 3d, nicht 4p. Scandium beginnt den d-Block; zehn Elemente später, bei Zink, ist 3d voll, und Gallium geht weiter zu 4p.') },
 
   // ---------- u1.config ----------
   { id: 'i1s', unit: 1, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u1.config'],

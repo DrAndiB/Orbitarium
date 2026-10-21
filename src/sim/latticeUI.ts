@@ -124,7 +124,7 @@ export class LatticeUI {
       this.tempIn.value = String(st.temp);
       const pct = Math.min(100, (s.mp / 3000) * 100);
       this.mpMark!.style.left = `calc(${pct}% )`;
-      this.mpMark!.textContent = L({ en: `melts ${num(s.mp, 0)} °C`, de: `schmilzt ${num(s.mp, 0)} °C` });
+      this.mpMark!.textContent = L({ en: `melts at ${num(s.mp, 0)} °C`, de: `Schmelzpunkt ${num(s.mp, 0)} °C` });
     }
     this.drawGauge();
   }

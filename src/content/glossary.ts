@@ -48,8 +48,8 @@ export const GLOSSARY: Record<string, Term> = {
     def: { en: 'Element 19, symbol K — from the Latin "kalium".', de: 'Element 19, Symbol K – vom lateinischen „kalium“.' },
     falseFriend: { en: 'The symbol K only makes sense from the German name Kalium; sodium/Natrium (Na) works the same way.', de: 'Das Symbol K erklärt sich aus „Kalium“; Natrium/sodium (Na) funktioniert genauso.' },
   },
-  electronegativity: { en: 'electronegativity', de: 'Elektronegativität', unit: 5, def: { en: 'How strongly an atom pulls shared electrons towards itself (χ).', de: 'Wie stark ein Atom gemeinsame Elektronen zu sich zieht (χ).' } },
-  'polar-bond': { en: 'polar bond', de: 'polare Bindung', unit: 5, def: { en: 'A covalent bond where electrons sit closer to one atom: Δχ roughly 0.4 to 1.8.', de: 'Eine Atombindung, bei der die Elektronen näher an einem Atom liegen: Δχ etwa 0,4 bis 1,8.' } },
+  electronegativity: { en: 'electronegativity', de: 'Elektronegativität', unit: 5, def: { en: 'How strongly an atom pulls shared electrons towards itself (symbol χ or EN).', de: 'Wie stark ein Atom gemeinsame Elektronen anzieht (EN, international χ).' } },
+  'polar-bond': { en: 'polar bond', de: 'polare Bindung', unit: 5, def: { en: 'A covalent bond where electrons sit closer to one atom: Δχ roughly 0.4 to 1.8 (some books use 0.5 to 1.7).', de: 'Eine Atombindung, bei der das gemeinsame Elektronenpaar näher an einem Atom liegt: ΔEN etwa 0,4 bis 1,8 (viele Schulbücher: 0,5 bis 1,7).' } },
   'lone-pair': {
     en: 'lone pair', de: 'freies Elektronenpaar', unit: 6,
     def: { en: 'Two outer electrons that belong to one atom and take part in no bond.', de: 'Zwei Außenelektronen, die zu einem Atom gehören und an keiner Bindung beteiligt sind.' },
@@ -71,7 +71,7 @@ export const GLOSSARY: Record<string, Term> = {
     falseFriend: { en: 'Also called "angular" or "V-shaped" in English; German sometimes says "V-förmig".', de: 'Im Englischen auch „angular“ oder „V-shaped“; im Deutschen manchmal „V-förmig“.' },
   },
   linear: { en: 'linear', de: 'linear', unit: 6, def: { en: 'Atoms on a straight line, 180° apart: {{CO2}}.', de: 'Atome auf einer Geraden, 180° auseinander: {{CO2}}.' } },
-  dipole: { en: 'dipole moment', de: 'Dipolmoment', unit: 6, def: { en: 'The net pull of all bond polarities, added as vectors. Zero means the molecule is nonpolar.', de: 'Der Nettozug aller Bindungspolaritäten, als Vektoren addiert. Null bedeutet: das Molekül ist unpolar.' } },
+  dipole: { en: 'dipole moment', de: 'Dipolmoment', unit: 6, def: { en: 'The sum of all bond dipoles, added as vectors. Zero means the molecule is nonpolar.', de: 'Die Summe aller Bindungsdipole, als Vektoren addiert. Null bedeutet: Das Molekül ist unpolar.' } },
   octet: { en: 'octet rule', de: 'Oktettregel', unit: 4, def: { en: 'Main-group atoms tend to end up with eight outer electrons.', de: 'Hauptgruppenatome enden oft mit acht Außenelektronen.' } },
   dispersion: {
     en: 'dispersion force', de: 'Dispersionskraft', unit: 8,
