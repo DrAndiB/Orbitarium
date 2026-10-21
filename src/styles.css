@@ -206,8 +206,9 @@ input[type='range'] { width: 100%; accent-color: var(--energy); height: 30px; }
 /* data card (puzzle) */
 .data-card { background: var(--dome-2); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px; }
 .data-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.data-table th { text-align: left; font-weight: 400; color: var(--fog); font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--line); }
-.data-table td { padding: 10px 0; border-bottom: 1px solid var(--dome-3); font-size: 18px; }
+.data-table th { text-align: left; font-weight: 400; color: var(--fog); font-size: 14px; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: bottom; }
+.data-table th:last-child, .data-table td:last-child { padding-right: 0; }
+.data-table td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--dome-3); font-size: 18px; }
 .data-table td.num { font-family: var(--serif); text-align: right; }
 .data-table tr.mystery td { color: var(--energy); }
 
