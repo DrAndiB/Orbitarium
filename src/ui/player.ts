@@ -1,10 +1,10 @@
 // The unit player: one unit, seven steps, the same 20-minute loop every time.
 // Unit content and step logic live in src/units/; this file is the shell around them.
-import { h, s, clear, rich } from './dom';
+import { h, s, clear, rich, toast } from './dom';
 import { L, t, num, type Bi } from '../i18n';
-import { unitByN, allConcepts, UNITS } from '../content/curriculum';
+import { unitByN, allConcepts } from '../content/curriculum';
 import { getState, save, today } from '../model/store';
-import { markSeen, logSession, recall, pickRekindle, daysSinceLastSession } from '../model/learner';
+import { markSeen, logSession, recall, pickRekindle, daysSinceLastSession, finishUnit, finishSecondPass } from '../model/learner';
 import { itemRun } from './questions';
 import { WorkbenchUI } from '../sim/workbenchUI';
 import { createTable, openTable, tableIcon } from './ptable';
@@ -17,6 +17,8 @@ import type { StepCtx, UnitPlayer } from '../units/types';
 
 const PLAYERS: Record<number, UnitPlayer> = { 0: unit0, 6: unit6 };
 const STEPS = ['stepWarmup', 'stepPuzzle', 'stepExplore', 'stepPredict', 'stepExamples', 'stepExplain', 'stepWrap'];
+/** Typical minutes per step, for the "minutes left" line. Exploring varies most. */
+const MINUTES = [3, 3, 7, 4, 5, 4, 1];
 
 const closeIcon = () => {
   const svg = s('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round' });
@@ -37,7 +39,8 @@ function header(unit: number, step: number, title: Bi): HTMLElement {
         h('button', { class: 'icon-btn', type: 'button', 'aria-label': L({ en: 'Open the periodic table', de: 'Periodensystem öffnen' }), onclick: () => openTable() }, tableIcon()),
         h('button', { class: 'icon-btn', type: 'button', 'aria-label': L({ en: 'Leave the unit (progress is kept)', de: 'Einheit verlassen (Fortschritt bleibt)' }), onclick: () => go('#/') }, closeIcon()))),
     dots,
-    h('p', { class: 'step-name' }, h('strong', null, t(STEPS[step])), ` · ${L({ en: 'step', de: 'Schritt' })} ${step + 1} ${L({ en: 'of', de: 'von' })} 7`));
+    h('p', { class: 'step-name' }, h('strong', null, t(STEPS[step])), ` · ${L({ en: 'step', de: 'Schritt' })} ${step + 1} ${L({ en: 'of', de: 'von' })} 7`,
+      h('span', { class: 'time-left' }, ` · ${L({ en: `about ${MINUTES.slice(step).reduce((a, b) => a + b, 0)} min left, saved after every step`, de: `noch etwa ${MINUTES.slice(step).reduce((a, b) => a + b, 0)} Min., gespeichert nach jedem Schritt` })}`)));
 }
 
 export function renderPlayer(root: HTMLElement, unit: number) {
@@ -83,37 +86,34 @@ function showStep(root: HTMLElement, player: UnitPlayer, step: number) {
 
 function finish(unit: number) {
   const st = getState();
-  const prev = st.units[unit];
-  st.units[unit] = { status: 'done', completedAt: prev?.status === 'done' && prev.completedAt ? prev.completedAt : today(), step: 0 };
-  // Point to the next unit unless one is already marked as next.
-  if (!Object.values(st.units).some((p) => p.status === 'next')) {
-    const nextUnit = UNITS.find((u) => u.n > unit && st.units[u.n]?.status !== 'done');
-    if (nextUnit && (!st.units[nextUnit.n] || st.units[nextUnit.n].status === 'not-started')) st.units[nextUnit.n] = { status: 'next' };
-  }
-  save();
-  logSession('unit', unit);
+  const { secondPass } = finishUnit(unit);
+  if (secondPass) toast(L({ en: 'Not everything landed this time. A short second pass is waiting for your next session.', de: 'Diesmal ist nicht alles angekommen. Eine kurze zweite Runde wartet auf deine nächste Sitzung.' }));
   scheduleNudges(st.settings, today(), st.settings.lang);
   cleanup();
   go('#/?lit=' + unit);
 }
 
-// ---------- rekindle: a three-question session on fading concepts ----------
+// ---------- rekindle: a short session on fading concepts, or a second pass on one unit ----------
 export function renderRekindle(root: HTMLElement, params: URLSearchParams) {
-  const unit = Number(params.get('unit') || 0) || undefined;
-  const items = pickRekindle(3, unit);
+  const unitParam = params.get('unit');
+  const unit = unitParam !== null && unitParam !== '' ? Number(unitParam) : undefined;
+  const second = params.get('second') === '1' && unit !== undefined;
+  const items = pickRekindle(undefined, unit);
   const before = new Map(items.flatMap((i) => i.concepts).map((c) => [c, recall(c)]));
-  root.append(h('div', { class: 'topbar' }, h('div', { class: 'title' }, L({ en: 'Rekindle', de: 'Auffrischen' })),
+  root.append(h('div', { class: 'topbar' }, h('div', { class: 'title' }, second ? L({ en: `Second pass: unit ${unit}`, de: `Zweite Runde: Einheit ${unit}` }) : L({ en: 'Rekindle', de: 'Auffrischen' })),
     h('button', { class: 'icon-btn', type: 'button', 'aria-label': t('close'), onclick: () => go('#/') }, closeIcon())));
-  root.append(h('p', { class: 'muted' }, L({ en: 'Three questions on the concepts that are fading fastest. Each answer resets the memory clock.', de: 'Drei Fragen zu den Konzepten, die am schnellsten verblassen. Jede Antwort stellt die Erinnerungsuhr neu.' })));
-  if (!items.length) { root.append(h('p', null, t('dueNone'))); return; }
+  root.append(h('p', { class: 'muted' }, second
+    ? L({ en: `${items.length} questions on unit ${unit}, the parts that did not land last time. New variants, not the same questions again.`, de: `${items.length} Fragen zu Einheit ${unit}, zu dem, was letztes Mal nicht angekommen ist. Neue Varianten, nicht dieselben Fragen noch einmal.` })
+    : L({ en: `${items.length} questions on the concepts that are fading fastest. Each answer resets the memory clock.`, de: `${items.length} Fragen zu den Konzepten, die am schnellsten verblassen. Jede Antwort stellt die Erinnerungsuhr neu.` })));
+  if (!items.length) { root.append(h('p', null, t('dueNone'))); if (second) finishSecondPass(unit!); return; }
   root.append(itemRun(items, () => {
     const gapBefore = daysSinceLastSession();
-    logSession('rekindle');
+    if (second) finishSecondPass(unit!); else logSession('rekindle');
     scheduleNudges(getState().settings, today(), getState().settings.lang);
     const names = new Map(allConcepts().map((c) => [c.id, c.name]));
     const rows = [...before.entries()].map(([c, r0]) => h('li', null, h('span', null, rich(names.get(c) ?? c)), h('span', { class: 'up' }, `${Math.round(r0 * 100)} % → ${Math.round(recall(c) * 100)} %`)));
     root.append(h('div', { class: 'panel' }, h('h3', null, t('summary')), h('ul', { class: 'summary-list' }, rows),
       gapBefore !== null && gapBefore > 0 ? h('p', { class: 'muted small', style: 'margin-top:10px' }, L({ en: `Memory today, before and after. ${num(gapBefore, 0)} days since your previous session.`, de: `Erinnerung heute, vorher und nachher. ${num(gapBefore, 0)} Tage seit deiner letzten Sitzung.` })) : null),
       h('button', { class: 'btn block', type: 'button', style: 'margin-top:14px', onclick: () => go('#/') }, L({ en: 'Back to the sky', de: 'Zurück zum Himmel' })));
-  }, { showUnit: true }));
+  }, { showUnit: true, review: true }));
 }

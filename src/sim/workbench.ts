@@ -53,14 +53,30 @@ export const PRESETS: Record<string, MoleculeSpec> = {
   CH2Cl2: spec('CH2Cl2', 'CH2Cl2', 'C', [['H', 1], ['H', 1], ['Cl', 1], ['Cl', 1]]),
 };
 
+/** Why a combination cannot be built: the partners do not fit the outer electrons, or it needs more than four directions. */
+export function buildProblem(center: string, ligands: Ligand[]): 'short' | 'odd' | 'directions' | null {
+  const free = (VALENCE[center] ?? 0) - ligands.reduce((n, l) => n + l.order, 0);
+  if (free < 0) return 'short';
+  if (free % 2) return 'odd';
+  if (ligands.length + free / 2 > 4) return 'directions';
+  return null;
+}
+
+const signature = (center: string, ligands: Ligand[]) => center + ':' + ligands.map((l) => l.el + l.order).sort().join(',');
+
 export function buildSpec(center: string, ligands: Ligand[]): MoleculeSpec | null {
   const lp = lonePairsFor(center, ligands, 0);
   if (lp === null || ligands.length === 0 || ligands.length + lp > 4) return null;
+  // A known molecule is recognised by its composition, whatever order the slots were filled in.
+  const known = Object.values(PRESETS).find((p) => !p.charge && signature(p.center, p.ligands) === signature(center, ligands));
+  if (known) return known;
   const counts = new Map<string, number>();
   for (const l of ligands) counts.set(l.el, (counts.get(l.el) ?? 0) + 1);
-  const formula = center + [...counts.entries()].sort(([a], [b]) => (a === 'H' ? -1 : b === 'H' ? 1 : a.localeCompare(b))).map(([e, n]) => e + (n > 1 ? n : '')).join('');
-  const known = Object.values(PRESETS).find((p) => p.formula === formula && p.center === center);
-  return known ?? { id: 'custom', formula, center, ligands, lonePairs: lp };
+  const rest = [...counts.entries()].sort(([a], [b]) => (a === 'H' ? -1 : b === 'H' ? 1 : a.localeCompare(b))).map(([e, n]) => e + (n > 1 ? n : '')).join('');
+  // Hydrides of groups 16 and 17 are written hydrogen first: H2O, H2S, HCl.
+  const onlyH = counts.size === 1 && counts.has('H');
+  const formula = onlyH && ['O', 'S', 'F', 'Cl', 'Br'].includes(center) ? rest + center : center + rest;
+  return { id: 'custom', formula, center, ligands, lonePairs: lp };
 }
 
 type Domain = { kind: 'bond' | 'lone'; order: number; p: THREE.Vector3; lig?: Ligand };

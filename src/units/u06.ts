@@ -2,17 +2,16 @@
 import { h, s, rich, chem } from '../ui/dom';
 import { L, t } from '../i18n';
 import { UNIT6 } from '../content/unit06';
-import { pickWarmup, recordAnswer } from '../model/learner';
+import { pickWarmup, recordAnswer, confidentToday } from '../model/learner';
 import { itemRun, renderItem, formatLabel } from '../ui/questions';
-import { explainStep, wrapStep } from '../ui/steps';
-import { buzz } from '../platform';
+import { explainStep, wrapStep, taskList, extraExample, deeperPanel } from '../ui/steps';
 import type { StepCtx, UnitPlayer } from './types';
 
 // ---------- step 1: warm-up ----------
 function warmup(body: HTMLElement, enable: () => void, ctx: StepCtx) {
-  const items = pickWarmup(3, 6);
+  const items = pickWarmup(undefined, 6);
   body.append(h('p', { class: 'lead' }, rich(UNIT6.lead)), h('p', { class: 'muted' }, t('warmupIntro')));
-  body.append(itemRun(items, () => enable(), { showUnit: true }));
+  body.append(itemRun(items, () => enable(), { showUnit: true, review: true }));
 }
 
 // ---------- step 2: puzzle ----------
@@ -29,30 +28,15 @@ function puzzle(body: HTMLElement, enable: () => void, ctx: StepCtx) {
 // ---------- step 3: explore ----------
 function explore(body: HTMLElement, enable: () => void, ctx: StepCtx) {
   const E = UNIT6.explore;
-  const ui = ctx.workbench({ presets: ['CH4', 'NH3', 'H2O', 'NH4', 'CO2', 'BF3'], start: 'NH3', controls: { builder: true } });
-  const done = new Set<string>();
+  // The fold-out on atom size waits until step 5: it would give away the PCl3 prediction.
+  const ui = ctx.workbench({ presets: ['CH4', 'NH3', 'H2O', 'NH4', 'CO2', 'BF3'], start: 'NH3', controls: { builder: true, leavesOut: false } });
   const family = new Set<string>();
   const polar = new Set<string>();
   let builtScored = false;
-  const taskEls = new Map<string, HTMLElement>();
-  const list = h('ul', { class: 'tasks' }, E.tasks.map((tk) => {
-    const li = h('li', null, h('span', { class: 'tick', 'aria-hidden': 'true' }, '✓'), h('span', null, rich(tk.text)));
-    taskEls.set(tk.id, li);
-    return li;
-  }));
   const lambdaNote = h('div');
   const rankBox = h('div');
-  const mark = (id: string) => {
-    if (done.has(id)) return;
-    done.add(id);
-    taskEls.get(id)!.classList.add('done');
-    taskEls.get(id)!.setAttribute('aria-label', L({ en: 'done', de: 'erledigt' }));
-    buzz('light');
-    if (id === 'lambda') lambdaNote.replaceChildren(h('p', { class: 'muted small' }, rich(E.lambdaNote)));
-    if ([...done].filter((d) => d !== 'build').length + (done.has('build') ? 1 : 0) >= 3 && !rankBox.childElementCount) {
-      rankBox.append(renderItem(E.rank, () => enable()));
-    }
-  };
+  const tasks = taskList(E.tasks, () => { rankBox.append(renderItem(E.rank, () => enable())); });
+  const mark = (id: string) => { if (tasks.mark(id) && id === 'lambda') lambdaNote.replaceChildren(h('p', { class: 'muted small' }, rich(E.lambdaNote))); };
   ui.on('toggle', (what: string, v: boolean) => {
     if (what === 'ignore' && v && ui.wb.current.lonePairs > 0) setTimeout(() => mark('wrong'), 1200);
   });
@@ -70,9 +54,9 @@ function explore(body: HTMLElement, enable: () => void, ctx: StepCtx) {
     }
   });
   body.append(h('h2', null, L({ en: 'The Molecule Workbench', de: 'Die Molekül-Werkbank' })),
-    h('p', { class: 'muted' }, L({ en: 'Every pair of electrons pushes on every other. Nothing here is drawn by hand: the shape is wherever the pushing settles.', de: 'Jedes Elektronenpaar drückt auf jedes andere. Nichts hier ist von Hand gezeichnet: Die Gestalt ist dort, wo das Drücken zur Ruhe kommt.' })),
+    h('p', { class: 'muted' }, rich(E.intro)),
     ui.el,
-    h('div', { class: 'panel' }, h('h3', { style: 'margin-bottom:6px' }, L({ en: 'Things to try', de: 'Zum Ausprobieren' })), h('p', { class: 'muted small' }, t('exploreIntro')), list, lambdaNote),
+    h('div', { class: 'panel' }, h('h3', { style: 'margin-bottom:6px' }, L({ en: 'Things to try', de: 'Zum Ausprobieren' })), tasks.el, lambdaNote),
     rankBox);
 }
 
@@ -87,7 +71,10 @@ function predict(body: HTMLElement, enable: () => void, ctx: StepCtx) {
     if (!p) { enable(); return; }
     const box = h('div', { class: 'stack' });
     body.append(box);
-    box.append(renderItem(p.item, () => {
+    box.append(renderItem(p.item, (r) => {
+      // A missed prediction gets one more worked example before the reveal.
+      const extra = r.correct ? null : extraExample(p.extra);
+      if (extra) box.append(extra);
       stage.hidden = false;
       ui.load(p.reveal);
       ui.wb.setShowDipole(!!p.dipole);
@@ -98,7 +85,7 @@ function predict(body: HTMLElement, enable: () => void, ctx: StepCtx) {
       const next = h('button', { class: 'btn quiet block', type: 'button' }, i + 1 < UNIT6.predictions.length ? L({ en: 'Next prediction', de: 'Nächste Vorhersage' }) : L({ en: 'Done predicting', de: 'Vorhersagen abgeschlossen' }));
       next.addEventListener('click', () => { next.remove(); run(i + 1); });
       box.append(next);
-      stage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      (extra ?? stage).scrollIntoView({ behavior: 'smooth', block: extra ? 'start' : 'center' });
     }));
   };
   run(0);
@@ -106,7 +93,7 @@ function predict(body: HTMLElement, enable: () => void, ctx: StepCtx) {
 
 // ---------- step 5: worked examples, draw-on-it, spot the flaw ----------
 function examples(body: HTMLElement, enable: () => void, ctx: StepCtx) {
-  const ui = ctx.workbench({ presets: [], start: 'H2O', compact: true, controls: { wrongModel: false, lambda: false, leavesOut: false } });
+  const ui = ctx.workbench({ presets: [], start: 'H2O', compact: true, controls: { wrongModel: false, lambda: false, leavesOut: true } });
   body.append(h('h2', null, t('stepExamples')), ui.el);
   for (const ex of UNIT6.examples) {
     body.append(h('article', { class: 'panel example' },
@@ -117,7 +104,11 @@ function examples(body: HTMLElement, enable: () => void, ctx: StepCtx) {
       h('button', { class: 'btn small quiet', type: 'button', onclick: () => { ui.load(ex.preset); ui.el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, t('showIn3d'))));
   }
   let answered = 0;
-  const tick = () => { if (++answered === 2) enable(); };
+  const tick = () => {
+    if (++answered !== 2) return;
+    if (confidentToday(UNIT6.predictions.map((p) => p.item.id))) body.append(deeperPanel(UNIT6.deeper));
+    enable();
+  };
   body.append(h('div', { class: 'panel' }, drawDipole(tick)));
   body.append(h('div', { class: 'panel' }, renderItem(UNIT6.flaw, () => {
     body.append(h('button', { class: 'btn small quiet', type: 'button', onclick: () => { ui.load('CH2O'); ui.el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, L({ en: 'Show formaldehyde in 3D', de: 'Formaldehyd in 3D zeigen' })));
@@ -183,7 +174,7 @@ function explainBack(body: HTMLElement, enable: () => void) {
 
 // ---------- step 7: wrap-up ----------
 function wrap(body: HTMLElement, enable: () => void) {
-  wrapStep(body, enable, 6, UNIT6.terms, UNIT6.reading);
+  wrapStep(body, enable, 6, UNIT6.terms, UNIT6.readings);
 }
 
 export const unit6: UnitPlayer = { n: 6, title: UNIT6.title, steps: [warmup, puzzle, explore, predict, examples, explainBack, wrap] };

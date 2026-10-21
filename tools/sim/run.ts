@@ -44,7 +44,7 @@ function rename(n: number, id: string) { return id.replace(/^u6\./, `s${n}.`); }
 function renameMis(n: number, id: string) { return `s${n}:${id}`; }
 function cloneItem(n: number, it: Item, idPrefix: string): Item {
   const c: any = JSON.parse(JSON.stringify(it));
-  c.id = `${idPrefix}${n}-${it.id}`; c.unit = n;
+  c.id = idPrefix === 'x' ? it.id.replace(/^u6-/, `u${n}-`) : `${idPrefix}${n}-${it.id}`; c.unit = n;
   c.concepts = it.concepts.map((x: string) => rename(n, x));
   if (it.targets) c.targets = it.targets.map((x) => renameMis(n, x));
   if ((it as any).options) c.options = (it as any).options.map((o: any) => ({ ...o, mis: o.mis ? renameMis(n, o.mis) : undefined }));
@@ -198,7 +198,7 @@ function runProfile(p0: Profile, runSeed: number) {
   const log: any = { daily: [], units: [], warmups: [], probes: null };
   let nextUnit = 0;
   let repeatPending: number | null = null;
-  let answerMemCorrect = 0, warmupAnswers = 0, warmupRepeats = 0, servedReviews = 0;
+  let answerMemCorrect = 0, warmupAnswers = 0, warmupRepeats = 0, servedReviews = 0, secondPassesQueued = 0, secondPassesDone = 0;
   const unitFirstReview = new Map<string, string>();
   const conceptUnit = new Map<string, number>();
   for (const u of UNITS) for (const c of u.concepts) conceptUnit.set(c, u.n);
@@ -230,6 +230,7 @@ function runProfile(p0: Profile, runSeed: number) {
     if (it.kind === 'choice') { rec.conf = conf; rec.chosenMis = correct ? undefined : chosenMis; rec.partial = undefined; }
     if (it.kind === 'rank') rec.chosenMis = chosenMis;
     if (it.kind === 'flaw') { rec.chosenMis = correct ? undefined : it.targets?.[0]; rec.partial = undefined; }
+    if (ctx === 'warmup') rec.review = true;
     learner.recordAnswer(rec);
     // the learner's truth after feedback
     for (const c of it.concepts) retrieve(c, now, correct && know);
@@ -239,7 +240,7 @@ function runProfile(p0: Profile, runSeed: number) {
   }
 
   function warmup(n: number | undefined, now: string, kind: 'warmup' | 'rekindle') {
-    const its = VARIANT === 'fixed' ? pickFixed(3, n, now) : kind === 'rekindle' ? learner.pickRekindle(3) : learner.pickWarmup(3, n);
+    const its = VARIANT === 'fixed' ? pickFixed(3, n, now) : kind === 'rekindle' ? learner.pickRekindle() : learner.pickWarmup(undefined, n);
     const dueBefore = learner.dueConcepts().length;
     let right = 0;
     for (const it of its) {
@@ -264,7 +265,11 @@ function runProfile(p0: Profile, runSeed: number) {
     else warmup(u.n, now, 'warmup');
     let right = 0, total = 0;
     for (const s of u.steps) {
-      if (s.kind === 'item') { const r = answer(s.item, now, 'unit'); total++; if (r.correct) right++; }
+      if (s.kind === 'item') {
+        const r = answer(s.item, now, 'unit'); total++; if (r.correct) right++;
+        // a missed prediction shows one more worked example: another chance to understand
+        if (!r.correct && (s.item as any).evidence === 'transfer' && s.item.kind === 'choice') for (const c of s.item.concepts) { const t = truth.get(c); if (t && !t.u && rnd() < p.pFix * 0.5) t.u = true; }
+      }
       else if (s.p === 'challenge') {
         if (rnd() < p.challenge) learner.recordAnswer({ item: s.id, concepts: s.concepts, correct: true, evidence: s.evidence, targets: s.targets });
       } else {
@@ -277,15 +282,15 @@ function runProfile(p0: Profile, runSeed: number) {
     }
     // the unit's confrontation can dissolve a held misconception
     for (const m of u.mis) if (held.has(m) && rnd() < p.pFixMis) held.delete(m);
-    // explain-back, scored like the app (≥1 hit records explain evidence for hit concepts, misses as partial)
-    const hits = u.ideas.filter((i) => truth.get(i.concept)?.u && rnd() < p.explain);
+    // explain-back as a self-check: the learner ticks the ideas they wrote (overconfident learners tick a few extra)
+    const hits = u.ideas.filter((i) => (truth.get(i.concept)?.u && rnd() < p.explain) || (p.bias > 0.1 && rnd() < 0.3));
     const hc = [...new Set(hits.map((h) => h.concept))];
-    if (hc.length) learner.recordAnswer({ item: `u${u.n}-explain`, concepts: hc, correct: true, conf: 0.8, evidence: 'explain' });
+    if (hc.length) learner.recordAnswer({ item: `u${u.n}-explain`, concepts: hc, correct: true, conf: 0.8, evidence: 'seen' });
     const missed = [...new Set(u.ideas.map((i) => i.concept))].filter((c) => !hc.includes(c));
     if (missed.length) learner.recordAnswer({ item: `u${u.n}-explain-missed`, concepts: missed, correct: false, partial: true });
-    for (const c of hc) retrieve(c, now, true);
-    learner.logSession('unit', u.n);
-    st.units[u.n] = { status: 'done', completedAt: now };
+    for (const c of hc) if (truth.get(c)?.u) retrieve(c, now, true);
+    if (VARIANT === 'fixed') { learner.logSession('unit', u.n); st.units[u.n] = { status: 'done', completedAt: now }; }
+    else { const f = learner.finishUnit(u.n); if (f.secondPass) secondPassesQueued++; }
     const acc = right / total;
     log.units.push({ date: now, unit: u.n, secondPass, acc, trueUnderstood: u.concepts.filter((c) => truth.get(c)!.u).length / u.concepts.length });
     return acc;
@@ -297,6 +302,12 @@ function runProfile(p0: Profile, runSeed: number) {
     const dow = i % 7; // 0 = Monday
     const what = p.schedule(i, dow);
     if (what === 'unit' && nextUnit < UNITS.length) {
+      // the home screen puts a waiting second pass first; it is short, so the unit follows in the same session
+      const sp = VARIANT === 'fixed' ? undefined : learner.secondPassDue();
+      if (sp !== undefined) {
+        for (const it of learner.pickRekindle(undefined, sp)) { answer(it, now, 'warmup'); warmupAnswers++; }
+        learner.finishSecondPass(sp); secondPassesDone++;
+      }
       if (VARIANT === 'fixed' && repeatPending !== null) { doUnit(UNITS[repeatPending], now, true); repeatPending = null; }
       else {
         const acc = doUnit(UNITS[nextUnit], now);
@@ -357,7 +368,7 @@ function runProfile(p0: Profile, runSeed: number) {
       misResolvedButHeld: misStates.filter((m) => m.status === 'resolved' && m.held).length,
       crossUnitConcepts: [...crossUnit],
       misHeldUnseen: [...held].filter((m) => !st.misconceptions[m]).length, misHeldTotal: held.size,
-      lowAccUnitsAdvanced: lowAccUnits, calib, bins,
+      lowAccUnitsAdvanced: lowAccUnits, calib, bins, secondPassesQueued, secondPassesDone, memScale: st.memScale ?? 1,
     },
     daily: log.daily, units: log.units, warmups: log.warmups,
   };
@@ -367,7 +378,7 @@ const results: any[] = [];
 for (const p of P) {
   // average over several seeds for the summary; keep the first run's daily series
   const runs = [11, 23, 37, 41, 53, 67, 71, 89].map((s) => runProfile(p, s));
-  const keys = ['unitsDone', 'sessions', 'conceptsSeen', 'dueAtEnd', 'appRecallMean', 'trueKnowMean', 'understoodShare', 'falseMastery', 'hiddenKnow', 'warmupAnswers', 'warmupRepeatShare', 'answerMemShare', 'reviewedShare', 'medianFirstReviewLag', 'servedReviews', 'misSpotted', 'misResolved', 'misResolvedButHeld', 'misHeldUnseen', 'misHeldTotal', 'lowAccUnitsAdvanced'];
+  const keys = ['secondPassesQueued', 'secondPassesDone', 'memScale', 'unitsDone', 'sessions', 'conceptsSeen', 'dueAtEnd', 'appRecallMean', 'trueKnowMean', 'understoodShare', 'falseMastery', 'hiddenKnow', 'warmupAnswers', 'warmupRepeatShare', 'answerMemShare', 'reviewedShare', 'medianFirstReviewLag', 'servedReviews', 'misSpotted', 'misResolved', 'misResolvedButHeld', 'misHeldUnseen', 'misHeldTotal', 'lowAccUnitsAdvanced'];
   const avg: any = {};
   for (const k of keys) avg[k] = runs.reduce((a, r) => a + ((r.summary as any)[k] ?? 0), 0) / runs.length;
   avg.levels = [0, 1, 2, 3, 4].map((l) => runs.reduce((a, r) => a + r.summary.levels[l], 0) / runs.length);
@@ -395,7 +406,7 @@ for (const p of P) {
   console.log(`levels 0-4 ${avg.levels.map((x: number) => f(x, 1)).join(' / ')}`);
   console.log(`warm-up answers ${f(avg.warmupAnswers, 0)}  repeat share ${f(avg.warmupRepeatShare)}  right-by-answer-memory ${f(avg.answerMemShare)}  concepts ever reviewed ${f(avg.reviewedShare)}  median first-review lag ${f(avg.medianFirstReviewLag, 1)} d`);
   console.log(`misconceptions held at end ${f(avg.misHeldTotal, 1)} (app never spotted ${f(avg.misHeldUnseen, 1)})  app spotted ${f(avg.misSpotted, 1)} resolved ${f(avg.misResolved, 1)} (resolved but still held ${f(avg.misResolvedButHeld, 1)})`);
-  console.log(`units passed with <50 % right ${f(avg.lowAccUnitsAdvanced, 1)}`);
+  console.log(`units passed with <50 % right ${f(avg.lowAccUnitsAdvanced, 1)}  second passes queued ${f(avg.secondPassesQueued, 1)} done ${f(avg.secondPassesDone, 1)}  memory scale ${f(avg.memScale)}`);
   console.log('calibration (app recall bin → actual on new question):', avg.bins.map((b: any) => `${b.bin}: n=${f(b.n, 1)} app ${f(b.app)} actual ${f(b.actual)}`).join(' | '));
 }
 writeFileSync(OUT, JSON.stringify(results, null, 1));

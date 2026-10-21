@@ -24,7 +24,7 @@ export function renderSettings(root: HTMLElement, rerender: () => void) {
     h('div', { class: 'seg-choice' },
       h('button', { class: 'chip', type: 'button', 'aria-pressed': String(s.hint === 'other'), onclick: () => { s.hint = 'other'; save(); setHint('other'); rerender(); } }, s.lang === 'en' ? 'German under English' : 'Englisch unter Deutsch'),
       h('button', { class: 'chip', type: 'button', 'aria-pressed': String(s.hint === 'off'), onclick: () => { s.hint = 'off'; save(); setHint('off'); rerender(); } }, t('hintsOff'))),
-    h('p', { class: 'muted small', style: 'margin:0' }, L({ en: 'Tap any underlined term for both names, a definition and the trap between the languages.', de: 'Tippe auf einen unterstrichenen Begriff für beide Namen, eine Definition und die Falle zwischen den Sprachen.' })));
+    h('p', { class: 'muted small', style: 'margin:0' }, L({ en: 'With the second language on, terms show their German name and each unit ends with an optional term-matching round. Tap any underlined term for both names, a definition and the trap between the languages.', de: 'Mit der zweiten Sprache zeigen Begriffe ihren englischen Namen, und jede Einheit endet mit einer freiwilligen Zuordnungsrunde. Tippe auf einen unterstrichenen Begriff für beide Namen, eine Definition und die Falle zwischen den Sprachen.' })));
 
   // Rhythm
   const targetOut = h('output', null, String(s.weeklyTarget));

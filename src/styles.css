@@ -428,3 +428,21 @@ body.sheet-open { overflow: hidden; }
 .cell-example .pt-tile { width: 70px; height: 78px; flex: 0 0 auto; }
 .cell-example .pt-tile .sym { font-size: 28px; }
 .cell-steps { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+
+/* --- review round 1: feedback variants, self-check, key tasks, extras --- */
+.feedback.neutral { border-left-color: var(--fog); }
+.feedback .fb-note { margin-bottom: 8px; color: var(--energy); font-size: 15px; }
+.feedback .sure-note { margin-top: 8px; font-size: 14.5px; color: var(--chalk-2); }
+.option.part { border-color: var(--energy); }
+.option.part::before { background: var(--energy); border-color: var(--energy); }
+.tasks li .key-badge { display: inline-block; margin-right: 6px; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--energy); border: 1px solid var(--energy); border-radius: 6px; padding: 0 5px; vertical-align: 1px; }
+.tasks li .bonus-badge { display: inline-block; margin-right: 6px; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--fog); border: 1px solid var(--line); border-radius: 6px; padding: 0 5px; vertical-align: 1px; }
+.extra { border-left: 3px solid var(--energy); }
+.extra ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.selfcheck { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.selfcheck li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; font-size: 15.5px; }
+.selfcheck input[type='checkbox'] { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--ok); }
+.selfcheck .hint { grid-column: 2; font-size: 13.5px; color: var(--energy); }
+.time-left { color: var(--fog); }
+.second-pass { border-left: 3px solid var(--energy); }
+.gap-label { display: block; font-size: 11.5px; color: var(--fog); text-align: center; margin-top: 2px; }

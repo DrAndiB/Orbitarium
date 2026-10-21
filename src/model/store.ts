@@ -7,7 +7,9 @@ export interface MisState { status: 'spotted' | 'challenged' | 'resolved'; since
 export interface Attempt { at: string; item: string; correct: boolean; partial?: boolean; conf?: number; concepts: string[]; }
 export interface Session { date: string; kind: 'unit' | 'rekindle' | 'diagnostic'; unit?: number; }
 export interface Takeaway { unit: number; date: string; text: string; tightened?: string; }
-export interface UnitProgress { status: 'not-started' | 'in-progress' | 'done' | 'next' | 'review'; step?: number; completedAt?: string; }
+export interface UnitProgress { status: 'not-started' | 'in-progress' | 'done' | 'next' | 'review'; step?: number; completedAt?: string; secondPass?: boolean; lastScore?: number; }
+/** One review answer: what the memory model forecast (t days since last review, stability s) and what happened. */
+export interface MemPoint { t: number; s: number; ok: 0 | 1; }
 export interface Settings {
   lang: Lang; hint: Hint;
   weeklyTarget: number; nudgeDays: number[]; nudgeTime: string; gapDays: number;
@@ -28,6 +30,8 @@ export interface State {
   units: Record<string, UnitProgress>;
   elements: string[];
   history: string[]; // free-text notes carried from imports ("How I learn best" etc.)
+  memScale?: number;   // personal correction of the memory model, fitted from review answers (1 = default)
+  memLog?: MemPoint[]; // recent review answers used for that fit
 }
 
 const KEY = 'orbitarium.v1';

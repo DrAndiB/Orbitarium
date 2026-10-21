@@ -4,7 +4,7 @@ import { h, s, clear, rich } from './dom';
 import { L, num, getLang, type Bi } from '../i18n';
 import {
   ELEMENTS, byZ, search, OVERLAYS, overlayById, overlayColor, overlayRange, outerElectrons, ionText, typicalIons,
-  prettyConfig, CAT_COLOR, CAT_NAME, BLOCK_COLOR, ROW_COLOR, CORE, type Element, type OverlayId,
+  prettyConfig, CAT_COLOR, CAT_NAME, BLOCK_COLOR, ROW_COLOR, CORE, CALCULATED_RADIUS, NO_STANDARD_MASS, type Element, type OverlayId,
 } from '../content/elements';
 import { getState } from '../model/store';
 import { touchElements } from '../model/learner';
@@ -160,6 +160,8 @@ export function createTable(opts: TableOptions = {}): TableHandle {
         h('span', null, fmt(hi))));
       if (o.id === 'chi') legend.append(h('p', { class: 'muted small' }, L({ en: 'Pauling scale. Grey cells have no value: noble gases rarely bond.', de: 'Pauling-Skala. Graue Felder haben keinen Wert: Edelgase binden kaum.' })));
       if (o.id === 'mass') legend.append(h('p', { class: 'muted small' }, L({ en: 'Average over the natural isotopes, in atomic mass units (u). One u is about the mass of one proton.', de: 'Mittelwert über die natürlichen Isotope, in atomaren Masseeinheiten (u). Ein u ist etwa die Masse eines Protons.' })));
+      if (o.id === 'mass') legend.append(h('p', { class: 'muted small' }, L({ en: 'Technetium, promethium and everything from polonium on (except thorium, protactinium and uranium) have no stable isotopes: their value is the mass number of the longest-lived one.', de: 'Technetium, Promethium und alles ab Polonium (außer Thorium, Protactinium und Uran) haben keine stabilen Isotope: Ihr Wert ist die Massenzahl des langlebigsten.' })));
+      if (o.id === 'radius') legend.append(h('p', { class: 'muted small' }, L({ en: 'Empirical radii measured in compounds (Slater). Noble gases and astatine form almost no compounds, so theirs are calculated (Clementi) and run a little small.', de: 'Empirische Radien aus Verbindungen (Slater). Edelgase und Astat bilden kaum Verbindungen, ihre Werte sind berechnet (Clementi) und fallen etwas klein aus.' })));
     }
   }
 
@@ -217,9 +219,11 @@ export function createTable(opts: TableOptions = {}): TableHandle {
       h('div', { class: 'pt-rows' },
         row({ en: 'Shells', de: 'Schalen' }, e.sh.join(' · '), outer !== null ? L({ en: `${outer} outer electron${outer === 1 ? '' : 's'}`, de: `${outer} Außenelektron${outer === 1 ? '' : 'en'}` }) : undefined),
         row({ en: 'Typical ion', de: 'Typisches Ion' }, ionLine),
-        row({ en: 'Atomic mass', de: 'Atommasse' }, `${num(e.m, e.m >= 100 ? 0 : 3)} u`, L({ en: 'isotope average', de: 'Isotopen-Mittelwert' })),
+        NO_STANDARD_MASS.has(e.z)
+          ? row({ en: 'Atomic mass', de: 'Atommasse' }, `[${Math.round(e.m)}]`, L({ en: 'mass number of the longest-lived isotope (no stable isotopes)', de: 'Massenzahl des langlebigsten Isotops (keine stabilen Isotope)' }))
+          : row({ en: 'Atomic mass', de: 'Atommasse' }, `${num(e.m, e.m >= 100 ? 0 : 3)} u`, L({ en: 'isotope average', de: 'Isotopen-Mittelwert' })),
         row({ en: 'Electronegativity', de: 'Elektronegativität' }, e.chi === null ? '–' : num(e.chi, 2)),
-        row({ en: 'Atom size', de: 'Atomgröße' }, e.r === null ? '–' : `${e.r} pm`, L({ en: 'radius', de: 'Radius' })),
+        row({ en: 'Atom size', de: 'Atomgröße' }, e.r === null ? '–' : `${e.r} pm`, CALCULATED_RADIUS.has(e.z) ? L({ en: 'calculated radius', de: 'berechneter Radius' }) : L({ en: 'radius measured in compounds', de: 'in Verbindungen gemessener Radius' })),
         row({ en: '1st ionization energy', de: '1. Ionisierungsenergie' }, e.ie === null ? '–' : `${num(e.ie, 0)} kJ/mol`),
         row({ en: 'At room temperature', de: 'Bei Raumtemperatur' }, phase, e.mp !== null ? `${L({ en: 'melts', de: 'schmilzt' })} ${num(e.mp, 0)} °C${e.bp !== null ? ` · ${L({ en: 'boils', de: 'siedet' })} ${num(e.bp, 0)} °C` : ''}` : undefined),
         row({ en: 'Electron configuration', de: 'Elektronenkonfiguration' }, prettyConfig(e.cfg)),

@@ -3,6 +3,7 @@
 import { writeFileSync } from 'node:fs';
 import { UNIT0 } from '../../src/content/unit00';
 import { UNIT6 } from '../../src/content/unit06';
+import { ideaHints, looksLikeKeywordList } from '../../src/content/ideas';
 
 interface Case { unit: 0 | 6; kind: string; text: string; trulyCorrect: number; note: string }
 const C: Case[] = [
@@ -20,14 +21,16 @@ const C: Case[] = [
   { unit: 6, kind: 'correct, plain words', trulyCorrect: 3, note: 'Marie-style: get away, pairs that are not bonded, more room, pushed closer', text: 'The electrons around the middle atom all try to get away from each other. The pairs that are not bonded still take up room, even more room, so the hydrogens get pushed closer together.' },
   { unit: 6, kind: 'correct, technical', trulyCorrect: 4, note: 'VSEPR language: electron domains, nonbonding domains, angular space', text: 'VSEPR: electron domains around the central atom minimise repulsion. Nonbonding domains occupy more angular space than bonding domains, so the molecular geometry, which describes nuclear positions only, deviates from the electron-domain geometry: NH3 107°, H2O 104.5°.' },
   { unit: 6, kind: 'correct, German, school shorthand', trulyCorrect: 3, note: 'Jonas-style: EP for Elektronenpaare (EPA model)', text: 'die elektronenpaare stoßen sich ab, freie EP brauchen mehr platz deshalb kleinerer winkel' },
-  { unit: 6, kind: 'correct, German, full', trulyCorrect: 5, note: 'complete answer in German', text: 'Um das Zentralatom sitzen vier Elektronenpaare (Oktett), Bindungen und freie Paare. Sie stoßen sich ab und gehen so weit wie möglich auseinander. Freie Elektronenpaare brauchen mehr Platz und stauchen die Bindungswinkel. Benannt wird die Form nur nach den Atomen.' },
+  { unit: 6, kind: 'correct, German, full', trulyCorrect: 4, note: 'complete answer in German', text: 'Um das Zentralatom sitzen vier Elektronenpaare (Oktett), Bindungen und freie Paare. Sie stoßen sich ab und gehen so weit wie möglich auseinander. Freie Elektronenpaare brauchen mehr Platz und stauchen die Bindungswinkel. Benannt wird die Form nur nach den Atomen.' },
   { unit: 6, kind: 'negated', trulyCorrect: 0, note: 'denies the ideas', text: 'Lone pairs do not push and do not take up a direction; the shape is not about the atoms; the angles are never squeezed.' },
 ];
 
+// The hints are no longer a grade: the learner ticks the ideas; hints only flag disagreements.
 const rows = C.map((c) => {
   const X = c.unit === 0 ? UNIT0.explain : UNIT6.explain;
-  const hits = X.ideas.filter((i) => i.en.test(c.text) || i.de.test(c.text)).map((i) => i.id);
-  return { ...c, rubric: hits.length, hits, verdict: hits.length >= 3 ? 'good' : 'not yet' };
+  const salad = looksLikeKeywordList(c.text);
+  const hits = salad ? [] : [...ideaHints(c.text, X.ideas)];
+  return { ...c, hints: hits.length, hits, salad };
 });
-for (const r of rows) console.log(`u${r.unit} ${r.kind.padEnd(34)} rubric ${r.rubric}/5 (${r.verdict.padEnd(7)}) truly ${r.trulyCorrect}/5  hits: ${r.hits.join(',')}`);
-writeFileSync('/home/claude/sim-out/rubric-tests.json', JSON.stringify(rows, null, 1));
+for (const r of rows) console.log(`u${r.unit} ${r.kind.padEnd(34)} hints ${r.hints}/5${r.salad ? ' (keyword list)' : ''}  truly ${r.trulyCorrect}/5  hits: ${r.hits.join(',')}`);
+writeFileSync('/home/claude/sim-out/rubric-tests-after.json', JSON.stringify(rows, null, 1));

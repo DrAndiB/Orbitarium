@@ -3,7 +3,7 @@ import { h, s, clear, rich, plain } from './dom';
 import { L, t, dateStr, num } from '../i18n';
 import { UNITS, MODULES, unitByN, moduleByN, PLAYABLE } from '../content/curriculum';
 import { getState, today } from '../model/store';
-import { unitMemory, unitLevel, dueConcepts, sessionsThisWeek, daysSinceLastSession, recall, nextReview } from '../model/learner';
+import { unitMemory, unitLevel, dueConcepts, sessionsThisWeek, daysSinceLastSession, recall, nextReview, secondPassDue, warmupSize } from '../model/learner';
 import { go } from '../router';
 
 // Module anchors on a 400 × 660 sky: the map (unit 0) at the bottom, organic reactions at the top.
@@ -38,7 +38,7 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   const due = dueConcepts();
   root.append(h('header', { class: 'greeting' },
     h('h1', null, st.learner ? `${greet}, ${st.learner}` : greet),
-    h('p', { class: 'muted' }, due.length ? t('dueLine', { n: due.length }) : t('dueNone'))));
+    h('p', { class: 'muted' }, due.length ? t('dueLine', { n: due.length, k: Math.min(due.length, warmupSize()) }) : t('dueNone'))));
 
   // ----- the sky -----
   const pos = unitPositions();
@@ -108,12 +108,19 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   const gap = daysSinceLastSession();
   if (gap !== null && gap >= st.settings.gapDays) todayBox.appendChild(h('div', { class: 'panel alert' }, h('p', null, t('gapAlert', { d: gap }))));
 
+  // A unit that did not land comes first: a short second pass before anything new.
+  const sp = secondPassDue();
+  if (sp !== undefined) todayBox.appendChild(h('div', { class: 'panel second-pass' },
+    h('div', { class: 'kicker' }, L({ en: 'First, a second pass', de: 'Zuerst eine zweite Runde' })),
+    h('p', { style: 'margin:4px 0 10px' }, L({ en: `Less than half of unit ${sp} landed last time. Five short questions on it, about five minutes.`, de: `Von Einheit ${sp} ist letztes Mal weniger als die Hälfte angekommen. Fünf kurze Fragen dazu, etwa fünf Minuten.` })),
+    h('button', { class: 'btn block', type: 'button', onclick: () => go(`#/rekindle?unit=${sp}&second=1`) }, L({ en: `Second pass: unit ${sp}`, de: `Zweite Runde: Einheit ${sp}` }))));
+
   // The recommended playable unit: the first one not done yet; otherwise offer replays.
   const playable = PLAYABLE();
   const pick = playable.find((n) => st.units[n]?.status !== 'done') ?? playable.at(-1)!;
   const blurb: Record<number, { en: string; de: string }> = {
-    0: { en: 'About 20 minutes with the interactive periodic table: rows, columns, blocks, and a fun fact for every element.', de: 'Etwa 20 Minuten mit dem interaktiven Periodensystem: Zeilen, Spalten, Blöcke und eine kuriose Tatsache zu jedem Element.' },
-    6: { en: 'About 20 minutes, built around the Molecule Workbench.', de: 'Etwa 20 Minuten, gebaut um die Molekül-Werkbank.' },
+    0: { en: 'About 25 minutes with the interactive periodic table: rows, columns, blocks, and a fun fact for every element. Progress is saved after every step.', de: 'Etwa 25 Minuten mit dem interaktiven Periodensystem: Zeilen, Spalten, Blöcke und eine kuriose Tatsache zu jedem Element. Gespeichert wird nach jedem Schritt.' },
+    6: { en: 'About 25 minutes, built around the Molecule Workbench. Progress is saved after every step.', de: 'Etwa 25 Minuten, gebaut um die Molekül-Werkbank. Gespeichert wird nach jedem Schritt.' },
   };
   const unitLabel = (n: number) => { const p = st.units[n]; return p?.status === 'in-progress' ? t('resumeUnit', { n }) : p?.status === 'done' ? t('replayUnit', { n }) : t('startUnit', { n }); };
   const pu = unitByN(pick);
@@ -126,7 +133,7 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
     h('button', { class: 'btn block', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/' + pick) }, unitLabel(pick)),
     ...playable.filter((n) => n !== pick).map((n) => h('button', { class: 'btn ghost block small', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/' + n) }, `${unitLabel(n)}: ${L(unitByN(n).name)}`))));
 
-  if (due.length) todayBox.appendChild(h('button', { class: 'btn ghost block', type: 'button', onclick: () => go('#/rekindle') }, t('rekindle')));
+  if (due.length) todayBox.appendChild(h('button', { class: 'btn ghost block', type: 'button', onclick: () => go('#/rekindle') }, t('rekindle', { n: warmupSize() })));
 
   const n = sessionsThisWeek(), target = st.settings.weeklyTarget;
   const ring = s('svg', { viewBox: '0 0 64 64', width: 64, height: 64, 'aria-hidden': 'true' });

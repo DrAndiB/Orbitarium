@@ -10,7 +10,19 @@ export interface Element extends ElementData {
   predicted: boolean;   // superheavy elements: properties are predictions
 }
 
-export const ELEMENTS: Element[] = ELEMENT_DATA.map((d) => {
+// Corrections on top of the generated data (reviewed against the sources):
+// He and Ne carried van der Waals radii among bonded ones; use the calculated radii like the other noble gases.
+// Francium's first ionization energy is 393 kJ/mol (4.07 eV), slightly above caesium's.
+// IUPAC spells caesium with "ae".
+const FIX: Record<number, Partial<ElementData>> = { 2: { r: 31 }, 10: { r: 38 }, 87: { ie: 393 }, 55: { en: 'Caesium' } };
+
+/** Radii that are calculated (Clementi) rather than measured in compounds: the noble gases and astatine. */
+export const CALCULATED_RADIUS = new Set<number>([2, 10, 18, 36, 54, 85, 86]);
+/** Elements without stable isotopes: the table shows the mass number of the longest-lived isotope, not an average. */
+export const NO_STANDARD_MASS = new Set<number>([43, 61, 84, 85, 86, 87, 88, 89, ...Array.from({ length: 26 }, (_, i) => 93 + i)]);
+
+export const ELEMENTS: Element[] = ELEMENT_DATA.map((d0) => {
+  const d = { ...d0, ...FIX[d0.z] };
   const tx = ELEMENT_TEXT[d.z];
   return { ...d, de: tx?.de ?? d.en, fact: tx?.fact ?? { en: '', de: '' }, origin: tx?.origin, predicted: d.z > 103 };
 });

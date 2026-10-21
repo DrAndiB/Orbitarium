@@ -16,14 +16,15 @@ export function exportProgress(st: State): string {
   out.push('---', 'format: orbitarium-progress v1', `learner: ${name}`, `as_of: ${today()}`,
     `content_language: ${st.settings.lang}`, `term_hints: ${st.settings.hint === 'off' ? 'off' : st.settings.lang === 'en' ? 'de' : 'en'}`,
     `weekly_target: ${st.settings.weeklyTarget}`, `nudge_days: ${st.settings.nudgeDays.map((d) => DAYS[d]).join(', ')}`,
-    `nudge_time: ${st.settings.nudgeTime}`, `gap_alert_days: ${st.settings.gapDays}`, '---', '',
+    `nudge_time: ${st.settings.nudgeTime}`, `gap_alert_days: ${st.settings.gapDays}`,
+    ...(st.memScale && Math.abs(st.memScale - 1) > 0.005 ? [`memory_scale: ${st.memScale.toFixed(2)}`] : []), '---', '',
     `# Progress — ${name}`, '');
 
   out.push('## Units');
   for (const u of UNITS) {
     const p = st.units[u.n];
     if (!p || p.status === 'not-started') continue;
-    out.push(`- ${u.n} ${u.name.en.replace(/_\{([^}]+)\}/g, '$1')}: ${STATUS_WORD[p.status]}${p.completedAt ? ' ' + p.completedAt : ''}`);
+    out.push(`- ${u.n} ${u.name.en.replace(/_\{([^}]+)\}/g, '$1')}: ${STATUS_WORD[p.status]}${p.completedAt ? ' ' + p.completedAt : ''}${p.secondPass ? ' · second pass due' : ''}`);
   }
   const started = UNITS.filter((u) => st.units[u.n] && st.units[u.n].status !== 'not-started').map((u) => u.n);
   const rest = UNITS.filter((u) => !started.includes(u.n)).map((u) => u.n);
@@ -98,6 +99,7 @@ export function parseProgress(text: string): ParsedProgress {
   if (meta.nudge_days) st.settings.nudgeDays = meta.nudge_days.split(',').map((d) => DAYS.indexOf(d.trim())).filter((d) => d >= 0);
   if (meta.nudge_time && /^\d{1,2}:\d{2}$/.test(meta.nudge_time)) st.settings.nudgeTime = meta.nudge_time.padStart(5, '0');
   if (meta.gap_alert_days) st.settings.gapDays = Math.max(2, Math.min(21, +meta.gap_alert_days || 5));
+  if (meta.memory_scale && +meta.memory_scale > 0) st.memScale = Math.max(0.2, Math.min(3, +meta.memory_scale));
 
   const sections = new Map<string, string[]>();
   let cur = '';
@@ -112,7 +114,7 @@ export function parseProgress(text: string): ParsedProgress {
     if (!m) continue;
     for (const n of expandRange(m[1])) {
       const status = WORD_STATUS[m[2].toLowerCase()];
-      if (status !== 'not-started') st.units[n] = { status, completedAt: m[3] };
+      if (status !== 'not-started') st.units[n] = { status, completedAt: m[3], secondPass: /second pass due/i.test(line) || undefined };
     }
   }
   let concepts = 0;
@@ -172,6 +174,7 @@ function expandRange(s: string): number[] {
 export function mergeProgress(cur: State, inc: State, takeSettings: boolean): State {
   const next: State = JSON.parse(JSON.stringify(cur));
   if (takeSettings || !cur.onboarded) { next.settings = { ...inc.settings }; next.learner = inc.learner || cur.learner; }
+  if (inc.memScale && (!next.memLog || next.memLog.length < 8)) next.memScale = inc.memScale;
   for (const [id, c] of Object.entries(inc.concepts)) {
     const mine = next.concepts[id];
     if (!mine || c.last > mine.last) next.concepts[id] = { ...c, firstSeen: mine?.firstSeen && mine.firstSeen < c.firstSeen ? mine.firstSeen : c.firstSeen, level: Math.max(c.level, mine?.level ?? 0) as Level };
