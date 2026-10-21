@@ -9,7 +9,7 @@ const b = (en: string, de: string): Bi => ({ en, de });
 export const BANK_U4: Item[] = [
   // ---- u4.coulomb ----
   { id: 'i4a', unit: 4, kind: 'estimate', format: 'estimate', concepts: ['u4.coulomb'],
-    prompt: b('MgO melts at 2852 °C, NaCl at 801 °C. Counting charges only (q₁ × q₂), how many times stronger is the attraction in MgO?', 'MgO schmilzt bei 2852 °C, NaCl bei 801 °C. Nur die Ladungen betrachtet (q₁ × q₂): Wie viel stärker ist die Anziehung in MgO?'),
+    prompt: b('MgO melts at 2852 °C, NaCl at 801 °C. Counting charges only (charge × charge, q₁ × q₂), how many times stronger is the attraction in MgO?', 'MgO schmilzt bei 2852 °C, NaCl bei 801 °C. Nur die Ladungen betrachtet (Ladung × Ladung, q₁ × q₂): Wie viel stärker ist die Anziehung in MgO?'),
     min: 1, max: 9, step: 1, answer: 4, tolerance: 0, suffix: '×',
     explain: b('2 × 2 = 4 against 1 × 1 = 1. The ions in MgO also sit closer (212 pm against 283 pm), which adds more: charges ÷ distance gives about 5.3 times, and the measured lattice energies differ by 4.8 times (3791 against 787 kJ/mol).', '2 × 2 = 4 gegenüber 1 × 1 = 1. Die Ionen in MgO sitzen außerdem näher (212 pm statt 283 pm), das legt noch etwas drauf: Ladung ÷ Abstand ergibt etwa das 5,3-Fache, die gemessenen Gitterenergien unterscheiden sich um das 4,8-Fache (3791 gegenüber 787 kJ/mol).') },
   { id: 'i4i', unit: 4, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u4.coulomb'], targets: ['bigger-heavier-stronger'],
@@ -17,10 +17,10 @@ export const BANK_U4: Item[] = [
     options: [
       { text: b('Fluoride carries a larger charge than iodide', 'Fluorid trägt eine größere Ladung als Iodid') },
       { text: b('Fluorine is lighter, and lighter particles always pack more tightly', 'Fluor ist leichter, und leichtere Teilchen packen sich immer dichter'), mis: 'bigger-heavier-stronger' },
-      { text: b('Fluoride is smaller, so its centre sits closer to sodium and the pull is stronger', 'Fluorid ist kleiner, also sitzt sein Mittelpunkt näher am Natrium, und der Zug ist stärker'), correct: true },
+      { text: b('Fluoride is smaller, so its centre sits closer to sodium and the pull is stronger', 'Fluorid ist kleiner, also sitzt sein Mittelpunkt näher am Natrium, und die Anziehung ist stärker'), correct: true },
       { text: b('Iodide is so big that it hides its charge completely', 'Iodid ist so groß, dass es seine Ladung ganz verbirgt') },
     ],
-    explain: b('Both are 1− ions, so distance decides: 235 pm in NaF against 322 pm in NaI, a pull about 1.4 times as strong. The lattice energies are 923 and 704 kJ/mol.', 'Beide sind 1−-Ionen, also entscheidet der Abstand: 235 pm in NaF gegenüber 322 pm in NaI, ein etwa 1,4-mal so starker Zug. Die Gitterenergien betragen 923 und 704 kJ/mol.') },
+    explain: b('Both are 1− ions, so distance decides: 235 pm in NaF against 322 pm in NaI, so fluoride, with three shells fewer than iodide, is held about 1.4 times as strongly. The lattice energies are 923 and 704 kJ/mol.', 'Beide sind 1−-Ionen, also entscheidet der Abstand: 235 pm in NaF gegenüber 322 pm in NaI; Fluorid, mit drei Schalen weniger als Iodid, wird also etwa 1,4-mal so stark angezogen. Die Gitterenergien betragen 923 und 704 kJ/mol.') },
   { id: 'i4j', unit: 4, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u4.coulomb'], targets: ['bigger-heavier-stronger'], mis: 'bigger-heavier-stronger',
     prompt: b('Rank by lattice energy, highest first. Ion sizes: Ca²⁺ 100, O²⁻ 140, Li⁺ 76, F⁻ 133, Na⁺ 102, K⁺ 138, Cl⁻ 181 pm.', 'Ordne nach Gitterenergie, die höchste zuerst. Ionengrößen: Ca²⁺ 100, O²⁻ 140, Li⁺ 76, F⁻ 133, Na⁺ 102, K⁺ 138, Cl⁻ 181 pm.'),
     order: [b('{{CaO}}', '{{CaO}}'), b('{{LiF}}', '{{LiF}}'), b('{{NaCl}}', '{{NaCl}}'), b('{{KCl}}', '{{KCl}}')],
@@ -32,7 +32,7 @@ export const BANK_U4: Item[] = [
     options: [{ text: b('{{NaCl}}', '{{NaCl}}') }, { text: b('{{MgO}}', '{{MgO}}') }, { text: b('{{KBr}}', '{{KBr}}') }, { text: b('{{CCl4}}', '{{CCl4}}'), correct: true }],
     explain: b('CCl₄ is covalent: the electronegativity difference between C and Cl is only about 0.6. The other three are ionic lattices of a metal and a non-metal.', 'CCl₄ ist kovalent: Der Elektronegativitätsunterschied zwischen C und Cl beträgt nur etwa 0,6. Die anderen drei sind Ionengitter aus Metall und Nichtmetall.') },
   { id: 'i4c', unit: 4, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u4.transfer', 'u4.formula-ratio'], targets: ['ionic-is-sharing'], table: 'outer',
-    prompt: b('Magnesium (group 2) reacts with chlorine (group 17). What happens to the electrons?', 'Magnesium (Gruppe 2) reagiert mit Chlor (Gruppe 17). Was passiert mit den Elektronen?'),
+    prompt: b('Magnesium (group 2) reacts with chlorine (group 17). What happens to the electrons?', 'Magnesium (Gruppe 2, II. Hauptgruppe) reagiert mit Chlor (Gruppe 17, VII. Hauptgruppe). Was passiert mit den Elektronen?'),
     options: [
       { text: b('Magnesium and chlorine share a pair of electrons', 'Magnesium und Chlor teilen sich ein Elektronenpaar'), mis: 'ionic-is-sharing' },
       { text: b('Each chlorine atom hands one electron to magnesium', 'Jedes Chloratom gibt ein Elektron an Magnesium ab') },
@@ -48,7 +48,7 @@ export const BANK_U4: Item[] = [
       { text: b('Sodium wants a full shell, and chlorine is happy to help', 'Natrium will eine volle Schale, und Chlor hilft gern') },
       { text: b('Two chlorine atoms form ions as well, but the charges cancel', 'Zwei Chloratome bilden auch Ionen, aber die Ladungen heben sich auf') },
     ],
-    explain: b('Electronegativity 3.16 against 0.93: the electrons end up entirely on chlorine, giving {{Na+}} and {{Cl-}}. Between two chlorine atoms the pull is equal, so they share. Atoms do not want anything; the difference in pull decides (unit 5 measures it).', 'Elektronegativität 3,16 gegenüber 0,93: Die Elektronen landen ganz beim Chlor, es entstehen {{Na+}} und {{Cl-}}. Zwischen zwei Chloratomen ist der Zug gleich, also teilen sie. Atome wollen nichts; der Unterschied im Zug entscheidet (Einheit 5 misst ihn).') },
+    explain: b('Electronegativity 3.16 against 0.93: the electrons end up entirely on chlorine, giving {{Na+}} and {{Cl-}}. Between two chlorine atoms the pull is equal, so they share. Atoms do not want anything; the difference in pull decides (unit 5 measures it). In an exam you may still write that {{Na+}} and {{Cl-}} have noble-gas configurations; the reason they form is the energy balance, not a wish of the atom.', 'Elektronegativität 3,16 gegenüber 0,93: Die Elektronen landen ganz beim Chlor, es entstehen {{Na+}} und {{Cl-}}. Zwischen zwei Chloratomen ist der Zug gleich, also teilen sie. Atome wollen nichts; der Unterschied in der Anziehung entscheidet (Einheit 5 misst ihn). In der Klausur darfst du trotzdem schreiben, dass {{Na+}} und {{Cl-}} Edelgaskonfiguration haben; der Grund, warum sie entstehen, ist die Energiebilanz, nicht ein Wunsch des Atoms.') },
   { id: 'i4e', unit: 4, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u4.transfer'], targets: ['ionic-is-sharing'], table: 'outer',
     prompt: b('Lithium burns in oxygen. Which ions does the product contain?', 'Lithium verbrennt in Sauerstoff. Welche Ionen enthält das Produkt?'),
     options: [
@@ -57,7 +57,7 @@ export const BANK_U4: Item[] = [
       { text: b('{{Li-}} and {{O2+}}', '{{Li-}} und {{O2+}}') },
       { text: b('No ions: lithium and oxygen share electrons', 'Keine Ionen: Lithium und Sauerstoff teilen sich Elektronen'), mis: 'ionic-is-sharing' },
     ],
-    explain: b('Lithium (group 1) gives up its one outer electron and becomes {{Li+}}, with helium\'s arrangement. Oxygen (group 16) takes two and becomes {{O2-}}, with neon\'s. Two {{Li+}} balance one {{O2-}}: {{Li2O}}.', 'Lithium (Gruppe 1) gibt sein einziges Außenelektron ab und wird zu {{Li+}}, mit der Anordnung von Helium. Sauerstoff (Gruppe 16) nimmt zwei auf und wird zu {{O2-}}, mit der von Neon. Zwei {{Li+}} gleichen ein {{O2-}} aus: {{Li2O}}.') },
+    explain: b('Lithium (group 1) gives up its one outer electron and becomes {{Li+}}, with helium\'s arrangement. Oxygen (group 16) takes two and becomes {{O2-}}, with neon\'s. Two {{Li+}} balance one {{O2-}}: {{Li2O}}.', 'Lithium (Gruppe 1, I. Hauptgruppe) gibt sein einziges Außenelektron ab und wird zu {{Li+}}, mit der Anordnung von Helium. Sauerstoff (Gruppe 16, VI. Hauptgruppe) nimmt zwei auf und wird zu {{O2-}}, mit der von Neon. Zwei {{Li+}} gleichen ein {{O2-}} aus: {{Li2O}}.') },
 
   // ---- u4.lattice ----
   { id: 'i4f', unit: 4, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u4.lattice'], targets: ['ionic-molecules'],
@@ -70,7 +70,7 @@ export const BANK_U4: Item[] = [
     ],
     explain: b('Six: above, below, left, right, in front and behind. Each chloride has six sodium neighbours too, so the one-to-one ratio holds without any pairs.', 'Sechs: oben, unten, links, rechts, vorne und hinten. Jedes Chlorid hat ebenfalls sechs Natrium-Nachbarn, also stimmt das Verhältnis eins zu eins, ganz ohne Paare.') },
   { id: 'i4g', unit: 4, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u4.lattice'], targets: ['ionic-molecules'],
-    prompt: b('Why does sodium chloride form one giant lattice rather than separate NaCl molecules?', 'Warum bildet Natriumchlorid ein einziges Riesengitter statt einzelner NaCl-Moleküle?'),
+    prompt: b('Why does sodium chloride form one giant lattice rather than separate NaCl molecules?', 'Warum bildet Natriumchlorid ein einziges Ionengitter statt einzelner NaCl-Moleküle?'),
     options: [
       { text: b('Each {{Na+}} is bonded to one {{Cl-}}, and the pairs stick together', 'Jedes {{Na+}} ist an ein {{Cl-}} gebunden, und die Paare kleben aneinander'), mis: 'ionic-molecules' },
       { text: b('An ion\'s charge pulls in every direction, so it gathers neighbours on all sides', 'Die Ladung eines Ions zieht in alle Richtungen, also sammelt es Nachbarn auf allen Seiten'), correct: true },
@@ -106,7 +106,7 @@ export const BANK_U4: Item[] = [
       { text: b('Each calcium atom can bond to exactly two chlorine atoms in a molecule', 'Jedes Calciumatom kann in einem Molekül genau zwei Chloratome binden'), mis: 'ionic-molecules' },
       { text: b('Formulas are always one to one; the 2 is the number of shells', 'Formeln sind immer eins zu eins; die 2 ist die Zahl der Schalen'), mis: 'formula-one-to-one' },
     ],
-    explain: b('Calcium (group 2) loses two electrons; each chlorine takes one. One {{Ca2+}} and two {{Cl-}} add up to zero charge. The 2 does not come from {{Cl2}} gas: in the crystal the chlorines are separate {{Cl-}} ions.', 'Calcium (Gruppe 2) gibt zwei Elektronen ab, jedes Chlor nimmt eines auf. Ein {{Ca2+}} und zwei {{Cl-}} ergeben zusammen die Ladung null. Die 2 stammt nicht vom Gas {{Cl2}}: Im Kristall sind die Chloratome einzelne {{Cl-}}-Ionen.') },
+    explain: b('Calcium (group 2) loses two electrons; each chlorine takes one. One {{Ca2+}} and two {{Cl-}} add up to zero charge. The 2 does not come from {{Cl2}} gas: in the crystal the chlorines are separate {{Cl-}} ions.', 'Calcium (Gruppe 2, II. Hauptgruppe) gibt zwei Elektronen ab, jedes Chlor nimmt eines auf. Ein {{Ca2+}} und zwei {{Cl-}} ergeben zusammen die Ladung null. Die 2 stammt nicht vom Gas {{Cl2}}: Im Kristall sind die Chloratome einzelne {{Cl-}}-Ionen.') },
   { id: 'i4m', unit: 4, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u4.formula-ratio'], targets: ['formula-one-to-one', 'ionic-molecules'],
     prompt: b('Road crews spread calcium chloride when it is too cold for ordinary salt. It contains {{Ca2+}} and {{Cl-}}. How many ions does one formula unit release when it dissolves?', 'Der Winterdienst streut Calciumchlorid, wenn es für normales Salz zu kalt ist. Es enthält {{Ca2+}} und {{Cl-}}. Wie viele Ionen setzt eine Formeleinheit beim Lösen frei?'),
     options: [

@@ -49,8 +49,8 @@ export const UNIT4: UnitContent = {
 
   explore: {
     title: b('The Lattice Builder', 'Der Gitterbaukasten'),
-    intro: b('Each ion pulls on every ion of the opposite charge and pushes on every ion of the same charge. Nothing else holds the crystal together. Positive ions are blue, negative ions red, drawn at their measured sizes.',
-      'Jedes Ion zieht an jedem Ion der Gegenladung und drückt jedes Ion gleicher Ladung weg. Sonst hält nichts den Kristall zusammen. Positive Ionen sind blau, negative rot, in ihrer gemessenen Größe gezeichnet.'),
+    intro: b('Each ion attracts every ion of the opposite charge and repels every ion of the same charge. Nothing else holds the crystal together; what stops it collapsing is that the ions\' electron clouds push back hard when they touch. Positive ions are blue, negative ions red, drawn a little smaller than their measured sizes so that you can see inside.',
+      'Jedes Ion zieht jedes Ion der Gegenladung an und stößt jedes Ion gleicher Ladung ab. Sonst hält nichts den Kristall zusammen; dass er nicht in sich zusammenfällt, liegt daran, dass sich die Elektronenhüllen der Ionen stark abstoßen, sobald sie sich berühren. Positive Ionen sind blau, negative rot, etwas kleiner als ihre gemessene Größe gezeichnet, damit du hineinsehen kannst.'),
     tasks: [
       { id: 'transfer', key: true, text: b('Tap “Make the ions” and watch the electron move. Which atom shrinks, which one grows?', 'Tippe auf „Ionen bilden“ und sieh dem Elektron zu. Welches Atom schrumpft, welches wächst?') },
       { id: 'neighbours', key: true, text: b('Tap one ion in the middle of the crystal. How many neighbours does it have, and what charge do they carry?', 'Tippe ein Ion in der Mitte des Kristalls an. Wie viele Nachbarn hat es, und welche Ladung tragen sie?') },
@@ -131,7 +131,7 @@ export const UNIT4: UnitContent = {
       extra: {
         title: b('Hard is not the same as tough', 'Hart ist nicht dasselbe wie zäh'),
         steps: [
-          b('Hard means hard to scratch, squash or melt. Brittle means it breaks instead of bending. A crystal can be both.', 'Hart bedeutet: schwer zu ritzen, zu zerdrücken oder zu schmelzen. Spröde bedeutet: Er bricht, statt sich zu biegen. Ein Kristall kann beides sein.'),
+          b('Hard means hard to scratch or dent. Brittle means it breaks instead of bending. A crystal can be both, and can also have a high melting point.', 'Hart bedeutet: schwer zu ritzen oder einzudrücken. Spröde bedeutet: Er bricht, statt sich zu biegen. Ein Kristall kann beides sein und dazu einen hohen Schmelzpunkt haben.'),
           b('In every crystal built like salt, positive and negative ions take turns in every direction.', 'In jedem Kristall, der wie Salz gebaut ist, wechseln sich positive und negative Ionen in jeder Richtung ab.'),
           b('Push one layer along by one ion and each ion lands beside ions of its own charge: 2+ beside 2+, 2− beside 2−.', 'Schiebt man eine Schicht um ein Ion weiter, landet jedes Ion neben Ionen gleicher Ladung: 2+ neben 2+, 2− neben 2−.'),
           b('Like charges repel, just as strongly as opposite charges attracted. The layers fly apart: {{MgO}} shatters like table salt.', 'Gleiche Ladungen stoßen sich ab, genauso stark, wie sich die Gegenladungen vorher anzogen. Die Schichten fliegen auseinander: {{MgO}} zerspringt wie Kochsalz.'),
@@ -151,11 +151,11 @@ export const UNIT4: UnitContent = {
     },
     {
       title: b('Magnesium oxide', 'Magnesiumoxid'), tag: 'MgO', show: { engine: 'lattice', salt: 'MgO', compare: 'NaCl' },
-      numbers: [{ v: '2+ and 2−', label: b('charges on the two ions', 'Ladungen der beiden Ionen') }, { v: '212 pm', label: b('between the centres of Mg²⁺ and O²⁻', 'zwischen den Mittelpunkten von Mg²⁺ und O²⁻') }, { v: '3791 kJ/mol', label: b('lattice energy', 'Gitterenergie') }],
-      body: b('Magnesium gives both outer electrons to oxygen. The charges multiply to 4 instead of 1, and the smaller ions sit closer. Together, charges ÷ distance predicts a hold about 5.3 times as strong as in {{NaCl}}; the measured lattice energy is 4.8 times as large. The simple estimate is close but a little high, because it treats ions as points and ignores how they push back when they get very close.',
-        'Magnesium gibt beide Außenelektronen an Sauerstoff ab. Die Ladungen ergeben multipliziert 4 statt 1, und die kleineren Ionen sitzen näher. Zusammen sagt Ladung ÷ Abstand einen etwa 5,3-mal so starken Zusammenhalt wie bei {{NaCl}} voraus; die gemessene Gitterenergie ist 4,8-mal so groß. Die einfache Schätzung liegt nah dran, aber etwas zu hoch, weil sie Ionen als Punkte behandelt und übersieht, wie sie sich aus großer Nähe wegdrücken.'),
-      soWhat: b('Magnesium oxide bricks line furnaces and kilns: they stay solid up to 2852 °C, far above the 1538 °C at which iron melts.',
-        'Ziegel aus Magnesiumoxid kleiden Öfen aus: Sie bleiben bis 2852 °C fest, weit über den 1538 °C, bei denen Eisen schmilzt.'),
+      numbers: [{ v: '2+ / 2−', label: b('charges on the two ions', 'Ladungen der beiden Ionen') }, { v: '212 pm', label: b('between the centres of Mg²⁺ and O²⁻', 'zwischen den Mittelpunkten von Mg²⁺ und O²⁻') }, { v: '3791 kJ/mol', label: b('lattice energy', 'Gitterenergie') }],
+      body: b('Magnesium gives both outer electrons to oxygen. The charges multiply to 4 instead of 1, and the smaller ions sit closer. Together, charges ÷ distance predicts a hold about 5.3 times as strong as in {{NaCl}}; the measured lattice energy is 4.8 times as large. The simple estimate gets the direction and the rough size right but runs a little high: real ions are not hard points. They push back at close range, distort each other and attract each other in other weak ways, and these effects do not cancel exactly between the two salts.',
+        'Magnesium gibt beide Außenelektronen an Sauerstoff ab. Die Ladungen ergeben multipliziert 4 statt 1, und die kleineren Ionen sitzen näher. Zusammen sagt Ladung ÷ Abstand einen etwa 5,3-mal so starken Zusammenhalt wie bei {{NaCl}} voraus; die gemessene Gitterenergie ist 4,8-mal so groß. Die einfache Schätzung trifft die Richtung und die ungefähre Größe, liegt aber etwas zu hoch: Echte Ionen sind keine harten Punkte. Sie stoßen sich aus der Nähe ab, verformen einander und ziehen sich auf weitere schwache Arten an, und diese Effekte heben sich zwischen den beiden Salzen nicht genau auf.'),
+      soWhat: b('Magnesium oxide bricks line furnaces and kilns: they stay solid up to 2852 °C, far above the 1538 °C at which iron melts. The same counting explains the road de-icer: calcium also gives up two electrons (its ionization cliff comes after two, unit 3), but each chlorine takes only one, so every {{Ca2+}} needs two {{Cl-}}: {{CaCl2}}, not CaCl.',
+        'Ziegel aus Magnesiumoxid kleiden Öfen aus: Sie bleiben bis 2852 °C fest, weit über den 1538 °C, bei denen Eisen schmilzt. Dasselbe Abzählen erklärt das Auftausalz: Auch Calcium gibt zwei Elektronen ab (sein Sprung der Ionisierungsenergie kommt nach dem zweiten, Einheit 3), aber jedes Chlor nimmt nur eines auf, also braucht jedes {{Ca2+}} zwei {{Cl-}}: {{CaCl2}}, nicht CaCl.'),
     },
     {
       title: b('Lithium fluoride: where the simple picture stops', 'Lithiumfluorid: wo das einfache Bild an seine Grenzen stößt'), tag: 'LiF', show: { engine: 'lattice', salt: 'LiF', compare: 'NaCl' },
@@ -188,7 +188,7 @@ export const UNIT4: UnitContent = {
     id: 'u4-deeper', unit: 4, kind: 'estimate', format: 'estimate', evidence: 'transfer', concepts: ['u4.coulomb'],
     prompt: b('Go deeper: estimate how many times as strongly calcium oxide holds together as sodium chloride, using charges ÷ distance. {{CaO}}: {{Ca2+}} and {{O2-}}, centres 240 pm apart. {{NaCl}}: {{Na+}} and {{Cl-}}, 283 pm apart.',
       'Tiefer gehen: Schätze mit Ladung ÷ Abstand, wie viel stärker Calciumoxid zusammenhält als Natriumchlorid. {{CaO}}: {{Ca2+}} und {{O2-}}, Mittelpunkte 240 pm auseinander. {{NaCl}}: {{Na+}} und {{Cl-}}, 283 pm auseinander.'),
-    min: 1, max: 8, step: 0.1, answer: 4.7, tolerance: 0.25, suffix: '×',
+    min: 1, max: 8, step: 0.1, answer: 4.7, tolerance: 0.15, suffix: '×',
     near: [{ value: 4, tol: 0.25, note: b('That is the charges alone. The ions in {{CaO}} also sit closer, 240 against 283 pm, which adds a little more.', 'Das sind nur die Ladungen. Die Ionen in {{CaO}} sitzen außerdem näher, 240 gegenüber 283 pm, das legt noch etwas drauf.') }],
     explain: b('(2 × 2) ÷ 240 against (1 × 1) ÷ 283, so 4 × 283 ÷ 240 ≈ 4.7. The measured lattice energies are 3414 and 787 kJ/mol, a ratio of 4.3: the estimate lands close, but a little high, as it did for {{MgO}}.',
       '(2 × 2) ÷ 240 gegenüber (1 × 1) ÷ 283, also 4 × 283 ÷ 240 ≈ 4,7. Die gemessenen Gitterenergien betragen 3414 und 787 kJ/mol, ein Verhältnis von 4,3: Die Schätzung liegt nah dran, aber etwas zu hoch, wie schon bei {{MgO}}.'),
@@ -220,8 +220,8 @@ export const UNIT4: UnitContent = {
         en: /(shift|slide|slip|move|push|knock|hammer|hit)\w*.{0,60}\b(same|like|similar) charges?|\b(same|like|similar) charges?.{0,40}(repel|push|meet|next to|side by side|line up|face|contact|together|touch|beside)|(plus|pluses|\+|positive|positives) (are |is |end up |ends up |sit |sits |land |lands |come |comes )?(next to|beside|meets?|against|on top of|facing|touching|side by side with) (other )?(plus|pluses|\+|positive|positives)|(minus|minuses|negative|negatives) (are |is |end up |sit |sits |land |come )?(next to|beside|meets?|against|on top of|facing|touching) (other )?(minus|minuses|negative|negatives)|(pluses|positives|minuses|negatives) (are |sit )?(side by side|together)/,
         de: /(verschieb|versetz|rutsch|schlag|hammer)\w*.{0,60}gleich(e|en|namig)\w* ladung|gleich(e|en|namig)\w* ladung\w*.{0,40}(abstoß|stoßen|treffen|nebeneinander|gegenüber|aufeinander)|(treffen|stoßen|liegen|sitzen)\w*.{0,30}gleich\w* ladung|(plus|\+) (neben|an|auf|trifft) (plus|\+)|(minus|-) (neben|an|auf|trifft) (minus|-)|(plus|minus|positive\w*|negative\w*) (liegen |sitzen |stehen )?nebeneinander/ },
     ] as Idea[],
-    tightened: b('The metal hands its outer electrons to the non-metal, so the crystal is made of positive and negative ions. Each ion pulls on all the ions around it, so they stack into a giant lattice in which every ion is surrounded by ions of the opposite charge; there are no separate molecules. The pull is stronger for bigger charges and for smaller ions that sit closer, which is why salts melt only at high temperatures, and they conduct only once molten or dissolved, when the ions can move. Push one layer along by one ion and like charges meet, so the crystal shatters instead of bending.',
-      'Das Metall gibt seine Außenelektronen an das Nichtmetall ab, deshalb besteht der Kristall aus positiven und negativen Ionen. Jedes Ion zieht an allen Ionen um sich herum, also stapeln sie sich zu einem Riesengitter, in dem jedes Ion von Ionen der Gegenladung umgeben ist; einzelne Moleküle gibt es nicht. Der Zug ist stärker bei größeren Ladungen und bei kleineren Ionen, die näher beieinandersitzen. Deshalb schmelzen Salze erst bei hohen Temperaturen, und sie leiten erst geschmolzen oder gelöst, wenn die Ionen sich bewegen können. Schiebt man eine Schicht um ein Ion weiter, treffen gleiche Ladungen aufeinander, und der Kristall zerspringt, statt sich zu verbiegen.'),
+    tightened: b('The metal hands its outer electrons to the non-metal, so the crystal is made of positive and negative ions. Each ion pulls on all the ions around it, so they stack into a giant lattice in which every ion is surrounded by ions of the opposite charge; there are no separate molecules. The attraction is stronger for bigger charges and for smaller ions that sit closer, which is why salts melt only at high temperatures, and they conduct only once molten or dissolved, when the ions can move. Push one layer along by one ion and like charges meet, so the crystal shatters instead of bending.',
+      'Das Metall gibt seine Außenelektronen an das Nichtmetall ab, deshalb besteht der Kristall aus positiven und negativen Ionen. Jedes Ion zieht an allen Ionen um sich herum, also stapeln sie sich zu einem Ionengitter, in dem jedes Ion von Ionen der Gegenladung umgeben ist; einzelne Moleküle gibt es nicht. Die Anziehung ist stärker bei größeren Ladungen und bei kleineren Ionen, die näher beieinandersitzen. Deshalb schmelzen Salze erst bei hohen Temperaturen, und sie leiten erst geschmolzen oder gelöst, wenn die Ionen sich bewegen können. Schiebt man eine Schicht um ein Ion weiter, treffen gleiche Ladungen aufeinander, und der Kristall zerspringt, statt sich zu verbiegen.'),
   },
 
   terms: ['ionic-bond', 'ionic-lattice', 'lattice-energy', 'formula-unit', 'octet'],
@@ -232,9 +232,9 @@ export const UNIT4: UnitContent = {
       title: b('Physical Properties of Ionic Compounds', 'Physical Properties of Ionic Compounds'), source: 'CK-12, via LibreTexts',
       url: 'https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(CK-12)/08%3A_Ionic_and_Metallic_Bonding/8.09%3A_Physical_Properties_of_Ionic_Compounds',
       lookFor: [
-        b('The melting point it gives for sodium chloride. Compare it with the 801 °C on the gauge.', ''),
-        b('Its picture of a shifted layer. Which charges end up side by side, and does it match what the Lattice Builder showed?', ''),
+        b('Its picture of a shifted layer. Which charges end up side by side? Compare it with the reveal after the hammer question.', ''),
         b('When it says ionic compounds conduct. Why not as a solid, if the ions are there all along?', ''),
+        b('It says melting has to break all of the ionic bonds. What did the lithium fluoride card say melting really does?', ''),
       ],
     },
     {
@@ -254,7 +254,7 @@ export const UNIT4: UnitContent = {
       lookFor: [
         b('', 'Die Gleichungen Na → Na⁺ + e⁻ und Cl + e⁻ → Cl⁻. Vergleiche sie mit dem Elektronenübergang im Gitterbaukasten.'),
         b('', 'Den Satz, die Ionenbindung sei „ungerichtet“. Was bedeutet das für die sechs Nachbarn, die du gezählt hast?'),
-        b('', 'Die Stelle, an der Atome einen günstigen Zustand „anstreben“. Atome streben nichts an: Was bezahlt in Wirklichkeit die Energie, um {{Na+}} zu bilden? (Tipp: die Gitterenergie, 787 kJ/mol bei {{NaCl}}.)'),
+        b('', 'Die Stelle, an der Atome einen günstigen Zustand „anstreben“. Atome streben nichts an: Was bezahlt in Wirklichkeit die Energie, um {{Na+}} zu bilden? (Tipp: die Gitterenergie, 787 kJ/mol bei {{NaCl}}.) In der Klausur darfst du trotzdem schreiben: {{Na+}} und {{Cl-}} haben Edelgaskonfiguration. Der Grund, warum sie entstehen, ist die Energiebilanz, nicht ein Streben der Atome.'),
       ],
     },
   ] as Reading[],

@@ -71,8 +71,8 @@ export const BANK_U3: Item[] = [
       { text: b('about the same, because both outer shells are shell 2', 'etwa gleich, weil beide Außenschalen Schale 2 sind') },
       { text: b('higher, because nine protons pull on the same shell', 'größer, weil neun Protonen an derselben Schale ziehen'), correct: true },
     ],
-    explain: b('1681 kJ/mol, more than three times lithium\'s 520. Same shell, but nine protons against three: in the simple model the net pull is about 7 against 1.',
-      '1681 kJ/mol, mehr als das Dreifache der 520 von Lithium. Gleiche Schale, aber neun Protonen gegen drei: Im einfachen Modell beträgt die effektive Kernladung etwa 7 gegen 1.') },
+    explain: b('1681 kJ/mol, more than three times lithium\'s 520. Same shell, but nine protons against three: in the simple count the pull is about 7 against 1. That gives the direction, not the factor.',
+      '1681 kJ/mol, mehr als das Dreifache der 520 von Lithium. Gleiche Schale, aber neun Protonen gegen drei: In der einfachen Zählung beträgt die effektive Kernladung etwa 7 gegen 1. Das zeigt die Richtung, nicht den Faktor.') },
 
   // u3.ie-cliff
   { id: 'i3b', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-cliff'],
@@ -109,8 +109,8 @@ export const BANK_U3: Item[] = [
       { text: b('K²⁺ and Br⁻', 'K²⁺ und Br⁻'), mis: 'kbr-charges' },
       { text: b('K⁺ and Br²⁻', 'K⁺ und Br²⁻'), mis: 'kbr-charges' },
     ],
-    explain: b('Potassium has a single electron in its outer shell, far easier to remove than any of the electrons beneath it (419 against 3052 kJ/mol); what is left has argon\'s arrangement. Bromine is one electron short of eight outer electrons, an [[octet]], and takes exactly one.',
-      'Kalium hat ein einzelnes Elektron in der äußeren Schale, viel leichter abzulösen als alle Elektronen darunter (419 gegen 3052 kJ/mol); was bleibt, hat die Anordnung von Argon. Brom fehlt ein Elektron zu acht Außenelektronen, einem [[octet|Oktett]], und es nimmt genau eines auf.') },
+    explain: b('Potassium has a single electron in its outer shell, far easier to remove than any of the electrons beneath it (419 against 3052 kJ/mol); what is left has argon\'s arrangement. Bromine has seven outer electrons; gaining one costs far less than losing seven, and {{Br-}} ends up with eight, an [[octet]].',
+      'Kalium hat ein einzelnes Elektron in der äußeren Schale, viel leichter abzulösen als alle Elektronen darunter (419 gegen 3052 kJ/mol); was bleibt, hat die Anordnung von Argon. Brom hat sieben Außenelektronen; eines aufzunehmen kostet weit weniger, als sieben abzugeben, und {{Br-}} hat danach acht, ein [[octet|Oktett]].') },
   { id: 'i3k', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.ion-charges', 'u3.ie-cliff'],
     prompt: b('Calcium\'s energies are 590, 1145 and 4912 kJ/mol for its first three electrons. Why does it form {{Ca2+}}, not {{Ca+}} or {{Ca3+}}?', 'Die Energien von Calcium für die ersten drei Elektronen sind 590, 1145 und 4912 kJ/mol. Warum bildet es {{Ca2+}} und nicht {{Ca+}} oder {{Ca3+}}?'),
     options: [
@@ -182,8 +182,8 @@ export const BANK_U3: Item[] = [
       { text: b('loses seven electrons and becomes {{F7+}}', 'gibt Fluor sieben Elektronen ab und wird zu {{F7+}}'), mis: 'gain-lose-swapped' },
       { text: b('loses one electron and becomes {{F+}}', 'gibt Fluor ein Elektron ab und wird zu {{F+}}') },
     ],
-    explain: b('One electron short of eight, fluorine takes one from sodium. Losing seven would cost more than any reaction can pay: fluorine\'s first ionization energy alone is 1681 kJ/mol, and each further one costs more.',
-      'Fluor fehlt ein Elektron zu acht, also nimmt es eines von Natrium auf. Sieben abzugeben würde mehr kosten, als irgendeine Reaktion zahlen kann: Schon die erste Ionisierungsenergie von Fluor beträgt 1681 kJ/mol, und jede weitere kostet mehr.') },
+    explain: b('Fluorine gains one electron from sodium and ends up with eight outer electrons. Losing seven would cost more than any reaction can pay: fluorine\'s first ionization energy alone is 1681 kJ/mol, and each further one costs more.',
+      'Fluor nimmt ein Elektron von Natrium auf und hat danach acht Außenelektronen. Sieben abzugeben würde mehr kosten, als irgendeine Reaktion zahlen kann: Schon die erste Ionisierungsenergie von Fluor beträgt 1681 kJ/mol, und jede weitere kostet mehr.') },
   { id: 'i3s', unit: 3, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u3.gain-vs-lose'],
     prompt: b('Why do non-metals such as oxygen gain electrons in reactions with metals, instead of losing their outer ones?', 'Warum nehmen Nichtmetalle wie Sauerstoff in Reaktionen mit Metallen Elektronen auf, statt ihre äußeren abzugeben?'),
     options: [
