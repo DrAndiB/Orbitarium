@@ -34,8 +34,9 @@ export function ideaHints(text: string, ideas: Idea[]): Set<string> {
   const norm = asciiCharges(text.toLowerCase().replace(/[’‘`´]/g, "'")).replace(/\s+/g, ' ');
   // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
   // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together.
-  // Cause and effect stay together ("…, so …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
-  const clauses = norm.split(/[.;:!?\n]|,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because)\b)|\s(?:and|but|while|whereas|und|aber|während|sondern)\s(?!\d)/).map((c) => c.trim()).filter(Boolean);
+  // Cause and effect and contrast stay together ("…, so …", "… but …", "…, deshalb …"); a list of numbers
+  // ("2, 8, 18") is not split either.
+  const clauses = norm.split(/[.;:!?\n]|,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d)/).map((c) => c.trim()).filter(Boolean);
   const hits = new Set<string>();
   for (const idea of ideas) {
     // A clause that states the opposite of the idea (e.g. "the shape depends on the number of atoms") rules it out.

@@ -232,7 +232,7 @@ export class AtomUI {
     const cfg = ionize(groundConfig(Z), this.pulled.length);
     this.stage.setAtom(Z, cfg);
     this.refresh();
-    buzz(this.pulled.length > 1 && v / this.pulled[this.pulled.length - 2] > 2.5 ? 'heavy' : 'light');
+    buzz(this.pulled.length - 1 === cliffAfter(Z) ? 'heavy' : 'light');
     this.emit('pulled', this.pulled.length, v);
   }
 

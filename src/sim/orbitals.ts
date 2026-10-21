@@ -74,7 +74,7 @@ export class AtomStage extends Stage3D {
     this.electronGroups = [];
     const charge = this.Z - [...this.config.values()].reduce((a, b) => a + b, 0);
     // nucleus
-    const nuc = new THREE.Mesh(new THREE.SphereGeometry(0.26, 32, 24), new THREE.MeshStandardMaterial({ color: 0xff8a7a, emissive: 0x401010, roughness: 0.4 }));
+    const nuc = new THREE.Mesh(new THREE.SphereGeometry(0.26, 32, 24), new THREE.MeshStandardMaterial({ color: 0x6fb2ff, emissive: 0x0d2850, roughness: 0.4 }));
     this.atom.add(nuc);
     const lab = this.label(`${this.Z}+`, 0.32, '#ffffff');
     lab.position.set(0, 0.5, 0);
@@ -99,7 +99,7 @@ export class AtomStage extends Stage3D {
       for (let j = 0; j < k; j++) {
         const a = (j / k) * Math.PI * 2;
         const hot = newestShell === n && j === k - 1;
-        const dot = new THREE.Mesh(new THREE.SphereGeometry(hot ? 0.12 : 0.085, 16, 12), new THREE.MeshStandardMaterial({ color: hot ? 0xffffff : 0x5aa9ff, emissive: hot ? 0xffc15e : 0x123a6a, emissiveIntensity: hot ? 1.2 : 0.8 }));
+        const dot = new THREE.Mesh(new THREE.SphereGeometry(hot ? 0.12 : 0.085, 16, 12), new THREE.MeshStandardMaterial({ color: hot ? 0xffffff : 0xff8f8f, emissive: hot ? 0xffc15e : 0x4a1616, emissiveIntensity: hot ? 1.2 : 0.8 }));
         dot.position.set(R * Math.cos(a), 0, R * Math.sin(a));
         g.add(dot);
       }
