@@ -148,6 +148,7 @@ export class LatticeUI {
     this.gauge.replaceChildren(
       h('div', { class: 'ob-head' }, h('strong', null, L({ en: 'How strongly the ions hold on', de: 'Wie stark die Ionen zusammenhalten' })),
         h('span', { class: 'muted small' }, salts.length > 1 ? L({ en: 'the last two salts you loaded', de: 'die letzten zwei geladenen Salze' }) : L({ en: 'load a second salt to compare', de: 'lade ein zweites Salz zum Vergleich' }))),
+      h('p', { class: 'muted small', style: 'margin:0 0 8px' }, L({ en: 'In plain words: bigger charges and smaller ions hold on harder. The model multiplies the charges and divides by the distance between the ion centres.', de: 'In Worten: Größere Ladungen und kleinere Ionen halten stärker zusammen. Das Modell multipliziert die Ladungen und teilt durch den Abstand der Ionenmittelpunkte.' })),
       h('div', { class: 'gcols' }, ...salts.map(col)));
   }
 
