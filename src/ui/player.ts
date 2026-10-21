@@ -7,15 +7,23 @@ import { getState, save, today } from '../model/store';
 import { markSeen, logSession, recall, pickRekindle, daysSinceLastSession, finishUnit, finishSecondPass } from '../model/learner';
 import { itemRun } from './questions';
 import { WorkbenchUI } from '../sim/workbenchUI';
+import { AtomUI } from '../sim/orbitalsUI';
+import { LatticeUI } from '../sim/latticeUI';
+import { BondUI } from '../sim/bondUI';
 import { createTable, openTable, tableIcon } from './ptable';
 import { go } from '../router';
 import { onLeave } from './lifecycle';
 import { scheduleNudges } from '../platform';
 import { unit0 } from '../units/u00';
 import { unit6 } from '../units/u06';
+import { unit1 } from '../units/u01';
+import { unit2 } from '../units/u02';
+import { unit3 } from '../units/u03';
+import { unit4 } from '../units/u04';
+import { unit5 } from '../units/u05';
 import type { StepCtx, UnitPlayer } from '../units/types';
 
-const PLAYERS: Record<number, UnitPlayer> = { 0: unit0, 6: unit6 };
+const PLAYERS: Record<number, UnitPlayer> = { 0: unit0, 1: unit1, 2: unit2, 3: unit3, 4: unit4, 5: unit5, 6: unit6 };
 const STEPS = ['stepWarmup', 'stepPuzzle', 'stepExplore', 'stepPredict', 'stepExamples', 'stepExplain', 'stepWrap'];
 /** Typical minutes per step, for the "minutes left" line. Exploring varies most. */
 const MINUTES = [3, 3, 7, 4, 5, 4, 1];
@@ -34,7 +42,7 @@ function header(unit: number, step: number, title: Bi): HTMLElement {
   });
   return h('header', null,
     h('div', { class: 'topbar' },
-      h('div', { style: 'min-width:0' }, h('div', { class: 'muted small' }, `${L({ en: 'Unit', de: 'Einheit' })} ${unit}`), h('div', { class: 'title' }, L(title))),
+      h('div', { style: 'min-width:0' }, h('div', { class: 'muted small' }, `${L({ en: 'Unit', de: 'Einheit' })} ${unit}`), h('div', { class: 'title' }, rich(title))),
       h('div', { class: 'topbar-actions' },
         h('button', { class: 'icon-btn', type: 'button', 'aria-label': L({ en: 'Open the periodic table', de: 'Periodensystem öffnen' }), onclick: () => openTable() }, tableIcon()),
         h('button', { class: 'icon-btn', type: 'button', 'aria-label': L({ en: 'Leave the unit (progress is kept)', de: 'Einheit verlassen (Fortschritt bleibt)' }), onclick: () => go('#/') }, closeIcon()))),
@@ -79,6 +87,9 @@ function showStep(root: HTMLElement, player: UnitPlayer, step: number) {
     unit: player.n,
     workbench: (opts) => { const ui = new WorkbenchUI(opts); disposers.push(() => ui.dispose()); return ui; },
     table: (opts) => { const tb = createTable(opts); disposers.push(() => tb.dispose()); return tb; },
+    atom: (opts) => { const ui = new AtomUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    lattice: (opts) => { const ui = new LatticeUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    bond: (opts) => { const ui = new BondUI(opts); disposers.push(() => ui.dispose()); return ui; },
   };
   player.steps[step](body, enable, ctx);
   root.append(ctaWrap);

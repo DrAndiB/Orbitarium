@@ -1,12 +1,18 @@
 import type { Bi } from '../i18n';
 import type { WorkbenchUI, WorkbenchUIOptions } from '../sim/workbenchUI';
 import type { TableHandle, TableOptions } from '../ui/ptable';
+import type { AtomUI, AtomUIOptions } from '../sim/orbitalsUI';
+import type { LatticeUI, LatticeUIOptions } from '../sim/latticeUI';
+import type { BondUI, BondUIOptions } from '../sim/bondUI';
 
 /** Helpers a step gets from the player; anything created through them is disposed when the step changes. */
 export interface StepCtx {
   unit: number;
   workbench(opts: WorkbenchUIOptions): WorkbenchUI;
   table(opts: TableOptions): TableHandle;
+  atom(opts: AtomUIOptions): AtomUI;
+  lattice(opts: LatticeUIOptions): LatticeUI;
+  bond(opts: BondUIOptions): BondUI;
 }
 export type StepFn = (body: HTMLElement, enable: () => void, ctx: StepCtx) => void;
 export interface UnitPlayer { n: number; title: Bi; steps: StepFn[]; }

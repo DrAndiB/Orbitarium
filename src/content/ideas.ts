@@ -2,7 +2,7 @@
 import type { Idea } from './unit06';
 
 const NEG = /\b(not|no|never|nothing|neither|don't|doesn't|isn't|aren't|can't|cannot|won't|nicht|nichts|kein\w*|nie|weder)\b/;
-const FUNCTION_WORDS = /^(the|a|an|is|are|be|of|to|in|on|at|by|it|its|they|their|that|this|which|so|and|but|as|with|for|has|have|der|die|das|den|dem|des|ein|eine|einen|ist|sind|und|aber|sich|zu|von|mit|im|in|am|es|sie|dass|weil|wird|werden|hat|haben)$/;
+const FUNCTION_WORDS = /^(the|a|an|is|are|be|of|to|in|on|at|by|it|its|they|their|that|this|which|so|and|but|as|with|for|has|have|der|die|das|den|dem|des|ein|eine|einen|einer|eines|einem|ist|sind|und|aber|sich|zu|von|mit|im|in|am|es|sie|dass|weil|wird|werden|hat|haben|beim|bei|nach|vor|wie|nur|kein|keine|nicht|also|auf|für|aus|man|wenn|dann|deshalb|je|desto)$/;
 
 /** A run of terms with no sentence around them. Hints are pointless there; the learner is asked for sentences. */
 export function looksLikeKeywordList(text: string): boolean {
@@ -20,7 +20,9 @@ export function looksLikeKeywordList(text: string): boolean {
  */
 export function ideaHints(text: string, ideas: Idea[]): Set<string> {
   const norm = text.toLowerCase().replace(/[’‘`´]/g, "'").replace(/\s+/g, ' ');
-  const clauses = norm.split(/[.;:!?\n]|,\s|\s(?:and|but|while|whereas|so|und|aber|während|sondern|deshalb|also)\s/).map((c) => c.trim()).filter(Boolean);
+  // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
+  // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together.
+  const clauses = norm.split(/[.;:!?\n]|,\s(?!(?:der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where)\b)|\s(?:and|but|while|whereas|so|und|aber|während|sondern|deshalb|also)\s/).map((c) => c.trim()).filter(Boolean);
   const hits = new Set<string>();
   for (const idea of ideas) {
     // A clause that states the opposite of the idea (e.g. "the shape depends on the number of atoms") rules it out.

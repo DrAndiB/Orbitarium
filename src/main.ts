@@ -2,6 +2,7 @@ import '@fontsource/young-serif/400.css';
 import '@fontsource/atkinson-hyperlegible-next/400.css';
 import '@fontsource/atkinson-hyperlegible-next/700.css';
 import './styles.css';
+import './content/registry';
 import { h, s, clear, closeTermCard } from './ui/dom';
 import { t, setLang, setHint } from './i18n';
 import { getState } from './model/store';

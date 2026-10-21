@@ -20,6 +20,8 @@ const fsrs = await import('../../src/model/fsrs');
 const items = await import('../../src/content/items');
 const { UNIT0 } = await import('../../src/content/unit00');
 const { UNIT6 } = await import('../../src/content/unit06');
+const { CONTENT_UNITS } = await import('../../src/content/registry');
+const { unitByN } = await import('../../src/content/curriculum');
 type Item = import('../../src/content/items').Item;
 
 const OUT = process.argv[2] ?? '/home/claude/sim-out/model-sim.json';
@@ -28,7 +30,7 @@ const DAYS = 70;
 const START = '2026-10-26'; // a Monday
 const UNIT_COUNT = 30;
 
-// ---------- content: unit 0 and unit 6 are real; every other unit is a clone of unit 6 with renamed ids ----------
+// ---------- content: units 0–6 are real; every later unit is a clone of unit 6 with renamed ids ----------
 const realBank = items.BANK.slice();
 const u6bank = realBank.filter((i) => i.unit === 6);
 const u0bank = realBank.filter((i) => i.unit === 0);
@@ -88,11 +90,23 @@ function unit0(): UnitDef {
     ideas: UNIT0.explain.ideas.map((i) => ({ concept: i.concept })),
   };
 }
+/** Units 1–5, built from their content files: the same in-unit items the player records. */
+function contentUnit(n: number): UnitDef {
+  const U = CONTENT_UNITS.find((u) => u.n === n)!;
+  const unitItems = [U.puzzle.question, U.explore.check, ...U.predictions.map((p) => p.item), U.flaw] as Item[];
+  const bank = realBank.filter((i) => i.unit === n);
+  const mis = [...new Set([...unitItems, ...bank].flatMap((i: any) => [...(i.targets ?? []), ...((i.options ?? []).map((o: any) => o.mis).filter(Boolean))]))];
+  return {
+    n, concepts: unitByN(n).concepts.map((c) => c.id), mis,
+    steps: unitItems.map((item) => ({ kind: 'item' as const, item })),
+    ideas: U.explain.ideas.map((i) => ({ concept: i.concept })),
+  };
+}
 const UNITS: UnitDef[] = [];
 for (let n = 0; n < UNIT_COUNT; n++) {
-  const def = n === 0 ? unit0() : unit6Like(n);
+  const def = n === 0 ? unit0() : n <= 5 ? contentUnit(n) : unit6Like(n);
   UNITS.push(def);
-  if (n === 6) items.BANK.push(...u6bank);
+  if (n >= 1 && n <= 6) items.BANK.push(...realBank.filter((i) => i.unit === n));
   else if (n !== 0) items.BANK.push(...u6bank.map((it) => cloneItem(n, it, 'b')));
 }
 const ALL_MIS = UNITS.flatMap((u) => u.mis);

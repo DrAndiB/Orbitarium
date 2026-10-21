@@ -101,7 +101,7 @@ const UI: Record<string, Bi> = {
   nextReview: { en: 'next review {d}', de: 'nächste Wiederholung {d}' },
   // Lab
   labTitle: { en: 'Free lab', de: 'Freies Labor' },
-  labLocked: { en: 'The Molecule Workbench opens as a sandbox once unit 6 is done. The periodic table is always open under Table.', de: 'Die Molekül-Werkbank wird zur Spielwiese, sobald Einheit 6 abgeschlossen ist. Das Periodensystem ist unter Tabelle immer offen.' },
+  labLocked: { en: 'Opens as a sandbox once you have done one of its units.', de: 'Wird zur Spielwiese, sobald du eine seiner Einheiten gemacht hast.' },
   build: { en: 'Build your own', de: 'Selbst bauen' },
   centralAtom: { en: 'Central atom', de: 'Zentralatom' },
   partners: { en: 'Partners', de: 'Bindungspartner' },

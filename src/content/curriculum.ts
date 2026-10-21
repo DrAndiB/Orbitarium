@@ -40,24 +40,43 @@ export const UNITS: UnitInfo[] = [
     c('u0.mass-average', 'Atomic mass is an isotope average', 'Die Atommasse ist ein Isotopen-Mittelwert'),
   ]),
   u(1, 1, 'Shells and orbitals', 'Schalen und Orbitale', 'Orbital Viewer', 1, [
-    c('u1.shells', 'Shells hold 2n² electrons', 'Schalen fassen 2n² Elektronen'),
+    c('u1.levels-light', 'Electrons have only certain energies; a jump down gives light of one colour', 'Elektronen haben nur bestimmte Energien; ein Sprung nach unten gibt Licht einer Farbe'),
+    c('u1.shells', 'Shell n holds up to 2n² electrons', 'Schale n fasst bis zu 2n² Elektronen'),
+    c('u1.subshells', 's, p, d, f hold 2, 6, 10, 14; shell n has n kinds', 's, p, d, f fassen 2, 6, 10, 14; Schale n hat n Sorten'),
     c('u1.orbit-vs-orbital', 'Orbitals are clouds, not paths', 'Orbitale sind Wolken, keine Bahnen'),
-    c('u1.subshells', 's, p, d, f capacities and where they start', 's-, p-, d-, f-Kapazitäten und wo sie beginnen'),
+    c('u1.filling-order', 'Lowest energy fills first: 4s before 3d', 'Die niedrigste Energie wird zuerst besetzt: 4s vor 3d'),
+    c('u1.config', 'Reading and writing an electron configuration', 'Elektronenkonfigurationen lesen und schreiben'),
   ]),
   u(2, 1, 'Z_{eff} and size', 'Z_{eff} und Atomgröße', 'Orbital Viewer', 1, [
-    c('u2.zeff', 'Z_{eff} ≈ Z − S', 'Z_{eff} ≈ Z − S'),
+    c('u2.zeff', 'Z_{eff} ≈ Z − inner electrons: the net pull on the outer electrons', 'Z_{eff} ≈ Z − innere Elektronen: der Nettozug auf die Außenelektronen'),
+    c('u2.shielding', 'Inner electrons shield the outer ones from the nucleus', 'Innere Elektronen schirmen die äußeren vom Kern ab'),
     c('u2.radius-trend', 'Radius shrinks across a period, grows down a group', 'Radius sinkt in der Periode, wächst in der Gruppe'),
+    c('u2.distance', 'Down a group, distance wins: the net pull stays about the same', 'In der Gruppe nach unten gewinnt der Abstand: der Nettozug bleibt etwa gleich'),
+    c('u2.ions-size', 'Positive ions are smaller than their atoms, negative ions bigger', 'Positive Ionen sind kleiner als ihre Atome, negative größer'),
+    c('u2.isoelectronic', 'Same number of electrons, more protons: smaller', 'Gleich viele Elektronen, mehr Protonen: kleiner'),
   ]),
   u(3, 1, 'Ionization and ion charges', 'Ionisierung und Ionenladungen', 'Orbital Viewer', 1, [
-    c('u3.ie-cliff', 'The ionization cliff reveals valence', 'Der Sprung der Ionisierungsenergie zeigt die Wertigkeit'),
+    c('u3.ie-definition', 'Ionization energy: the energy to pull off the outermost electron', 'Ionisierungsenergie: die Energie, um das äußerste Elektron abzuziehen'),
+    c('u3.ie-trend', 'First ionization energy rises across a period, falls down a group', 'Die erste Ionisierungsenergie steigt in der Periode und fällt in der Gruppe'),
+    c('u3.ie-cliff', 'The ionization cliff reveals the outer electrons', 'Der Sprung der Ionisierungsenergie zeigt die Außenelektronen'),
     c('u3.ion-charges', 'Ion charges from the group', 'Ionenladungen aus der Gruppe'),
+    c('u3.noble-config', 'Ions often share a noble gas\'s electron arrangement, not its identity', 'Ionen teilen oft die Elektronenanordnung eines Edelgases, nicht seine Identität'),
+    c('u3.gain-vs-lose', 'Metals lose electrons, non-metals gain them', 'Metalle geben Elektronen ab, Nichtmetalle nehmen sie auf'),
   ]),
   u(4, 2, 'Ionic bonding', 'Ionenbindung', 'Lattice Builder', 1, [
-    c('u4.transfer', 'Electron transfer completes both shells', 'Elektronenübergang vervollständigt beide Schalen'),
-    c('u4.coulomb', 'Lattice strength scales with q₁q₂/r', 'Gitterstärke skaliert mit q₁q₂/r'),
+    c('u4.transfer', 'Electron transfer turns atoms into ions', 'Elektronenübergang macht aus Atomen Ionen'),
+    c('u4.lattice', 'An ionic solid is a giant lattice, not molecules', 'Ein Ionenkristall ist ein Riesengitter, keine Moleküle'),
+    c('u4.coulomb', 'Lattice strength grows with the charges and shrinks with distance', 'Die Gitterstärke wächst mit den Ladungen und sinkt mit dem Abstand'),
+    c('u4.formula-ratio', 'Charges balance: the formula is the ion ratio', 'Ladungen gleichen sich aus: Die Formel ist das Ionenverhältnis'),
+    c('u4.properties', 'High melting points; conducts only when molten or dissolved', 'Hohe Schmelzpunkte; leitet nur geschmolzen oder gelöst'),
+    c('u4.brittle', 'A shifted layer puts like charges side by side: brittle', 'Eine verschobene Schicht bringt gleiche Ladungen nebeneinander: spröde'),
   ]),
   u(5, 2, 'Covalent bonds and electronegativity', 'Atombindung und Elektronegativität', 'Charge Field', 1, [
+    c('u5.sharing', 'A covalent bond is a shared electron pair', 'Eine Atombindung ist ein gemeinsames Elektronenpaar'),
+    c('u5.bond-count', 'An atom forms as many bonds as it lacks electrons for an octet', 'Ein Atom bildet so viele Bindungen, wie ihm Elektronen zum Oktett fehlen'),
+    c('u5.multiple-bonds', 'Double and triple bonds are shorter and stronger', 'Doppel- und Dreifachbindungen sind kürzer und stärker'),
     c('u5.en', 'Electronegativity pulls shared electrons', 'Elektronegativität zieht gemeinsame Elektronen'),
+    c('u5.partial-charges', 'Unequal sharing leaves partial charges, δ+ and δ−', 'Ungleiches Teilen hinterlässt Teilladungen, δ+ und δ−'),
     c('u5.delta-chi', 'Δχ bands: nonpolar, polar, ionic', 'Δχ-Bereiche: unpolar, polar, ionisch'),
   ]),
   u(6, 2, 'Lone pairs and shape', 'Freie Elektronenpaare und Molekülgestalt', 'Molecule Workbench', 0, [
@@ -116,7 +135,7 @@ export const UNITS: UnitInfo[] = [
   u(44, 10, 'Esters and condensation', 'Ester und Kondensation', 'Molecule Workbench', 3),
   u(45, 10, 'Polymers and biomolecules', 'Polymere und Biomoleküle', 'Molecule Workbench', 3),
 ];
-for (const n of [0, 6]) unitByNumber(n).playable = true;
+for (const n of [0, 1, 2, 3, 4, 5, 6]) unitByNumber(n).playable = true;
 function unitByNumber(n: number) { return UNITS.find((x) => x.n === n)!; }
 
 export const unitByN = (n: number) => UNITS.find((x) => x.n === n)!;

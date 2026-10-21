@@ -1,4 +1,9 @@
 import type { Bi } from '../i18n';
+import { BANK_U1 } from './bank/u01';
+import { BANK_U2 } from './bank/u02';
+import { BANK_U3 } from './bank/u03';
+import { BANK_U4 } from './bank/u04';
+import { BANK_U5 } from './bank/u05';
 
 // Question bank. Each item names the concepts it exercises; wrong options can name the
 // misconception they reveal. `evidence` says what a correct answer proves on the
@@ -164,70 +169,7 @@ export const BANK: Item[] = [
       { text: b('bromine-75 and bromine-85', 'Brom-75 und Brom-85') },
     ],
     explain: b('Two isotopes, roughly half each, average to about 79.9: bromine-79 (51 %) and bromine-81 (49 %). No single bromine atom weighs 79.9 u, and mass numbers are always whole.', 'Zwei Isotope, je etwa zur Hälfte, ergeben im Mittel etwa 79,9: Brom-79 (51 %) und Brom-81 (49 %). Kein einzelnes Bromatom wiegt 79,9 u, und Massenzahlen sind immer ganz.') },
-  // Unit 1
-  { id: 'i1a', unit: 1, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u1.subshells'], targets: ['d-in-shell-2'],
-    prompt: b('Which subshells exist in shell 2?', 'Welche Unterschalen gibt es in Schale 2?'),
-    options: [
-      { text: b('2s and 2p', '2s und 2p'), correct: true },
-      { text: b('2s, 2p and 2d', '2s, 2p und 2d'), mis: 'd-in-shell-2' },
-      { text: b('Only 2s', 'Nur 2s') },
-      { text: b('2p and 2d', '2p und 2d'), mis: 'd-in-shell-2' },
-    ],
-    explain: b('Shell n has n subshells, so shell 2 has s and p. d orbitals first appear in shell 3.', 'Schale n hat n Unterschalen, Schale 2 also s und p. d-Orbitale gibt es erst ab Schale 3.') },
-  { id: 'i1b', unit: 1, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u1.orbit-vs-orbital'], targets: ['bohr-orbits'],
-    prompt: b('An electron in a 2p [[orbital]]…', 'Ein Elektron in einem 2p-[[orbital]]…'),
-    options: [
-      { text: b('travels along a figure-of-eight path', 'bewegt sich auf einer achtförmigen Bahn'), mis: 'bohr-orbits' },
-      { text: b('is somewhere in a dumbbell-shaped cloud of probability', 'befindet sich irgendwo in einer hantelförmigen Wahrscheinlichkeitswolke'), correct: true },
-      { text: b('circles the nucleus at a fixed radius', 'kreist in festem Abstand um den Kern'), mis: 'bohr-orbits' },
-      { text: b('sits still in one of the two lobes', 'sitzt still in einer der beiden Keulen') },
-    ],
-    explain: b('An orbital is a cloud of where the electron is likely to be, not a track it follows. Bohr\'s circular orbits are the older picture.', 'Ein Orbital ist eine Wolke des wahrscheinlichen Aufenthalts, keine Bahn. Die Kreisbahnen sind das ältere Bohr\'sche Bild.') },
-  { id: 'i1c', unit: 1, kind: 'estimate', format: 'estimate', concepts: ['u1.shells'],
-    prompt: b('How many electrons fit into shell 3?', 'Wie viele Elektronen passen in Schale 3?'),
-    min: 2, max: 32, step: 1, answer: 18, tolerance: 0, suffix: '',
-    explain: b('2n² with n = 3 gives 18: 2 in 3s, 6 in 3p, 10 in 3d.', '2n² mit n = 3 ergibt 18: 2 in 3s, 6 in 3p, 10 in 3d.') },
-  // Unit 2
-  { id: 'i2a', unit: 2, kind: 'rank', format: 'rank', concepts: ['u2.radius-trend', 'u2.zeff'], table: 'category',
-    prompt: b('Rank by atomic radius, largest first.', 'Ordne nach Atomradius, den größten zuerst.'),
-    order: [b('Na', 'Na'), b('Mg', 'Mg'), b('Si', 'Si'), b('Cl', 'Cl')],
-    explain: b('Same shell, rising Z_{eff} (1, 2, 4, 7): each step pulls the outer electrons closer.', 'Gleiche Schale, steigendes Z_{eff} (1, 2, 4, 7): Jeder Schritt zieht die Außenelektronen näher heran.') },
-  { id: 'i2b', unit: 2, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u2.zeff'],
-    prompt: b('Chlorine has Z = 17 and 10 inner electrons. The [[zeff]] felt by its outer electrons is roughly…', 'Chlor hat Z = 17 und 10 innere Elektronen. Die [[zeff]], die seine Außenelektronen spüren, beträgt etwa…'),
-    options: [{ text: b('1', '1') }, { text: b('7', '7'), correct: true }, { text: b('17', '17') }, { text: b('10', '10') }],
-    explain: b('In the simple model the 10 inner electrons shield fully: 17 − 10 = 7. The other outer electrons shield a little too, so careful estimates (Slater\'s rules) give about 6.', 'Im einfachen Modell schirmen die 10 inneren Elektronen vollständig ab: 17 − 10 = 7. Die anderen Außenelektronen schirmen auch ein wenig ab, genauere Abschätzungen (Slater-Regeln) ergeben etwa 6.') },
-  // Unit 3
-  { id: 'i3a', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ion-charges'], targets: ['kbr-charges'], table: 'outer',
-    prompt: b('[[potassium|Potassium]] reacts with bromine. Which ions form?', '[[potassium|Kalium]] reagiert mit Brom. Welche Ionen entstehen?'),
-    options: [
-      { text: b('K⁺ and Br⁻', 'K⁺ und Br⁻'), correct: true },
-      { text: b('K²⁺ and Br²⁻', 'K²⁺ und Br²⁻'), mis: 'kbr-charges' },
-      { text: b('K²⁺ and Br⁻', 'K²⁺ und Br⁻'), mis: 'kbr-charges' },
-      { text: b('K⁺ and Br²⁻', 'K⁺ und Br²⁻'), mis: 'kbr-charges' },
-    ],
-    explain: b('Potassium has a single electron in its outer shell, far easier to remove than any of the electrons beneath it; what is left looks like argon. Bromine needs exactly one more for eight outer electrons, an [[octet]].', 'Kalium hat ein einzelnes Elektron in der äußeren Schale, viel leichter abzulösen als alle Elektronen darunter; was bleibt, sieht aus wie Argon. Brom braucht genau eines mehr für acht Außenelektronen, ein [[octet|Oktett]].') },
-  { id: 'i3b', unit: 3, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u3.ie-cliff'],
-    prompt: b('Magnesium\'s successive [[ionization|ionization energies]]: 738, 1451, 7733, 10 543 kJ/mol. How many electrons does Mg give up easily?', 'Die aufeinanderfolgenden [[ionization|Ionisierungsenergien]] von Magnesium: 738, 1451, 7733, 10 543 kJ/mol. Wie viele Elektronen gibt Mg leicht ab?'),
-    options: [{ text: b('1', '1') }, { text: b('2', '2'), correct: true }, { text: b('3', '3') }, { text: b('4', '4') }],
-    explain: b('The cliff comes after the second electron (1451 → 7733): the third would break into the full neon core.', 'Der Sprung kommt nach dem zweiten Elektron (1451 → 7733): Das dritte müsste aus dem vollen Neon-Rumpf kommen.') },
-  // Unit 4
-  { id: 'i4a', unit: 4, kind: 'estimate', format: 'estimate', concepts: ['u4.coulomb'],
-    prompt: b('MgO melts at 2852 °C, NaCl at 801 °C. Counting charges only (q₁ × q₂), how many times stronger is the attraction in MgO?', 'MgO schmilzt bei 2852 °C, NaCl bei 801 °C. Nur die Ladungen betrachtet (q₁ × q₂): Wie viel stärker ist die Anziehung in MgO?'),
-    min: 1, max: 9, step: 1, answer: 4, tolerance: 0, suffix: '×',
-    explain: b('2 × 2 = 4 against 1 × 1 = 1. The slightly shorter distance in MgO adds a little more.', '2 × 2 = 4 gegenüber 1 × 1 = 1. Der etwas kleinere Abstand in MgO legt noch etwas drauf.') },
-  { id: 'i4b', unit: 4, kind: 'choice', format: 'odd', concepts: ['u4.transfer', 'u5.delta-chi'], table: 'category',
-    prompt: b('Odd one out?', 'Was passt nicht dazu?'),
-    options: [{ text: b('{{NaCl}}', '{{NaCl}}') }, { text: b('{{MgO}}', '{{MgO}}') }, { text: b('{{KBr}}', '{{KBr}}') }, { text: b('{{CCl4}}', '{{CCl4}}'), correct: true }],
-    explain: b('CCl₄ is covalent: the electronegativity difference between C and Cl is only about 0.6. The other three are ionic lattices of a metal and a non-metal.', 'CCl₄ ist kovalent: Der Elektronegativitätsunterschied zwischen C und Cl beträgt nur etwa 0,6. Die anderen drei sind Ionengitter aus Metall und Nichtmetall.') },
-  // Unit 5
-  { id: 'i5a', unit: 5, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u5.delta-chi'],
-    prompt: b('O–H: [[electronegativity]] 3.4 vs 2.2, so Δχ = 1.2. The bond is…', 'O–H: [[electronegativity]] 3,4 gegen 2,2, also Δχ = 1,2. Die Bindung ist…'),
-    options: [{ text: b('nonpolar covalent', 'unpolar kovalent') }, { text: b('polar covalent', 'polar kovalent'), correct: true }, { text: b('ionic', 'ionisch') }, { text: b('metallic', 'metallisch') }],
-    explain: b('Between about 0.4 and 1.8 the electrons are shared unequally: a [[polar-bond]].', 'Zwischen etwa 0,4 und 1,8 werden die Elektronen ungleich geteilt: eine [[polar-bond]].') },
-  { id: 'i5b', unit: 5, kind: 'rank', format: 'rank', concepts: ['u5.en'], table: 'chi',
-    prompt: b('Rank the bonds by polarity, most polar first.', 'Ordne die Bindungen nach Polarität, die polarste zuerst.'),
-    order: [b('H–F', 'H–F'), b('H–Cl', 'H–Cl'), b('H–Br', 'H–Br'), b('H–H', 'H–H')],
-    explain: b('Electronegativity differences: 1.8, 1.0, 0.8 and 0. Electronegativity falls going down group 17, so each bond to hydrogen is a little less lopsided.', 'Elektronegativitätsunterschiede: 1,8; 1,0; 0,8 und 0. Die Elektronegativität sinkt in Gruppe 17 nach unten, also wird jede Bindung zum Wasserstoff etwas weniger einseitig.') },
+  ...BANK_U1, ...BANK_U2, ...BANK_U3, ...BANK_U4, ...BANK_U5,
   // Unit 6
   { id: 'i6a', unit: 6, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u6.lp-squeeze', 'u6.lp-count'], targets: ['lone-pairs-ignored', 'molecular-vs-electron-geometry'],
     prompt: b('{{NH3}} has three bonds. Its H–N–H [[bond-angle]] is about…', '{{NH3}} hat drei Bindungen. Sein H–N–H-[[bond-angle]] beträgt etwa…'),

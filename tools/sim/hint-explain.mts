@@ -1,12 +1,15 @@
 // Show what the revised explain-back step displays for a text and a set of ticked ideas.
-// Usage: npx tsx tools/sim/hint-explain.ts <unit 0|6> <en|de> "<ticked idea numbers, e.g. 1,2,4>" "<explanation text>"
-import { UNIT0 } from '../../src/content/unit00';
-import { UNIT6 } from '../../src/content/unit06';
+// Usage: npx tsx tools/sim/hint-explain.mts <unit 0–6> <en|de> "<ticked idea numbers, e.g. 1,2,4>" "<explanation text>"
 import { ideaHints, looksLikeKeywordList } from '../../src/content/ideas';
+import type { Idea } from '../../src/content/unit06';
+import type { Bi } from '../../src/i18n';
 
 const [unitArg, lang = 'en', tickArg = '', ...rest] = process.argv.slice(2);
 const text = rest.join(' ');
-const X = unitArg === '0' ? UNIT0.explain : UNIT6.explain;
+const n = Number(unitArg);
+const mod = await import(`../../src/content/unit0${n}.ts`);
+const content = mod[`UNIT${n}`] as { explain: { ideas: Idea[]; tightened: Bi } };
+const X = content.explain;
 const L = (b: { en: string; de: string }) => b[lang as 'en' | 'de'].replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2').replace(/\{\{([^}]+)\}\}/g, '$1');
 const ticked = new Set(tickArg.split(',').map((x) => Number(x.trim()) - 1).filter((x) => x >= 0));
 const salad = looksLikeKeywordList(text);

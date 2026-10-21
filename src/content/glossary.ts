@@ -72,7 +72,7 @@ export const GLOSSARY: Record<string, Term> = {
   },
   linear: { en: 'linear', de: 'linear', unit: 6, def: { en: 'Atoms on a straight line, 180° apart: {{CO2}}.', de: 'Atome auf einer Geraden, 180° auseinander: {{CO2}}.' } },
   dipole: { en: 'dipole moment', de: 'Dipolmoment', unit: 6, def: { en: 'The net pull of all bond polarities, added as vectors. Zero means the molecule is nonpolar.', de: 'Der Nettozug aller Bindungspolaritäten, als Vektoren addiert. Null bedeutet: das Molekül ist unpolar.' } },
-  octet: { en: 'octet rule', de: 'Oktettregel', unit: 4, def: { en: 'Main-group atoms tend to end up with eight outer electrons.', de: 'Hauptgruppenatome streben acht Außenelektronen an.' } },
+  octet: { en: 'octet rule', de: 'Oktettregel', unit: 4, def: { en: 'Main-group atoms tend to end up with eight outer electrons.', de: 'Hauptgruppenatome enden oft mit acht Außenelektronen.' } },
   dispersion: {
     en: 'dispersion force', de: 'Dispersionskraft', unit: 8,
     def: { en: 'Attraction between temporary dipoles; grows with electron count and contact area.', de: 'Anziehung zwischen kurzlebigen Dipolen; wächst mit Elektronenzahl und Kontaktfläche.' },

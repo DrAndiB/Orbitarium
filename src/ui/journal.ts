@@ -1,5 +1,5 @@
 // Journal: takeaways, misconception ledger, calibration, elements met, equation notebook.
-import { h, s, clear } from './dom';
+import { h, s, clear, rich } from './dom';
 import { L, t, dateStr, num } from '../i18n';
 import { getState } from '../model/store';
 import { MISCONCEPTIONS } from '../content/curriculum';
@@ -39,13 +39,13 @@ function misconceptions(p: HTMLElement) {
   const st = getState();
   const rank = { spotted: 0, challenged: 1, resolved: 2 };
   const rows = Object.entries(st.misconceptions).sort(([, a], [, b]) => rank[a.status] - rank[b.status]);
-  p.append(h('p', { class: 'muted small' }, L({ en: 'A trap counts as resolved after you avoid it on three separate days.', de: 'Eine Falle gilt als gelöst, wenn du sie an drei verschiedenen Tagen vermeidest.' })));
+  p.append(h('p', { class: 'muted small' }, L({ en: 'A trap counts as resolved once you avoid it on two different days, at least three days apart.', de: 'Eine Falle gilt als gelöst, wenn du sie an zwei verschiedenen Tagen vermeidest, die mindestens drei Tage auseinanderliegen.' })));
   if (!rows.length) { p.append(h('p', { class: 'muted' }, L({ en: 'No traps recorded yet.', de: 'Noch keine Fallen verzeichnet.' }))); return; }
   for (const [id, m] of rows) {
     const info = MISCONCEPTIONS.find((x) => x.id === id);
     p.append(h('div', { class: 'mis-row' },
-      h('div', null, h('div', null, info ? L(info.name) : id),
-        h('div', { class: 'unit' }, `${L({ en: 'Unit', de: 'Einheit' })} ${info?.unit ?? '?'} · ${L({ en: 'since', de: 'seit' })} ${dateStr(m.since)} · ${m.correctDays.length}/3 ${L({ en: 'days right', de: 'Tage richtig' })}`)),
+      h('div', null, h('div', null, info ? rich(info.name) : id),
+        h('div', { class: 'unit' }, `${L({ en: 'Unit', de: 'Einheit' })} ${info?.unit ?? '?'} · ${L({ en: 'since', de: 'seit' })} ${dateStr(m.since)} · ${Math.min(2, m.correctDays.length)}/2 ${L({ en: 'days right', de: 'Tage richtig' })}`)),
       h('span', { class: 'status-pill ' + m.status }, t(m.status))));
   }
 }

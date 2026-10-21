@@ -37,23 +37,39 @@ export function s(tag: string, attrs: Record<string, string | number> = {}, ...c
   return el;
 }
 
-/** Chemical formula: "H2O" -> H₂O with real <sub>, "NH4+" -> NH₄⁺. */
+/**
+ * Split a formula into its body and its charge. The digit before the sign belongs to the charge when the body is
+ * a single element ("Mg2+" is Mg²⁺, "O2-" is O²⁻) or already ends in a digit ("SO42-" is SO₄²⁻); otherwise it is a
+ * subscript ("NH4+" is NH₄⁺).
+ */
+function splitCharge(formula: string): [string, string] {
+  const m = /^(.*?)(\d?)([+\-−])$/.exec(formula);
+  if (!m) return [formula, ''];
+  const [, body, d, sign] = m;
+  const sg = sign === '+' ? '+' : '−';
+  if (d && (/^[A-Z][a-z]?$/.test(body) || /\d$/.test(body))) return [body, d + sg];
+  return [body + d, sg];
+}
+
+/** Chemical formula: "H2O" -> H₂O with real <sub>, "NH4+" -> NH₄⁺, "Mg2+" -> Mg²⁺. */
 export function chem(formula: string): HTMLElement {
   const span = h('span', { class: 'chem' });
-  const re = /(\d+)|([+\-−]+)$|([^\d+\-−]+)/g;
+  const [body, charge] = splitCharge(formula);
+  const re = /(\d+)|([^\d]+)/g;
   let m: RegExpExecArray | null;
-  while ((m = re.exec(formula))) {
+  while ((m = re.exec(body))) {
     if (m[1]) span.appendChild(h('sub', null, m[1]));
-    else if (m[2]) span.appendChild(h('sup', null, m[2].replace('-', '−')));
-    else span.appendChild(document.createTextNode(m[3]));
+    else span.appendChild(document.createTextNode(m[2]));
   }
+  if (charge) span.appendChild(h('sup', null, charge));
   return span;
 }
 
-/** Plain-text version of a formula with unicode subscripts (for canvas labels). */
+/** Plain-text version of a formula with unicode sub- and superscripts (for canvas labels). */
 export function chemText(formula: string): string {
-  const sub = '₀₁₂₃₄₅₆₇₈₉';
-  return formula.replace(/\d/g, (d) => sub[+d]).replace(/\+$/, '⁺').replace(/-$/, '⁻');
+  const sub = '₀₁₂₃₄₅₆₇₈₉', sup: Record<string, string> = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '+': '⁺', '−': '⁻' };
+  const [body, charge] = splitCharge(formula);
+  return body.replace(/\d/g, (d) => sub[+d]) + charge.split('').map((c) => sup[c] ?? c).join('');
 }
 
 /**

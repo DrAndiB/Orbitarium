@@ -120,6 +120,11 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   const pick = playable.find((n) => st.units[n]?.status !== 'done') ?? playable.at(-1)!;
   const blurb: Record<number, { en: string; de: string }> = {
     0: { en: 'About 25 minutes with the interactive periodic table: rows, columns, blocks, and a fun fact for every element. Progress is saved after every step.', de: 'Etwa 25 Minuten mit dem interaktiven Periodensystem: Zeilen, Spalten, Blöcke und eine kuriose Tatsache zu jedem Element. Gespeichert wird nach jedem Schritt.' },
+    1: { en: 'About 25 minutes in the Orbital Viewer: shells, orbital clouds and the colours in hydrogen\'s light. Progress is saved after every step.', de: 'Etwa 25 Minuten im Orbital-Betrachter: Schalen, Orbitalwolken und die Farben im Licht des Wasserstoffs. Gespeichert wird nach jedem Schritt.' },
+    2: { en: 'About 25 minutes with atoms drawn at their measured size: why they shrink along a row and grow down a column. Progress is saved after every step.', de: 'Etwa 25 Minuten mit Atomen in gemessener Größe: warum sie entlang einer Zeile schrumpfen und eine Spalte hinunter wachsen. Gespeichert wird nach jedem Schritt.' },
+    3: { en: 'About 25 minutes pulling electrons off atoms one at a time, to see where ion charges come from. Progress is saved after every step.', de: 'Etwa 25 Minuten, in denen du Atomen Elektronen einzeln abziehst und siehst, woher Ionenladungen kommen. Gespeichert wird nach jedem Schritt.' },
+    4: { en: 'About 25 minutes in the Lattice Builder: make salt crystals, melt them and break them. Progress is saved after every step.', de: 'Etwa 25 Minuten im Gitterbaukasten: Salzkristalle bauen, schmelzen und zerbrechen. Gespeichert wird nach jedem Schritt.' },
+    5: { en: 'About 25 minutes in the Charge Field: which atom pulls harder on a shared pair of electrons. Progress is saved after every step.', de: 'Etwa 25 Minuten im Ladungsfeld: welches Atom stärker an einem gemeinsamen Elektronenpaar zieht. Gespeichert wird nach jedem Schritt.' },
     6: { en: 'About 25 minutes, built around the Molecule Workbench. Progress is saved after every step.', de: 'Etwa 25 Minuten, gebaut um die Molekül-Werkbank. Gespeichert wird nach jedem Schritt.' },
   };
   const unitLabel = (n: number) => { const p = st.units[n]; return p?.status === 'in-progress' ? t('resumeUnit', { n }) : p?.status === 'done' ? t('replayUnit', { n }) : t('startUnit', { n }); };
@@ -127,11 +132,13 @@ export function renderHome(root: HTMLElement, params: URLSearchParams) {
   todayBox.appendChild(h('div', { class: 'panel next-unit' },
     h('div', null,
       h('div', { class: 'kicker' }, `${L({ en: 'Unit', de: 'Einheit' })} ${pick} · ${L(moduleByN(pu.module).name)} · ${t('playable')}`),
-      h('h2', null, L(pu.name)),
+      h('h2', null, rich(pu.name)),
       h('p', { class: 'muted small', style: 'margin:0' }, L(blurb[pick] ?? blurb[6]))),
     h('span'),
     h('button', { class: 'btn block', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/' + pick) }, unitLabel(pick)),
-    ...playable.filter((n) => n !== pick).map((n) => h('button', { class: 'btn ghost block small', type: 'button', style: 'grid-column:1/-1', onclick: () => go('#/unit/' + n) }, `${unitLabel(n)}: ${L(unitByN(n).name)}`))));
+    playable.length > 1 ? h('details', { class: 'other-units', style: 'grid-column:1/-1' },
+      h('summary', null, L({ en: 'Other playable units', de: 'Weitere spielbare Einheiten' })),
+      h('div', { class: 'stack', style: 'gap:8px;margin-top:8px' }, playable.filter((n) => n !== pick).map((n) => h('button', { class: 'btn ghost block small', type: 'button', onclick: () => go('#/unit/' + n) }, `${unitLabel(n)}: ${plain(unitByN(n).name)}`)))) : null));
 
   if (due.length) todayBox.appendChild(h('button', { class: 'btn ghost block', type: 'button', onclick: () => go('#/rekindle') }, t('rekindle', { n: warmupSize() })));
 
