@@ -47,7 +47,7 @@ export function makeUnit(U: UnitContent, engine: UnitEngine): UnitPlayer {
   // ---------- 2. puzzle ----------
   const puzzle = (body: HTMLElement, enable: () => void) => {
     const P = U.puzzle;
-    body.append(h('h2', null, L(P.title)), h('p', null, rich(P.lead)), dataTable(P.data), h('p', { class: 'lead' }, rich(P.clash)));
+    body.append(h('h2', null, rich(P.title)), h('p', null, rich(P.lead)), dataTable(P.data), h('p', { class: 'lead' }, rich(P.clash)));
     body.append(renderItem(P.question, () => { body.append(h('p', { class: 'muted' }, rich(P.after))); enable(); }));
   };
 
@@ -64,7 +64,7 @@ export function makeUnit(U: UnitContent, engine: UnitEngine): UnitPlayer {
       return true;
     };
     const eng = engine.explore(ctx, mark);
-    body.append(h('h2', null, L(E.title)), h('p', { class: 'muted' }, rich(E.intro)), eng.el,
+    body.append(h('h2', null, rich(E.title)), h('p', { class: 'muted' }, rich(E.intro)), eng.el,
       h('div', { class: 'panel' }, h('h3', { style: 'margin-bottom:6px' }, L({ en: 'Things to try', de: 'Zum Ausprobieren' })), tasks.el, note),
       checkBox);
   };
@@ -104,7 +104,7 @@ export function makeUnit(U: UnitContent, engine: UnitEngine): UnitPlayer {
     eng.show(U.examples[0].show);
     for (const ex of U.examples) {
       body.append(h('article', { class: 'panel example' },
-        h('h3', null, L(ex.title), ' ', h('span', { class: 'muted small' }, chem(ex.tag))),
+        h('h3', null, rich(ex.title), ' ', h('span', { class: 'muted small' }, chem(ex.tag))),
         h('div', { class: 'numbers' }, ex.numbers.map((n) => h('span', null, h('b', null, decimal(n.v)), rich(n.label)))),
         h('p', { style: 'margin:0' }, rich(ex.body)),
         h('p', { class: 'muted', style: 'margin:0' }, rich(ex.soWhat)),

@@ -30,22 +30,44 @@ function asciiRe(re: RegExp): RegExp {
   return r;
 }
 
+// A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
+// kleiner"; "je mehr …, desto …"), so the parts of one statement stay together. Cause and effect and contrast stay
+// together ("…, so …", "… but …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
+const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
+// A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
+// molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
+const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|after|before|unless|the (?:more|less|fewer|bigger|smaller|larger|higher|lower|stronger|weaker|longer|shorter|greater|heavier|lighter|closer|further|farther|faster|slower|hotter|colder|warmer|cooler|easier|harder|better|worse)|wenn|weil|da|sobald|obwohl|als|nachdem|bevor|während|falls|je)\b/;
+function clausesOf(norm: string): string[] {
+  const out: string[] = [];
+  for (const sentence of norm.split(/[.;:!?\n]/)) {
+    const parts = sentence.split(SOFT);
+    let cur = parts[0];
+    let joined = false;
+    for (let i = 1; i < parts.length; i += 2) {
+      const delim = parts[i], next = parts[i + 1] ?? '';
+      if (!joined && delim.startsWith(',') && FRONTED.test(cur.trim())) { cur += delim + next; joined = true; continue; }
+      out.push(cur); cur = next; joined = false;
+    }
+    out.push(cur);
+  }
+  return out.map((c) => c.trim()).filter(Boolean);
+}
+
 export function ideaHints(text: string, ideas: Idea[]): Set<string> {
   const norm = asciiCharges(text.toLowerCase().replace(/[’‘`´]/g, "'")).replace(/\s+/g, ' ');
-  // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
-  // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together.
-  // Cause and effect and contrast stay together ("…, so …", "… but …", "…, deshalb …"); a list of numbers
-  // ("2, 8, 18") is not split either.
-  const clauses = norm.split(/[.;:!?\n]|,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d)/).map((c) => c.trim()).filter(Boolean);
+  const clauses = clausesOf(norm);
   const hits = new Set<string>();
   for (const idea of ideas) {
+    // An idea that is itself a negative statement ("solid salt does not conduct", "no free charges") keeps a clause
+    // with a negation in it; for the others a negation elsewhere in the clause rules the clause out.
+    const negIdea = NEG.test(idea.en.source) || NEG.test(idea.de.source);
     // A clause that states the opposite of the idea (e.g. "the shape depends on the number of atoms") rules it out.
     if (idea.contra && clauses.some((c) => asciiRe(idea.contra!.en).test(c) || asciiRe(idea.contra!.de).test(c))) continue;
     for (const c of clauses) {
       const m = c.match(asciiRe(idea.en)) ?? c.match(asciiRe(idea.de));
       if (!m) continue;
       const rest = c.slice(0, m.index) + ' ' + c.slice((m.index ?? 0) + m[0].length);
-      if (NEG.test(rest)) continue;
+      if (!negIdea && NEG.test(rest)) continue;
       // A negation inside the match only counts when the idea itself is phrased that way ("can't see the lone pairs").
       const inner = new RegExp(NEG.source + '\\s+\\S+').exec(m[0]);
       if (inner && !(asciiRe(idea.en).source + asciiRe(idea.de).source).includes(inner[0])) continue;
