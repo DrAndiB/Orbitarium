@@ -138,7 +138,7 @@ for (const U of contents) {
   });
   H(T('Step 5 of 7 · Worked examples', 'Schritt 5 von 7 · Beispiele') + left(4));
   P(T('A compact engine sits above three example cards, each with a "Show in 3D" button.', 'Über drei Beispielkarten sitzt eine kompakte Simulation; jede Karte hat einen Knopf „In 3D zeigen“.'));
-  U.examples.forEach((ex) => { P(`\n**${plain(ex.title)}** (${formula(ex.tag)}) — ${ex.numbers.map((n) => `${lang === 'de' ? n.v.replace(/(\d)\.(\d)/g, '$1,$2') : n.v} ${plain(n.label)}`).join(', ')}`); P(`  ${plain(ex.body)}`); P(`  ${plain(ex.soWhat)}`); P(`  (${T('Show in 3D', 'In 3D zeigen')}: ${showText(ex.show)})`); });
+  U.examples.forEach((ex) => { P(`\n**${plain(ex.title)}** (${formula(ex.tag)}) — ${ex.numbers.map((n) => `${lang === 'de' ? n.v.replace(/(\d)\.(\d)/g, '$1,$2').replace(/ × 10/g, ' · 10') : n.v} ${plain(n.label)}`).join(', ')}`); P(`  ${plain(ex.body)}`); P(`  ${plain(ex.soWhat)}`); P(`  (${T('Show in 3D', 'In 3D zeigen')}: ${showText(ex.show)})`); });
   question(U.flaw, T('Spot the flaw.', 'Finde den Fehler.'));
   P(T('\nIf both predictions were right (at any confidence), an optional "Go deeper" question appears:', '\nWaren beide Vorhersagen richtig (egal wie sicher), erscheint eine freiwillige Frage „Tiefer gehen“:'));
   question(U.deeper, T('Go deeper (optional).', 'Tiefer gehen (freiwillig).'));

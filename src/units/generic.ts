@@ -18,7 +18,8 @@ export interface UnitEngine {
   compact(ctx: StepCtx, shows: Show[]): Engine;
 }
 
-const decimal = (v: string) => L({ en: v, de: v.replace(/(\d)\.(\d)/g, '$1,$2') });
+// German: decimal commas, and a raised dot for "times" before a power of ten (6 · 10⁷).
+const decimal = (v: string) => L({ en: v, de: v.replace(/(\d)\.(\d)/g, '$1,$2').replace(/ × 10/g, ' · 10') });
 const cell = (c: string | Bi, numeric: boolean) => (typeof c === 'string' ? (numeric ? decimal(c) : rich(c)) : rich(c));
 
 function dataTable(d: DataTable): HTMLElement {

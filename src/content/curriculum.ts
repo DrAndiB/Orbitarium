@@ -188,5 +188,5 @@ export const MISCONCEPTIONS: Misconception[] = [
   { id: 'symmetric-means-nonpolar', unit: 6, name: { en: 'A symmetric-looking shape always cancels the pulls', de: 'Eine symmetrisch wirkende Gestalt hebt die Züge immer auf' } },
   { id: 'polarity-conduction', unit: 7, name: { en: 'Polarity as the cause of conduction', de: 'Polarität als Ursache der Leitfähigkeit' } },
   { id: 'dispersion-direction', unit: 8, name: { en: 'Trend the wrong way round: more electrons, weaker attraction', de: 'Trend falsch herum: mehr Elektronen, schwächere Anziehung' } },
-  { id: 'hbond-donor-acceptor', unit: 10, name: { en: 'H-bond donor vs acceptor', de: 'H-Brücken: Donor vs. Akzeptor' } },
+  { id: 'hbond-donor-acceptor', unit: 10, name: { en: 'Hydrogen-bond donor and acceptor mixed up', de: 'Donor und Akzeptor einer Wasserstoffbrücke verwechselt' } },
 ];

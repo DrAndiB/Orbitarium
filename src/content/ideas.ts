@@ -41,9 +41,10 @@ const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|
 // Abbreviations keep their sentence together ("bzw.", "z. B.", "Sdp.", "e.g."); a full stop only ends a sentence when a
 // space or the end follows, so "0.917" and "2.5" stay whole. A colon does not split: "Wasser: 2 Donoren, 2 Akzeptoren"
 // is one statement.
-const ABBR = /\b(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\w*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh)\./g;
+// (?<!\p{L}) instead of \b: in JavaScript \b does not see a boundary before an umlaut ("ähnl.").
+const ABBR = /(?<!\p{L})(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\p{L}*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh)\./gu;
 /** "bewegl. ladungsträger": a short lowercase word with a full stop, followed by a lowercase word, is an abbreviation. */
-const SHORT_ABBR = /\b([a-zäöüß]{1,6})\.(?=\s+[a-zäöüß])/g;
+const SHORT_ABBR = /(?<!\p{L})([a-zäöüß]{1,6})\.(?=\s+[a-zäöüß])/gu;
 function clausesOf(norm: string): string[] {
   const out: string[] = [];
   const text = norm.replace(ABBR, (m) => m.replace(/\./g, ''));

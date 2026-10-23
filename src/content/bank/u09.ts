@@ -20,7 +20,7 @@ export const BANK_U9: Item[] = [
     ],
     explain: b('Opposite partial charges attract: the δ+ hydrogen end of one molecule settles next to the δ− chlorine end of a neighbour. Heat keeps jostling them, so the line-up is a preference, not a fixed pattern.', 'Entgegengesetzte Partialladungen ziehen sich an: Das δ+-Wasserstoff-Ende des einen Moleküls legt sich neben das δ−-Chlor-Ende eines Nachbarn. Die Wärmebewegung bringt sie immer wieder durcheinander; die Ausrichtung ist eine Vorliebe, kein festes Muster.') },
   { id: 'i9c', unit: 9, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u9.dipole'], targets: ['hbond-donor-acceptor', 'boiling-breaks-bonds'],
-    prompt: b('Acetone and butane weigh the same (58 g/mol), but acetone molecules hold on to each other more strongly. Why?', 'Aceton und Butan wiegen gleich viel (58 g/mol), aber Aceton-Moleküle halten stärker zusammen. Warum?'),
+    prompt: b('Acetone and butane have the same molar mass (58 g/mol), but acetone molecules hold on to each other more strongly. Why?', 'Aceton und Butan haben dieselbe molare Masse (58 g/mol), aber Aceton-Moleküle halten stärker zusammen. Warum?'),
     options: [
       { text: b('Acetone molecules form hydrogen bonds with each other', 'Aceton-Moleküle bilden untereinander Wasserstoffbrücken'), mis: 'hbond-donor-acceptor' },
       { text: b('Their C=O bonds link neighbouring molecules together', 'Ihre C=O-Bindungen verknüpfen benachbarte Moleküle'), mis: 'boiling-breaks-bonds' },
@@ -78,16 +78,16 @@ export const BANK_U9: Item[] = [
 
   // ---------- u9.fair-compare ----------
   { id: 'i9a', unit: 9, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u9.fair-compare'], targets: ['hbond-donor-acceptor', 'boiling-breaks-bonds'],
-    prompt: b('Propane and acetaldehyde both weigh 44 g/mol. Propane boils at −42 °C, acetaldehyde at 20 °C. Mainly because of…', 'Propan und Acetaldehyd wiegen beide 44 g/mol. Propan siedet bei −42 °C, Acetaldehyd bei 20 °C. Vor allem wegen…'),
+    prompt: b('Propane and acetaldehyde have the same molar mass, 44 g/mol. Propane boils at −42 °C, acetaldehyde at 20 °C. Mainly because of…', 'Propan und Acetaldehyd haben dieselbe molare Masse (44 g/mol). Propan siedet bei −42 °C, Acetaldehyd bei 20 °C. Vor allem wegen…'),
     options: [
       { text: b('dipole–dipole attraction between acetaldehyde molecules', 'Dipol-Dipol-Anziehung zwischen Acetaldehyd-Molekülen'), correct: true },
       { text: b('hydrogen bonds between acetaldehyde molecules', 'Wasserstoffbrücken zwischen Acetaldehyd-Molekülen'), mis: 'hbond-donor-acceptor' },
       { text: b('stronger dispersion in acetaldehyde', 'stärkerer Dispersionskräfte beim Acetaldehyd') },
       { text: b('the C=O bond, which has to break when it boils', 'der C=O-Bindung, die beim Sieden brechen muss'), mis: 'boiling-breaks-bonds' },
     ],
-    explain: b('Same mass and similar electrons (24 against 26), so similar dispersion. Acetaldehyde\'s C=O makes it polar (2.75 D), and that adds a dipole–dipole pull. It has no H on oxygen, so it cannot donate a [[h-bond]], and boiling leaves its C=O intact.', 'Gleiche Masse und ähnlich viele Elektronen (24 gegenüber 26), also ähnliche Dispersionskräfte. Durch das C=O ist Acetaldehyd polar (2,75 D), und das bringt eine Dipol-Dipol-Anziehung dazu. Ein H am Sauerstoff hat er nicht, kann also keine [[h-bond]] bilden, und beim Sieden bleibt sein C=O intakt.') },
+    explain: b('Same molar mass and similar electrons (24 against 26), so similar dispersion. Acetaldehyde\'s C=O makes it polar (2.75 D), and that adds a dipole–dipole pull. It has no H on oxygen, so it cannot donate a [[h-bond]], and boiling leaves its C=O intact.', 'Gleiche molare Masse und ähnlich viele Elektronen (24 gegenüber 26), also ähnliche Dispersionskräfte. Durch das C=O ist Acetaldehyd polar (2,75 D), und das bringt eine Dipol-Dipol-Anziehung dazu. Ein H am Sauerstoff hat er nicht, kann also keine [[h-bond]] bilden, und beim Sieden bleibt sein C=O intakt.') },
   { id: 'i9i', unit: 9, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u9.fair-compare'], targets: ['one-force-only'],
-    prompt: b('Butane and acetone both weigh 58 g/mol; butane has 34 electrons, acetone 32 and a dipole of 2.88 D. At room temperature, 20 °C…', 'Butan und Aceton wiegen beide 58 g/mol; Butan hat 34 Elektronen, Aceton 32 und ein Dipolmoment von 2,88 D. Bei Raumtemperatur, 20 °C, …'),
+    prompt: b('Butane and acetone both have a molar mass of 58 g/mol; butane has 34 electrons, acetone 32 and a dipole of 2.88 D. At room temperature, 20 °C…', 'Butan und Aceton haben beide eine molare Masse von 58 g/mol; Butan hat 34 Elektronen, Aceton 32 und ein Dipolmoment von 2,88 D. Bei Raumtemperatur, 20 °C, …'),
     options: [
       { text: b('both are gases', 'sind beide gasförmig') },
       { text: b('both are liquids', 'sind beide flüssig') },
@@ -96,9 +96,9 @@ export const BANK_U9: Item[] = [
     ],
     explain: b('Butane boils at −0.5 °C, acetone at 56 °C. Their dispersion is similar; acetone\'s dipole adds a pull on top, which keeps it liquid at room temperature.', 'Butan siedet bei −0,5 °C, Aceton bei 56 °C. Ihre Dispersionskräfte sind ähnlich stark; der Dipol des Acetons bringt eine zusätzliche Anziehung, die es bei Raumtemperatur flüssig hält.') },
   { id: 'i9j', unit: 9, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u9.fair-compare'],
-    prompt: b('Three molecules of similar size: propane (26 electrons, 0.08 D), dimethyl ether (26 electrons, 1.30 D), acetaldehyde (24 electrons, 2.75 D). None has an H on oxygen. Rank by boiling point, highest first.', 'Drei Moleküle ähnlicher Größe: Propan (26 Elektronen, 0,08 D), Dimethylether (26 Elektronen, 1,30 D), Acetaldehyd (24 Elektronen, 2,75 D). Keines hat ein H am Sauerstoff. Ordne nach Siedepunkt, den höchsten zuerst.'),
+    prompt: b('Three molecules of similar size: propane (26 electrons, 0.08 D), dimethyl ether (26 electrons, 1.30 D), acetaldehyde (24 electrons, 2.75 D). None has an H on oxygen. Rank by boiling point, highest first.', 'Drei Moleküle ähnlicher Größe: Propan (26 Elektronen, 0,08 D), Dimethylether (26 Elektronen, 1,30 D), Acetaldehyd (24 Elektronen, 2,75 D). Keines hat ein H am Sauerstoff. Ordne nach Siedetemperatur, die höchste zuerst.'),
     order: [b('acetaldehyde', 'Acetaldehyd'), b('dimethyl ether', 'Dimethylether'), b('propane', 'Propan')],
-    explain: b('20 °C, −25 °C, −42 °C. With dispersion about equal, the bigger the dipole, the higher the boiling point: a fair comparison lets the dipole show.', '20 °C, −25 °C, −42 °C. Bei etwa gleich starken Dispersionskräften gilt: je größer der Dipol, desto höher der Siedepunkt. Ein fairer Vergleich lässt den Dipol sichtbar werden.') },
+    explain: b('20 °C, −25 °C, −42 °C. With dispersion about equal, the bigger the dipole, the higher the boiling point: a fair comparison lets the dipole show.', '20 °C, −25 °C, −42 °C. Bei etwa gleich starken Dispersionskräften gilt: je größer der Dipol, desto höher die Siedetemperatur. Ein fairer Vergleich lässt den Dipol sichtbar werden.') },
 
   // ---------- u9.dispersion-wins ----------
   { id: 'i9k', unit: 9, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u9.dispersion-wins'], targets: ['dipole-always-wins'],
@@ -127,7 +127,7 @@ export const BANK_U9: Item[] = [
     ],
     explain: b('Octane boils at 126 °C, 70 degrees above acetone. Its 66 electrons on a long chain give it far more dispersion than acetone has, dipole included.', 'Octan siedet bei 126 °C, 70 K über Aceton. Seine 66 Elektronen entlang einer langen Kette ergeben weit stärkere Dispersionskräfte als die gesamte Anziehung im Aceton, Dipol eingeschlossen.') },
   { id: 'i9v', unit: 9, kind: 'rank', format: 'rank', concepts: ['u9.dispersion-wins'], mis: 'dipole-always-wins', targets: ['dipole-always-wins'],
-    prompt: b('Rank by boiling point, highest first. Dipoles: HCl 1.11 D, HBr 0.83 D, HI 0.45 D.', 'Ordne nach Siedepunkt, den höchsten zuerst. Dipolmomente: HCl 1,11 D, HBr 0,83 D, HI 0,45 D.'),
+    prompt: b('Rank by boiling point, highest first. Dipoles: HCl 1.11 D, HBr 0.83 D, HI 0.45 D.', 'Ordne nach Siedetemperatur, die höchste zuerst. Dipolmomente: HCl 1,11 D, HBr 0,83 D, HI 0,45 D.'),
     order: [b('{{HI}}', '{{HI}}'), b('{{HBr}}', '{{HBr}}'), b('{{HCl}}', '{{HCl}}')],
     explain: b('−35 °C, −67 °C, −85 °C: the reverse of the dipoles. Down group 17 the electrons rise from 18 to 36 to 54, and the growing dispersion outweighs the shrinking dipole.', '−35 °C, −67 °C, −85 °C: genau umgekehrt wie die Dipole. In Gruppe 17 (VII. Hauptgruppe) steigt die Elektronenzahl von 18 über 36 auf 54, und die wachsenden Dispersionskräfte wiegen den schrumpfenden Dipol mehr als auf.') },
 
@@ -168,7 +168,7 @@ export const BANK_U9: Item[] = [
       { text: b('Dispersion and dipole–dipole forces, adding up', 'Dispersions- und Dipol-Dipol-Kräfte, die sich addieren'), correct: true },
       { text: b('Covalent bonds between neighbouring molecules', 'Atombindungen zwischen benachbarten Molekülen') },
     ],
-    explain: b('Every molecule has electrons, so every molecule feels dispersion. A polar molecule like acetone feels dipole–dipole forces on top. The two add up to the total pull that its boiling point reflects.', 'Jedes Molekül hat Elektronen, also spürt jedes Molekül Dispersionskräfte. Ein polares Molekül wie Aceton spürt zusätzlich Dipol-Dipol-Kräfte. Beide addieren sich zur gesamten Anziehung, die sein Siedepunkt widerspiegelt.') },
+    explain: b('Every molecule has electrons, so every molecule feels dispersion. A polar molecule like acetone feels dipole–dipole forces on top. The two add up to the total pull that its boiling point reflects.', 'Jedes Molekül hat Elektronen, also spürt jedes Molekül Dispersionskräfte. Ein polares Molekül wie Aceton spürt zusätzlich Dipol-Dipol-Kräfte. Beide addieren sich zur gesamten Anziehung, die seine Siedetemperatur widerspiegelt.') },
   { id: 'i9s', unit: 9, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u9.add-up'], targets: ['one-force-only'],
     prompt: b('Acetone has a strong permanent dipole. Why does it still have dispersion forces as well?', 'Aceton hat einen starken permanenten Dipol. Warum hat es trotzdem auch Dispersionskräfte?'),
     options: [
@@ -186,5 +186,5 @@ export const BANK_U9: Item[] = [
       { text: b('Hydrogen bonds, because it has H on a halogen', 'Wasserstoffbrücken, weil H an einem Halogen sitzt'), mis: 'hbond-donor-acceptor' },
       { text: b('Dispersion only: its dipole is too small to count', 'Nur Dispersionskräfte: Sein Dipol ist zu klein, um mitzuzählen'), mis: 'one-force-only' },
     ],
-    explain: b('Both act and add up: dispersion from its 36 electrons, and a smaller dipole–dipole share. Hydrogen bonds in the school sense need an H on N, O or F; bromine is a large atom whose lone pairs are spread out, so H–Br forms at most very weak ones (unit 10).', 'Beides wirkt und addiert sich: Dispersionskräfte aus seinen 36 Elektronen und ein kleinerer Anteil Dipol-Dipol-Kräfte. Wasserstoffbrücken im Sinne des Schulbuchs brauchen ein H an N, O oder F; Brom ist ein großes Atom mit weit verteilten freien Elektronenpaaren, deshalb bildet H–Br höchstens sehr schwache (Einheit 10).') },
+    explain: b('Both act and add up: dispersion from its 36 electrons, and a smaller dipole–dipole share. Hydrogen bonds in the school sense need an H on N, O or F; between HBr molecules the acceptor would be bromine, a large atom whose lone pairs are spread out, so at most very weak ones form (unit 10).', 'Beides wirkt und addiert sich: Dispersionskräfte aus seinen 36 Elektronen und ein kleinerer Anteil Dipol-Dipol-Kräfte. Wasserstoffbrücken im Sinne des Schulbuchs brauchen ein H an N, O oder F; zwischen HBr-Molekülen wäre Brom der Akzeptor, ein großes Atom mit weit verteilten freien Elektronenpaaren, deshalb entstehen höchstens sehr schwache (Einheit 10).') },
 ];

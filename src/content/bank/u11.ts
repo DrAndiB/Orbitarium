@@ -10,7 +10,8 @@ const b = (en: string, de: string): Bi => ({ en, de });
 // 20 °C, melts (and decomposes) at about 186 °C; NaCl melts at 801 °C (ions.ts) (CRC Handbook).
 // Hydration shells: O (δ−) towards cations, H (δ+) towards anions (OpenStax Biology 2e, 2.2). Salt water (NaCl)
 // stays liquid down to its eutectic, about −21 °C (CRC Handbook). The hydrophobic effect at room temperature is
-// mostly entropic: water around a nonpolar molecule keeps its hydrogen bonds by forming an ordered cage.
+// mostly entropic: water around a nonpolar molecule keeps its hydrogen bonds by forming an ordered cage. NaCl dissolving takes
+// in +3.9 kJ/mol (CRC Handbook); its ions spreading out (entropy) outweighs that.
 export const BANK_U11: Item[] = [
   // ---------- u11.network ----------
   { id: 'i11a', unit: 11, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u11.network'], targets: ['hbond-donor-acceptor'],
@@ -52,7 +53,7 @@ export const BANK_U11: Item[] = [
     ],
     explain: b('A floating object sinks until it pushes aside its own mass of water. Ice needs 0.917 of its volume under water: about 92 %. In seawater (about 1.025 g/cm³) it is about 89 %, which is why only the tip of an iceberg shows.', 'Ein schwimmender Körper sinkt so weit ein, bis er seine eigene Masse an Wasser verdrängt. Eis braucht dafür 0,917 seines Volumens unter Wasser: etwa 92 %. In Meerwasser (etwa 1,025 g/cm³) sind es etwa 89 %; deshalb sieht man nur die Spitze eines Eisbergs.') },
   { id: 'i11e', unit: 11, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u11.ice'],
-    prompt: b('Most substances are denser as solids than as liquids. Why is water the exception?', 'Die meisten Stoffe sind als Feststoff dichter als als Flüssigkeit. Warum ist Wasser die Ausnahme?'),
+    prompt: b('Most substances are denser as solids than as liquids. Why is water the exception?', 'Die meisten Stoffe haben im festen Zustand eine größere Dichte als im flüssigen. Warum ist Wasser die Ausnahme?'),
     options: [
       { text: b('Ice is full of trapped air bubbles', 'Eis ist voller eingeschlossener Luftbläschen') },
       { text: b('In ice each molecule holds four neighbours at fixed angles, an open network with gaps', 'Im Eis hält jedes Molekül vier Nachbarn in festen Winkeln, ein offenes Netzwerk mit Lücken'), correct: true },
@@ -63,7 +64,7 @@ export const BANK_U11: Item[] = [
   { id: 'i11f', unit: 11, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u11.ice'], mis: 'ice-denser', targets: ['ice-denser'],
     prompt: b('Rank by density, densest first: water at 0 °C, ice at 0 °C, water at 4 °C.', 'Ordne nach Dichte, die größte zuerst: Wasser bei 0 °C, Eis bei 0 °C, Wasser bei 4 °C.'),
     order: [b('water at 4 °C', 'Wasser bei 4 °C'), b('water at 0 °C', 'Wasser bei 0 °C'), b('ice at 0 °C', 'Eis bei 0 °C')],
-    explain: b('1.0000, 0.9998 and 0.917 g/cm³. Water is densest at 4 °C; below that, short-lived open patterns start to form and it expands slightly. Ice, the fully open network, is far less dense than any liquid water.', '1,0000; 0,9998 und 0,917 g/cm³. Wasser ist bei 4 °C am dichtesten; darunter bilden sich kurzlebige offene Muster, und es dehnt sich leicht aus. Eis, das vollständig offene Netzwerk, hat eine viel geringere Dichte als jedes flüssige Wasser.') },
+    explain: b('1.0000, 0.9998 and 0.917 g/cm³. Water is densest at 4 °C and expands slightly as it cools further; one common picture is that more and more molecules briefly form open, ice-like patterns. Ice, the fully open network, is far less dense than any liquid water.', '1,0000; 0,9998 und 0,917 g/cm³. Wasser ist bei 4 °C am dichtesten und dehnt sich beim weiteren Abkühlen leicht aus; ein verbreitetes Bild dafür: Immer mehr Moleküle ordnen sich kurzzeitig in offenen, eisähnlichen Mustern an. Eis, das vollständig offene Netzwerk, hat eine viel geringere Dichte als jedes flüssige Wasser.') },
 
   // ---------- u11.like ----------
   { id: 'i11g', unit: 11, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u11.like'], targets: ['oh-group-decides'],
@@ -74,7 +75,7 @@ export const BANK_U11: Item[] = [
       { text: b('1-hexanol, {{C6H13OH}}: it has an O–H group', '1-Hexanol, {{C6H13OH}}: Es hat eine O–H-Gruppe'), mis: 'oh-group-decides' },
       { text: b('Octane, {{C8H18}}', 'Octan, {{C8H18}}') },
     ],
-    explain: b('Methanol is almost all O–H group: it gives and takes hydrogen bonds as water does, with only one carbon in the way. Hexanol has the same O–H group but a six-carbon chain and dissolves only 0.59 g in 100 g of water. Hexane and octane have no O–H at all.', 'Methanol ist fast nur O–H-Gruppe: Es spendet und nimmt Wasserstoffbrücken wie Wasser, mit nur einem Kohlenstoffatom im Weg. Hexanol hat dieselbe O–H-Gruppe, aber eine Kette aus sechs Kohlenstoffatomen, und nur 0,59 g lösen sich in 100 g Wasser. Hexan und Octan haben gar keine O–H-Gruppe.') },
+    explain: b('Methanol is almost all O–H group: like water, it is both donor and acceptor of hydrogen bonds, with only one carbon in the way. Hexanol has the same O–H group but a six-carbon chain and dissolves only 0.59 g in 100 g of water. Hexane and octane have no O–H at all.', 'Methanol ist fast nur O–H-Gruppe: Es ist wie Wasser Donor und Akzeptor von Wasserstoffbrücken, mit nur einem Kohlenstoffatom im Weg. Hexanol hat dieselbe O–H-Gruppe, aber eine Kette aus sechs Kohlenstoffatomen, und nur 0,59 g lösen sich in 100 g Wasser. Hexan und Octan haben gar keine O–H-Gruppe.') },
   { id: 'i11h', unit: 11, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u11.like'], targets: ['oil-water-repel'],
     prompt: b('Hexane and water molecules do attract each other a little, through dispersion. Why does hexane still not dissolve in water?', 'Hexan- und Wassermoleküle ziehen sich durchaus ein wenig an, über Dispersionskräfte. Warum löst sich Hexan trotzdem nicht in Wasser?'),
     options: [
@@ -118,12 +119,12 @@ export const BANK_U11: Item[] = [
     options: [
       { text: b('The water warms the crystal until it melts', 'Das Wasser erwärmt den Kristall, bis er schmilzt'), mis: 'dissolving-is-melting' },
       { text: b('Water splits the salt into NaCl molecules, small enough to dissolve', 'Wasser zerlegt das Salz in NaCl-Moleküle, die klein genug zum Lösen sind'), mis: 'salt-molecules-in-water' },
-      { text: b('Water molecules surround each ion, and the energy this releases makes up for taking the lattice apart', 'Wassermoleküle umgeben jedes Ion, und die dabei frei werdende Energie gleicht die Gitterenergie aus'), correct: true },
+      { text: b('Water molecules surround each ion; that nearly pays for the lattice, and spreading out does the rest', 'Wassermoleküle umhüllen jedes Ion; das gleicht die Gitterenergie fast aus, die Verteilung erledigt den Rest'), correct: true },
       { text: b('Salt is polar, so it reacts with the water', 'Salz ist polar, also reagiert es mit dem Wasser') },
     ],
-    explain: b('Dissolving is not melting: the ions leave the crystal one by one, each wrapped in water molecules turned the right way. The energy from these attractions almost exactly makes up for the lattice energy (787 kJ/mol); there are no NaCl molecules at any point.', 'Lösen ist kein Schmelzen: Die Ionen verlassen den Kristall einzeln, jedes umhüllt von richtig ausgerichteten Wassermolekülen. Die Energie aus diesen Anziehungen gleicht die Gitterenergie (787 kJ/mol) fast genau aus; NaCl-Moleküle entstehen dabei zu keinem Zeitpunkt.') },
+    explain: b('Dissolving is not melting: the ions leave the crystal one by one, each wrapped in water molecules turned the right way. The energy from these attractions almost exactly makes up for the lattice energy (787 kJ/mol); the remaining 3.9 kJ/mol is taken as heat from the water, and the ions\' tendency to spread out (entropy, unit 19) outweighs it. There are no NaCl molecules at any point.', 'Lösen ist kein Schmelzen: Die Ionen verlassen den Kristall einzeln, jedes umhüllt von richtig ausgerichteten Wassermolekülen. Die Energie aus diesen Anziehungen gleicht die Gitterenergie (787 kJ/mol) fast genau aus; die fehlenden 3,9 kJ/mol kommen als Wärme aus dem Wasser, und die Neigung der Ionen, sich zu verteilen (Entropie, Einheit 19), überwiegt sie. NaCl-Moleküle entstehen dabei zu keinem Zeitpunkt.') },
   { id: 'i11l', unit: 11, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u11.hydration'], targets: ['salt-molecules-in-water', 'dissolving-is-melting'],
-    prompt: b('Besides water molecules, what does a glass of clear salt water contain?', 'Was enthält ein Glas klares Salzwasser außer Wassermolekülen?'),
+    prompt: b('Besides water molecules, what does a glass of clear salt water contain?', 'Was enthält ein Glas klare Kochsalzlösung außer Wassermolekülen?'),
     options: [
       { text: b('NaCl molecules spread out between the water molecules', 'NaCl-Moleküle, verteilt zwischen den Wassermolekülen'), mis: 'salt-molecules-in-water' },
       { text: b('Molten salt mixed in with the water', 'Geschmolzenes Salz, mit dem Wasser vermischt'), mis: 'dissolving-is-melting' },
@@ -132,14 +133,14 @@ export const BANK_U11: Item[] = [
     ],
     explain: b('Salt was never made of molecules: it is a lattice of ions (unit 4). In water the ions separate and move about on their own, each inside its [[hydration]] shell.', 'Salz bestand nie aus Molekülen: Es ist ein Ionengitter (Einheit 4). Im Wasser trennen sich die Ionen und bewegen sich einzeln, jedes in seiner Hydrathülle ([[hydration]]).') },
   { id: 'i11t', unit: 11, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u11.hydration'], targets: ['salt-molecules-in-water'],
-    prompt: b('Salt water conducts electricity, sugar water does not (unit 7), though both are clear solutions. What does that tell you about dissolved salt?', 'Salzwasser leitet den elektrischen Strom, Zuckerwasser nicht (Einheit 7), obwohl beide klare Lösungen sind. Was sagt das über gelöstes Salz?'),
+    prompt: b('Salt water conducts electricity, sugar water does not (unit 7), though both are clear solutions. What does that tell you about dissolved salt?', 'Salzlösung leitet den elektrischen Strom, Zuckerlösung nicht (Einheit 7), obwohl beide klar sind. Was sagt das über gelöstes Salz?'),
     options: [
       { text: b('It is present as separate ions that can move', 'Es liegt als einzelne, bewegliche Ionen vor'), correct: true },
       { text: b('It is present as NaCl molecules, which carry the charge', 'Es liegt als NaCl-Moleküle vor, die die Ladung tragen'), mis: 'salt-molecules-in-water' },
       { text: b('It gives off free electrons into the water', 'Es gibt freie Elektronen ins Wasser ab') },
       { text: b('Sugar blocks the current, salt does not', 'Zucker blockiert den Strom, Salz nicht') },
     ],
-    explain: b('A current needs charged particles that can move. Dissolved sugar stays as whole, neutral molecules; dissolved salt is Na⁺ and Cl⁻ ions, each in its hydration shell, free to drift towards the poles.', 'Strom braucht bewegliche geladene Teilchen. Gelöster Zucker bleibt als ganze, neutrale Moleküle; gelöstes Salz besteht aus Na⁺- und Cl⁻-Ionen, jedes in seiner Hydrathülle, die frei zu den Polen wandern können.') },
+    explain: b('A current needs charged particles that can move. Dissolved sugar stays as whole, neutral molecules; dissolved salt is Na⁺ and Cl⁻ ions, each in its hydration shell, free to drift towards the poles.', 'Strom braucht bewegliche geladene Teilchen. Gelöster Zucker bleibt als ganze, neutrale Moleküle; gelöstes Salz besteht aus Na⁺- und Cl⁻-Ionen, die jeweils von einer Hydrathülle umgeben sind und frei zu den Polen wandern können.') },
 
   { id: 'i11u', unit: 11, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u11.hydration'], targets: ['dissolving-is-melting'],
     prompt: b('A road is iced over at −5 °C, and salt is spread on it. Why does the ice melt?', 'Eine Straße ist bei −5 °C vereist, und es wird Salz gestreut. Warum taut das Eis?'),

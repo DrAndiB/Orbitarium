@@ -449,7 +449,7 @@ export function noBondReason(a: Molecule, b: Molecule): string {
     const y = plainHeavy(R);
     if (de) {
       const tail = y === 'C' ? 'das kein freies Elektronenpaar hat' : 'dessen freie Elektronenpaare hier nicht zählen';
-      return `Keine Wasserstoffbrücke: ${nameOf(R)} hat kein H an N, O oder F, und ein H-Atom vom ${D.molDe} würde auf das ${y}-Atom zeigen, ${tail}.`;
+      return `Keine Wasserstoffbrücke: ${nameOf(R)} hat kein H an N, O oder F, und ein H-Atom des ${D.molDe}s würde auf das ${y}-Atom zeigen, ${tail}.`;
     }
     const tail = y === 'C' ? 'which has no lone pair' : 'whose lone pairs are not counted here';
     return `No hydrogen bond: ${R.name.en} has no H on N, O or F, and ${possEn(D)} H would point at ${EL_NAME[y].en}, ${tail}.`;
