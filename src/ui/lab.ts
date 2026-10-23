@@ -6,7 +6,10 @@ import { WorkbenchUI } from '../sim/workbenchUI';
 import { AtomUI } from '../sim/orbitalsUI';
 import { LatticeUI } from '../sim/latticeUI';
 import { BondUI } from '../sim/bondUI';
-import { U2_IONS } from '../units/engines';
+import { ParticleBoxUI } from '../sim/particleBoxUI';
+import { ConductUI } from '../sim/conductUI';
+import { HBondUI } from '../sim/hbondUI';
+import { U2_IONS, U8_SUBS, U9_SUBS, U11_MIXES } from '../units/engines';
 import { onLeave } from './lifecycle';
 import { go } from '../router';
 
@@ -17,10 +20,13 @@ const ENGINES: LabEngine[] = [
   { name: { en: 'Lattice Builder', de: 'Gitterbaukasten' }, units: [4], open: () => new LatticeUI({ start: 'NaCl' }) },
   { name: { en: 'Charge Field', de: 'Ladungsfeld' }, units: [5], open: () => new BondUI({ start: { a: 'H', b: 'Cl', order: 1 } }) },
   { name: { en: 'Molecule Workbench', de: 'Molekül-Werkbank' }, units: [6], open: () => new WorkbenchUI({ presets: ['CH4', 'NH3', 'H2O', 'NH4', 'CO2', 'HCN', 'BF3', 'CH2O', 'SO2', 'H2S', 'PCl3', 'CCl4', 'CHCl3', 'CH2Cl2'], start: 'NH3', controls: { builder: true } }) },
+  { name: { en: 'Conductivity tester', de: 'Leitfähigkeitsprüfer' }, units: [7], open: () => new ConductUI({ start: 'Cu' }) },
+  { name: { en: 'Particle Box', de: 'Teilchenbox' }, units: [8, 9, 11], open: () => new ParticleBoxUI({ start: 'Br2', subs: [...new Set([...U8_SUBS, ...U9_SUBS, 'H2O', 'HF', 'NH3', 'CH3OH', 'C2H5OH', 'C4H9OH'])], temp: 20, controls: { compare: true, views: ['clouds', 'dipoles', 'hbonds'], whatIf: true, temp: true } }) },
+  { name: { en: 'Hydrogen bonds', de: 'Wasserstoffbrücken' }, units: [10], open: () => new HBondUI({ start: 'H2O' }) },
+  { name: { en: 'Water and mixing', de: 'Wasser und Mischen' }, units: [11], open: () => new ParticleBoxUI({ start: 'H2O', subs: ['H2O'], temp: 20, mixes: [...U11_MIXES, 'CH3OH', 'CH3COCH3', 'C6H13OH'], controls: { compare: false, views: ['hbonds'], temp: true } }) },
 ];
 
 const COMING: { name: string; units: string; phase: number }[] = [
-  { name: 'Particle Box', units: '8, 9, 11, …', phase: 1 },
   { name: 'Energy Landscape', units: '17, 18, 20, 23', phase: 2 },
   { name: 'Zoom Ladder', units: '12–15, 31', phase: 2 },
   { name: 'Lab Bench', units: '16, 27, …', phase: 2 },

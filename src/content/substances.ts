@@ -98,7 +98,8 @@ export const WATER = { densityIce: 0.917, densityLiquid0: 0.9998, densityLiquid4
 /**
  * Electrical conductivity for the conduction view (unit 7), in S/m at about 25 °C unless noted. Copper and
  * ultrapure water: CRC Handbook; 1 mol/L NaCl solution: from its molar conductivity (about 86 S·cm²/mol);
- * molten NaCl near 850 °C: about 3.6 S/cm (Janz, molten-salt data); solid NaCl at room temperature: far below
+ * molten NaCl near its melting point: about 3.6 S/cm (Janz, J. Phys. Chem. Ref. Data 9, 791 (1980), the van Artsdalen
+ * and Yaffe equation gives 3.57 S/cm at 1074 K); solid NaCl at room temperature: far below
  * 10⁻¹⁰ S/m. Sugar solution: practically that of the pure water it is made with.
  */
 export const CONDUCTIVITY: Record<string, { value: number; carriers: 'electrons' | 'ions' | 'none'; name: Bi }> = {

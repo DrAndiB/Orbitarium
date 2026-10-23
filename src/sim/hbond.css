@@ -1,0 +1,19 @@
+/* Hydrogen-bond view (unit 10) */
+.hbond .wb-build-label { margin-top: 6px; }
+.hb-info { display: grid; gap: 6px; margin-top: 8px; }
+.hb-info p { margin: 0; }
+.hb-counts { font-size: 15px; line-height: 1.45; font-variant-numeric: tabular-nums; }
+.hb-status { font-size: 15px; line-height: 1.45; padding: 8px 12px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--dome-2); }
+.hb-status.ok { border-color: color-mix(in srgb, var(--lonepair) 55%, var(--line)); }
+.hb-status.none { border-color: color-mix(in srgb, var(--fog) 45%, var(--line)); }
+.hb-note { line-height: 1.4; }
+.hb-facts { margin-top: 2px; }
+.hb-facts[hidden] { display: none; }
+.hb-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--fog); margin-top: 4px; }
+.hb-key { display: inline-flex; align-items: center; gap: 6px; }
+.hb-key i { display: inline-block; flex: 0 0 auto; }
+.hb-key i.donor { width: 12px; height: 12px; border-radius: 50%; background: #e9e3d3; box-shadow: 0 0 0 3px rgba(90, 169, 255, 0.55); }
+.hb-key i.lp { width: 9px; height: 14px; border-radius: 50%; background: var(--lonepair); opacity: 0.85; }
+.hb-key i.dash { width: 22px; height: 0; border-top: 3px dashed #e6dcff; }
+.hbond.compact .hb-legend { display: none; }
+.hbond.compact .hb-counts, .hbond.compact .hb-status { font-size: 14px; }

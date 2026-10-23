@@ -1,0 +1,34 @@
+/* Conduction view (unit 7) */
+
+.conduct-title { display: grid; gap: 3px; min-width: 0; }
+.conduct-title .wb-formula { font-size: 20px; line-height: 1.1; }
+.conduct-carriers { font-size: 13.5px; color: var(--chalk-2); }
+.conduct-carriers strong { color: var(--chalk); font-weight: 600; }
+.conduct-status { font-size: 13px; color: var(--fog); }
+.conduct-status.on { color: var(--energy); }
+.conduct .lattice-legend i.el { width: 7px; height: 7px; background: #ff8f8f; margin: 2px; }
+.conduct .lattice-legend i.sugar { background: #bdb6a6; }
+.conduct .lattice-legend i.water { background: #8fa3c8; opacity: .6; }
+.conduct-note { min-height: 2.6em; }
+.conduct-value { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin: 2px 0 10px; }
+.conduct-value strong { font: 400 20px/1.15 var(--serif); color: var(--chalk); }
+.conduct-meter.compact { padding: 0 2px; }
+.conduct-meter.compact .conduct-value { margin: 0; }
+.conduct-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; min-height: 52px; }
+.conduct-head .lattice-legend { flex: 0 0 auto; }
+.conduct-status-row { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 12px; flex-wrap: wrap; margin-top: -4px; }
+.conduct-status-row .conduct-status { font-size: 14px; }
+.conduct.compact .conduct-head { min-height: 0; }
+.cm-grid { display: grid; gap: 2px; }
+.cm-row { display: grid; grid-template-columns: 130px 1fr; align-items: center; gap: 10px; min-height: 24px; font-size: 13px; color: var(--fog); }
+.cm-row.now { color: var(--chalk); font-weight: 600; }
+.cm-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-track { position: relative; height: 18px; margin: 0 10px; }
+.cm-track::before { content: ''; position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: var(--line); }
+.cm-axis-row { min-height: 30px; }
+.cm-axis::before { top: 24px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #2e3a69 0%, #50608f 50%, #ffc15e 100%); }
+.cm-axis .cm-tick { position: absolute; top: 0; transform: translateX(-50%); font-size: 12px; color: var(--fog); font-weight: 400; white-space: nowrap; }
+.cm-dot { position: absolute; top: 3px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--fog); font-style: normal; font-size: 11px; line-height: 12px; text-align: center; color: var(--dome); }
+.cm-dot.below { border-radius: 3px; margin-left: -2px; }
+.cm-row.now .cm-dot { background: var(--energy); width: 14px; height: 14px; top: 2px; margin-left: -7px; box-shadow: 0 0 0 3px rgba(255,193,94,.25); }
+.cm-row.now .cm-dot.below { margin-left: -2px; }

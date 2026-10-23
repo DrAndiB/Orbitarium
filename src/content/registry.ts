@@ -8,8 +8,13 @@ import { UNIT2 } from './unit02';
 import { UNIT3 } from './unit03';
 import { UNIT4 } from './unit04';
 import { UNIT5 } from './unit05';
+import { UNIT7 } from './unit07';
+import { UNIT8 } from './unit08';
+import { UNIT9 } from './unit09';
+import { UNIT10 } from './unit10';
+import { UNIT11 } from './unit11';
 
-export const CONTENT_UNITS: UnitContent[] = [UNIT1, UNIT2, UNIT3, UNIT4, UNIT5];
+export const CONTENT_UNITS: UnitContent[] = [UNIT1, UNIT2, UNIT3, UNIT4, UNIT5, UNIT7, UNIT8, UNIT9, UNIT10, UNIT11];
 
 for (const U of CONTENT_UNITS) {
   for (const m of U.misconceptions) if (!MISCONCEPTIONS.some((x) => x.id === m.id)) MISCONCEPTIONS.push({ ...m, unit: U.n });

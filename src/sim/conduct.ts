@@ -25,13 +25,13 @@ export function lampLevel(sigma: number): number {
 
 export class ConductStage extends Stage3D {
   material: ConductMaterial = 'Cu';
-  on = false;
+  power = false;
   reversed = false;
   private matter = new THREE.Group();
   private circuit = new THREE.Group();
   private arrows = new THREE.Group();
   private pools: Pool[] = [];
-  private onTime = 0;
+  private onSince = 0;
   private reported = false;
   private lamp!: THREE.Mesh;
   private glow!: THREE.Sprite;
@@ -40,14 +40,12 @@ export class ConductStage extends Stage3D {
   private batteryGroup = new THREE.Group();
   private dummy = new THREE.Object3D();
   private t = 0;
-  private compact: boolean;
 
   constructor(host: HTMLElement, compact = false) {
-    super(host, { distance: compact ? 14 : 12, autoRotate: false, minDistance: 7, maxDistance: 22 });
-    this.compact = compact;
-    const d = compact ? 14 : 12.2;
-    this.camera.position.set(0.9, 2.1, d);
-    this.controls.target.set(0, 0.55, 0);
+    super(host, { distance: compact ? 12 : 12, autoRotate: false, minDistance: 7, maxDistance: 22 });
+    const d = compact ? 11.9 : 12.2;
+    this.camera.position.set(0.9, compact ? 1.4 : 2.1, d);
+    this.controls.target.set(0, compact ? 0.3 : 0.55, 0);
     this.root.add(this.matter, this.circuit, this.arrows);
     this.buildCircuit();
     this.setMaterial('Cu');
@@ -56,20 +54,20 @@ export class ConductStage extends Stage3D {
   get sigma() { return CONDUCTIVITY[this.material].value; }
   get carriers() { return CONDUCTIVITY[this.material].carriers; }
   /** The battery is on and something can move. */
-  get flowing() { return this.on && this.carriers !== 'none'; }
+  get flowing() { return this.power && this.carriers !== 'none'; }
 
   setMaterial(m: ConductMaterial) {
     this.material = m;
-    this.onTime = 0; this.reported = false;
+    this.onSince = performance.now(); this.reported = false;
     this.build();
     this.updateCircuit();
     this.emit('material', m);
   }
 
   setPower(on: boolean) {
-    if (on === this.on) return;
-    this.on = on;
-    this.onTime = 0; this.reported = false;
+    if (on === this.power) return;
+    this.power = on;
+    this.onSince = performance.now(); this.reported = false;
     this.updateCircuit();
     this.emit('power', on, this.material);
   }
@@ -77,7 +75,7 @@ export class ConductStage extends Stage3D {
   setReversed(r: boolean) {
     if (r === this.reversed) return;
     this.reversed = r;
-    this.onTime = 0; this.reported = false;
+    this.onSince = performance.now(); this.reported = false;
     this.updateCircuit();
     this.emit('reverse', r, this.material);
   }
@@ -107,7 +105,7 @@ export class ConductStage extends Stage3D {
     this.batteryGroup.position.set(-1.5, top, 0);
     this.circuit.add(this.batteryGroup);
     // lamp
-    this.lamp = new THREE.Mesh(new THREE.SphereGeometry(0.42, 28, 20), new THREE.MeshStandardMaterial({ color: 0x8a8576, emissive: 0xffc15e, emissiveIntensity: 0, roughness: 0.3, transparent: true, opacity: 0.95 }));
+    this.lamp = new THREE.Mesh(new THREE.SphereGeometry(0.42, 28, 20), new THREE.MeshStandardMaterial({ color: 0x55524b, emissive: 0xffc15e, emissiveIntensity: 0, roughness: 0.55, transparent: true, opacity: 0.95 }));
     this.lamp.position.set(1.35, top, 0);
     const base = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.3, 18), new THREE.MeshStandardMaterial({ color: 0x6d7699, metalness: 0.5, roughness: 0.4 }));
     base.rotation.z = Math.PI / 2; base.position.set(0.98, top, 0);
@@ -135,12 +133,12 @@ export class ConductStage extends Stage3D {
     // battery: the long plate is the + terminal; it faces the side of the + plate
     this.clearGroup(this.batteryGroup);
     const mk = (h: number, w: number, x: number) => {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.5), new THREE.MeshStandardMaterial({ color: this.on ? 0xece6d6 : 0x7a819c, roughness: 0.5 }));
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.5), new THREE.MeshStandardMaterial({ color: this.power ? 0xece6d6 : 0x7a819c, roughness: 0.5 }));
       m.position.set(x, 0, 0); return m;
     };
     const plusRight = !this.reversed;   // + plate on the right unless swapped
     this.batteryGroup.add(mk(0.95, 0.08, plusRight ? 0.22 : -0.22), mk(0.5, 0.14, plusRight ? -0.22 : 0.22));
-    if (!this.on) {
+    if (!this.power) {
       // an open switch: one short tilted segment above the gap
       const sw = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.05, 0.05), new THREE.MeshStandardMaterial({ color: 0x9aa3bf }));
       sw.position.set(0.68, 0.18, 0); sw.rotation.z = 0.55;
@@ -154,31 +152,34 @@ export class ConductStage extends Stage3D {
 
   private describe() {
     const m = CONDUCTIVITY[this.material].name.en;
-    if (!this.on) return `${m} between two plates, battery off`;
+    if (!this.power) return `${m} between two plates, battery off`;
     if (this.carriers === 'electrons') return `${m}: electrons drift towards the + plate, the lamp is bright`;
     if (this.carriers === 'ions') return `${m}: sodium ions drift to the − plate, chloride ions to the + plate, the lamp glows`;
     return `${m}: nothing drifts, practically no current`;
   }
 
-  /** Big arrows above the slab that say at a glance which way each kind of carrier drifts. */
+  /** Big labelled arrows under the slab that say at a glance which way each kind of carrier drifts. */
   private buildArrows() {
     this.clearGroup(this.arrows);
     if (!this.flowing) return;
     const toPlus = this.reversed ? -1 : 1;     // direction (sign of x) towards the + plate
-    const arrow = (dir: number, color: number, y: number, z: number) => {
+    const arrow = (dir: number, color: number, css: string, text: string, y: number) => {
       const g = new THREE.Group();
-      const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.5, 12), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9 }));
+      const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.95 });
+      const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.6, 12), mat);
       shaft.rotation.z = Math.PI / 2;
-      const head = new THREE.Mesh(new THREE.ConeGeometry(0.17, 0.4, 16), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9 }));
-      head.rotation.z = -Math.PI / 2; head.position.x = 0.95;
+      const head = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.42, 16), mat);
+      head.rotation.z = -Math.PI / 2; head.position.x = 1.0;
       g.add(shaft, head);
-      g.position.set(0, y, z);
       g.scale.x = dir;
-      this.arrows.add(g);
+      g.position.set(0.25 * dir, y, SLAB.z);
+      const lab = this.label(text, 0.52, css);
+      lab.position.set(-1.1 * dir, y, SLAB.z);
+      this.arrows.add(g, lab);
     };
-    const y = SLAB.y + 0.55;
-    if (this.carriers === 'electrons') arrow(toPlus, ELECTRON, y, 0.4);
-    else { arrow(-toPlus, CHARGE.plus, y + 0.02, 0.6); arrow(toPlus, CHARGE.minus, y - 0.02, -0.5); }
+    const y = -SLAB.y - 0.45;
+    if (this.carriers === 'electrons') arrow(toPlus, ELECTRON, '#ff9f9f', 'e⁻', y);
+    else { arrow(-toPlus, CHARGE.plus, '#8cc4ff', 'Na⁺', y); arrow(toPlus, CHARGE.minus, '#ff9f9f', 'Cl⁻', y - 0.6); }
   }
 
   // ---------- matter ----------
@@ -286,10 +287,10 @@ export class ConductStage extends Stage3D {
     const toPlus = this.reversed ? -1 : 1;
     for (const p of this.pools) {
       if (p.kind === 'core' || (this.material === 'NaCl' && (p.kind === 'cation' || p.kind === 'anion'))) this.vibrate(p, p.kind === 'core' ? 0.035 : 0.045);
-      else if (p.kind === 'electron') this.electrons(p, dt * slow, this.on ? toPlus * 1.15 : 0);
+      else if (p.kind === 'electron') this.electrons(p, dt * slow, this.power ? toPlus * 1.15 : 0);
       else {
         // ions, water and sugar wander; with the battery on, ions also drift towards the plate of opposite charge
-        const drift = !this.on ? 0 : p.kind === 'cation' ? -toPlus * 0.85 : p.kind === 'anion' ? toPlus * 0.85 : 0;
+        const drift = !this.power ? 0 : p.kind === 'cation' ? -toPlus * 0.85 : p.kind === 'anion' ? toPlus * 0.85 : 0;
         const jiggle = p.kind === 'water' ? 1.6 : p.kind === 'sugar' ? 0.7 : 1.1;
         this.wander(p, dt * slow, jiggle, drift);
       }
@@ -298,15 +299,14 @@ export class ConductStage extends Stage3D {
     // lamp
     const lvl = this.flowing ? lampLevel(this.sigma) : 0;
     const mat = this.lamp.material as THREE.MeshStandardMaterial;
-    mat.emissiveIntensity += (lvl * 2.6 - mat.emissiveIntensity) * Math.min(1, dt * 4);
-    mat.color.setHex(lvl > 0 ? 0xfff2cf : 0x8a8576);
+    mat.emissiveIntensity += (lvl * 2.6 - mat.emissiveIntensity) * Math.min(1, dt * 8);
+    mat.color.setHex(lvl > 0 ? 0xfff2cf : 0x55524b);
     const gm = this.glow.material as THREE.SpriteMaterial;
-    gm.opacity += (Math.min(1, lvl * 1.4) - gm.opacity) * Math.min(1, dt * 4);
+    gm.opacity += (Math.min(1, lvl * 1.4) - gm.opacity) * Math.min(1, dt * 8);
     this.glow.scale.setScalar(0.6 + 3.2 * lvl);
     // events after two seconds with the battery on
-    if (this.on) {
-      this.onTime += dt;
-      if (this.onTime > 2 && !this.reported) {
+    if (this.power && !this.reported && performance.now() - this.onSince > 2000) {
+      {
         this.reported = true;
         this.emit(this.carriers === 'none' ? 'noCurrent' : 'drift', this.material);
       }
@@ -343,8 +343,9 @@ export class ConductStage extends Stage3D {
       }
       p.pos[o] += (p.vel[o] + drift) * dt; p.pos[o + 1] += p.vel[o + 1] * dt; p.pos[o + 2] += p.vel[o + 2] * dt;
       if (drift !== 0 && Math.abs(p.pos[o]) > SLAB.x) {
-        // reached its plate: give it back on the far side, so the drift keeps going
-        p.pos[o] = -Math.sign(p.pos[o]) * (SLAB.x - 0.05);
+        // reached its plate: give it back at a random place, so the drift keeps going (and, in a still picture,
+        // each kind of ion gathers towards the plate it moves to)
+        p.pos[o] = this.rnd(SLAB.x);
         p.pos[o + 1] = this.rnd(SLAB.y); p.pos[o + 2] = this.rnd(SLAB.z);
       } else this.reflect(p, o, SLAB.x);
       this.reflect(p, o + 1, SLAB.y); this.reflect(p, o + 2, SLAB.z);
