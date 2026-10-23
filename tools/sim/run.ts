@@ -30,7 +30,7 @@ const DAYS = 70;
 const START = '2026-10-26'; // a Monday
 const UNIT_COUNT = 30;
 
-// ---------- content: units 0–6 are real; every later unit is a clone of unit 6 with renamed ids ----------
+// ---------- content: units 0–11 are real; every later unit is a clone of unit 6 with renamed ids ----------
 const realBank = items.BANK.slice();
 const u6bank = realBank.filter((i) => i.unit === 6);
 const u0bank = realBank.filter((i) => i.unit === 0);
@@ -90,7 +90,7 @@ function unit0(): UnitDef {
     ideas: UNIT0.explain.ideas.map((i) => ({ concept: i.concept })),
   };
 }
-/** Units 1–5, built from their content files: the same in-unit items the player records. */
+/** Units built from content files (1–5, 7–11): the same in-unit items the player records. */
 function contentUnit(n: number): UnitDef {
   const U = CONTENT_UNITS.find((u) => u.n === n)!;
   const unitItems = [U.puzzle.question, U.explore.check, ...U.predictions.map((p) => p.item), U.flaw] as Item[];
@@ -104,9 +104,10 @@ function contentUnit(n: number): UnitDef {
 }
 const UNITS: UnitDef[] = [];
 for (let n = 0; n < UNIT_COUNT; n++) {
-  const def = n === 0 ? unit0() : n <= 5 ? contentUnit(n) : unit6Like(n);
+  const real = CONTENT_UNITS.some((u) => u.n === n);
+  const def = n === 0 ? unit0() : real ? contentUnit(n) : unit6Like(n);
   UNITS.push(def);
-  if (n >= 1 && n <= 6) items.BANK.push(...realBank.filter((i) => i.unit === n));
+  if (real || n === 6) items.BANK.push(...realBank.filter((i) => i.unit === n));
   else if (n !== 0) items.BANK.push(...u6bank.map((it) => cloneItem(n, it, 'b')));
 }
 const ALL_MIS = UNITS.flatMap((u) => u.mis);
