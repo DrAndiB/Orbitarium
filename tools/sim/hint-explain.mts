@@ -1,5 +1,5 @@
 // Show what the revised explain-back step displays for a text and a set of ticked ideas.
-// Usage: npx tsx tools/sim/hint-explain.mts <unit 0–6> <en|de> "<ticked idea numbers, e.g. 1,2,4>" "<explanation text>"
+// Usage: npx tsx tools/sim/hint-explain.mts <unit 0–11> <en|de> "<ticked idea numbers, e.g. 1,2,4>" "<explanation text>"
 import { ideaHints, looksLikeKeywordList } from '../../src/content/ideas';
 import type { Idea } from '../../src/content/unit06';
 import type { Bi } from '../../src/i18n';
@@ -7,7 +7,7 @@ import type { Bi } from '../../src/i18n';
 const [unitArg, lang = 'en', tickArg = '', ...rest] = process.argv.slice(2);
 const text = rest.join(' ');
 const n = Number(unitArg);
-const mod = await import(`../../src/content/unit0${n}.ts`);
+const mod = await import(`../../src/content/unit${String(n).padStart(2, "0")}.ts`);
 const content = mod[`UNIT${n}`] as { explain: { ideas: Idea[]; tightened: Bi } };
 const X = content.explain;
 const L = (b: { en: string; de: string }) => b[lang as 'en' | 'de'].replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2').replace(/\{\{([^}]+)\}\}/g, '$1');

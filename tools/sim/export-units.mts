@@ -13,7 +13,7 @@ const lang = (process.argv[2] ?? 'en') as 'en' | 'de';
 const out = process.argv[3] ?? '.';
 const units = (process.argv[4] ?? '1,2,3,4,5').split(',').map(Number);
 const contents: UnitContent[] = [];
-for (const n of units) contents.push((await import(`../../src/content/unit0${n}.ts`))[`UNIT${n}`]);
+for (const n of units) contents.push((await import(`../../src/content/unit${String(n).padStart(2, "0")}.ts`))[`UNIT${n}`]);
 for (const U of contents) for (const m of U.misconceptions) if (!MISCONCEPTIONS.some((x) => x.id === m.id)) MISCONCEPTIONS.push({ ...m, unit: U.n });
 for (const U of contents) Object.assign(GLOSSARY, U.glossary);
 

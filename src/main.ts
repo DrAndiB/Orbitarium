@@ -21,6 +21,7 @@ function renderTableScreen(root: HTMLElement) {
   root.append(h('div', { class: 'topbar' }, h('h1', null, L({ en: 'Periodic table', de: 'Periodensystem' }))), table.el);
 }
 import { renderJournal } from './ui/journal';
+import { renderDev } from './ui/dev';
 import { renderSettings } from './ui/settings';
 import { renderWelcome, renderDiagnostic } from './ui/onboarding';
 import { scheduleNudges } from './platform';
@@ -56,6 +57,7 @@ function render() {
   setLang(st.settings.lang);
   setHint(st.settings.hint);
   const { path, params } = currentRoute();
+  if (import.meta.env.DEV && path[0] === 'dev') { renderDev(root, path[1] ?? '', params); return; }
   if (!st.onboarded && path[0] !== 'welcome') { go('#/welcome'); return; }
   const top = path[0] ?? '';
   switch (top) {

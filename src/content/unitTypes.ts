@@ -13,11 +13,23 @@ import type { Term } from './glossary';
  * - lattice (Lattice Builder): one salt from SALTS (src/content/ions.ts); `compare` loads a second salt into the
  *   gauge; `mode` plays the electron transfer, shifts a layer, heats to `temp` °C or highlights one ion's neighbours.
  * - bond (Charge Field): a bond between atoms a and b with bond order 1–3.
+ * - conduct (Lattice Builder, conduction view): one material between two electrodes; `on` connects the battery,
+ *   `reversed` swaps the poles. Materials and conductivities: CONDUCTIVITY in src/content/substances.ts.
+ * - box (Particle Box): substance `sub` (SUBSTANCES) at `temp` °C; `compare` puts a second box beside it at the
+ *   same temperature; `view` overlays electron clouds (flickering dipoles), permanent dipoles or hydrogen bonds;
+ *   `dipoleOff` is the what-if that removes a polar molecule's dipole; `mix` pours a second substance into the
+ *   same box (unit 11: water with hexane, ethanol, 1-butanol, or 'NaCl' crystals).
+ * - hbond (Molecule Workbench, hydrogen-bond view): molecule a alone, or a with partner b joined by the best
+ *   hydrogen bond (`swap` gives the other direction where both work); `cluster` shows water with four neighbours.
  */
+export type ConductMaterial = 'Cu' | 'NaCl' | 'NaCl-melt' | 'NaCl-aq' | 'sugar-aq' | 'water';
 export type Show =
   | { engine: 'atom'; z: number; charge?: number; view?: 'shells' | 'clouds'; highlight?: string; pull?: number; jump?: [number, number]; size?: boolean }
   | { engine: 'lattice'; salt: string; compare?: string; mode?: 'transfer' | 'shift' | 'heat' | 'neighbours'; temp?: number }
-  | { engine: 'bond'; a: string; b: string; order?: 1 | 2 | 3 };
+  | { engine: 'bond'; a: string; b: string; order?: 1 | 2 | 3 }
+  | { engine: 'conduct'; material: ConductMaterial; on?: boolean; reversed?: boolean }
+  | { engine: 'box'; sub: string; temp?: number; compare?: string; view?: 'plain' | 'clouds' | 'dipoles' | 'hbonds'; dipoleOff?: boolean; mix?: string }
+  | { engine: 'hbond'; a: string; b?: string; swap?: boolean; cluster?: boolean };
 
 /** A small data table for the puzzle. Cells are plain strings (formulas in {{…}} allowed) or bilingual text. */
 export interface DataTable {

@@ -4,6 +4,11 @@ import { BANK_U2 } from './bank/u02';
 import { BANK_U3 } from './bank/u03';
 import { BANK_U4 } from './bank/u04';
 import { BANK_U5 } from './bank/u05';
+import { BANK_U7 } from './bank/u07';
+import { BANK_U8 } from './bank/u08';
+import { BANK_U9 } from './bank/u09';
+import { BANK_U10 } from './bank/u10';
+import { BANK_U11 } from './bank/u11';
 
 // Question bank. Each item names the concepts it exercises; wrong options can name the
 // misconception they reveal. `evidence` says what a correct answer proves on the
@@ -330,38 +335,7 @@ export const BANK: Item[] = [
       { text: b('ionic', 'ionisch') },
     ],
     explain: b('Three equal pulls spread evenly in a plane add up to zero, just like four equal pulls in a tetrahedron. BF₃ has no dipole.', 'Drei gleiche Bindungsdipole, gleichmäßig in einer Ebene verteilt, ergeben null, genau wie vier gleiche Bindungsdipole im Tetraeder. BF₃ hat kein Dipolmoment.') },
-  // Unit 8
-  { id: 'i8a', unit: 8, kind: 'rank', format: 'rank', concepts: ['u8.dispersion'], mis: 'dispersion-direction', table: 'category',
-    prompt: b('Rank the noble gases by boiling point, highest first.', 'Ordne die Edelgase nach Siedepunkt, den höchsten zuerst.'),
-    order: [b('Xe', 'Xe'), b('Ar', 'Ar'), b('Ne', 'Ne'), b('He', 'He')],
-    explain: b('More electrons, bigger and softer clouds, stronger [[dispersion]]: Xe 165 K, Ar 87 K, Ne 27 K, He 4 K.', 'Mehr Elektronen, größere, weichere Wolken, stärkere [[dispersion]]: Xe 165 K, Ar 87 K, Ne 27 K, He 4 K.') },
-  { id: 'i8b', unit: 8, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u8.dispersion'], targets: ['dispersion-direction'],
-    prompt: b('Pentane and neopentane are both C₅H₁₂. Which boils higher?', 'Pentan und Neopentan sind beide C₅H₁₂. Welches siedet höher?'),
-    options: [
-      { text: b('Pentane: the chain has more contact area', 'Pentan: die Kette hat mehr Kontaktfläche'), correct: true },
-      { text: b('Neopentane: it is more compact', 'Neopentan: es ist kompakter'), mis: 'dispersion-direction' },
-      { text: b('Neither: same electrons, same boiling point', 'Keines: gleiche Elektronen, gleicher Siedepunkt') },
-    ],
-    explain: b('Pentane 36 °C, neopentane 9.5 °C. Dispersion only acts where molecules touch.', 'Pentan 36 °C, Neopentan 9,5 °C. Dispersion wirkt nur, wo sich Moleküle berühren.') },
-  // Unit 9
-  { id: 'i9a', unit: 9, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u9.dipole'], targets: ['hbond-donor-acceptor'],
-    prompt: b('Propane and acetaldehyde both weigh 44 g/mol. Propane boils at −42 °C, acetaldehyde at 20 °C. Mainly because of…', 'Propan und Acetaldehyd wiegen beide 44 g/mol. Propan siedet bei −42 °C, Acetaldehyd bei 20 °C. Vor allem wegen…'),
-    options: [
-      { text: b('dipole–dipole attraction', 'Dipol-Dipol-Anziehung'), correct: true },
-      { text: b('hydrogen bonds between acetaldehyde molecules', 'Wasserstoffbrücken zwischen Acetaldehyd-Molekülen'), mis: 'hbond-donor-acceptor' },
-      { text: b('stronger dispersion', 'stärkerer Dispersion') },
-    ],
-    explain: b('Acetaldehyde has a polar C=O but no H on oxygen, so it cannot donate a [[h-bond]].', 'Acetaldehyd hat ein polares C=O, aber kein H am Sauerstoff, kann also keine [[h-bond]] spenden.') },
-  // Unit 10
-  { id: 'i10a', unit: 10, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u10.donor-acceptor'], targets: ['hbond-donor-acceptor'],
-    prompt: b('Dimethyl ether, CH₃–O–CH₃, meets water. In a [[h-bond]], dimethyl ether can be…', 'Dimethylether, CH₃–O–CH₃, trifft auf Wasser. In einer [[h-bond]] kann Dimethylether…'),
-    options: [
-      { text: b('an acceptor only', 'nur Akzeptor sein'), correct: true },
-      { text: b('a donor only', 'nur Donor sein'), mis: 'hbond-donor-acceptor' },
-      { text: b('both donor and acceptor', 'Donor und Akzeptor sein'), mis: 'hbond-donor-acceptor' },
-      { text: b('neither', 'keines von beiden') },
-    ],
-    explain: b('Its oxygen has lone pairs to accept with, but no H attached to O to donate.', 'Sein Sauerstoff hat freie Paare zum Annehmen, aber kein H am O zum Spenden.') },
+  ...BANK_U7, ...BANK_U8, ...BANK_U9, ...BANK_U10, ...BANK_U11,
 ];
 
 export const itemById = (id: string) => BANK.find((i) => i.id === id);

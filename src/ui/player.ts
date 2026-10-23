@@ -10,6 +10,9 @@ import { WorkbenchUI } from '../sim/workbenchUI';
 import { AtomUI } from '../sim/orbitalsUI';
 import { LatticeUI } from '../sim/latticeUI';
 import { BondUI } from '../sim/bondUI';
+import { ParticleBoxUI } from '../sim/particleBoxUI';
+import { ConductUI } from '../sim/conductUI';
+import { HBondUI } from '../sim/hbondUI';
 import { createTable, openTable, tableIcon } from './ptable';
 import { go } from '../router';
 import { onLeave } from './lifecycle';
@@ -90,6 +93,9 @@ function showStep(root: HTMLElement, player: UnitPlayer, step: number) {
     atom: (opts) => { const ui = new AtomUI(opts); disposers.push(() => ui.dispose()); return ui; },
     lattice: (opts) => { const ui = new LatticeUI(opts); disposers.push(() => ui.dispose()); return ui; },
     bond: (opts) => { const ui = new BondUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    box: (opts) => { const ui = new ParticleBoxUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    conduct: (opts) => { const ui = new ConductUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    hbond: (opts) => { const ui = new HBondUI(opts); disposers.push(() => ui.dispose()); return ui; },
   };
   player.steps[step](body, enable, ctx);
   root.append(ctaWrap);
