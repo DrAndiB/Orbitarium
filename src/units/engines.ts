@@ -1,9 +1,12 @@
-// Engine wiring for units 1–5: which engine each unit uses, and which engine events tick which explore task.
+// Engine wiring for units 1–5 and 7–11: which engine each unit uses, and which engine events tick which explore task.
 import type { UnitEngine, Engine } from './generic';
 import type { Show } from '../content/unitTypes';
 import type { AtomUI } from '../sim/orbitalsUI';
 import type { LatticeUI } from '../sim/latticeUI';
 import type { BondUI } from '../sim/bondUI';
+import type { ParticleBoxUI } from '../sim/particleBoxUI';
+import type { ConductUI } from '../sim/conductUI';
+import type { HBondUI } from '../sim/hbondUI';
 
 const atomEngine = (ui: AtomUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'atom') ui.show(s); } });
 const latticeEngine = (ui: LatticeUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'lattice') ui.show(s); } });
@@ -139,5 +142,135 @@ export const ENGINE_U5: UnitEngine = {
     const first = shows.find((s) => s.engine === 'bond') as Extract<Show, { engine: 'bond' }> | undefined;
     const ui = ctx.bond({ start: first ? { a: first.a, b: first.b, order: first.order ?? 1 } : undefined, compact: true, controls: { presets: false, picker: false, dial: false, scale: true } });
     return bondEngine(ui);
+  },
+};
+
+// ---------- units 7–11: shared helpers ----------
+
+const boxEngine = (ui: ParticleBoxUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'box') ui.show(s); } });
+const conductEngine = (ui: ConductUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'conduct') ui.show(s); } });
+const hbondEngine = (ui: HBondUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'hbond') ui.show(s); } });
+const firstShow = <E extends Show['engine']>(shows: Show[], e: E) => shows.find((s) => s.engine === e) as Extract<Show, { engine: E }> | undefined;
+
+/** Tracks what a Particle Box currently shows: the substance in each box, the temperature and the views that are on. */
+function boxTracker(ui: ParticleBoxUI, start: string, temp = 20) {
+  const st = { box: { 1: start, 2: null as string | null } as Record<1 | 2, string | null>, temp, views: new Set<string>(), loaded: new Set<string>([start]), mix: null as string | null };
+  ui.on('substance', (id: string, box: 1 | 2) => { st.box[box] = id; if (id) st.loaded.add(id); });
+  ui.on('temp', (t: number) => { st.temp = t; });
+  ui.on('view', (v: string, on: boolean) => { if (on) st.views.add(v); else st.views.delete(v); });
+  ui.on('mix', (m: string | null) => { st.mix = m; });
+  const shown = () => [st.box[1], st.box[2]].filter((x): x is string => !!x);
+  const pair = (a: string, b: string) => { const s = shown(); return s.includes(a) && s.includes(b); };
+  return { st, shown, pair };
+}
+
+// ---------- unit 7: who carries the charge ----------
+export const ENGINE_U7: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.conduct({ start: 'Cu' });
+    let powered = false;
+    let material = 'Cu';
+    const TASK: Record<string, string> = { Cu: 'metal', NaCl: 'solid', 'NaCl-melt': 'melt', 'NaCl-aq': 'solution', 'sugar-aq': 'sugar' };
+    const check = () => { if (powered && TASK[material]) mark(TASK[material]); };
+    ui.on('material', (id: string) => { material = id; check(); });
+    ui.on('power', (on: boolean, id: string) => { powered = on; material = id; check(); });
+    ui.on('reverse', (_r: boolean, id: string) => { if (powered && (id === 'NaCl-melt' || id === 'NaCl-aq')) mark('reverse'); });
+    return conductEngine(ui);
+  },
+  compact(ctx, shows) {
+    const first = firstShow(shows, 'conduct');
+    return conductEngine(ctx.conduct({ start: first?.material ?? 'Cu', compact: true }));
+  },
+};
+
+// ---------- unit 8: dispersion ----------
+export const U8_SUBS = ['He', 'Ne', 'Ar', 'Kr', 'Xe', 'F2', 'Cl2', 'Br2', 'I2', 'CH4', 'C2H6', 'C3H8', 'C4H10', 'C5H12', 'neoC5H12', 'C6H14', 'C8H18'];
+const NOBLE = ['He', 'Ne', 'Ar', 'Kr', 'Xe'];
+export const ENGINE_U8: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.box({ start: 'Ar', subs: U8_SUBS, temp: 20, controls: { compare: true, views: ['clouds'], temp: true } });
+    const t = boxTracker(ui, 'Ar');
+    const roomAlkanes = new Set<string>();
+    const check = () => {
+      const s = t.shown();
+      if (t.st.views.has('clouds')) mark('clouds');
+      if (s.length === 2 && s[0] !== s[1] && s.every((x) => NOBLE.includes(x))) mark('noble');
+      if (t.pair('C5H12', 'neoC5H12') && t.st.temp >= 10 && t.st.temp <= 30) mark('shape');
+      if (['F2', 'Cl2', 'Br2', 'I2'].every((x) => t.st.loaded.has(x))) mark('halogens');
+      if (t.st.temp >= 15 && t.st.temp <= 30) for (const x of s) if (x === 'C4H10' || x === 'C5H12') roomAlkanes.add(x);
+      if (roomAlkanes.has('C4H10') && roomAlkanes.has('C5H12')) mark('alkanes');
+    };
+    for (const e of ['substance', 'temp', 'view']) ui.on(e, () => queueMicrotask(check));
+    ui.on('boil', () => mark('boil'));
+    return boxEngine(ui);
+  },
+  compact(ctx, shows) {
+    const first = firstShow(shows, 'box');
+    return boxEngine(ctx.box({ start: first?.sub ?? 'Ar', temp: first?.temp ?? 20, compact: true }));
+  },
+};
+
+// ---------- unit 9: dipole–dipole ----------
+export const U9_SUBS = ['C3H8', 'CH3CHO', 'C4H10', 'CH3COCH3', 'CH3OCH3', 'CO2', 'HCl', 'HBr', 'HI', 'F2', 'Ar'];
+export const ENGINE_U9: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.box({ start: 'CH3COCH3', subs: U9_SUBS, temp: 20, controls: { compare: true, views: ['dipoles', 'clouds'], whatIf: true, temp: true } });
+    const t = boxTracker(ui, 'CH3COCH3');
+    const check = () => {
+      const s = t.shown();
+      const dip = t.st.views.has('dipoles');
+      if (dip && s.includes('CH3COCH3')) mark('dipoles');
+      if (t.pair('C4H10', 'CH3COCH3') && t.st.temp >= 10 && t.st.temp <= 30) mark('pair');
+      if (dip && s.includes('CO2')) mark('co2');
+      if (t.pair('HCl', 'HI')) mark('hx');
+      if (dip && s.includes('CH3COCH3') && t.st.temp > 50) mark('scramble');
+    };
+    for (const e of ['substance', 'temp', 'view']) ui.on(e, () => queueMicrotask(check));
+    ui.on('dipoleOff', (id: string, off: boolean) => { if (off && id === 'CH3COCH3') mark('whatif'); });
+    return boxEngine(ui);
+  },
+  compact(ctx, shows) {
+    const first = firstShow(shows, 'box');
+    return boxEngine(ctx.box({ start: first?.sub ?? 'CH3COCH3', temp: first?.temp ?? 20, compact: true }));
+  },
+};
+
+// ---------- unit 10: hydrogen-bond donors and acceptors ----------
+export const ENGINE_U10: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.hbond({ start: 'NH3', controls: { partner: true, swap: true, cluster: true } });
+    const is = (a: string, b: string | null, x: string, y: string) => (a === x && b === y) || (a === y && b === x);
+    ui.on('molecule', (id: string) => { if (id === 'H2O') mark('water'); });
+    ui.on('partner', (a: string, b: string | null, bonded: boolean) => {
+      if (a === 'H2O' && !b) mark('water');
+      if (a === 'H2O' && b === 'H2O' && bonded) mark('pair');
+      if (is(a, b, 'CH4', 'H2O')) mark('methane');
+      if (is(a, b, 'CH3OCH3', 'H2O') && bonded) mark('ether');
+      if (a === 'CH3OCH3' && b === 'CH3OCH3') mark('ether-self');
+    });
+    ui.on('cluster', () => mark('cluster'));
+    return hbondEngine(ui);
+  },
+  compact(ctx, shows) {
+    const first = firstShow(shows, 'hbond');
+    return hbondEngine(ctx.hbond({ start: first?.a ?? 'H2O', compact: true }));
+  },
+};
+
+// ---------- unit 11: water's network and solubility ----------
+export const U11_MIXES = ['C6H14', 'C2H5OH', 'C4H9OH', 'NaCl', 'ice'];
+export const ENGINE_U11: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.box({ start: 'H2O', subs: ['H2O'], temp: 20, mixes: U11_MIXES, controls: { compare: false, views: ['hbonds'], temp: true } });
+    ui.on('view', (v: string, on: boolean) => { if (on && v === 'hbonds') mark('network'); });
+    ui.on('freeze', (id: string) => { if (id === 'H2O') mark('ice'); });
+    ui.on('state', (id: string, state: string) => { if (id === 'H2O' && state === 'solid') mark('ice'); });
+    ui.on('mix', (m: string | null) => { if (m === 'C6H14') mark('oil'); if (m === 'C2H5OH') mark('ethanol'); if (m === 'C4H9OH') mark('butanol'); });
+    ui.on('dissolved', (f: number) => { if (f >= 0.5) mark('salt'); });
+    return boxEngine(ui);
+  },
+  compact(ctx, shows) {
+    const first = firstShow(shows, 'box');
+    return boxEngine(ctx.box({ start: first?.sub ?? 'H2O', temp: first?.temp ?? 20, compact: true, mixes: U11_MIXES }));
   },
 };
