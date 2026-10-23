@@ -60,7 +60,7 @@ export function ideaHints(text: string, ideas: Idea[]): Set<string> {
   for (const idea of ideas) {
     // An idea that is itself a negative statement ("solid salt does not conduct", "no free charges") keeps a clause
     // with a negation in it; for the others a negation elsewhere in the clause rules the clause out.
-    const negIdea = NEG.test(idea.en.source) || NEG.test(idea.de.source);
+    const negIdea = NEG.test(idea.idea.en.toLowerCase()) || NEG.test(idea.idea.de.toLowerCase());
     // A clause that states the opposite of the idea (e.g. "the shape depends on the number of atoms") rules it out.
     if (idea.contra && clauses.some((c) => asciiRe(idea.contra!.en).test(c) || asciiRe(idea.contra!.de).test(c))) continue;
     for (const c of clauses) {
