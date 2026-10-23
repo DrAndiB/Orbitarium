@@ -15,6 +15,7 @@ const out = process.argv[3] ?? '.';
 const units = (process.argv[4] ?? '1,2,3,4,5').split(',').map(Number);
 const contents: UnitContent[] = [];
 for (const n of units) contents.push((await import(`../../src/content/unit${String(n).padStart(2, "0")}.ts`))[`UNIT${n}`]);
+await import('../../src/content/registry');
 for (const U of contents) for (const m of U.misconceptions) if (!MISCONCEPTIONS.some((x) => x.id === m.id)) MISCONCEPTIONS.push({ ...m, unit: U.n });
 for (const U of contents) Object.assign(GLOSSARY, U.glossary);
 
@@ -138,13 +139,13 @@ for (const U of contents) {
   P(T('A compact engine sits above three example cards, each with a "Show in 3D" button.', 'Über drei Beispielkarten sitzt eine kompakte Simulation; jede Karte hat einen Knopf „In 3D zeigen“.'));
   U.examples.forEach((ex) => { P(`\n**${plain(ex.title)}** (${formula(ex.tag)}) — ${ex.numbers.map((n) => `${lang === 'de' ? n.v.replace(/(\d)\.(\d)/g, '$1,$2') : n.v} ${plain(n.label)}`).join(', ')}`); P(`  ${plain(ex.body)}`); P(`  ${plain(ex.soWhat)}`); P(`  (${T('Show in 3D', 'In 3D zeigen')}: ${showText(ex.show)})`); });
   question(U.flaw, T('Spot the flaw.', 'Finde den Fehler.'));
-  P(T('\nIf both predictions were right at 80 % confidence or more, an optional "Go deeper" question appears:', '\nWaren beide Vorhersagen richtig mit mindestens 80 % Sicherheit, erscheint eine freiwillige Frage „Tiefer gehen“:'));
+  P(T('\nIf both predictions were right (at any confidence), an optional "Go deeper" question appears:', '\nWaren beide Vorhersagen richtig (egal wie sicher), erscheint eine freiwillige Frage „Tiefer gehen“:'));
   question(U.deeper, T('Go deeper (optional).', 'Tiefer gehen (freiwillig).'));
   H(T('Step 6 of 7 · Explain back', 'Schritt 6 von 7 · Erklären') + left(5));
   P(plain(U.explain.prompt));
   P(explainHow);
   U.explain.ideas.forEach((i) => P(`  ☐ ${plain(i.idea)}`));
-  k.push(`- ${T('Tightened version', 'Geschärfte Fassung')}: ${plain(U.explain.tightened)}`);
+  k.push(`- ${T('Tightened version', 'Musterformulierung')}: ${plain(U.explain.tightened)}`);
   H(T('Step 7 of 7 · Wrap-up', 'Schritt 7 von 7 · Abschluss') + left(6));
   P(T('A summary of each concept with level and next review date; then the reading. Term pairs only if the second language is on.', 'Eine Übersicht je Konzept mit Stufe und nächstem Wiederholungsdatum; dann der Lesestoff. Begriffspaare nur, wenn die zweite Sprache an ist.'));
   readingsOut(U.readings);

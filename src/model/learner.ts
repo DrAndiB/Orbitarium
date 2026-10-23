@@ -259,7 +259,8 @@ export function finishSecondPass(n: number) {
 export function confidentToday(ids: string[]): boolean {
   const now = today();
   const xs = getState().attempts.filter((a) => a.at === now && ids.includes(a.item));
-  return xs.length >= ids.length && xs.every((a) => a.correct && (a.conf ?? 0) >= 0.8);
+  // Both predictions right today, at any confidence: cautious learners who get them right deserve the stretch too.
+  return xs.length >= ids.length && xs.every((a) => a.correct);
 }
 
 /** Sessions in the current Monday-based week. */

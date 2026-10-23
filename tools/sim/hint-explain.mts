@@ -22,4 +22,4 @@ X.ideas.forEach((i, n) => {
   console.log(`  ${t ? '☑' : '☐'} ${n + 1}. ${L(i.idea)}${hint ? '\n' + hint : ''}`);
 });
 console.log((lang === 'de' ? `Du hast ${ticked.size} von ${X.ideas.length} Kernideen abgehakt.` : `You ticked ${ticked.size} of ${X.ideas.length} key ideas.`));
-console.log((lang === 'de' ? 'Geschärfte Fassung: ' : 'Tightened version: ') + L(X.tightened));
+console.log((lang === 'de' ? 'Musterformulierung: ' : 'Tightened version: ') + L(X.tightened));

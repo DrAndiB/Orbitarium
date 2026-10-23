@@ -37,9 +37,14 @@ const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den
 // A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
 // molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
 const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|after|before|unless|the (?:more|less|fewer|bigger|smaller|larger|higher|lower|stronger|weaker|longer|shorter|greater|heavier|lighter|closer|further|farther|faster|slower|hotter|colder|warmer|cooler|easier|harder|better|worse)|wenn|weil|da|sobald|obwohl|als|nachdem|bevor|während|falls|je)\b/;
+// Abbreviations keep their sentence together ("bzw.", "z. B.", "Sdp.", "e.g."); a full stop only ends a sentence when a
+// space or the end follows, so "0.917" and "2.5" stay whole. A colon does not split: "Wasser: 2 Donoren, 2 Akzeptoren"
+// is one statement.
+const ABBR = /\b(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no)\./g;
 function clausesOf(norm: string): string[] {
   const out: string[] = [];
-  for (const sentence of norm.split(/[.;:!?\n]/)) {
+  const text = norm.replace(ABBR, (m) => m.replace(/\./g, ''));
+  for (const sentence of text.split(/[;!?\n]|\.(?=\s|$)/)) {
     const parts = sentence.split(SOFT);
     let cur = parts[0];
     let joined = false;
@@ -69,7 +74,7 @@ export function ideaHints(text: string, ideas: Idea[]): Set<string> {
       const rest = c.slice(0, m.index) + ' ' + c.slice((m.index ?? 0) + m[0].length);
       if (!negIdea && NEG.test(rest)) continue;
       // A negation inside the match only counts when the idea itself is phrased that way ("can't see the lone pairs").
-      const inner = new RegExp(NEG.source + '\\s+\\S+').exec(m[0]);
+      const inner = new RegExp(NEG.source + "\\s+[\\p{L}']+", 'u').exec(m[0]);
       if (inner && !(asciiRe(idea.en).source + asciiRe(idea.de).source).includes(inner[0])) continue;
       hits.add(idea.id);
       break;

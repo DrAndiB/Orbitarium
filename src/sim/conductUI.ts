@@ -150,7 +150,7 @@ export class ConductUI {
       this.heatBtn.style.display = m === 'NaCl' || m === 'NaCl-melt' ? '' : 'none';
       this.heatBtn.textContent = m === 'NaCl' ? L({ en: 'Heat past 801 °C', de: 'Über 801 °C erhitzen' }) : L({ en: 'Let it cool below 801 °C', de: 'Unter 801 °C abkühlen lassen' });
     }
-    const note = m === 'water' ? L({ en: 'About one water molecule in 555 million is split into H₃O⁺ and OH⁻ ions, too few to light the lamp.', de: 'Etwa eines von 555 Millionen Wassermolekülen ist in H₃O⁺- und OH⁻-Ionen gespalten, zu wenige, um die Lampe leuchten zu lassen.' })
+    const note = m === 'water' ? L({ en: 'In pure water about one molecule in 555 million has passed a proton (H⁺) to a neighbour, giving an H₃O⁺ and an OH⁻ ion: far too few ions to light the lamp.', de: 'In reinem Wasser hat etwa eines von 555 Millionen Molekülen ein Proton (H⁺) an ein Nachbarmolekül abgegeben, sodass ein H₃O⁺- und ein OH⁻-Ion entstehen (Autoprotolyse): viel zu wenige Ionen, um die Lampe leuchten zu lassen.' })
       : !st.power ? L({ en: 'Connect the battery and watch which particles drift, and which way.', de: 'Schließ die Batterie an und beobachte, welche Teilchen wandern und in welche Richtung.' })
       : info.carriers === 'electrons' ? L({ en: 'The electrons drift towards the + plate; the atom cores stay where they are.', de: 'Die Elektronen wandern zur Plusplatte; die Atomrümpfe bleiben an ihrem Platz.' })
       : info.carriers === 'ions' ? L({ en: 'Na⁺ drift to the − plate, Cl⁻ to the + plate: opposite charges attract.', de: 'Na⁺ wandern zur Minusplatte, Cl⁻ zur Plusplatte: Ungleiche Ladungen ziehen sich an.' })

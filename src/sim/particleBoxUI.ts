@@ -346,7 +346,7 @@ export class ParticleBoxUI {
     const b = this.stage.boxes[0];
     const inf = b.info();
     const parts: (string | Node)[] = [];
-    if (inf.mix === 'NaCl') parts.push(L({ en: `Ions dissolved: ${inf.dissolved} of ${inf.total}.`, de: `Gelöste Ionen: ${inf.dissolved} von ${inf.total}.` }) + (b.state === 'solid' ? ' ' + L({ en: 'Below 0 °C the water is ice: nothing dissolves.', de: 'Unter 0 °C ist das Wasser Eis: Nichts löst sich.' }) : ''));
+    if (inf.mix === 'NaCl') parts.push(L({ en: `Ions dissolved: ${inf.dissolved} of ${inf.total}.`, de: `Gelöste Ionen: ${inf.dissolved} von ${inf.total}.` }) + (b.state === 'solid' ? ' ' + L({ en: 'Below 0 °C this pure water has frozen, and in this model the ice dissolves nothing. On a gritted road, salt dissolves in the thin film of water on the ice, and salt water stays liquid down to about −21 °C.', de: 'Unter 0 °C ist dieses reine Wasser gefroren, und im Modell löst das Eis nichts. Auf einer gestreuten Straße löst sich das Salz im dünnen Wasserfilm auf dem Eis, und Salzwasser bleibt bis etwa −21 °C flüssig.' }) : ''));
     if ((b.sub.id === 'H2O' && b.state === 'solid') || inf.mix === 'ice') parts.push(L({ en: 'Ice is drawn a little more open than it is, so the network stays visible: real ice is about 9 % less dense than liquid water.', de: 'Eis ist hier etwas offener gezeichnet, als es ist, damit das Netzwerk sichtbar bleibt: Echtes Eis ist etwa 9 % weniger dicht als flüssiges Wasser.' }));
     if (inf.mix && inf.mix !== 'ice' && inf.mix !== 'NaCl') parts.push(L({ en: `Mixed into the water: ${inf.dissolved} of ${inf.total} molecules (model).`, de: `Im Wasser verteilt: ${inf.dissolved} von ${inf.total} Molekülen (Modell).` }));
     const st = this.stage;
@@ -357,7 +357,7 @@ export class ParticleBoxUI {
     }
     if (this.stage.view === 'hbonds') {
       if (b.sub.id === 'H2O' && b.state === 'solid') parts.push(L({ en: 'In ice every molecule has four hydrogen bonds; at the edges of this small piece, fewer.', de: 'Im Eis hat jedes Molekül vier Wasserstoffbrücken; am Rand dieses kleinen Stücks weniger.' }));
-      else if (inf.hbAvg !== null) parts.push(L({ en: `Hydrogen bonds per molecule: about ${num(inf.hbAvg, 1)} (in this model).`, de: `Wasserstoffbrücken pro Molekül: etwa ${num(inf.hbAvg, 1)} (in diesem Modell).` }));
+      else if (inf.hbAvg !== null) parts.push(L({ en: `Each molecule takes part in about ${num(inf.hbAvg, 1)} hydrogen bonds right now (in this model; at most four).`, de: `Jedes Molekül ist gerade an etwa ${num(inf.hbAvg, 1)} Wasserstoffbrücken beteiligt (in diesem Modell; höchstens vier).` }));
       else {
         const subs = [b.sub, ...(b.mix && b.mix !== 'ice' && b.mix !== 'NaCl' ? [substance(b.mix)] : []), ...(st.compare ? [st.boxes[1].sub] : [])];
         if (!subs.some((x) => x.donors > 0)) parts.push(L({ en: 'No hydrogen bonds: none of these molecules has an H on N, O or F.', de: 'Keine Wasserstoffbrücken: Keines dieser Moleküle hat ein H an N, O oder F.' }));

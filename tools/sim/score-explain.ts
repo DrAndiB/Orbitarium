@@ -14,4 +14,4 @@ console.log(good
   ? (lang === 'de' ? `Du hast ${hits.length} von ${n} Kernideen getroffen.` : `You covered ${hits.length} of ${n} key ideas.`)
   : (lang === 'de' ? `Bisher ${hits.length} von ${n} Kernideen. Die offenen Kreise zeigen, was fehlt.` : `${hits.length} of ${n} key ideas so far. The open circles show what is missing.`));
 for (const i of X.ideas) console.log(`  ${hits.includes(i) ? '●' : '○'} ${L(i.idea)}`);
-console.log((lang === 'de' ? 'Geschärfte Fassung: ' : 'Tightened version: ') + L(X.tightened));
+console.log((lang === 'de' ? 'Musterformulierung: ' : 'Tightened version: ') + L(X.tightened));
