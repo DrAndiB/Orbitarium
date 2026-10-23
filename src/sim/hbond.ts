@@ -427,6 +427,15 @@ export function countsText(m: Molecule): string {
 export function noBondReason(a: Molecule, b: Molecule): string {
   const de = getLang() === 'de';
   const da = donors(a).length > 0, db = donors(b).length > 0;
+  // H on Cl or S, or a lone pair on Cl or S: a weak hydrogen bond, which this view (like most school books) does not draw
+  const weakDonor = (m: Molecule) => m.id === 'HCl' || m.id === 'H2S';
+  const weakEl = (m: Molecule): El | null => { const y = plainHeavy(m); return y === 'Cl' || y === 'S' ? y : null; };
+  const weak = (weakDonor(a) && b.lps.length) ? weakEl(a) : (weakDonor(b) && a.lps.length) ? weakEl(b) : (da && weakEl(b)) ? weakEl(b) : (db && weakEl(a)) ? weakEl(a) : null;
+  if (weak) {
+    return de
+      ? `Nur eine schwache Wasserstoffbrücke: ${weak === 'Cl' ? 'Chlor ist zwar stark elektronegativ, aber groß' : 'Schwefel ist groß und weniger elektronegativ'}. Diese Ansicht zeigt, wie die meisten Schulbücher, nur die starken Wasserstoffbrücken an N, O und F.`
+      : `Only a weak hydrogen bond: ${weak === 'Cl' ? 'chlorine is strongly electronegative but large' : 'sulfur is large and less electronegative'}. Like most school books, this view draws only the strong hydrogen bonds on N, O and F.`;
+  }
   if (da || db) {
     // one has donors; the other has no lone pair on N, O or F, and no donor of its own
     const D = da ? a : b, R = da ? b : a;

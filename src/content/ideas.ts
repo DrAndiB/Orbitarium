@@ -50,6 +50,8 @@ function clausesOf(norm: string): string[] {
     let joined = false;
     for (let i = 1; i < parts.length; i += 2) {
       const delim = parts[i], next = parts[i + 1] ?? '';
+      // Inside a fronted subordinate part ("je mehr Elektronen und je größer …, desto …") an "and" does not split either.
+      if (!joined && FRONTED.test(cur.trim()) && !delim.startsWith(',')) { cur += delim + next; continue; }
       if (!joined && delim.startsWith(',') && FRONTED.test(cur.trim())) { cur += delim + next; joined = true; continue; }
       out.push(cur); cur = next; joined = false;
     }

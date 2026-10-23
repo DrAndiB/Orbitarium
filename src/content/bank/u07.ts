@@ -5,7 +5,8 @@ const b = (en: string, de: string): Bi => ({ en, de });
 
 // Unit 7 question bank: at least three variants per concept (predict, why, transfer), every trap option tagged.
 // Data: conductivities from CONDUCTIVITY in substances.ts and the Engineering ToolBox table of conductors
-// (copper 5.96 × 10⁷ S/m, deionised water 5.5 × 10⁻⁶ S/m, drinking water 0.0005–0.05 S/m). Melting points from
+// (copper 5.96 × 10⁷ S/m, deionised water 5.5 × 10⁻⁶ S/m); tap water 50–800 µS/cm = 0.005–0.08 S/m (Atlas Scientific,
+// water conductivity ranges). Melting points from
 // elements.ts: Na 97.8 °C, Mg 649.9 °C, Al 660.3 °C, Hg −38.8 °C; NaCl 801 °C (ions.ts). Silicon dioxide (quartz)
 // melts at about 1700 °C (CRC Handbook). Solid ion conductors that let lithium ions hop through a ceramic are used
 // in solid-state battery research.
@@ -59,7 +60,7 @@ export const BANK_U7: Item[] = [
   { id: 'i7f', unit: 7, kind: 'choice', format: 'why', evidence: 'transfer', withConfidence: true, concepts: ['u7.metallic', 'u7.bond-types'], targets: ['brittle-means-weak'],
     prompt: b('Gold can be hammered into leaf thinner than a hair without breaking, while a salt crystal shatters. Why can metals bend?', 'Gold lässt sich zu Blattgold hämmern, dünner als ein Haar, ohne zu brechen, ein Salzkristall dagegen zerspringt. Warum können sich Metalle verformen?'),
     options: [
-      { text: b('When layers of cores slide, they stay in the same electron sea, so no like charges are pushed together', 'Wenn Schichten von Atomrümpfen gleiten, bleiben sie im selben Elektronengas, und keine gleichen Ladungen werden aneinandergedrückt'), correct: true },
+      { text: b('When layers of cores slide, they stay in the same electron sea, so no like charges end up side by side', 'Wenn Schichten von Atomrümpfen gleiten, bleiben sie im selben Elektronengas, und es geraten keine gleichnamigen Ladungen nebeneinander'), correct: true },
       { text: b('Salt\'s bonds are weaker than a metal\'s, so salt breaks first', 'Die Bindungen im Salz sind schwächer als im Metall, also bricht Salz zuerst'), mis: 'brittle-means-weak' },
       { text: b('Gold atoms are heavy, and heavy atoms are soft', 'Goldatome sind schwer, und schwere Atome sind weich') },
       { text: b('Metals are made of small molecules that slide past each other', 'Metalle bestehen aus kleinen Molekülen, die aneinander vorbeigleiten') },
@@ -109,7 +110,7 @@ export const BANK_U7: Item[] = [
       { text: b('Nowhere: in a melt only electrons move', 'Nirgendwohin: In einer Schmelze bewegen sich nur Elektronen'), mis: 'electrons-through-solution' },
       { text: b('To the positive electrode', 'Zur positiven Elektrode') },
     ],
-    explain: b('Opposite charges attract: positive {{Na+}} ions drift to the negative electrode, negative {{Cl-}} ions to the positive one. The ions themselves carry the charge through the melt; electrons only change hands at the electrodes.', 'Gegensätzliche Ladungen ziehen sich an: Positive {{Na+}}-Ionen wandern zur negativen Elektrode (Minuspol), negative {{Cl-}}-Ionen zur positiven (Pluspol). Die Ionen selbst tragen die Ladung durch die Schmelze; Elektronen wechseln nur an den Elektroden den Besitzer.') },
+    explain: b('Opposite charges attract: positive {{Na+}} ions (cations) drift to the negative electrode, the cathode, negative {{Cl-}} ions (anions) to the positive one, the anode. The ions themselves carry the charge through the melt; electrons only change hands at the electrodes.', 'Ungleichnamige Ladungen ziehen sich an: Positive {{Na+}}-Ionen (Kationen) wandern zur negativen Elektrode, der Kathode, negative {{Cl-}}-Ionen (Anionen) zur positiven, der Anode. Die Ionen selbst tragen die Ladung durch die Schmelze; Elektronen wechseln nur an den Elektroden den Besitzer.') },
   { id: 'i7l', unit: 7, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u7.salt-free'], targets: ['electrons-through-solution', 'ionic-molecules', 'ions-need-melting'],
     prompt: b('Why does salt water conduct when solid salt does not?', 'Warum leitet Salzlösung, festes Salz aber nicht?'),
     options: [
@@ -147,7 +148,7 @@ export const BANK_U7: Item[] = [
     ],
     explain: b('Sugar dissolves completely, and its molecules wander freely through the water. But each one is neutral overall: its δ+ and δ− partial charges add up to zero. Moving particles without a net charge carry no current. Size is not the problem: large ions still carry current.', 'Zucker löst sich vollständig, und seine Moleküle bewegen sich frei durch das Wasser. Aber jedes ist insgesamt ungeladen: Seine Partialladungen δ+ und δ− ergeben zusammen null. Bewegte Teilchen ohne Gesamtladung tragen keinen Strom. An der Größe liegt es nicht: Auch große Ionen tragen Strom.') },
   { id: 'i7p', unit: 7, kind: 'choice', format: 'why', evidence: 'transfer', withConfidence: true, concepts: ['u7.molecular', 'u7.carriers'], targets: ['pure-water-conducts', 'polarity-conduction'],
-    prompt: b('Pure water conducts about as poorly as sugar water (5.5 × 10⁻⁶ S/m), yet tap water conducts a hundred to ten thousand times better. Why?', 'Reines Wasser leitet etwa so schlecht wie Zuckerlösung (5,5 · 10⁻⁶ S/m), Leitungswasser aber hundert- bis zehntausendmal besser. Warum?'),
+    prompt: b('Pure water conducts about as poorly as sugar water (5.5 × 10⁻⁶ S/m), yet tap water conducts about a thousand to fifteen thousand times better. Why?', 'Reines Wasser leitet etwa so schlecht wie Zuckerlösung (5,5 · 10⁻⁶ S/m), Leitungswasser aber etwa tausend- bis fünfzehntausendmal besser. Warum?'),
     options: [
       { text: b('Tap water contains dissolved minerals, which are ions', 'Leitungswasser enthält gelöste Mineralstoffe, und die sind Ionen'), correct: true },
       { text: b('Water conducts well anyway; tap water just has more of it', 'Wasser leitet ohnehin gut; Leitungswasser hat nur mehr davon'), mis: 'pure-water-conducts' },

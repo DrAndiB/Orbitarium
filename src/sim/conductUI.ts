@@ -21,8 +21,8 @@ const CHIP: Record<ConductMaterial, { en: string; de: string }> = {
   Cu: { en: 'Copper', de: 'Kupfer' },
   NaCl: { en: 'Salt (solid)', de: 'Salz (fest)' },
   'NaCl-melt': { en: 'Salt (molten)', de: 'Salz (geschmolzen)' },
-  'NaCl-aq': { en: 'Salt water', de: 'Salzwasser' },
-  'sugar-aq': { en: 'Sugar water', de: 'Zuckerwasser' },
+  'NaCl-aq': { en: 'Salt water', de: 'Salzlösung' },
+  'sugar-aq': { en: 'Sugar water', de: 'Zuckerlösung' },
   water: { en: 'Pure water', de: 'Reines Wasser' },
 };
 /** What sits between the plates, in a few words. */
@@ -125,7 +125,7 @@ export class ConductUI {
   private refresh() {
     const st = this.stage, m = st.material, info = CONDUCTIVITY[m];
     const carriers = info.carriers === 'electrons' ? L({ en: 'electrons', de: 'Elektronen' })
-      : info.carriers === 'ions' ? L({ en: 'ions', de: 'Ionen' }) : L({ en: 'none that can move', de: 'keine beweglichen' });
+      : info.carriers === 'ions' ? L({ en: 'ions', de: 'Ionen' }) : this.stage.material === 'water' ? L({ en: 'very few ions (H₃O⁺, OH⁻)', de: 'sehr wenige Ionen (H₃O⁺, OH⁻)' }) : L({ en: 'none that can move', de: 'keine beweglichen' });
     const status = !st.power ? L({ en: 'battery off', de: 'Batterie aus' })
       : info.carriers === 'none' ? L({ en: 'practically no current', de: 'praktisch kein Strom' })
       : lampLevel(info.value) > 0.8 ? L({ en: 'current flows: lamp bright', de: 'Strom fließt: Lampe hell' }) : L({ en: 'current flows: lamp glows', de: 'Strom fließt: Lampe leuchtet' });

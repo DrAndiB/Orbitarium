@@ -6,20 +6,22 @@ const b = (en: string, de: string): Bi => ({ en, de });
 // Unit 10 question bank: three or more variants per concept (predict, why, transfer), every trap option tagged.
 // Data: substances.ts (boiling points, electron counts, donors/acceptors; CRC Handbook, NIST WebBook); bonds.ts
 // (O–H 464, H–F 569 kJ/mol); the elements table (Pauling electronegativity; empirical radii N 65, Cl 100 pm);
-// WATER.hBondEnergy (about 20 kJ/mol). Not in substances.ts, from the CRC Handbook: hydrazine N₂H₄ boils at
+// WATER.hBondEnergy (about 20 kJ/mol). Counting convention as in unit10.ts: "takes part in" counts bond ends (water up
+// to 4), "per molecule (each bond counted once)" divides by two (water 2, HF and NH₃ about 1). Strong hydrogen bonds need
+// N, O or F; H on Cl or S forms only weak ones. Not in substances.ts, from the CRC Handbook: hydrazine N₂H₄ boils at
 // 113.5 °C, hydrogen peroxide H₂O₂ at 150.2 °C (both 18 electrons). HCl dipole moment 1.11 D (substances.ts).
 export const BANK_U10: Item[] = [
   // ---------- u10.donor-acceptor ----------
   { id: 'i10b', unit: 10, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u10.donor-acceptor'], targets: ['any-h-hbond', 'hbond-donor-acceptor'],
-    prompt: b('Which of these molecules can donate a [[h-bond]], that is, bring the H?', 'Welches dieser Moleküle kann bei einer [[h-bond]] Donor sein, also das H mitbringen?'),
+    prompt: b('Which of these molecules is a strong donor in a [[h-bond]], that is, brings an H on N, O or F?', 'Welches dieser Moleküle ist bei einer [[h-bond]] ein starker Donor, bringt also ein H an N, O oder F mit?'),
     options: [
       { text: b('methane, {{CH4}}: four H atoms', 'Methan, {{CH4}}: vier H-Atome'), mis: 'any-h-hbond' },
       { text: b('dimethyl ether, {{CH3OCH3}}: an oxygen with lone pairs', 'Dimethylether, {{CH3OCH3}}: ein Sauerstoff mit freien Paaren'), mis: 'hbond-donor-acceptor' },
       { text: b('methanol, {{CH3OH}}: one H on oxygen', 'Methanol, {{CH3OH}}: ein H am Sauerstoff'), correct: true },
       { text: b('hydrogen chloride, {{HCl}}: one H on chlorine', 'Chlorwasserstoff, {{HCl}}: ein H am Chlor') },
     ],
-    explain: b('Only an H on N, O or F counts as a donor. Methanol has one, its O–H. Methane\'s and the ether\'s H all sit on carbon; the ether\'s oxygen can only accept. Chlorine is much bigger than N, O or F, and its hydrogen bonds are very weak.',
-      'Als Donor zählt nur ein H an N, O oder F. Methanol hat eines, sein O–H. Die H von Methan und Ether sitzen alle am Kohlenstoff; der Sauerstoff des Ethers kann nur Akzeptor sein. Chlor ist viel größer als N, O oder F, seine Wasserstoffbrücken sind sehr schwach.') },
+    explain: b('A strong donor needs an H on N, O or F. Methanol has one, its O–H. Methane\'s and the ether\'s H all sit on carbon; the ether\'s oxygen can only accept. HCl\'s H sits on chlorine, which is much bigger than N, O or F: it forms only very weak hydrogen bonds.',
+      'Ein starker Donor braucht ein H an N, O oder F. Methanol hat eines, sein O–H. Die H von Methan und Ether sitzen alle am Kohlenstoff; der Sauerstoff des Ethers kann nur Akzeptor sein. Das H des HCl sitzt am Chlor, das viel größer ist als N, O oder F: Es bildet nur sehr schwache Wasserstoffbrücken.') },
   { id: 'i10c', unit: 10, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u10.donor-acceptor'], targets: ['hbond-is-covalent'],
     prompt: b('In a hydrogen bond between two water molecules, what attracts what?', 'Was zieht bei einer Wasserstoffbrücke zwischen zwei Wassermolekülen was an?'),
     options: [
@@ -48,7 +50,7 @@ export const BANK_U10: Item[] = [
     explain: b('Electronegativity differences of 1.78, 1.24, 0.84 and 0.35. The harder the partner pulls on the shared pair, the more positive the H is left, and the stronger the hydrogen bond it can make.',
       'ΔEN = 1,78; 1,24; 0,84 und 0,35. Je stärker der Partner am gemeinsamen Paar zieht, desto positiver bleibt das H, und desto stärker ist die Wasserstoffbrücke, die es bilden kann.') },
   { id: 'i10f', unit: 10, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u10.why-nof'], targets: ['polar-means-ions'],
-    prompt: b('Why are N, O and F the atoms that make real hydrogen bonds?', 'Warum sind gerade N, O und F die Atome, die echte Wasserstoffbrücken bilden?'),
+    prompt: b('Why are N, O and F the atoms that make strong hydrogen bonds?', 'Warum sind gerade N, O und F die Atome, die starke Wasserstoffbrücken bilden?'),
     options: [
       { text: b('They have the most electrons, so they attract each other most', 'Sie haben die meisten Elektronen, also ziehen sie sich am stärksten an') },
       { text: b('They are the only atoms with lone pairs', 'Sie sind die einzigen Atome mit freien Elektronenpaaren') },
@@ -58,7 +60,7 @@ export const BANK_U10: Item[] = [
     explain: b('High electronegativity leaves the H strongly δ+, and a small atom keeps its lone pair compact, so the H can come close. Chlorine and sulfur have lone pairs too, but on much bigger atoms; their hydrogen bonds are very weak.',
       'Eine hohe EN lässt das H stark δ+ zurück, und ein kleines Atom hält sein freies Paar kompakt, sodass das H nah herankommt. Auch Chlor und Schwefel haben freie Paare, aber an viel größeren Atomen; ihre Wasserstoffbrücken sind sehr schwach.') },
   { id: 'i10g', unit: 10, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u10.why-nof'], targets: ['polar-means-ions'], table: 'radius',
-    prompt: b('Chlorine pulls on a shared pair a little harder than nitrogen (electronegativity 3.16 against 3.04). Yet liquid ammonia has hydrogen bonds and liquid HCl practically none. Best reason?', 'Chlor zieht etwas stärker an einem gemeinsamen Paar als Stickstoff (EN 3,16 gegenüber 3,04). Trotzdem hat flüssiges Ammoniak Wasserstoffbrücken und flüssiges HCl praktisch keine. Der beste Grund?'),
+    prompt: b('Chlorine pulls on a shared pair a little harder than nitrogen (electronegativity 3.16 against 3.04). Yet liquid ammonia has real hydrogen bonds and liquid HCl only very weak ones. Best reason?', 'Chlor zieht etwas stärker an einem gemeinsamen Paar als Stickstoff (EN 3,16 gegenüber 3,04). Trotzdem hat flüssiges Ammoniak echte Wasserstoffbrücken und flüssiges HCl nur sehr schwache. Der beste Grund?'),
     options: [
       { text: b('Chlorine has no lone pairs', 'Chlor hat keine freien Elektronenpaare') },
       { text: b('Chlorine is far bigger (100 pm against 65): its lone pairs are spread out, so an H cannot get close', 'Chlor ist viel größer (100 pm gegenüber 65): Seine freien Paare sind ausgedehnt, ein H kommt nicht nah heran'), correct: true },
@@ -82,7 +84,7 @@ export const BANK_U10: Item[] = [
   { id: 'i10i', unit: 10, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u10.anomaly'], targets: ['hbond-is-covalent'],
     prompt: b('HF boils at 19.5 °C, HCl at −85.1 °C, although HCl has more electrons (18 against 10). Why?', 'HF siedet bei 19,5 °C, HCl bei −85,1 °C, obwohl HCl mehr Elektronen hat (18 gegenüber 10). Warum?'),
     options: [
-      { text: b('HF molecules hold each other by hydrogen bonds; HCl molecules practically do not', 'HF-Moleküle halten über Wasserstoffbrücken zusammen, HCl-Moleküle praktisch nicht'), correct: true },
+      { text: b('HF molecules hold each other by strong hydrogen bonds; HCl molecules only by very weak ones', 'HF-Moleküle halten über starke Wasserstoffbrücken zusammen, HCl-Moleküle nur über sehr schwache'), correct: true },
       { text: b('The H–F bond is stronger, and boiling has to break it', 'Die H–F-Bindung ist stärker, und beim Sieden muss sie brechen'), mis: 'hbond-is-covalent' },
       { text: b('HF is the heavier molecule', 'HF ist das schwerere Molekül') },
       { text: b('HCl is ionic, and ions boil low', 'HCl ist ionisch, und Ionen sieden niedrig') },
@@ -115,12 +117,12 @@ export const BANK_U10: Item[] = [
     prompt: b('Fluorine pulls harder than oxygen, so one F–H···F hydrogen bond is stronger than one in water. Which boils higher, HF or water?', 'Fluor zieht stärker als Sauerstoff, also ist eine F–H···F-Brücke stärker als eine im Wasser. Was siedet höher, HF oder Wasser?'),
     options: [
       { text: b('HF: stronger hydrogen bonds always mean a higher boiling point', 'HF: Stärkere Wasserstoffbrücken bedeuten immer eine höhere Siedetemperatur') },
-      { text: b('Water: it makes two hydrogen bonds per molecule, HF only one', 'Wasser: Es bildet zwei Wasserstoffbrücken pro Molekül, HF nur eine'), correct: true },
+      { text: b('Water: two hydrogen bonds per molecule, HF only one (each bond counted once)', 'Wasser: zwei Wasserstoffbrücken pro Molekül, HF nur eine (jede Brücke einmal gezählt)'), correct: true },
       { text: b('The same: both are polar molecules with 10 electrons', 'Gleich hoch: Beide sind polare Moleküle mit 10 Elektronen') },
       { text: b('HF: its three lone pairs give it the most hydrogen bonds', 'HF: Seine drei freien Paare geben ihm die meisten Wasserstoffbrücken') },
     ],
-    explain: b('Water 100 °C, HF 19.5 °C. HF has three lone pairs but only one H to give, so it makes about one hydrogen bond per molecule; water\'s two donors and two acceptors give two. Here the number of bonds beats the strength of each.',
-      'Wasser 100 °C, HF 19,5 °C. HF hat drei freie Paare, aber nur ein H zu bieten, bildet also etwa eine Wasserstoffbrücke pro Molekül; die zwei Donoren und zwei Akzeptoren des Wassers ergeben zwei. Hier schlägt die Zahl der Brücken die Stärke jeder einzelnen.') },
+    explain: b('Water 100 °C, HF 19.5 °C. HF has three lone pairs but only one H to give, so there is about one hydrogen bond per HF molecule (each bond counted once); water\'s two donors and two acceptors give two. Here the number of bonds beats the strength of each.',
+      'Wasser 100 °C, HF 19,5 °C. HF hat drei freie Paare, aber nur ein H zu bieten, also kommt auf ein HF-Molekül etwa eine Wasserstoffbrücke (jede Brücke einmal gezählt); die zwei Donoren und zwei Akzeptoren des Wassers ergeben zwei. Hier schlägt die Zahl der Brücken die Stärke jeder einzelnen.') },
   { id: 'i10m', unit: 10, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u10.count'], targets: ['more-h-more-hbonds', 'hbond-is-covalent'],
     prompt: b('Ammonia has three H on nitrogen, water two on oxygen, yet ammonia boils at −33.3 °C and water at 100 °C. Why don\'t ammonia\'s three donors help more?', 'Ammoniak hat drei H am Stickstoff, Wasser zwei am Sauerstoff, trotzdem siedet Ammoniak bei −33,3 °C und Wasser bei 100 °C. Warum helfen die drei Donoren des Ammoniaks nicht mehr?'),
     options: [
@@ -129,8 +131,8 @@ export const BANK_U10: Item[] = [
       { text: b('The N–H bonds break more easily when ammonia boils', 'Die N–H-Bindungen brechen beim Sieden des Ammoniaks leichter'), mis: 'hbond-is-covalent' },
       { text: b('Nitrogen is not electronegative enough for any hydrogen bonds', 'Stickstoff ist nicht elektronegativ genug für überhaupt eine Wasserstoffbrücke') },
     ],
-    explain: b('A hydrogen bond pairs one donor with one acceptor. Ammonia has one lone pair for three H, so two of every three H stay unused; water\'s two and two match up. Ammonia does form hydrogen bonds, which is why it boils above PH₃ (−87.7 °C).',
-      'Eine Wasserstoffbrücke paart einen Donor mit einem Akzeptor. Ammoniak hat ein freies Paar für drei H, also bleiben zwei von drei H ungenutzt; beim Wasser passen zwei und zwei zusammen. Ammoniak bildet durchaus Wasserstoffbrücken, deshalb siedet es über PH₃ (−87,7 °C).') },
+    explain: b('A hydrogen bond pairs one donor with one acceptor. As a rule of thumb, ammonia\'s single lone pair limits it, so most of its H find no partner; water\'s two and two match up. Nitrogen also pulls less than oxygen, so each N–H···N bond is weaker. Ammonia does form hydrogen bonds, which is why it boils above PH₃ (−87.7 °C).',
+      'Eine Wasserstoffbrücke paart einen Donor mit einem Akzeptor. Als Faustregel begrenzt das einzige freie Paar des Ammoniaks, also finden die meisten seiner H keinen Partner; beim Wasser passen zwei und zwei zusammen. Außerdem zieht Stickstoff schwächer als Sauerstoff, jede N–H···N-Brücke ist also schwächer. Ammoniak bildet durchaus Wasserstoffbrücken, deshalb siedet es über PH₃ (−87,7 °C).') },
   { id: 'i10n', unit: 10, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u10.count'], targets: ['more-h-more-hbonds', 'hbond-is-covalent'],
     prompt: b('Hydrogen peroxide, H–O–O–H, has two H on oxygen and two lone pairs on each oxygen, and 18 electrons (water: 10). Predict its boiling point compared with water\'s 100 °C.', 'Wasserstoffperoxid, H–O–O–H, hat zwei H am Sauerstoff, zwei freie Elektronenpaare an jedem Sauerstoff und 18 Elektronen (Wasser: 10). Sag seine Siedetemperatur im Vergleich zu den 100 °C des Wassers voraus.'),
     options: [
@@ -157,7 +159,7 @@ export const BANK_U10: Item[] = [
       { text: b('both donor and acceptor', 'Donor und Akzeptor sein'), mis: 'hbond-donor-acceptor' },
       { text: b('neither', 'keines von beiden') },
     ],
-    explain: b('Its oxygen has two lone pairs to accept with, but none of its six H sits on oxygen, so it cannot donate: water brings the H.', 'Sein Sauerstoff hat zwei freie Elektronenpaare zum Annehmen, aber keines seiner sechs H sitzt am Sauerstoff, er kann also kein Donor sein: Das H bringt das Wasser mit.') },
+    explain: b('Its oxygen has two lone pairs to accept with, but none of its six H sits on oxygen, so it cannot donate: water brings the H.', 'Sein Sauerstoff hat zwei freie Elektronenpaare zum Annehmen, aber keines seiner sechs H sitzt am Sauerstoff, er kann also kein Donor sein: Das H liefert das Wassermolekül.') },
   { id: 'i10p', unit: 10, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u10.acceptor-only'], targets: ['any-h-hbond'],
     prompt: b('Acetone mixes with water in any ratio, yet two acetone molecules cannot form a hydrogen bond with each other. How can both be true?', 'Aceton mischt sich in jedem Verhältnis mit Wasser, trotzdem können zwei Acetonmoleküle keine Wasserstoffbrücke miteinander bilden. Wie passt das zusammen?'),
     options: [

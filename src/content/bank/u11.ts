@@ -8,7 +8,9 @@ const b = (en: string, de: string): Bi => ({ en, de });
 // ratio, 1-butanol 7.7, 1-hexanol 0.59, hexane 0.001; boiling points H₂O 100 °C, H₂S −60 °C; WATER: ice 0.917,
 // liquid 0.9998 at 0 °C and 1.0000 at 4 °C). Seawater about 1.025 g/cm³; sucrose: about 200 g per 100 g water at
 // 20 °C, melts (and decomposes) at about 186 °C; NaCl melts at 801 °C (ions.ts) (CRC Handbook).
-// Hydration shells: O (δ−) towards cations, H (δ+) towards anions (OpenStax Biology 2e, 2.2).
+// Hydration shells: O (δ−) towards cations, H (δ+) towards anions (OpenStax Biology 2e, 2.2). Salt water (NaCl)
+// stays liquid down to its eutectic, about −21 °C (CRC Handbook). The hydrophobic effect at room temperature is
+// mostly entropic: water around a nonpolar molecule keeps its hydrogen bonds by forming an ordered cage.
 export const BANK_U11: Item[] = [
   // ---------- u11.network ----------
   { id: 'i11a', unit: 11, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u11.network'], targets: ['hbond-donor-acceptor'],
@@ -19,7 +21,7 @@ export const BANK_U11: Item[] = [
       { text: b('Four: two through its H atoms, two through its lone pairs', 'Vier: zwei über seine H-Atome, zwei über seine freien Elektronenpaare'), correct: true },
       { text: b('Six', 'Sechs') },
     ],
-    explain: b('Each H atom can reach a lone pair on a neighbour, and each of its own two lone pairs can hold a neighbour\'s H: 2 + 2 = 4. In ice every molecule has all four.', 'Jedes H-Atom kann ein freies Elektronenpaar eines Nachbarn erreichen, und jedes seiner zwei eigenen freien Elektronenpaare kann ein H eines Nachbarn halten: 2 + 2 = 4. Im Eis hat jedes Molekül alle vier.') },
+    explain: b('Each H atom can bond to a lone pair on a neighbour, and each of its own two lone pairs can hold a neighbour\'s H: 2 + 2 = 4. In ice every molecule takes part in all four; since each bond joins two molecules, that makes two bonds for every molecule.', 'Jedes H-Atom kann eine Wasserstoffbrücke zu einem freien Elektronenpaar eines Nachbarn bilden, und jedes seiner zwei eigenen freien Elektronenpaare kann ein H eines Nachbarn halten: 2 + 2 = 4. Im Eis ist jedes Molekül an allen vier beteiligt; da jede Brücke zwei Moleküle verbindet, kommen zwei Brücken auf jedes Molekül.') },
   { id: 'i11b', unit: 11, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u11.network'],
     prompt: b('Water (18 g/mol) boils at 100 °C. Hydrogen sulfide, {{H2S}} (34 g/mol), boils at −60 °C, although its molecules are heavier. Which explanation fits best?', 'Wasser (18 g/mol) siedet bei 100 °C. Schwefelwasserstoff, {{H2S}} (34 g/mol), siedet bei −60 °C, obwohl seine Moleküle schwerer sind. Welche Erklärung passt am besten?'),
     options: [
@@ -79,9 +81,9 @@ export const BANK_U11: Item[] = [
       { text: b('Hexane repels water because it is nonpolar', 'Hexan stößt Wasser ab, weil es unpolar ist'), mis: 'oil-water-repel' },
       { text: b('Hexane is less dense, so it floats instead of dissolving', 'Hexan hat eine geringere Dichte, also schwimmt es, statt sich zu lösen') },
       { text: b('Hexane molecules are too large to fit between water molecules', 'Hexanmoleküle sind zu groß, um zwischen Wassermoleküle zu passen') },
-      { text: b('Water would lose hydrogen bonds to make room and get too little back', 'Wasser müsste Wasserstoffbrücken aufgeben, um Platz zu machen, und bekäme zu wenig zurück'), correct: true },
+      { text: b('Water next to hexane could keep its hydrogen bonds only in an ordered cage, and hexane offers too little in return', 'Wasser neben Hexan könnte seine Wasserstoffbrücken nur in einem geordneten Käfig behalten, und Hexan bietet zu wenig dafür'), correct: true },
     ],
-    explain: b('Mixing needs new attractions about as strong as the old ones. Hexane offers water only weak dispersion in place of hydrogen bonds of about 20 kJ/mol each, so the water molecules stay with each other. The low density only decides that the hexane layer ends up on top.', 'Mischen braucht neue Anziehungen, etwa so stark wie die alten. Hexan bietet dem Wasser nur schwache Dispersionskräfte statt Wasserstoffbrücken mit je etwa 20 kJ/mol, also bleiben die Wassermoleküle unter sich. Die geringe Dichte entscheidet nur, dass die Hexanschicht oben landet.') },
+    explain: b('Hexane offers water only weak dispersion forces. To keep their hydrogen bonds, the water molecules next to a hexane molecule would have to line up in an ordered cage around it, and that loss of freedom (entropy, unit 19) makes mixing unfavourable. So the water molecules stay with each other. The low density only decides that the hexane layer ends up on top.', 'Hexan bietet dem Wasser nur schwache Dispersionskräfte. Um ihre Wasserstoffbrücken zu behalten, müssten sich die Wassermoleküle neben einem Hexanmolekül zu einem geordneten Käfig aufreihen; dieser Verlust an Bewegungsfreiheit (Entropie, Einheit 19) macht das Mischen ungünstig. Also bleiben die Wassermoleküle unter sich. Die geringe Dichte entscheidet nur, dass die Hexanschicht oben landet.') },
   { id: 'i11i', unit: 11, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u11.like'],
     prompt: b('Iodine, {{I2}}, is made of nonpolar molecules. A few iodine crystals are shaken in a tube with water and hexane, which form two layers. Where does most of the iodine end up?', 'Iod, {{I2}}, besteht aus unpolaren Molekülen. Ein paar Iodkristalle werden in einem Reagenzglas mit Wasser und Hexan geschüttelt, die zwei Schichten bilden. Wo landet das meiste Iod?'),
     options: [
@@ -116,7 +118,7 @@ export const BANK_U11: Item[] = [
     options: [
       { text: b('The water warms the crystal until it melts', 'Das Wasser erwärmt den Kristall, bis er schmilzt'), mis: 'dissolving-is-melting' },
       { text: b('Water splits the salt into NaCl molecules, small enough to dissolve', 'Wasser zerlegt das Salz in NaCl-Moleküle, die klein genug zum Lösen sind'), mis: 'salt-molecules-in-water' },
-      { text: b('Water molecules surround each ion, and their pull pays for taking the lattice apart', 'Wassermoleküle umgeben jedes Ion, und ihre Anziehung bezahlt das Zerlegen des Gitters'), correct: true },
+      { text: b('Water molecules surround each ion, and the energy this releases makes up for taking the lattice apart', 'Wassermoleküle umgeben jedes Ion, und die dabei frei werdende Energie gleicht die Gitterenergie aus'), correct: true },
       { text: b('Salt is polar, so it reacts with the water', 'Salz ist polar, also reagiert es mit dem Wasser') },
     ],
     explain: b('Dissolving is not melting: the ions leave the crystal one by one, each wrapped in water molecules turned the right way. The energy from these attractions almost exactly makes up for the lattice energy (787 kJ/mol); there are no NaCl molecules at any point.', 'Lösen ist kein Schmelzen: Die Ionen verlassen den Kristall einzeln, jedes umhüllt von richtig ausgerichteten Wassermolekülen. Die Energie aus diesen Anziehungen gleicht die Gitterenergie (787 kJ/mol) fast genau aus; NaCl-Moleküle entstehen dabei zu keinem Zeitpunkt.') },
@@ -139,6 +141,16 @@ export const BANK_U11: Item[] = [
     ],
     explain: b('A current needs charged particles that can move. Dissolved sugar stays as whole, neutral molecules; dissolved salt is Na⁺ and Cl⁻ ions, each in its hydration shell, free to drift towards the poles.', 'Strom braucht bewegliche geladene Teilchen. Gelöster Zucker bleibt als ganze, neutrale Moleküle; gelöstes Salz besteht aus Na⁺- und Cl⁻-Ionen, jedes in seiner Hydrathülle, die frei zu den Polen wandern können.') },
 
+  { id: 'i11u', unit: 11, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u11.hydration'], targets: ['dissolving-is-melting'],
+    prompt: b('A road is iced over at −5 °C, and salt is spread on it. Why does the ice melt?', 'Eine Straße ist bei −5 °C vereist, und es wird Salz gestreut. Warum taut das Eis?'),
+    options: [
+      { text: b('The salt melts and its heat melts the ice', 'Das Salz schmilzt, und seine Wärme taut das Eis'), mis: 'dissolving-is-melting' },
+      { text: b('Salt dissolves in the thin film of water on the ice, and salt water stays liquid well below 0 °C', 'Salz löst sich im dünnen Wasserfilm auf dem Eis, und Salzwasser bleibt weit unter 0 °C flüssig'), correct: true },
+      { text: b('The salt grains scratch the ice to pieces', 'Die Salzkörner zerkratzen das Eis') },
+      { text: b('Salt reacts with the ice and gives off heat', 'Salz reagiert mit dem Eis und gibt Wärme ab') },
+    ],
+    explain: b('Even at −5 °C there is a very thin film of liquid water on ice. Salt dissolves in it as hydrated ions, and the ions get in the way of water molecules locking into the ice network, so salt water freezes only at a lower temperature, down to about −21 °C. More ice melts into the brine. Nothing melts the salt, which would take 801 °C.', 'Auch bei −5 °C liegt auf Eis ein sehr dünner Film aus flüssigem Wasser. Darin löst sich das Salz als hydratisierte Ionen, und die Ionen stören die Wassermoleküle dabei, sich ins Eisgitter einzufügen; Salzwasser gefriert deshalb erst bei tieferer Temperatur, bis hinunter zu etwa −21 °C. Weiteres Eis taut in die Salzlösung. Das Salz selbst schmilzt nicht, dafür bräuchte es 801 °C.') },
+
   // ---------- u11.chain ----------
   { id: 'i11n', unit: 11, kind: 'rank', format: 'rank', concepts: ['u11.chain'], mis: 'oh-group-decides', targets: ['oh-group-decides'],
     prompt: b('Rank by how well they dissolve in water, best first: 1-hexanol, ethanol, hexane, 1-butanol.', 'Ordne danach, wie gut sie sich in Wasser lösen, das beste zuerst: 1-Hexanol, Ethanol, Hexan, 1-Butanol.'),
@@ -152,7 +164,7 @@ export const BANK_U11: Item[] = [
       { text: b('Its six-carbon chain takes up room in water\'s network but forms no hydrogen bonds', 'Seine Kette aus sechs Kohlenstoffatomen braucht Platz im Netzwerk des Wassers, bildet aber keine Wasserstoffbrücken'), correct: true },
       { text: b('In hexanol the O–H group is no longer polar', 'Im Hexanol ist die O–H-Gruppe nicht mehr polar') },
     ],
-    explain: b('One O–H group gives water enough back for a short chain, not for a long one. The six carbons force water to give up hydrogen bonds around them and offer only weak dispersion in return, so water keeps to itself. Nothing repels the chain.', 'Eine O–H-Gruppe gibt dem Wasser genug zurück für eine kurze Kette, aber nicht für eine lange. Die sechs Kohlenstoffatome zwingen das Wasser, um sie herum Wasserstoffbrücken aufzugeben, und bieten dafür nur schwache Dispersionskräfte; also bleibt das Wasser unter sich. Nichts stößt die Kette ab.') },
+    explain: b('One O–H group gives water enough back for a short chain, not for a long one. Around six carbons, water can keep its hydrogen bonds only by lining up in an ordered cage, and the chain offers only weak dispersion forces in return, so water keeps to itself. Nothing repels the chain.', 'Eine Hydroxygruppe gibt dem Wasser genug zurück für eine kurze Kette, aber nicht für eine lange. Um sechs Kohlenstoffatome herum kann das Wasser seine Wasserstoffbrücken nur behalten, wenn es sich zu einem geordneten Käfig aufreiht, und die Kette bietet dafür nur schwache Dispersionskräfte; also bleibt das Wasser unter sich. Nichts stößt die Kette ab.') },
   { id: 'i11p', unit: 11, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u11.chain'], targets: ['dissolving-is-melting'],
     prompt: b('Table sugar (sucrose, {{C12H22O11}}) has twelve carbon atoms, twice as many as hexanol, but eight O–H groups. How well does it dissolve in water?', 'Haushaltszucker (Saccharose, {{C12H22O11}}) hat zwölf Kohlenstoffatome, doppelt so viele wie Hexanol, aber acht O–H-Gruppen. Wie gut löst er sich in Wasser?'),
     options: [

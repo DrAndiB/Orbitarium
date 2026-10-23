@@ -113,11 +113,11 @@ export const UNITS: UnitInfo[] = [
   ]),
   u(10, 3, 'Hydrogen-bond donors and acceptors', 'Wasserstoffbrücken: Donor und Akzeptor', 'Molecule Workbench', 1, [
     c('u10.donor-acceptor', 'Donor: H on N, O or F; acceptor: a lone pair on N, O or F', 'Donor: H an N, O oder F; Akzeptor: freies Paar an N, O oder F'),
-    c('u10.why-nof', 'Only N, O and F: strongly electronegative and small', 'Nur N, O und F: stark elektronegativ und klein'),
+    c('u10.why-nof', 'Strong hydrogen bonds need N, O or F: strongly electronegative and small', 'Starke Wasserstoffbrücken brauchen N, O oder F: stark elektronegativ und klein'),
     c('u10.anomaly', 'H₂O, HF and NH₃ boil far above the trend of their groups', 'H₂O, HF und NH₃ sieden weit über dem Trend ihrer Gruppen'),
     c('u10.count', 'Donors and acceptors must pair up: water has two of each', 'Donoren und Akzeptoren müssen sich paaren: Wasser hat von beiden zwei'),
     c('u10.acceptor-only', 'Acceptors without donors (ethers, ketones) bond to water but not to each other', 'Akzeptoren ohne Donor (Ether, Ketone) binden an Wasser, aber nicht aneinander'),
-    c('u10.not-covalent', 'A hydrogen bond is an attraction between molecules, far weaker than a covalent bond', 'Eine Wasserstoffbrücke ist eine Anziehung zwischen Molekülen, viel schwächer als eine Atombindung'),
+    c('u10.not-covalent', 'A hydrogen bond is an attraction, usually between molecules, far weaker than a covalent bond', 'Eine Wasserstoffbrücke ist eine Anziehung, meist zwischen Molekülen, viel schwächer als eine Atombindung'),
   ]),
   u(11, 3, "Water's network and solubility", 'Das Netzwerk des Wassers und Löslichkeit', 'Particle Box', 1, [
     c('u11.network', 'Each water molecule can take part in four hydrogen bonds: a network', 'Jedes Wassermolekül kann an vier Wasserstoffbrücken beteiligt sein: ein Netzwerk'),
@@ -187,6 +187,6 @@ export const MISCONCEPTIONS: Misconception[] = [
   { id: 'polar-bonds-polar-molecule', unit: 6, name: { en: 'Polar bonds always make a polar molecule', de: 'Polare Bindungen ergeben immer ein polares Molekül' } },
   { id: 'symmetric-means-nonpolar', unit: 6, name: { en: 'A symmetric-looking shape always cancels the pulls', de: 'Eine symmetrisch wirkende Gestalt hebt die Züge immer auf' } },
   { id: 'polarity-conduction', unit: 7, name: { en: 'Polarity as the cause of conduction', de: 'Polarität als Ursache der Leitfähigkeit' } },
-  { id: 'dispersion-direction', unit: 8, name: { en: 'Direction of the dispersion trend', de: 'Richtung des Dispersionstrends' } },
+  { id: 'dispersion-direction', unit: 8, name: { en: 'Trend the wrong way round: more electrons, weaker attraction', de: 'Trend falsch herum: mehr Elektronen, schwächere Anziehung' } },
   { id: 'hbond-donor-acceptor', unit: 10, name: { en: 'H-bond donor vs acceptor', de: 'H-Brücken: Donor vs. Akzeptor' } },
 ];

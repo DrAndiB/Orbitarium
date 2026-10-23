@@ -124,8 +124,9 @@ export class ConductStage extends Stage3D {
     // pole badges on the plates
     for (const sp of this.poleLabels) { this.circuit.remove(sp); sp.material.dispose(); }
     this.poleLabels = [];
-    const minus = this.label('−', 0.8, '#ffffff', 'rgba(150,50,62,0.92)');
-    const plus = this.label('+', 0.8, '#ffffff', 'rgba(36,76,140,0.92)');
+    // Neutral badges: on batteries and meters red usually marks +, while this app paints negative charge red.
+    const minus = this.label('−', 0.9, '#ffffff', 'rgba(70,78,104,0.95)');
+    const plus = this.label('+', 0.9, '#ffffff', 'rgba(70,78,104,0.95)');
     minus.position.set(this.minusX, -SLAB.y - 0.75, SLAB.z + 0.3);
     plus.position.set(-this.minusX, -SLAB.y - 0.75, SLAB.z + 0.3);
     this.circuit.add(minus, plus);
