@@ -32,3 +32,5 @@
 .cm-dot.below { border-radius: 3px; margin-left: -2px; }
 .cm-row.now .cm-dot { background: var(--energy); width: 14px; height: 14px; top: 2px; margin-left: -7px; box-shadow: 0 0 0 3px rgba(255,193,94,.25); }
 .cm-row.now .cm-dot.below { margin-left: -2px; }
+
+.cm-axis .cm-minor { position: absolute; top: 21px; width: 1px; height: 10px; background: var(--fog); opacity: .55; transform: translateX(-50%); }

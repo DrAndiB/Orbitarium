@@ -146,8 +146,8 @@ export class ParticleBoxUI {
       h('label', { class: 'wb-eq-head' }, h('span', null, L({ en: 'Temperature', de: 'Temperatur' })), this.tempOut),
       h('div', { class: 'pbox-range' }, this.tempIn, this.marks),
       h('div', { class: 'pbox-markkey muted small' },
-        h('span', null, h('i', { class: 'bp' }), L({ en: 'boiling point', de: 'Siedepunkt' })),
-        h('span', null, h('i', { class: 'mp' }), L({ en: 'melting point', de: 'Schmelzpunkt' }))));
+        h('span', null, h('i', { class: 'bp' }), L({ en: 'boiling point', de: 'Siedetemperatur' })),
+        h('span', null, h('i', { class: 'mp' }), L({ en: 'melting point', de: 'Schmelztemperatur' }))));
   }
 
   /** Slider range: from the lowest melting point − 40 to the highest boiling point + 60 (mixing: −20 to 110). */
@@ -314,8 +314,8 @@ export class ParticleBoxUI {
     const out = h('div', { class: 'gcol now' },
       h('div', { class: 'gname' }, chem(s.formula), ' ', h('span', { class: 'muted small' }, L(s.name))),
       row({ en: 'now', de: 'jetzt' }, h('span', { class: 'pbox-state ' + b.state }, `${L(STATE[b.state])}`)),
-      p.bp !== null ? row({ en: 'boiling point', de: 'Siedepunkt' }, deg(p.bp)) : p.sublimes !== undefined ? row({ en: 'turns to gas at', de: 'wird gasförmig bei' }, deg(p.sublimes)) : '',
-      p.mp !== null ? row({ en: 'melting point', de: 'Schmelzpunkt' }, deg(p.mp)) : s.id === 'He' ? row({ en: 'melting point', de: 'Schmelzpunkt' }, L({ en: 'none at normal pressure', de: 'keiner bei Normaldruck' })) : '',
+      p.bp !== null ? row({ en: 'boiling point', de: 'Siedetemperatur' }, deg(p.bp)) : p.sublimes !== undefined ? row({ en: 'turns to gas at', de: 'wird gasförmig bei' }, deg(p.sublimes)) : '',
+      p.mp !== null ? row({ en: 'melting point', de: 'Schmelztemperatur' }, deg(p.mp)) : s.id === 'He' ? row({ en: 'melting point', de: 'Schmelztemperatur' }, L({ en: 'none at normal pressure', de: 'keine bei Normaldruck' })) : '',
       row({ en: 'electrons per molecule', de: 'Elektronen pro Molekül' }, String(s.electrons)),
       s.dipole > 0 ? row({ en: 'dipole moment', de: 'Dipolmoment' }, `${num(s.dipole, 2)} D`) : row({ en: 'dipole moment', de: 'Dipolmoment' }, '0'),
       s.donors > 0 || s.acceptors > 0 ? row({ en: 'H-bond donors · acceptors', de: 'H-Brücken: Donoren · Akzeptoren' }, `${s.donors} · ${s.acceptors}`) : '',
@@ -346,8 +346,8 @@ export class ParticleBoxUI {
     const b = this.stage.boxes[0];
     const inf = b.info();
     const parts: (string | Node)[] = [];
-    if (inf.mix === 'NaCl') parts.push(L({ en: `Ions dissolved: ${inf.dissolved} of ${inf.total}.`, de: `Gelöste Ionen: ${inf.dissolved} von ${inf.total}.` }) + (b.state === 'solid' ? ' ' + L({ en: 'Below 0 °C this pure water has frozen, and in this model the ice dissolves nothing. On a gritted road, salt dissolves in the thin film of water on the ice, and salt water stays liquid down to about −21 °C.', de: 'Unter 0 °C ist dieses reine Wasser gefroren, und im Modell löst das Eis nichts. Auf einer gestreuten Straße löst sich das Salz im dünnen Wasserfilm auf dem Eis, und Salzwasser bleibt bis etwa −21 °C flüssig.' }) : ''));
-    if ((b.sub.id === 'H2O' && b.state === 'solid') || inf.mix === 'ice') parts.push(L({ en: 'Ice is drawn a little more open than it is, so the network stays visible: real ice is about 9 % less dense than liquid water.', de: 'Eis ist hier etwas offener gezeichnet, als es ist, damit das Netzwerk sichtbar bleibt: Echtes Eis ist etwa 9 % weniger dicht als flüssiges Wasser.' }));
+    if (inf.mix === 'NaCl') parts.push(L({ en: `Ions dissolved: ${inf.dissolved} of ${inf.total}.`, de: `Gelöste Ionen: ${inf.dissolved} von ${inf.total}.` }) + (b.state === 'solid' ? ' ' + L({ en: 'Below 0 °C this pure water has frozen, and in this model nothing dissolves in the ice. On a gritted road, salt dissolves in the thin film of water on the ice, and salt water stays liquid down to about −21 °C.', de: 'Unter 0 °C ist dieses reine Wasser gefroren, und im Modell löst sich im Eis nichts. Auf einer gestreuten Straße löst sich das Salz im dünnen Wasserfilm auf dem Eis, und Salzwasser bleibt bis etwa −21 °C flüssig.' }) : ''));
+    if ((b.sub.id === 'H2O' && b.state === 'solid') || inf.mix === 'ice') parts.push(L({ en: 'Ice is drawn a little more open than it is, so the network stays visible: real ice is about 8 % less dense than liquid water (it takes up about 9 % more room).', de: 'Eis ist hier etwas offener gezeichnet, als es ist, damit das Netzwerk sichtbar bleibt: Echtes Eis hat eine um etwa 8 % geringere Dichte als flüssiges Wasser (es braucht etwa 9 % mehr Platz).' }));
     if (inf.mix && inf.mix !== 'ice' && inf.mix !== 'NaCl') parts.push(L({ en: `Mixed into the water: ${inf.dissolved} of ${inf.total} molecules (model).`, de: `Im Wasser verteilt: ${inf.dissolved} von ${inf.total} Molekülen (Modell).` }));
     const st = this.stage;
     if (st.view === 'dipoles') {
@@ -356,7 +356,7 @@ export class ParticleBoxUI {
       if (subs.some((x) => x.dipole < 0.1 && x.id !== 'CO2')) parts.push(L({ en: 'Molecules without a dipole show no ends.', de: 'Moleküle ohne Dipol zeigen keine Enden.' }));
     }
     if (this.stage.view === 'hbonds') {
-      if (b.sub.id === 'H2O' && b.state === 'solid') parts.push(L({ en: 'In ice every molecule has four hydrogen bonds; at the edges of this small piece, fewer.', de: 'Im Eis hat jedes Molekül vier Wasserstoffbrücken; am Rand dieses kleinen Stücks weniger.' }));
+      if (b.sub.id === 'H2O' && b.state === 'solid') parts.push(L({ en: 'In ice every molecule takes part in four hydrogen bonds (two per molecule if each bond is counted once); at the edges of this small piece, fewer.', de: 'Im Eis ist jedes Molekül an vier Wasserstoffbrücken beteiligt (zwei pro Molekül, wenn man jede Brücke einmal zählt); am Rand dieses kleinen Stücks an weniger.' }));
       else if (inf.hbAvg !== null) parts.push(L({ en: `Each molecule takes part in about ${num(inf.hbAvg, 1)} hydrogen bonds right now (in this model; at most four).`, de: `Jedes Molekül ist gerade an etwa ${num(inf.hbAvg, 1)} Wasserstoffbrücken beteiligt (in diesem Modell; höchstens vier).` }));
       else {
         const subs = [b.sub, ...(b.mix && b.mix !== 'ice' && b.mix !== 'NaCl' ? [substance(b.mix)] : []), ...(st.compare ? [st.boxes[1].sub] : [])];

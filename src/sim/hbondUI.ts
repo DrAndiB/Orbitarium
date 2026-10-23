@@ -153,7 +153,7 @@ export class HBondUI {
       this.facts.replaceChildren(
         h('div', null, h('span', { class: 'muted small' }, L({ en: `${x}–H bond`, de: `${x}–H-Bindung` })), h('strong', null, `${cov} pm`)),
         h('div', null, h('span', { class: 'muted small' }, L({ en: 'hydrogen bond H···' + y, de: 'Wasserstoffbrücke H···' + y })), h('strong', null, `≈ ${len} pm`)),
-        h('div', null, h('span', { class: 'muted small' }, L({ en: this.cluster ? 'hydrogen bonds per molecule' : 'X–H···Y angle', de: this.cluster ? 'Brücken pro Molekül' : 'Winkel X–H···Y' })), h('strong', null, this.cluster ? '4' : '≈ 180°')));
+        h('div', null, h('span', { class: 'muted small' }, L({ en: this.cluster ? 'H-bonds the middle molecule takes part in' : 'X–H···Y angle', de: this.cluster ? 'H-Brücken, an denen das mittlere Molekül beteiligt ist' : 'Winkel X–H···Y' })), h('strong', null, this.cluster ? '4' : '≈ 180°')));
     } else { this.facts.hidden = true; this.facts.replaceChildren(); }
 
     const label = this.cluster ? 'water with four hydrogen-bonded neighbours'

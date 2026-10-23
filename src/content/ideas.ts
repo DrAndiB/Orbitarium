@@ -2,11 +2,12 @@
 import type { Idea } from './unit06';
 
 const NEG = /\b(not|no|never|nothing|neither|don't|doesn't|isn't|aren't|can't|cannot|won't|nicht|nichts|kein\w*|nie|weder)\b/;
-const FUNCTION_WORDS = /^(the|a|an|is|are|be|of|to|in|on|at|by|it|its|they|their|that|this|which|so|and|but|as|with|for|has|have|der|die|das|den|dem|des|ein|eine|einen|einer|eines|einem|ist|sind|und|aber|sich|zu|von|mit|im|in|am|es|sie|dass|weil|wird|werden|hat|haben|beim|bei|nach|vor|wie|nur|kein|keine|nicht|also|auf|für|aus|man|wenn|dann|deshalb|je|desto|zum|zur|um|er|ihm|ihn|ihr|ihre|ihren|sein|seine|seinen|seiner|dabei|damit|daher|so|oder|or|than|als|more|mehr|because|when|if|from|into|each|jedes|jede|jeder)$/;
+const FUNCTION_WORDS = /^(the|a|an|is|are|be|of|to|in|on|at|by|it|its|they|their|that|this|which|so|and|but|as|with|for|has|have|der|die|das|den|dem|des|ein|eine|einen|einer|eines|einem|ist|sind|und|aber|sich|zu|von|mit|im|in|am|es|sie|dass|weil|wird|werden|hat|haben|beim|bei|nach|vor|wie|nur|kein|keine|nicht|also|auf|für|aus|man|wenn|dann|deshalb|je|desto|zum|zur|um|er|ihm|ihn|ihr|ihre|ihren|sein|seine|seinen|seiner|dabei|damit|daher|so|oder|or|than|als|more|mehr|because|when|if|from|into|each|jedes|jede|jeder|würde|würden|ohne|machen|macht|können|kann|sehr|durch|über|unter|zwischen|auch|noch|da|denn|would|without|make|makes|can|very|through|between|only|also|even|still|these|those|was|were|been)$/;
 
 /** A run of terms with no sentence around them. Hints are pointless there; the learner is asked for sentences. */
 export function looksLikeKeywordList(text: string): boolean {
-  const words = text.toLowerCase().split(/[^a-zäöüß']+/).filter(Boolean);
+  // One-letter fragments ("H-", "°C") are not words.
+  const words = text.toLowerCase().split(/[^a-zäöüß']+/).filter((w) => w.length > 1);
   if (words.length < 6) return false;
   // Symbols that link ideas ("row = shells", "octet -> 4 pairs") count like small words.
   const links = (text.match(/=|->|→|⇒/g) ?? []).length;
@@ -33,14 +34,16 @@ function asciiRe(re: RegExp): RegExp {
 // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
 // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together. Cause and effect and contrast stay
 // together ("…, so …", "… but …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
-const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
+const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
 // A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
 // molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
 const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|after|before|unless|the (?:more|less|fewer|bigger|smaller|larger|higher|lower|stronger|weaker|longer|shorter|greater|heavier|lighter|closer|further|farther|faster|slower|hotter|colder|warmer|cooler|easier|harder|better|worse)|wenn|weil|da|sobald|obwohl|als|nachdem|bevor|während|falls|je)\b/;
 // Abbreviations keep their sentence together ("bzw.", "z. B.", "Sdp.", "e.g."); a full stop only ends a sentence when a
 // space or the end follows, so "0.917" and "2.5" stay whole. A colon does not split: "Wasser: 2 Donoren, 2 Akzeptoren"
 // is one statement.
-const ABBR = /\b(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no)\./g;
+const ABBR = /\b(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\w*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh)\./g;
+/** "bewegl. ladungsträger": a short lowercase word with a full stop, followed by a lowercase word, is an abbreviation. */
+const SHORT_ABBR = /\b([a-zäöüß]{1,6})\.(?=\s+[a-zäöüß])/g;
 function clausesOf(norm: string): string[] {
   const out: string[] = [];
   const text = norm.replace(ABBR, (m) => m.replace(/\./g, ''));
@@ -61,7 +64,7 @@ function clausesOf(norm: string): string[] {
 }
 
 export function ideaHints(text: string, ideas: Idea[]): Set<string> {
-  const norm = asciiCharges(text.toLowerCase().replace(/[’‘`´]/g, "'")).replace(/\s+/g, ' ');
+  const norm = asciiCharges(text.replace(SHORT_ABBR, '$1').toLowerCase().replace(/[’‘`´]/g, "'")).replace(/\s+/g, ' ');
   const clauses = clausesOf(norm);
   const hits = new Set<string>();
   for (const idea of ideas) {

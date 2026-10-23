@@ -55,7 +55,7 @@ function question(it: Item, label: string) {
     const ci = it.options.findIndex((o) => o.correct);
     const traps = it.options.map((o, i) => (o.mis ? `${letters[i]} (${misName(o.mis)})` : '')).filter(Boolean);
     k.push(`- [${it.id}] ${T('Correct', 'Richtig')}: ${letters[ci]}. ${plain(it.explain)}`
-      + (traps.length ? ' ' + T(`Trap options: ${traps.join('; ')}. If one is chosen, the app adds "A common trap: <name>. The app will bring it back on another day until it sticks."`, `Fallen: ${traps.join('; ')}. Wer eine wählt, sieht „Eine häufige Falle: <Name>. Die App bringt sie an einem anderen Tag wieder, bis es sitzt.“`) : ''));
+      + (traps.length ? ' ' + T(`Trap options: ${traps.join('; ')}. If one is chosen, the app adds "A common trap: <name>. The app will bring it back on another day until it sticks."`, `Fallen: ${traps.join('; ')}. Wer eine wählt, sieht „Eine häufige Falle: <Name>. Da tappen viele hinein. Die App fragt das an einem anderen Tag noch einmal ab, bis es sitzt.“`) : ''));
   } else if (it.kind === 'rank') {
     const n = it.order.length;
     const perm = n === 3 ? [1, 2, 0] : n === 4 ? [2, 0, 3, 1] : it.order.map((_, i) => (i * 2 + 1) % n);

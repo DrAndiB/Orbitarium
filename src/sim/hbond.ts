@@ -427,14 +427,21 @@ export function countsText(m: Molecule): string {
 export function noBondReason(a: Molecule, b: Molecule): string {
   const de = getLang() === 'de';
   const da = donors(a).length > 0, db = donors(b).length > 0;
-  // H on Cl or S, or a lone pair on Cl or S: a weak hydrogen bond, which this view (like most school books) does not draw
-  const weakDonor = (m: Molecule) => m.id === 'HCl' || m.id === 'H2S';
-  const weakEl = (m: Molecule): El | null => { const y = plainHeavy(m); return y === 'Cl' || y === 'S' ? y : null; };
-  const weak = (weakDonor(a) && b.lps.length) ? weakEl(a) : (weakDonor(b) && a.lps.length) ? weakEl(b) : (da && weakEl(b)) ? weakEl(b) : (db && weakEl(a)) ? weakEl(a) : null;
-  if (weak) {
+  // Cases the school rule (H on N, O or F, lone pair on N, O or F) leaves out, so the view draws no line but says why.
+  const hclDonates = (a.id === 'HCl' && b.lps.length > 0) || (b.id === 'HCl' && a.lps.length > 0);
+  if (hclDonates) {
     return de
-      ? `Nur eine schwache Wasserstoffbrücke: ${weak === 'Cl' ? 'Chlor ist zwar stark elektronegativ, aber groß' : 'Schwefel ist groß und weniger elektronegativ'}. Diese Ansicht zeigt, wie die meisten Schulbücher, nur die starken Wasserstoffbrücken an N, O und F.`
-      : `Only a weak hydrogen bond: ${weak === 'Cl' ? 'chlorine is strongly electronegative but large' : 'sulfur is large and less electronegative'}. Like most school books, this view draws only the strong hydrogen bonds on N, O and F.`;
+      ? 'Hier zeigt das H von HCl auf ein freies Elektronenpaar am Sauerstoff: eine echte Wasserstoffbrücke, und in Wasser gibt HCl das Proton sogar ganz ab (H₃O⁺ und Cl⁻, Einheit 26). Die Schulregel zählt nur H an N, O oder F, deshalb zeichnet diese Ansicht sie nicht ein.'
+      : "Here HCl's H points at a lone pair on oxygen: a real hydrogen bond, and in water HCl even hands its proton over (H₃O⁺ and Cl⁻, unit 26). The school rule counts only H on N, O or F, so this view does not draw it.";
+  }
+  const weakEl = (m: Molecule): El | null => { const y = plainHeavy(m); return y === 'Cl' || y === 'S' ? y : null; };
+  const h2sDonates = (a.id === 'H2S' && b.lps.length > 0) || (b.id === 'H2S' && a.lps.length > 0);
+  const weak = h2sDonates ? 'S' : (da && weakEl(b)) ? weakEl(b) : (db && weakEl(a)) ? weakEl(a) : null;
+  if (weak) {
+    const asDonor = h2sDonates;
+    return de
+      ? (asDonor ? 'Nur eine schwache Wasserstoffbrücke: Schwefel ist groß und weniger elektronegativ, das H an S ist kaum positiv.' : `Nur eine schwache Wasserstoffbrücke: Das H zeigt auf ${weak === 'Cl' ? 'Chlor' : 'Schwefel'}, dessen freie Elektronenpaare groß und weit verteilt sind.`) + ' Diese Ansicht zeigt, wie die meisten Schulbücher, nur die starken Wasserstoffbrücken an N, O und F.'
+      : (asDonor ? "Only a weak hydrogen bond: sulfur is large and less electronegative, so the H on it is barely positive." : `Only a weak hydrogen bond: the H points at ${weak === 'Cl' ? 'chlorine' : 'sulfur'}, whose lone pairs are large and spread out.`) + ' Like most school books, this view draws only the strong hydrogen bonds on N, O and F.';
   }
   if (da || db) {
     // one has donors; the other has no lone pair on N, O or F, and no donor of its own
@@ -461,8 +468,8 @@ export function noBondReason(a: Molecule, b: Molecule): string {
   if (accA || accB) {
     const acc = accA ? a : b;
     return de
-      ? `Keine Wasserstoffbrücke: ${nameOf(acc)} hat freie Elektronenpaare am Sauerstoff zum Annehmen, aber keines der Moleküle hat ein H an N, O oder F zum Abgeben.`
-      : `No hydrogen bond: ${acc.name.en} has lone pairs on oxygen to accept with, but neither molecule has an H on N, O or F to offer.`;
+      ? `Keine Wasserstoffbrücke: ${nameOf(acc)} hat freie Elektronenpaare am Sauerstoff zum Annehmen, aber keines der Moleküle hat ein H an N, O oder F, das als Donor dienen könnte.`
+      : `No hydrogen bond: ${acc.name.en} has lone pairs on oxygen to accept with, but neither molecule has an H on N, O or F to act as a donor.`;
   }
   return de
     ? 'Keine Wasserstoffbrücke: Keines der Moleküle hat ein H an N, O oder F oder ein freies Elektronenpaar an N, O oder F.'

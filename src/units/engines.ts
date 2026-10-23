@@ -171,7 +171,14 @@ export const ENGINE_U7: UnitEngine = {
     let powered = false;
     let material = 'Cu';
     const TASK: Record<string, string> = { Cu: 'metal', NaCl: 'solid', 'NaCl-melt': 'melt', 'NaCl-aq': 'solution', 'sugar-aq': 'sugar' };
-    const check = () => { if (powered && TASK[material]) mark(TASK[material]); };
+    let meltSeen = false;
+    // 'solution' asks for a comparison with the melt, so it ticks only once the melt has been connected too.
+    const check = () => {
+      if (!powered || !TASK[material]) return;
+      if (material === 'NaCl-melt') meltSeen = true;
+      if (material === 'NaCl-aq' && !meltSeen) return;
+      mark(TASK[material]);
+    };
     ui.on('material', (id: string) => { material = id; check(); });
     ui.on('power', (on: boolean, id: string) => { powered = on; material = id; check(); });
     ui.on('reverse', (_r: boolean, id: string) => { if (powered && (id === 'NaCl-melt' || id === 'NaCl-aq')) mark('reverse'); });

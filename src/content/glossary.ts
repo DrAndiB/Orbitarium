@@ -80,7 +80,7 @@ export const GLOSSARY: Record<string, Term> = {
   },
   'h-bond': {
     en: 'hydrogen bond', de: 'Wasserstoffbrückenbindung', unit: 10,
-    def: { en: 'An H on N, O or F attracted to a lone pair on another N, O or F.', de: 'Ein H an N, O oder F, angezogen von einem freien Elektronenpaar an einem anderen N, O oder F.' },
+    def: { en: 'A strong attraction between an H on N, O or F and a lone pair on a nearby N, O or F, usually on another molecule.', de: 'Starke Anziehung zwischen einem H an N, O oder F und einem freien Elektronenpaar an einem nahen N, O oder F, meist an einem anderen Molekül.' },
     falseFriend: { en: 'Not a bond in the covalent sense — German "Brücke" (bridge) describes it better.', de: 'Keine Bindung im Sinne einer Atombindung – „Brücke“ beschreibt es besser.' },
   },
   ka: {

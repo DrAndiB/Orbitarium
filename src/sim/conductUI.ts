@@ -27,7 +27,7 @@ const CHIP: Record<ConductMaterial, { en: string; de: string }> = {
 };
 /** What sits between the plates, in a few words. */
 const WHAT: Record<ConductMaterial, { en: string; de: string }> = {
-  Cu: { en: 'metal: atom cores and shared electrons', de: 'Metall: Atomrümpfe und gemeinsame Elektronen' },
+  Cu: { en: 'metal: atom cores and shared electrons', de: 'Metall: Atomrümpfe und frei bewegliche Elektronen (Elektronengas)' },
   NaCl: { en: 'solid: every ion held in place', de: 'fest: jedes Ion an seinem Platz' },
   'NaCl-melt': { en: 'molten at over 801 °C: ions free to move', de: 'geschmolzen über 801 °C: Ionen frei beweglich' },
   'NaCl-aq': { en: 'dissolved: ions spread among water molecules', de: 'gelöst: Ionen zwischen Wassermolekülen verteilt' },
@@ -125,7 +125,7 @@ export class ConductUI {
   private refresh() {
     const st = this.stage, m = st.material, info = CONDUCTIVITY[m];
     const carriers = info.carriers === 'electrons' ? L({ en: 'electrons', de: 'Elektronen' })
-      : info.carriers === 'ions' ? L({ en: 'ions', de: 'Ionen' }) : this.stage.material === 'water' ? L({ en: 'very few ions (H₃O⁺, OH⁻)', de: 'sehr wenige Ionen (H₃O⁺, OH⁻)' }) : L({ en: 'none that can move', de: 'keine beweglichen' });
+      : info.carriers === 'ions' ? L({ en: 'ions', de: 'Ionen' }) : this.stage.material === 'water' ? L({ en: 'very few ions (H₃O⁺, OH⁻)', de: 'sehr wenige Ionen (H₃O⁺, OH⁻)' }) : this.stage.material === 'sugar-aq' ? L({ en: 'very few ions (from the water itself)', de: 'sehr wenige Ionen (aus dem Wasser selbst)' }) : L({ en: 'none that can move', de: 'keine beweglichen' });
     const status = !st.power ? L({ en: 'battery off', de: 'Batterie aus' })
       : info.carriers === 'none' ? L({ en: 'practically no current', de: 'praktisch kein Strom' })
       : lampLevel(info.value) > 0.8 ? L({ en: 'current flows: lamp bright', de: 'Strom fließt: Lampe hell' }) : L({ en: 'current flows: lamp glows', de: 'Strom fließt: Lampe leuchtet' });
@@ -152,8 +152,8 @@ export class ConductUI {
     }
     const note = m === 'water' ? L({ en: 'In pure water about one molecule in 555 million has passed a proton (H⁺) to a neighbour, giving an H₃O⁺ and an OH⁻ ion: far too few ions to light the lamp.', de: 'In reinem Wasser hat etwa eines von 555 Millionen Molekülen ein Proton (H⁺) an ein Nachbarmolekül abgegeben, sodass ein H₃O⁺- und ein OH⁻-Ion entstehen (Autoprotolyse): viel zu wenige Ionen, um die Lampe leuchten zu lassen.' })
       : !st.power ? L({ en: 'Connect the battery and watch which particles drift, and which way.', de: 'Schließ die Batterie an und beobachte, welche Teilchen wandern und in welche Richtung.' })
-      : info.carriers === 'electrons' ? L({ en: 'The electrons drift towards the + plate; the atom cores stay where they are.', de: 'Die Elektronen wandern zur Plusplatte; die Atomrümpfe bleiben an ihrem Platz.' })
-      : info.carriers === 'ions' ? L({ en: 'Na⁺ drift to the − plate, Cl⁻ to the + plate: opposite charges attract.', de: 'Na⁺ wandern zur Minusplatte, Cl⁻ zur Plusplatte: Ungleiche Ladungen ziehen sich an.' })
+      : info.carriers === 'electrons' ? L({ en: 'The electrons drift towards the + pole; the atom cores stay where they are.', de: 'Die Elektronen wandern zum Pluspol; die Atomrümpfe bleiben an ihrem Platz.' })
+      : info.carriers === 'ions' ? L({ en: 'Na⁺ ions drift to the − pole (cathode), Cl⁻ ions to the + pole (anode): opposite charges attract.', de: 'Die Na⁺-Ionen wandern zum Minuspol (Kathode), die Cl⁻-Ionen zum Pluspol (Anode): Ungleichnamige Ladungen ziehen sich an.' })
       : m === 'NaCl' ? L({ en: 'The ions only vibrate in place: nothing drifts, so no current flows.', de: 'Die Ionen schwingen nur an ihrem Platz: Nichts wandert, also fließt kein Strom.' })
       : L({ en: 'The sugar molecules have no charge: nothing drifts, so no current flows.', de: 'Die Zuckermoleküle haben keine Ladung: Nichts wandert, also fließt kein Strom.' });
     this.note.textContent = note;
@@ -169,6 +169,7 @@ export class ConductUI {
     if (this.meter.classList.contains('compact')) { this.meter.replaceChildren(value); return; }
     // one row per material, best conductor first, each with a dot on the same log scale
     const axis = h('div', { class: 'cm-track cm-axis' });
+    for (let e = lo; e <= hi; e++) axis.append(h('i', { class: 'cm-minor', style: `left:${((e - lo) / (hi - lo)) * 100}%`, 'aria-hidden': 'true' }));
     for (const e of [-8, -4, 0, 4, 8]) axis.append(h('span', { class: 'cm-tick', style: `left:${((e - lo) / (hi - lo)) * 100}%` }, e === 0 ? '1' : `10${sup(e)}`));
     const order: ConductMaterial[] = ['Cu', 'NaCl-melt', 'NaCl-aq', 'water', 'sugar-aq', 'NaCl'];
     const rows = order.map((id) => {
