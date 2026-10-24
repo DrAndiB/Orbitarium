@@ -14,7 +14,8 @@ export interface Element extends ElementData {
 // He and Ne carried van der Waals radii among bonded ones; use the calculated radii like the other noble gases.
 // Francium's first ionization energy is 393 kJ/mol (4.07 eV), slightly above caesium's.
 // IUPAC spells caesium with "ae".
-const FIX: Record<number, Partial<ElementData>> = { 2: { r: 31 }, 10: { r: 38 }, 87: { ie: 393 }, 55: { en: 'Caesium' } };
+// Lead: IUPAC's conventional atomic weight is 207.2 (the generated data carries 207.21).
+const FIX: Record<number, Partial<ElementData>> = { 2: { r: 31 }, 10: { r: 38 }, 87: { ie: 393 }, 55: { en: 'Caesium' }, 82: { m: 207.2 } };
 
 /** Radii that are calculated (Clementi) rather than measured in compounds: the noble gases and astatine. */
 export const CALCULATED_RADIUS = new Set<number>([2, 10, 18, 36, 54, 85, 86]);
