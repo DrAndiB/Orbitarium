@@ -96,3 +96,13 @@ conversation and started with its whole history. Work like this instead:
 
 Keep the main session lean: read only the parts of files you need, ask helpers for short reports, look at screenshots
 as one contact sheet, and do not paste long outputs into the conversation.
+
+**Lessons from batch 12–16** (about 3.4 M helper tokens up to the fix round, against 13 M for 7–11; but seven Opus
+helpers at once used up the account's usage window in about 90 minutes and stalled the batch for three hours):
+- Pace the helpers: **at most three at a time**. Start the two engines and one unit, then the next units as slots free.
+- Every helper spends about 140 k tokens reading CLAUDE.md, the brief and the guides before it edits anything, so
+  never start a helper you might stop, and resume a stopped helper with SendMessage instead of starting a new one.
+- Models: Opus for engines, unit writing and Priya; **Sonnet for fix helpers, Marie and Jonas**.
+- Fix a unit with about ten findings or fewer in the main session instead of a helper.
+- Priya's accuracy review is the most expensive step (about 2½ hours, 100+ tool calls); give her a numbers list from
+  stoich.ts up front so she checks claims rather than recomputing every value.
