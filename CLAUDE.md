@@ -7,6 +7,10 @@ noUnusedLocals) + Three.js, wrapped with Capacitor; GitHub Actions builds the AP
 **Status:** units 0–11 are playable and reviewed (modules 1–3: periodic table, atoms, bonding, forces between
 molecules). **Next:** module 4, units 12–16 (counting by weighing, formulas and molar mass, balancing equations,
 limiting reagent and yield, concentration). They need two new engines, the Zoom Ladder (12–15) and the Lab Bench (16).
+**Batch 12–16 (2026-10-24):** engines and units 12–16 built, wired, checked and shipped as build-29 (before review). One
+review round done (Marie, Jonas, Priya); the fix round was paused before any unit edits. Open: per-unit fixes (top: unit
+16's "isotonic" glucose claim, false explain-back hints, units too long at 31–42 min, German calques), shared fixes (Pb
+207.2 in elements.ts, "=" shorthand in ideas.ts), targeted re-check, then push, web preview and Learner Simulation doc.
 
 **Owner preferences:** Andreas works on Windows: give command-line examples for PowerShell, not bash or curl. He
 likes workflows and data flows shown visually. He reads English and German (native German).
