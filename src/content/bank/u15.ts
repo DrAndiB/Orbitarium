@@ -49,7 +49,7 @@ export const BANK_U15: Item[] = [
       { text: b('32 g: all the methane and oxygen together', '32 g: das ganze Methan und der Sauerstoff zusammen'), mis: 'coefficients-mass-ratio' },
     ],
     explain: b('Methane 0.499 mol ÷ 1, oxygen 0.750 mol ÷ 2 = 0.375: oxygen runs out first. It burns 0.375 mol of methane to 0.375 mol of CO₂, 16.5 g; 2.0 g of methane is left over.',
-      'Methan 0,499 mol ÷ 1, Sauerstoff 0,750 mol ÷ 2 = 0,375: Der Sauerstoff ist zuerst aufgebraucht. Er verbrennt 0,375 mol Methan zu 0,375 mol CO₂, 16,5 g; 2,0 g Methan bleiben übrig.') },
+      'Methan 0,499 mol : 1, Sauerstoff 0,750 mol : 2 = 0,375: Der Sauerstoff ist zuerst aufgebraucht. Er verbrennt 0,375 mol Methan zu 0,375 mol CO₂, 16,5 g; 2,0 g Methan bleiben übrig.') },
 
   // ---------- u15.limiting ----------
   { id: 'i15d', unit: 15, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u15.limiting'],
@@ -61,7 +61,7 @@ export const BANK_U15: Item[] = [
       { text: b('Less ammonia forms: the nitrogen gets in the way', 'Es entsteht weniger Ammoniak: Der Stickstoff stört') },
     ],
     explain: b('3 mol of H₂ ÷ 3 = 1, against 2 mol of N₂ ÷ 1 = 2: hydrogen runs out first and makes 2 mol of NH₃. Extra nitrogen only adds to the leftover; only more hydrogen would raise the yield.',
-      '3 mol H₂ ÷ 3 = 1 gegenüber 2 mol N₂ ÷ 1 = 2: Der Wasserstoff ist zuerst aufgebraucht und ergibt 2 mol NH₃. Mehr Stickstoff vergrößert nur den Rest; nur mehr Wasserstoff würde die Ausbeute erhöhen.') },
+      '3 mol H₂ : 3 = 1 gegenüber 2 mol N₂ : 1 = 2: Der Wasserstoff ist zuerst aufgebraucht und ergibt 2 mol NH₃. Mehr Stickstoff vergrößert nur den Rest; nur mehr Wasserstoff würde die Ausbeute erhöhen.') },
   { id: 'i15e', unit: 15, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u15.limiting'], targets: ['less-mass-limiting'],
     prompt: b('Why does the limiting reactant, and not the one in excess, decide how much product forms?', 'Warum bestimmt das limitierende Edukt und nicht das im Überschuss, wie viel Produkt entsteht?'),
     options: [
@@ -77,7 +77,7 @@ export const BANK_U15: Item[] = [
     options: [
       { text: b('Neither: equal masses react completely', 'Keines: Gleiche Massen reagieren vollständig') },
       { text: b('Aluminium: the equation needs twice as much of it', 'Aluminium: Die Gleichung braucht doppelt so viel davon'), mis: 'coefficients-mass-ratio' },
-      { text: b('Iron oxide: 0.626 mol, against 3.71 mol ÷ 2 = 1.85 for aluminium', 'Eisenoxid: 0,626 mol gegenüber 3,71 mol ÷ 2 = 1,85 beim Aluminium'), correct: true },
+      { text: b('Iron oxide: 0.626 mol, against 3.71 mol ÷ 2 = 1.85 for aluminium', 'Eisenoxid: 0,626 mol gegenüber 3,71 mol : 2 = 1,85 beim Aluminium'), correct: true },
       { text: b('Aluminium: it is the lighter metal', 'Aluminium: Es ist das leichtere Metall'), mis: 'less-mass-limiting' },
     ],
     explain: b('Equal masses, very different counts: a formula unit of Fe₂O₃ has about six times the mass of an Al atom. The iron oxide runs out first and gives 69.9 g of iron; 66.2 g of aluminium is left over.',
@@ -88,16 +88,16 @@ export const BANK_U15: Item[] = [
     prompt: b('N₂ + 3 H₂ → 2 NH₃, with 2 mol of N₂ and 5 mol of H₂. Put the steps for finding the limiting reactant in order.', 'N₂ + 3 H₂ → 2 NH₃, mit 2 mol N₂ und 5 mol H₂. Bring die Schritte zum Finden des limitierenden Edukts in die richtige Reihenfolge.'),
     order: [
       b('Have both amounts in moles: 2 mol N₂, 5 mol H₂', 'Beide Mengen in Mol angeben: 2 mol N₂, 5 mol H₂'),
-      b('Divide each by its coefficient: N₂ 2 ÷ 1 = 2, H₂ 5 ÷ 3 = 1.67', 'Jede durch ihren Koeffizienten teilen: N₂ 2 ÷ 1 = 2, H₂ 5 ÷ 3 = 1,67'),
-      b('The smaller result runs out first: hydrogen', 'Der kleinere Wert ist zuerst aufgebraucht: Wasserstoff'),
-      b('Hydrogen sets the product: 5 × 2 ÷ 3 = 3.33 mol NH₃', 'Der Wasserstoff legt das Produkt fest: 5 · 2 ÷ 3 = 3,33 mol NH₃'),
+      b('Divide each by its coefficient: N₂ 2 ÷ 1 = 2, H₂ 5 ÷ 3 = 1.67', 'Jede durch ihren Koeffizienten teilen: N₂ 2 : 1 = 2, H₂ 5 : 3 = 1,67'),
+      b('The reactant with the smaller result runs out first: hydrogen', 'Das Edukt mit dem kleineren Wert ist zuerst aufgebraucht: Wasserstoff'),
+      b('Hydrogen sets the product: 5 × 2 ÷ 3 = 3.33 mol NH₃', 'Der Wasserstoff legt das Produkt fest: 5 · 2 : 3 = 3,33 mol NH₃'),
     ],
-    explain: b('Moles first, then the coefficients, then the smallest result, then the product from the limiting reactant. Comparing 2 mol with 5 mol directly would point at nitrogen, the wrong one.',
-      'Erst die Stoffmengen, dann die Koeffizienten, dann der kleinste Wert, dann das Produkt aus dem limitierenden Edukt. Ein direkter Vergleich von 2 mol mit 5 mol würde auf den Stickstoff zeigen, das falsche Edukt.') },
+    explain: b('Moles first, then the coefficients, then the reactant with the smallest result, then the product from the limiting reactant. Comparing 2 mol with 5 mol directly would point at nitrogen, the wrong one.',
+      'Erst die Stoffmengen, dann die Koeffizienten, dann das Edukt mit dem kleinsten Wert, dann das Produkt aus dem limitierenden Edukt. Ein direkter Vergleich von 2 mol mit 5 mol würde auf den Stickstoff zeigen, das falsche Edukt.') },
   { id: 'i15h', unit: 15, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u15.compare'], targets: ['less-mass-limiting', 'ratio-ignored-limiting'],
     prompt: b('Why must you divide each amount by its coefficient before comparing, instead of comparing the masses or the moles directly?', 'Warum musst du jede Stoffmenge durch ihren Koeffizienten teilen, bevor du vergleichst, statt die Massen oder Stoffmengen direkt zu vergleichen?'),
     options: [
-      { text: b('n ÷ coefficient counts how many times each reactant could run the equation once', 'n ÷ Koeffizient zählt, wie oft jedes Edukt die Gleichung einmal durchlaufen könnte'), correct: true },
+      { text: b('n ÷ coefficient counts how many times each reactant could run the equation once', 'n : Koeffizient zählt, wie oft jedes Edukt die Gleichung einmal durchlaufen könnte'), correct: true },
       { text: b('It turns the moles back into grams, which is what really counts', 'Damit werden die Mol wieder in Gramm umgerechnet, und auf die kommt es an'), mis: 'less-mass-limiting' },
       { text: b('It does not matter: the reactant with fewer moles always runs out first', 'Das ist egal: Das Edukt mit weniger Mol ist immer zuerst aufgebraucht'), mis: 'ratio-ignored-limiting' },
       { text: b('It corrects for the reactants being at different temperatures', 'Damit gleicht man aus, dass die Edukte verschieden warm sind') },
@@ -108,24 +108,24 @@ export const BANK_U15: Item[] = [
     prompt: b('2 Mg + O₂ → 2 MgO. 4 g of magnesium burns in a jar with 4 g of oxygen (Mg 24.31, O₂ 32.00 g/mol). Which runs out first?', '2 Mg + O₂ → 2 MgO. 4 g Magnesium verbrennen in einem Glas mit 4 g Sauerstoff (Mg 24,31, O₂ 32,00 g/mol). Welches Edukt ist zuerst aufgebraucht?'),
     options: [
       { text: b('Oxygen: 0.125 mol is less than 0.165 mol of magnesium', 'Sauerstoff: 0,125 mol sind weniger als 0,165 mol Magnesium'), mis: 'ratio-ignored-limiting' },
-      { text: b('Magnesium: 0.165 mol ÷ 2 = 0.082 is less than 0.125 mol ÷ 1 for oxygen', 'Magnesium: 0,165 mol ÷ 2 = 0,082 sind weniger als 0,125 mol ÷ 1 beim Sauerstoff'), correct: true },
+      { text: b('Magnesium: 0.165 mol ÷ 2 = 0.082 is less than 0.125 mol ÷ 1 for oxygen', 'Magnesium: 0,165 mol : 2 = 0,082 sind weniger als 0,125 mol : 1 beim Sauerstoff'), correct: true },
       { text: b('Neither: equal masses burn completely', 'Keines: Gleiche Massen verbrennen vollständig'), mis: 'less-mass-limiting' },
       { text: b('Oxygen: it is a gas and escapes', 'Sauerstoff: Er ist ein Gas und entweicht') },
     ],
     explain: b('Two Mg for each O₂: magnesium gives 0.165 ÷ 2 = 0.082, oxygen 0.125 ÷ 1. Magnesium runs out first, making 6.63 g of MgO, and 1.37 g of oxygen is left over. Comparing the moles without the coefficients points the wrong way.',
-      'Zwei Mg auf jedes O₂: Magnesium ergibt 0,165 ÷ 2 = 0,082, Sauerstoff 0,125 ÷ 1. Das Magnesium ist zuerst aufgebraucht und ergibt 6,63 g MgO, und 1,37 g Sauerstoff bleiben übrig. Ein Vergleich der Stoffmengen ohne Koeffizienten zeigt in die falsche Richtung.') },
+      'Zwei Mg auf jedes O₂: Magnesium ergibt 0,165 : 2 = 0,082, Sauerstoff 0,125 : 1. Das Magnesium ist zuerst aufgebraucht und ergibt 6,63 g MgO, und 1,37 g Sauerstoff bleiben übrig. Ein Vergleich der Stoffmengen ohne Koeffizienten zeigt in die falsche Richtung.') },
 
   // ---------- u15.theoretical ----------
   { id: 'i15j', unit: 15, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u15.theoretical', 'u15.compare'], targets: ['ratio-ignored-limiting'],
-    prompt: b('Propane burns: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O. 44 g of propane (1.00 mol) meets 128 g of oxygen (4.00 mol). What is the theoretical yield of CO₂ (44.01 g/mol)?', 'Propan verbrennt: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O. 44 g Propan (1,00 mol) treffen auf 128 g Sauerstoff (4,00 mol). Wie groß ist die theoretische Ausbeute an CO₂ (44,01 g/mol)?'),
+    prompt: b('Propane burns: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O. 44 g of propane (1.00 mol) reacts with 128 g of oxygen (4.00 mol). What is the theoretical yield of CO₂ (44.01 g/mol)?', 'Propan verbrennt: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O. 44 g Propan (1,00 mol) reagieren mit 128 g Sauerstoff (4,00 mol). Wie groß ist die theoretische Ausbeute an CO₂ (44,01 g/mol)?'),
     options: [
       { text: b('132 g: 1.00 mol of propane gives 3 mol of CO₂', '132 g: 1,00 mol Propan ergibt 3 mol CO₂'), mis: 'ratio-ignored-limiting' },
-      { text: b('106 g: oxygen limits, 4.00 ÷ 5 = 0.80, and that gives 2.40 mol of CO₂', '106 g: Der Sauerstoff limitiert, 4,00 ÷ 5 = 0,80, und das ergibt 2,40 mol CO₂'), correct: true },
+      { text: b('106 g: oxygen limits, 4.00 ÷ 5 = 0.80, and that gives 2.40 mol of CO₂', '106 g: Der Sauerstoff limitiert, 4,00 : 5 = 0,80, und das ergibt 2,40 mol CO₂'), correct: true },
       { text: b('35 g: oxygen limits, so 0.80 mol of CO₂ forms', '35 g: Der Sauerstoff limitiert, also entstehen 0,80 mol CO₂') },
       { text: b('172 g: all the propane and oxygen together', '172 g: das ganze Propan und der Sauerstoff zusammen') },
     ],
     explain: b('Propane 1.00 ÷ 1, oxygen 4.00 ÷ 5 = 0.80: oxygen runs out first. 0.80 runs of the equation make 3 × 0.80 = 2.40 mol of CO₂, 105.6 g, the most this mix can give.',
-      'Propan 1,00 ÷ 1, Sauerstoff 4,00 ÷ 5 = 0,80: Der Sauerstoff ist zuerst aufgebraucht. 0,80 Durchläufe der Gleichung ergeben 3 · 0,80 = 2,40 mol CO₂, 105,6 g, das Höchste, was diese Mischung liefern kann.') },
+      'Propan 1,00 : 1, Sauerstoff 4,00 : 5 = 0,80: Der Sauerstoff ist zuerst aufgebraucht. 0,80 Durchläufe der Gleichung ergeben 3 · 0,80 = 2,40 mol CO₂, 105,6 g, das Höchste, was diese Mischung liefern kann.') },
   { id: 'i15k', unit: 15, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u15.theoretical'], targets: ['ratio-ignored-limiting'],
     prompt: b('Why is the theoretical yield worked out from the limiting reactant and not from the reactant in excess?', 'Warum berechnet man die theoretische Ausbeute aus dem limitierenden Edukt und nicht aus dem Edukt im Überschuss?'),
     options: [
@@ -141,7 +141,7 @@ export const BANK_U15: Item[] = [
     min: 0, max: 1200, step: 10, answer: 560, tolerance: 10, suffix: ' kg',
     near: [{ value: 1000, tol: 10, note: b('1000 kg would mean no mass leaves. The CO₂ escapes as a gas: 440 kg of the 1000 kg.', '1000 kg würde bedeuten, dass keine Masse entweicht. Das CO₂ entweicht als Gas: 440 kg der 1000 kg.') }],
     explain: b('1000 kg ÷ 100.09 kg/kmol = 9.99 kmol of CaCO₃ gives 9.99 kmol of CaO × 56.08 = 560 kg. The other 440 kg leaves the kiln as carbon dioxide.',
-      '1000 kg ÷ 100,09 kg/kmol = 9,99 kmol CaCO₃ ergeben 9,99 kmol CaO · 56,08 = 560 kg. Die übrigen 440 kg verlassen den Ofen als Kohlenstoffdioxid.') },
+      '1000 kg : 100,09 kg/kmol = 9,99 kmol CaCO₃ ergeben 9,99 kmol CaO · 56,08 = 560 kg. Die übrigen 440 kg verlassen den Ofen als Kohlenstoffdioxid.') },
 
   // ---------- u15.percent ----------
   { id: 'i15m', unit: 15, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u15.percent'],
@@ -153,7 +153,7 @@ export const BANK_U15: Item[] = [
       { text: b('80 %', '80 %'), correct: true },
     ],
     explain: b('Percent yield = actual ÷ theoretical × 100 % = 6.4 ÷ 8.0 × 100 % = 80 %. Dividing the other way round (125 %) would claim more product than the reactants can make.',
-      'Ausbeute in Prozent = tatsächliche ÷ theoretische Menge · 100 % = 6,4 ÷ 8,0 · 100 % = 80 %. Andersherum geteilt (125 %) würde mehr Produkt behaupten, als die Edukte ergeben können.') },
+      'Ausbeute in Prozent = tatsächliche : theoretische Menge · 100 % = 6,4 : 8,0 · 100 % = 80 %. Andersherum geteilt (125 %) würde mehr Produkt behaupten, als die Edukte ergeben können.') },
   { id: 'i15n', unit: 15, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u15.percent'],
     prompt: b('A student reports a percent yield of 112 % for a salt she dried on a filter paper. What is the most likely reason?', 'Eine Schülerin gibt für ein Salz, das sie auf einem Filterpapier getrocknet hat, eine Ausbeute von 112 % an. Was ist der wahrscheinlichste Grund?'),
     options: [
@@ -169,7 +169,7 @@ export const BANK_U15: Item[] = [
     min: 0, max: 160, step: 1, answer: 88, tolerance: 2, suffix: ' %',
     near: [{ value: 146, tol: 2, note: b('About 146 % compares the oxide with the magnesium. Compare it with the oxide that 0.48 g of magnesium could make, 0.796 g.', 'Etwa 146 % vergleicht das Oxid mit dem Magnesium. Vergleiche es mit dem Oxid, das 0,48 g Magnesium ergeben könnten: 0,796 g.') }],
     explain: b('0.48 g ÷ 24.31 g/mol = 0.0197 mol of Mg gives 0.0197 mol of MgO × 40.30 = 0.796 g, the theoretical yield. 0.70 ÷ 0.796 × 100 % ≈ 88 %: some oxide escaped as smoke, or some magnesium did not burn.',
-      '0,48 g ÷ 24,31 g/mol = 0,0197 mol Mg ergeben 0,0197 mol MgO · 40,30 = 0,796 g, die theoretische Ausbeute. 0,70 ÷ 0,796 · 100 % ≈ 88 %: Etwas Oxid ist als Rauch entwichen, oder etwas Magnesium ist nicht verbrannt.') },
+      '0,48 g : 24,31 g/mol = 0,0197 mol Mg ergeben 0,0197 mol MgO · 40,30 = 0,796 g, die theoretische Ausbeute. 0,70 : 0,796 · 100 % ≈ 88 %: Etwas Oxid ist als Rauch entwichen, oder etwas Magnesium ist nicht verbrannt.') },
 
   // ---------- u15.excess ----------
   { id: 'i15p', unit: 15, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u15.excess'],
@@ -195,11 +195,11 @@ export const BANK_U15: Item[] = [
   { id: 'i15r', unit: 15, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u15.excess', 'u15.compare'], targets: ['less-mass-limiting', 'coefficients-mass-ratio'],
     prompt: b('A hydrogen–oxygen rocket engine is fed 5 kg of oxygen for every 1 kg of hydrogen. The equation needs 7.94 kg of oxygen per kilogram of hydrogen. What leaves the nozzle besides water?', 'Ein Wasserstoff-Sauerstoff-Raketentriebwerk erhält 5 kg Sauerstoff auf jedes Kilogramm Wasserstoff. Die Gleichung braucht 7,94 kg Sauerstoff pro Kilogramm Wasserstoff. Was verlässt die Düse außer Wasser?'),
     options: [
-      { text: b('Unburned oxygen: there is five times more of it', 'Unverbrannter Sauerstoff: Davon ist fünfmal mehr da'), mis: 'less-mass-limiting' },
+      { text: b('Unburned oxygen: there is five times as much of it', 'Unverbrannter Sauerstoff: Davon ist fünfmal so viel da'), mis: 'less-mass-limiting' },
       { text: b('Unburned hydrogen: oxygen runs out first and limits the burn', 'Unverbrannter Wasserstoff: Der Sauerstoff ist zuerst aufgebraucht und limitiert die Verbrennung'), correct: true },
       { text: b('Nothing: 5 : 1 is close enough to 2 : 1', 'Nichts: 5 : 1 liegt nah genug an 2 : 1'), mis: 'coefficients-mass-ratio' },
       { text: b('Both gases, in equal amounts', 'Beide Gase, in gleichen Mengen') },
     ],
     explain: b('5 kg of oxygen is less than the 7.94 kg that 1 kg of hydrogen needs, so oxygen is limiting and hydrogen is in excess: 5 ÷ 7.94 = 63 % of the hydrogen burns. Engines do this on purpose: the light, unburned hydrogen leaves the nozzle fast and gives more thrust per kilogram of propellant.',
-      '5 kg Sauerstoff sind weniger als die 7,94 kg, die 1 kg Wasserstoff braucht, also limitiert der Sauerstoff, und der Wasserstoff liegt im Überschuss vor: 5 ÷ 7,94 = 63 % des Wasserstoffs verbrennen. Triebwerke machen das absichtlich: Der leichte, unverbrannte Wasserstoff strömt schnell aus der Düse und bringt mehr Schub pro Kilogramm Treibstoff.') },
+      '5 kg Sauerstoff sind weniger als die 7,94 kg, die 1 kg Wasserstoff braucht, also limitiert der Sauerstoff, und der Wasserstoff liegt im Überschuss vor: 5 : 7,94 = 63 % des Wasserstoffs verbrennen. Triebwerke machen das absichtlich: Der leichte, unverbrannte Wasserstoff strömt schnell aus der Düse und bringt mehr Schub pro Kilogramm Treibstoff.') },
 ];
