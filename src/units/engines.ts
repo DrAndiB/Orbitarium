@@ -1,4 +1,4 @@
-// Engine wiring for units 1–5 and 7–11: which engine each unit uses, and which engine events tick which explore task.
+// Engine wiring for units 1–5 and 7–16: which engine each unit uses, and which engine events tick which explore task.
 import type { UnitEngine, Engine } from './generic';
 import type { Show } from '../content/unitTypes';
 import type { AtomUI } from '../sim/orbitalsUI';
@@ -7,6 +7,10 @@ import type { BondUI } from '../sim/bondUI';
 import type { ParticleBoxUI } from '../sim/particleBoxUI';
 import type { ConductUI } from '../sim/conductUI';
 import type { HBondUI } from '../sim/hbondUI';
+import type { ZoomLadderUI } from '../sim/zoomLadderUI';
+import type { LabBenchUI } from '../sim/labBenchUI';
+import type { Rung } from '../content/unitTypes';
+import { equation, molarMass } from '../content/stoich';
 
 const atomEngine = (ui: AtomUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'atom') ui.show(s); } });
 const latticeEngine = (ui: LatticeUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'lattice') ui.show(s); } });
@@ -279,5 +283,125 @@ export const ENGINE_U11: UnitEngine = {
   compact(ctx, shows) {
     const first = firstShow(shows, 'box');
     return boxEngine(ctx.box({ start: first?.sub ?? 'H2O', temp: first?.temp ?? 20, compact: true, mixes: U11_MIXES }));
+  },
+};
+
+// ---------- module 4: the Zoom Ladder (units 12–15) and the Lab Bench (unit 16) ----------
+const ladderEngine = (ui: ZoomLadderUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'ladder') ui.show(s); } });
+const benchEngine = (ui: LabBenchUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'bench') ui.show(s); } });
+/** A compact ladder in the mode its first Show needs (show() switches modes as well). */
+function compactLadder(ctx: Parameters<UnitEngine['compact']>[0], shows: Show[], start: string) {
+  const f = firstShow(shows, 'ladder');
+  const mode = f?.eq ? (f.amounts ? 'reaction' : 'equation') : 'sample';
+  return ladderEngine(ctx.ladder({ mode, start: f?.sub ?? f?.eq ?? start, compact: true }));
+}
+
+// ---------- unit 12: counting by weighing ----------
+export const U12_SAMPLES = ['C', 'Mg', 'Al', 'Fe', 'Cu', 'Au', 'Pb', 'H2', 'H2O'];
+export const ENGINE_U12: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.ladder({ mode: 'sample', start: 'C', grams: 12, samples: U12_SAMPLES, controls: { compare: true } });
+    const rungs = new Set<Rung>(['grams']);
+    ui.on('rung', (r: Rung) => { rungs.add(r); if (rungs.size === 4) mark('zoom'); });
+    ui.on('mass', (id: string, g: number, mol: number, count: number) => {
+      if (id === 'C' && Math.abs(mol - 1) <= 0.01) mark('onemol');
+      if (id === 'H2O' && Math.abs(mol - 1) <= 0.02) mark('water');
+      if (g <= 10 && count > 1e24) mark('light');
+    });
+    ui.on('compare', (a: string, b: string | null, by: 'mass' | 'moles') => { if (b && b !== a) mark(by === 'mass' ? 'same-mass' : 'same-moles'); });
+    return ladderEngine(ui);
+  },
+  compact: (ctx, shows) => compactLadder(ctx, shows, 'C'),
+};
+
+// ---------- unit 13: formulas and molar mass ----------
+export const U13_SAMPLES = ['H2O', 'CO2', 'CO', 'N2', 'C2H4', 'NH3', 'C6H12O6', 'NaCl', 'Ca(OH)2', 'CaCO3', 'FeO', 'Fe2O3', 'Fe3O4'];
+const IRON_OXIDES = ['FeO', 'Fe2O3', 'Fe3O4'];
+export const ENGINE_U13: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.ladder({ mode: 'sample', start: 'H2O', grams: 18, samples: U13_SAMPLES, controls: { compare: true, breakdown: true } });
+    let current = 'H2O';
+    let rung: Rung = 'grams';
+    const salt = () => { if (current === 'NaCl' && rung === 'particles') mark('salt'); };
+    ui.on('sample', (id: string, which: 1 | 2) => { if (which === 1) { current = id; salt(); } });
+    ui.on('rung', (r: Rung) => { rung = r; salt(); });
+    const seenM = new Map<string, number>();
+    const ores = new Set<string>();
+    ui.on('breakdown', (id: string, M: number) => {
+      if (id === 'H2O') mark('water');
+      if (id === 'C6H12O6') mark('glucose');
+      if (id === 'Ca(OH)2') mark('bracket');
+      if (IRON_OXIDES.includes(id)) { ores.add(id); if (ores.size >= 2) mark('ores'); }
+      for (const [other, m] of seenM) if (other !== id && Math.abs(m - M) < 0.1) mark('twins');
+      seenM.set(id, M);
+    });
+    return ladderEngine(ui);
+  },
+  compact: (ctx, shows) => compactLadder(ctx, shows, 'H2O'),
+};
+
+// ---------- unit 14: balancing equations ----------
+export const U14_EQS = ['h2o', 'mgo', 'ch4', 'nh3', 'c2h6'];
+export const ENGINE_U14: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.ladder({ mode: 'equation', start: 'h2o', equations: U14_EQS, controls: { trap: true } });
+    const TASK: Record<string, string> = { h2o: 'water', ch4: 'methane', nh3: 'ammonia', c2h6: 'ethane' };
+    let balanced = false;
+    let rung: Rung = 'particles';
+    const grams = () => { if (balanced && rung === 'grams') mark('grams'); };
+    ui.on('equation', () => { balanced = false; });
+    ui.on('coeffs', (_eq: string, _c: number[], ok: boolean) => { if (!ok) balanced = false; });
+    ui.on('balanced', (eq: string, _c: number[], smallest: boolean) => { balanced = true; if (smallest && TASK[eq]) mark(TASK[eq]); grams(); });
+    ui.on('subscript', () => { balanced = false; mark('subscript'); });
+    ui.on('rung', (r: Rung) => { rung = r; grams(); });
+    return ladderEngine(ui);
+  },
+  compact: (ctx, shows) => compactLadder(ctx, shows, 'h2o'),
+};
+
+// ---------- unit 15: limiting reagent and yield ----------
+export const U15_EQS = ['h2o', 'nh3', 'mgo', 'ch4'];
+export const ENGINE_U15: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.ladder({ mode: 'reaction', start: 'h2o', equations: U15_EQS, controls: { yield: true } });
+    ui.on('react', (eqId: string, amounts: number[], limiting: number, _left: number[], product: number[], by: 'particles' | 'mol' | 'g') => {
+      if (limiting < 0) mark('exact');
+      else {
+        mark('leftover');
+        const eq = equation(eqId);
+        if (eq) {
+          const g = amounts.map((n, i) => n * molarMass(eq.reactants[i].f));
+          if (g.every((x, i) => i === limiting || g[limiting] > x)) mark('heavier');
+        }
+      }
+      if (by === 'g') mark('grams');
+      if (eqId === 'nh3' && limiting < 0 && Math.abs(product[0] - 2) <= 0.02) mark('haber');
+    });
+    ui.on('yield', () => mark('yield'));
+    return ladderEngine(ui);
+  },
+  compact: (ctx, shows) => compactLadder(ctx, shows, 'h2o'),
+};
+
+// ---------- unit 16: concentration ----------
+export const U16_SOLUTES = ['CuSO4-5H2O', 'NaCl', 'C6H12O6', 'KMnO4'];
+export const ENGINE_U16: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.bench({ start: 'CuSO4-5H2O', solutes: U16_SOLUTES, controls: { dilute: true, sample: true, beaker: true, zoom: true } });
+    ui.on('made', (id: string, _g: number, flask: number, c: number) => {
+      mark('make');
+      if (id === 'CuSO4-5H2O' && flask === 250 && Math.abs(c - 0.1) <= 0.001) mark('target');
+    });
+    ui.on('diluted', (_id: string, c1: number, _pip: number, flask: number, c2: number) => {
+      mark('dilute');
+      if (flask === 100 && Math.abs(c2 - c1 / 10) <= 0.01 * c2) mark('tenfold');
+    });
+    ui.on('sample', () => mark('sample'));
+    ui.on('beaker', () => mark('beaker'));
+    return benchEngine(ui);
+  },
+  compact(ctx, shows) {
+    const f = firstShow(shows, 'bench');
+    return benchEngine(ctx.bench({ start: f?.solute ?? 'CuSO4-5H2O', compact: true }));
   },
 };

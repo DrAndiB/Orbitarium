@@ -9,7 +9,9 @@ import { BondUI } from '../sim/bondUI';
 import { ParticleBoxUI } from '../sim/particleBoxUI';
 import { ConductUI } from '../sim/conductUI';
 import { HBondUI } from '../sim/hbondUI';
-import { U2_IONS, U8_SUBS, U9_SUBS, U11_MIXES } from '../units/engines';
+import { ZoomLadderUI } from '../sim/zoomLadderUI';
+import { LabBenchUI } from '../sim/labBenchUI';
+import { U2_IONS, U8_SUBS, U9_SUBS, U11_MIXES, U12_SAMPLES, U13_SAMPLES, U14_EQS, U15_EQS, U16_SOLUTES } from '../units/engines';
 import { onLeave } from './lifecycle';
 import { go } from '../router';
 
@@ -24,12 +26,14 @@ const ENGINES: LabEngine[] = [
   { name: { en: 'Particle Box', de: 'Teilchenbox' }, units: [8, 9, 11], open: () => new ParticleBoxUI({ start: 'Br2', subs: [...new Set([...U8_SUBS, ...U9_SUBS, 'H2O', 'HF', 'NH3', 'CH3OH', 'C2H5OH', 'C4H9OH'])], temp: 20, controls: { compare: true, views: ['clouds', 'dipoles', 'hbonds'], whatIf: true, temp: true } }) },
   { name: { en: 'Hydrogen bonds', de: 'Wasserstoffbrücken' }, units: [10], open: () => new HBondUI({ start: 'H2O' }) },
   { name: { en: 'Water and mixing', de: 'Wasser und Mischen' }, units: [11], open: () => new ParticleBoxUI({ start: 'H2O', subs: ['H2O'], temp: 20, mixes: [...U11_MIXES, 'CH3OH', 'CH3COCH3', 'C6H13OH'], controls: { compare: false, views: ['hbonds'], temp: true } }) },
+  { name: { en: 'Zoom Ladder: samples', de: 'Zoom-Leiter: Stoffproben' }, units: [12, 13], open: () => new ZoomLadderUI({ mode: 'sample', start: 'H2O', grams: 18, samples: [...new Set([...U12_SAMPLES, ...U13_SAMPLES])], controls: { compare: true, breakdown: true } }) },
+  { name: { en: 'Zoom Ladder: equations', de: 'Zoom-Leiter: Reaktionsgleichungen' }, units: [14], open: () => new ZoomLadderUI({ mode: 'equation', start: 'ch4', equations: [...new Set([...U14_EQS, 'c3h8', 'al2o3', 'fe2o3', 'nacl', 'caco3', 'zn', 'photo', 'glucose'])], controls: { trap: true } }) },
+  { name: { en: 'Zoom Ladder: reactions', de: 'Zoom-Leiter: Reaktionen' }, units: [15], open: () => new ZoomLadderUI({ mode: 'reaction', start: 'nh3', equations: [...new Set([...U15_EQS, 'c3h8', 'al2o3', 'nacl', 'zn'])], controls: { yield: true } }) },
+  { name: { en: 'Lab Bench', de: 'Labortisch' }, units: [16], open: () => new LabBenchUI({ start: 'CuSO4-5H2O', solutes: U16_SOLUTES, controls: { dilute: true, sample: true, beaker: true, zoom: true } }) },
 ];
 
 const COMING: { name: string; units: string; phase: number }[] = [
   { name: 'Energy Landscape', units: '17, 18, 20, 23', phase: 2 },
-  { name: 'Zoom Ladder', units: '12–15, 31', phase: 2 },
-  { name: 'Lab Bench', units: '16, 27, …', phase: 2 },
 ];
 
 export function renderLab(root: HTMLElement) {
