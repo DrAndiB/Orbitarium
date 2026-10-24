@@ -151,7 +151,7 @@ export const UNITS: UnitInfo[] = [
     c('u14.method', 'A method: start with the most complex substance, leave single elements for last', 'Ein Vorgehen: mit dem kompliziertesten Stoff anfangen, Elemente zuletzt ausgleichen'),
     c('u14.diatomic', 'Hydrogen, oxygen, nitrogen and the halogens are written as molecules: H₂, O₂, N₂, Cl₂', 'Wasserstoff, Sauerstoff, Stickstoff und die Halogene schreibt man als Moleküle: H₂, O₂, N₂, Cl₂'),
   ]),
-  u(15, 4, 'Limiting reagent and yield', 'Limitierender Stoff und Ausbeute', 'Zoom Ladder', 2, [
+  u(15, 4, 'Limiting reagent and yield', 'Limitierendes Edukt und Ausbeute', 'Zoom Ladder', 2, [
     c('u15.ratio', 'The equation fixes the ratio in which reactants are used up', 'Die Reaktionsgleichung legt fest, in welchem Verhältnis die Edukte verbraucht werden'),
     c('u15.limiting', 'The reactant that runs out first is limiting; it decides how much product forms', 'Das Edukt, das zuerst aufgebraucht ist, ist limitierend; es bestimmt, wie viel Produkt entsteht'),
     c('u15.compare', 'Find it by comparing moles divided by coefficients, not masses', 'Man findet es, indem man Stoffmenge durch Koeffizient vergleicht, nicht die Massen'),
