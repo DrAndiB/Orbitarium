@@ -4,13 +4,11 @@ Orbitarium is Andreas's offline chemistry learning app for Android, in English a
 curriculum (10 modules, units 0–45, listed in src/content/curriculum.ts). Private first. Vite + TypeScript (strict,
 noUnusedLocals) + Three.js, wrapped with Capacitor; GitHub Actions builds the APK.
 
-**Status:** units 0–11 are playable and reviewed (modules 1–3: periodic table, atoms, bonding, forces between
-molecules). **Next:** module 4, units 12–16 (counting by weighing, formulas and molar mass, balancing equations,
-limiting reagent and yield, concentration). They need two new engines, the Zoom Ladder (12–15) and the Lab Bench (16).
-**Batch 12–16 (2026-10-24):** engines and units 12–16 built, wired, checked and shipped as build-29 (before review). One
-review round done (Marie, Jonas, Priya); the fix round was paused before any unit edits. Open: per-unit fixes (top: unit
-16's "isotonic" glucose claim, false explain-back hints, units too long at 31–42 min, German calques), shared fixes (Pb
-207.2 in elements.ts, "=" shorthand in ideas.ts), targeted re-check, then push, web preview and Learner Simulation doc.
+**Status:** units 0–16 are playable and reviewed (modules 1–4: periodic table, atoms, bonding, forces between
+molecules, the mole), shipped as build-32 on 2026-10-24. **Next:** module 5, units 17–20 (bond energy and enthalpy,
+Hess's law, entropy, free energy); they need the Energy Landscape engine (17, 18, 20) and reuse the Particle Box (19).
+Open from batch 12–16: a fold-out for the "where the model breaks" cards, an honest minutes estimate in the unit header,
+a standing hint line on spot-the-flaw items, and the progress-file download in the web preview (the viewer blocks it).
 
 **Owner preferences:** Andreas works on Windows: give command-line examples for PowerShell, not bash or curl. He
 likes workflows and data flows shown visually. He reads English and German (native German).
@@ -97,8 +95,9 @@ conversation and started with its whole history. Work like this instead:
 Keep the main session lean: read only the parts of files you need, ask helpers for short reports, look at screenshots
 as one contact sheet, and do not paste long outputs into the conversation.
 
-**Lessons from batch 12–16** (about 3.4 M helper tokens up to the fix round, against 13 M for 7–11; but seven Opus
-helpers at once used up the account's usage window in about 90 minutes and stalled the batch for three hours):
+**Lessons from batch 12–16** (about 4.9 M helper tokens for the whole batch, against 13 M for 7–11: build 2.0 M,
+review 0.65 M, fixes 1.6 M of which 0.7 M was helpers stopped before editing, re-checks 0.45 M; seven Opus helpers at
+once used up the account's usage window in about 90 minutes and stalled the batch for three hours):
 - Pace the helpers: **at most three at a time**. Start the two engines and one unit, then the next units as slots free.
 - Every helper spends about 140 k tokens reading CLAUDE.md, the brief and the guides before it edits anything, so
   never start a helper you might stop, and resume a stopped helper with SendMessage instead of starting a new one.
