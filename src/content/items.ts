@@ -110,7 +110,7 @@ export const BANK: Item[] = [
       { text: b('Strontium', 'Strontium') },
       { text: b('Selenium', 'Selen') },
     ],
-    explain: b('Four shells means period 4; a 2+ ion means two outer electrons to give away, group 2. Period 4, group 2 is calcium: 2, 8, 8, 2. Magnesium has three shells, strontium five, and selenium takes electrons instead.', 'Vier Schalen heißt Periode 4; ein 2+-Ion heißt zwei abzugebende Außenelektronen, Gruppe 2. Periode 4, Gruppe 2 ist Calcium: 2, 8, 8, 2. Magnesium hat drei Schalen, Strontium fünf, und Selen nimmt Elektronen auf.') },
+    explain: b('Four shells means period 4; a 2+ ion means two outer electrons to give away, group 2. Period 4, group 2 is calcium: 2, 8, 8, 2. Magnesium has three shells, strontium five, and selenium takes electrons instead.', 'Vier Schalen bedeuten Periode 4; ein 2+-Ion bedeutet zwei abgegebene Außenelektronen, also Gruppe 2. Periode 4, Gruppe 2 ist Calcium: 2, 8, 8, 2. Magnesium hat drei Schalen, Strontium fünf, und Selen nimmt Elektronen auf.') },
   { id: 'u0o', unit: 0, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u0.columns-outer'], targets: ['rows-columns-swapped'], table: 'outer',
     prompt: b('Fluorine and chlorine both form ions with a 1− charge. Why?', 'Fluor und Chlor bilden beide Ionen mit der Ladung 1−. Warum?'),
     options: [

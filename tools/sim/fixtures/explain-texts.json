@@ -1,0 +1,428 @@
+[
+ {
+  "unit": 1,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "The electrons sit in shells around the nucleus, the first one holds 2, then 8 and so on. They don't really go round in circles like I learned at school, it's more like a cloud of where they probably are. An electron can only have certain amounts of energy, like the steps of a ladder, so when it drops down a step it gives off light of one exact colour. Every element has its own ladder so it has its own colours, like a fingerprint."
+ },
+ {
+  "unit": 1,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "The electrons sit in shells around the nucleus: the first shell holds 2, the next 8, then 18. They don't really go round in circles like I learned at school, it's more like a cloud of where they probably are. Electrons fill the lowest energy places first, that's why potassium starts a new shell early. An electron can only have certain amounts of energy, like the steps of a ladder, so when it drops down a step it gives off light of one exact colour. Every element has its own ladder so it has its own colours, like a fingerprint."
+ },
+ {
+  "unit": 2,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "It's like a tug of war between the protons in the middle pulling and how far out the outer electrons are. The inner electrons kind of block some of the pull. Going along a row there are more protons but the same number of shells, so they pull harder and the atom gets smaller. Going down a column you add another shell so it gets bigger. When an atom loses electrons it shrinks and when it gains one it swells."
+ },
+ {
+  "unit": 2,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "It's like a tug of war between the protons in the middle pulling and how far out the outer electrons are. The inner electrons kind of block some of the pull. Across a period the atom gets smaller, because there are more protons pulling on the same shell. Going down a column you add another shell so it gets bigger. When an atom loses electrons it shrinks and when it gains one it swells. If two ions have the same electrons, the one with more protons is smaller, like the potassium ion and chloride."
+ },
+ {
+  "unit": 3,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "It depends on how many electrons are in the outer shell. Metals like sodium give away their one or two outer electrons, and non-metals like chlorine take some to fill up the shell. Taking electrons off always costs energy and once you get to a full shell underneath it suddenly costs way more, like falling off a cliff, so the atom stops there. That's why sodium is always plus one and magnesium plus two. It ends up looking like a noble gas but it's still sodium."
+ },
+ {
+  "unit": 3,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "It depends on how many electrons are in the outer shell. Metals like sodium give away their one or two outer electrons, and non-metals like chlorine take some to fill up the shell. Taking electrons off always costs energy and once you get to a full shell underneath it suddenly costs way more, like falling off a cliff, so the atom stops there. That's why sodium is always plus one because it lost one electron, magnesium plus two because it lost two, and chlorine is minus one because it took one. It ends up looking like a noble gas but it's still sodium."
+ },
+ {
+  "unit": 4,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "The sodium gives its electron to the chlorine so one is plus and one is minus, and opposites attract. They're all stacked in a big cube pattern where each one is surrounded by six of the other kind, so there aren't really salt molecules. That's why salt is so hard to melt. But if you hit it with a hammer a layer slides over and then pluses are next to pluses, they push apart and it shatters. Salt grains are little cubes because of this."
+ },
+ {
+  "unit": 4,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "The sodium gives its electron to the chlorine so one is plus and one is minus, and opposites attract. They're all stacked in a big cube pattern where each one is surrounded by six of the other kind, so there aren't really salt molecules. Magnesium oxide holds even harder because its charges are double and its ions are smaller and closer. That's why salt is so hard to melt. But if you hit it with a hammer a layer slides over and then pluses are next to pluses, they push apart and it shatters. Salt grains are little cubes because of this."
+ },
+ {
+  "unit": 5,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "In a covalent bond the two atoms share a pair of electrons and both of them pull on it, that's what keeps them together. If one atom pulls harder (that's electronegativity) the pair leans over to it and that end gets a bit negative, the other end a bit positive. That's a polar bond, like in water. If they pull the same, like two hydrogens, it's shared fairly. If one pulls way harder it just takes the electron and it's ionic like salt."
+ },
+ {
+  "unit": 5,
+  "lang": "en",
+  "source": "r3-marie",
+  "text": "In a covalent bond the two atoms share a pair of electrons and both of them pull on it, that's what keeps them together. Each atom shares as many pairs as it needs to get to eight, like oxygen shares two. If one atom pulls harder (that's electronegativity) the pair leans over to it and that end gets a bit negative, the other end a bit positive. That's a polar bond, like in water. So it's the difference in how hard they pull that decides: a tiny difference is fair sharing, a medium one is polar, a big one is ionic like salt."
+ },
+ {
+  "unit": 1,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Die Elektronen sind auf Schalen um den Kern verteilt, die erste Schale hat 2, die zweite 8 und dann 18 (2n²). Elektronen können nur bestimmte Energien haben und wenn sie von einer höheren Schale auf eine niedrigere springen, wird Licht mit einer bestimmten Farbe frei. Deshalb hat jedes Element seine eigenen Farben."
+ },
+ {
+  "unit": 1,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Die Elektronen sind auf Schalen um den Kern verteilt, die erste Schale hat 2, die zweite 8 und dann 18 (2n²). Elektronen können nur bestimmte Energien haben und wenn sie von einer höheren Schale auf eine niedrigere springen, wird Licht mit einer bestimmten Farbe frei. Deshalb hat jedes Element seine eigenen Farben. Die Elektronen gehen immer zuerst auf die niedrigste Energie, deshalb kommt 4s vor 3d."
+ },
+ {
+  "unit": 2,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Die Größe hängt von der Anzahl der Schalen und von der Kernladung ab. In der Periode wird das Atom kleiner, weil mehr Protonen da sind und die Elektronen stärker angezogen werden. In der Gruppe nach unten wird es größer, weil eine neue Schale dazukommt. Kationen sind kleiner als ihr Atom, Anionen sind größer."
+ },
+ {
+  "unit": 2,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Die Größe hängt von der Anzahl der Schalen und von der Kernladung ab. Die inneren Elektronen schirmen die Kernladung ab. In der Periode wird das Atom kleiner, weil mehr Protonen da sind und die Elektronen stärker angezogen werden. In der Gruppe nach unten wird es größer, weil eine neue Schale dazukommt. Kationen sind kleiner als ihr Atom, Anionen sind größer. Bei gleich vielen Elektronen ist das Ion mit mehr Protonen kleiner (K+ kleiner als Cl-)."
+ },
+ {
+  "unit": 3,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Die Ladung hängt davon ab, wie viele Elektronen das Atom abgibt oder aufnimmt, um die Edelgaskonfiguration zu erreichen. Metalle geben Elektronen ab und werden positiv, Nichtmetalle nehmen Elektronen auf und werden negativ. Na gibt 1 ab -> Na+, Mg gibt 2 ab -> Mg2+, Cl nimmt 1 auf -> Cl-. Danach wird es viel teurer, weil das nächste Elektron aus der inneren Schale kommen würde."
+ },
+ {
+  "unit": 3,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Die Ladung hängt davon ab, wie viele Elektronen das Atom abgibt oder aufnimmt, um die Edelgaskonfiguration zu erreichen. Die Ladung ist so groß wie die Anzahl der abgegebenen oder aufgenommenen Elektronen. Metalle geben Elektronen ab und werden positiv, Nichtmetalle nehmen Elektronen auf und werden negativ. Na gibt 1 ab -> Na+, Mg gibt 2 ab -> Mg2+, Cl nimmt 1 auf -> Cl-. Danach wird es viel teurer, weil das nächste Elektron aus der inneren Schale kommen würde."
+ },
+ {
+  "unit": 4,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Im Salzkristall ziehen sich positive und negative Ionen gegenseitig an, das ist die Ionenbindung. Das Metall gibt Elektronen ab und das Nichtmetall nimmt sie auf. Die Ionen bilden ein Ionengitter, es gibt keine Moleküle. Daraus folgt: hohe Schmelztemperatur, spröde und leitet nur geschmolzen oder in Wasser gelöst."
+ },
+ {
+  "unit": 4,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Im Salzkristall ziehen sich positive und negative Ionen gegenseitig an, das ist die Ionenbindung. Das Metall gibt Elektronen ab und das Nichtmetall nimmt sie auf. Die Ionen bilden ein Ionengitter, es gibt keine Moleküle. Je größer die Ladung und je kleiner die Ionen, desto stärker die Anziehung (MgO > NaCl). Daraus folgt: hohe Schmelztemperatur, spröde und leitet nur geschmolzen oder in Wasser gelöst."
+ },
+ {
+  "unit": 5,
+  "lang": "de",
+  "source": "r3-jonas",
+  "text": "Bei der Atombindung teilen sich zwei Atome ein Elektronenpaar, damit beide die Edelgaskonfiguration (Oktett) erreichen. Die Elektronegativität gibt an, wie stark ein Atom die Bindungselektronen anzieht. Wenn der ΔEN groß ist, ist die Bindung polar, das Atom mit der höheren EN wird δ- und das andere δ+. Ab einem ΔEN von 1,7 ist es eine Ionenbindung, unter 0,5 ist sie unpolar."
+ },
+ {
+  "unit": 1,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "Electrons sit in shells (n = 1, 2, 3...) that hold up to 2n² electrons, and each shell is split into subshells s, p, d, f holding 2, 6, 10, 14. They fill from the lowest energy up (Aufbau), which is why 4s goes before 3d. Orbitals are probability clouds, not orbits. Because the energy levels are quantised, an electron dropping between two levels emits a photon of one specific energy and so one wavelength, and since every element has a different set of levels, each one has its own line spectrum."
+ },
+ {
+  "unit": 1,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "Electrons sit in shells (n = 1, 2, 3...) that hold up to 2n² electrons, and each shell is split into subshells s, p, d, f holding 2, 6, 10, 14. They fill from the lowest energy up, which is why 4s goes before 3d in K and Ca (though once you're in the transition metals 4s is also the first to empty). Orbitals are probability clouds, not orbits. Because the energy levels are quantised, an electron dropping between two levels emits a photon of one exact energy, so one colour; a bigger drop means a shorter wavelength. Every element has its own set of levels, so each one has its own line spectrum, like a fingerprint."
+ },
+ {
+  "unit": 2,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "Size is set by how far out the outermost electrons are and how hard the nucleus pulls on them. The pull is Z_eff, roughly protons minus inner (core) electrons. Across a period Z goes up but the electrons go into the same shell, so Z_eff rises and the atom contracts. Down a group you add a new shell further from the nucleus while Z_eff stays roughly constant, so the atom gets bigger. Cations are smaller than their atoms (Na+ loses its whole outer shell), anions are bigger, and in an isoelectronic series the one with more protons is the smallest."
+ },
+ {
+  "unit": 2,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "Size is set by how far out the outermost electrons are and how hard the nucleus pulls on them. The pull is Z_eff, roughly protons minus inner (core) electrons. Across a period the atom gets smaller, because each step adds a proton while the new electron goes into the same shell, so Z_eff rises. Down a group you add a new shell further from the nucleus while Z_eff stays roughly constant, so the atom gets bigger. Cations are smaller than their atoms (Na+ loses its whole outer shell), anions are bigger, and in an isoelectronic series the one with more protons is the smallest."
+ },
+ {
+  "unit": 3,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "The charge comes from how many electrons the atom loses or gains. Every ionisation costs energy and successive IEs keep increasing, but there's a huge jump (the cliff) once you'd have to take an electron from the full inner shell, so metals lose only their valence electrons: Na+, Mg2+, Al3+. Non-metals on the right gain electrons instead (Cl-, O2-, S2-), since removing 6 or 7 would cost far too much. Usually the ion ends up isoelectronic with a noble gas, but it's still the same element because the nucleus doesn't change."
+ },
+ {
+  "unit": 3,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "The charge of the ion equals the number of electrons lost or gained. Every ionisation costs energy and successive IEs keep increasing, but there's a huge jump (the cliff) once you'd have to take an electron from the full inner shell, so metals lose only their valence electrons, e.g. Na+, Mg2+, Al3+. Non-metals on the right gain electrons instead (Cl-, O2-, S2-), since removing 6 or 7 would cost far too much. Usually the ion ends up isoelectronic with a noble gas, but it's still the same element because the nucleus doesn't change."
+ },
+ {
+  "unit": 4,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "A salt is a giant lattice of cations and anions held together by electrostatic attraction. The metal transfers its valence electrons to the non-metal, and every ion ends up surrounded by oppositely charged ions (6 in NaCl), so there are no discrete NaCl molecules. Lattice strength scales roughly with the charge product over the distance between the ion centres, which is why MgO has a much higher lattice energy and melting point than NaCl. Consequences: high melting points, no conductivity as a solid but conductivity when molten or dissolved because the ions can move, and brittleness, because shifting a layer by one ion puts like charges next to each other and they repel."
+ },
+ {
+  "unit": 5,
+  "lang": "en",
+  "source": "r3-priya",
+  "text": "In a covalent bond two atoms share a pair of electrons, and both nuclei are attracted to that shared pair, which holds them together. The number of pairs usually follows the octet rule: each atom shares enough pairs to count eight electrons around itself (H only two), so O=O has two pairs and N≡N three. Electronegativity is how strongly an atom attracts the bonding pair. If the two atoms have different electronegativities the pair is shared unequally, the more electronegative atom gets δ− and the other δ+. The size of Δχ tells you roughly where on the scale the bond is: below about 0.4 nonpolar, up to about 1.8 polar, above that mostly ionic, but these borders are only rules of thumb."
+ },
+ {
+  "unit": 7,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "It needs something with a charge that can move about. In metals like copper the electrons can move about. Salt has ions but when its solid they are stuck in place. When you melt it or put it in water they can move, the + ones go to the - side and the - ones go to the + side. Sugar doesnt work because the sugar bits arent charged overall, even though they have little + and - ends."
+ },
+ {
+  "unit": 7,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "A current needs charged particles that are free to move. In metals like copper the electrons can move about between the atoms. Salt has ions but when it's solid they are stuck in place. When you melt it or put it in water they can move, the + ones go to the - side and the - ones go to the + side. Sugar doesn't conduct because the sugar molecules have no charge overall, even though they have little + and - ends."
+ },
+ {
+  "unit": 8,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "Even though bromine has no + or - ends, its electrons are always moving, so for a split second one side is a bit negative and the other side a bit positive. That makes the next molecule go lopsided too and they pull together. Bigger molecules with more electrons pull harder, and long ones like octane pull more than round ones because they touch more. It's not the weight! When it boils the molecules come away from each other but each molecule stays in one piece."
+ },
+ {
+  "unit": 8,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "Even though bromine has no + or - ends, its electrons are always moving, so for a split second one side is a bit negative and the other side a bit positive. That makes the next molecule go lopsided too and they pull together. Bigger molecules with more electrons pull harder, and long ones like octane pull more than round ones because they touch more. The stronger the pull, the higher the boiling point, that's why bromine is a liquid and chlorine is a gas. It's not the weight! When it boils the molecules separate from each other but the bonds inside each molecule stay intact."
+ },
+ {
+  "unit": 9,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "Dipole-dipole is when molecules have a permanent + end and - end, like acetone, and the - end of one lines up next to the + end of the next one so they stick together more. It only happens if the whole molecule is lopsided. CO2 has polar bonds but they cancel out so it doesn't have it. It makes things boil higher than a non-polar one the same size. But it's not everything, the dispersion is still there as well, and a molecule with lots more electrons like hexane can still win. Boiling doesn't break the molecules up."
+ },
+ {
+  "unit": 9,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "Dipole-dipole forces are when polar molecules like acetone have a permanent slightly positive end and slightly negative end, and the negative end of one molecule sits next to the positive end of the next one, so they attract. Only a molecule with an overall dipole has them. CO2 has polar bonds but the two bond dipoles cancel out, so it has none. It makes things boil higher than a non-polar one the same size. But it's not everything, the dispersion is still there as well and the forces add up, so a molecule with lots more electrons like hexane can still win. Boiling doesn't break the molecules up."
+ },
+ {
+  "unit": 10,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "A hydrogen bond is when an H that's stuck on an N, O or F (the donor) gets pulled to a lone pair on the N, O or F of another molecule (the acceptor). Those atoms pull on the electrons so hard that the H is left quite positive. Water has 2 H's and 2 lone pairs, so every water molecule can join up 4 times and nothing is left over. That's why water boils at 100 and not about minus 80 like the table says it should. It's not the O-H bond breaking when it boils, it's the pull between the molecules, which is a lot weaker."
+ },
+ {
+  "unit": 10,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "A hydrogen bond is when an H that's stuck on an N, O or F (the donor) gets pulled to a lone pair on the N, O or F of another molecule (the acceptor). Those atoms pull on the electrons so hard that the H is left quite positive. Water has 2 H's and 2 lone pairs, so every water molecule can join up 4 times and nothing is left over. That's why water boils at 100 and not about minus 80 like the table says it should. HF and ammonia jump up too for the same reason, they boil much higher than the others in their column. It's not the O-H bond breaking when it boils, it's the pull between the molecules, which is a lot weaker."
+ },
+ {
+  "unit": 11,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "Water molecules hold on to each other with hydrogen bonds. Each one can make 4 (2 from its H's and 2 from its lone pairs) so it's like a big net. When it freezes they lock into an open pattern with gaps, so ice is lighter than the same amount of water and it floats. Salt dissolves because the water molecules crowd round each ion, the negative oxygen side goes to the Na+ and the positive H side goes to the Cl-. It doesn't melt! Oil doesn't dissolve because the water would rather hold on to itself than to the oil. They don't push each other away."
+ },
+ {
+  "unit": 11,
+  "lang": "en",
+  "source": "r5-marie",
+  "text": "Water molecules hold on to each other with hydrogen bonds. Each one can make 4 (2 from its H's and 2 from its lone pairs) so it's like a big net. When it freezes they lock into an open pattern with gaps, so ice is lighter than the same amount of water and it floats. Something mixes into water if it can hold on to water about as well as water holds on to itself, like dissolves like. Salt dissolves because the water molecules crowd round each ion, the negative oxygen side goes to the Na+ and the positive H side goes to the Cl-. It doesn't melt! Oil doesn't dissolve because the water would rather hold on to itself than to the oil. They don't push each other away."
+ },
+ {
+  "unit": 7,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "Man braucht frei bewegliche Ladungsträger. Metalle: Elektronengas zw. Atomrümpfen -> leiten. Salz fest: Ionen sitzen im Gitter fest -> leitet nicht. Schmelze + Lösung: Ionen frei beweglich -> leitet. Zucker: Moleküle ungeladen, keine Ionen -> leitet nicht."
+ },
+ {
+  "unit": 7,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "Man braucht frei bewegliche Ladungsträger. Metalle: Elektronengas zw. Atomrümpfen -> leiten. Festes Salz: Ionen sitzen im Ionengitter fest -> leitet nicht. Schmelze + Lösung: Ionen frei beweglich, Kationen (Na+) wandern zur Kathode (-), Anionen (Cl-) zur Anode (+). Zucker: Moleküle ungeladen, keine Ionen -> leitet nicht."
+ },
+ {
+  "unit": 8,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "VdW-Kräfte: Elektronen bewegen sich -> temporärer Dipol -> induziert Dipol im Nachbarmolekül -> Anziehung. Je mehr Elektronen bzw. je größer die Oberfläche, desto stärker die VdW-Kräfte -> höhere Sdp. Verzweigte Moleküle kleinere Oberfläche -> niedrigere Sdp."
+ },
+ {
+  "unit": 8,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "VdW-Kräfte: Elektronen bewegen sich -> temporärer Dipol -> induziert Dipol im Nachbarmolekül -> Anziehung. Je mehr Elektronen bzw. je größer die Oberfläche, desto stärker die VdW-Kräfte und desto höher die Siedetemperatur. Verzweigte Moleküle haben eine kleinere Oberfläche -> niedrigere Siedetemperatur. Beim Sieden werden nur die VdW-Kräfte überwunden, die Atombindungen im Molekül bleiben."
+ },
+ {
+  "unit": 9,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "Dipol-Dipol-WW: polare Moleküle (permanenter Dipol, z.B. Aceton wegen C=O) -> δ+ Ende zieht δ- Ende vom Nachbarmolekül an. Nur wenn das Molekül insgesamt ein Dipol ist, bei CO2 heben sich die Bindungsdipole auf (linear) -> nur VdW. Bei gleicher Größe stärker als VdW -> höhere Sdt. Aber VdW wirken immer zusätzlich, bei vielen Elektronen (HI, Hexan) können die VdW mehr ausmachen als der Dipol."
+ },
+ {
+  "unit": 9,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "Dipol-Dipol-WW: polare Moleküle (permanenter Dipol, z.B. Aceton wegen C=O) -> δ+ Ende zieht δ- Ende vom Nachbarmolekül an. Nur wenn das Molekül insgesamt ein Dipol ist, bei CO2 heben sich die Bindungsdipole auf (linear) -> nur VdW. Bei gleicher Größe siedet das polare Molekül höher (Aceton 56 °C vs. Butan -0,5 °C). Aber VdW-Kräfte wirken immer zusätzlich, die Kräfte addieren sich, bei viel mehr Elektronen (HI, Hexan) können die VdW mehr ausmachen als der Dipol. Beim Sieden werden nur die zwischenmolekularen Kräfte überwunden, keine Bindungen gespalten."
+ },
+ {
+  "unit": 10,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "H-Brücken: H an N, O oder F (stark δ+) wird vom freien Elektronenpaar eines N, O oder F im Nachbarmolekül angezogen. N, O, F haben hohe EN und sind klein. Wasser: 2 H + 2 freie EP -> 4 H-Brücken pro Molekül -> Sdt. 100 °C statt ca. -80 °C. H-Brücken sind zwischenmolekular, beim Sieden werden sie gelöst, nicht die Atombindungen."
+ },
+ {
+  "unit": 10,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "H-Brücken: H an N, O oder F (stark δ+) wird vom freien Elektronenpaar eines N, O oder F im Nachbarmolekül angezogen. N, O, F haben hohe EN und sind klein. Wasser: 2 H + 2 freie EP -> 4 H-Brücken pro Molekül -> Sdt. 100 °C statt ca. -80 °C. Genauso sieden HF und NH3 viel höher als der Trend in ihrer Gruppe. H-Brücken sind zwischenmolekular, beim Sieden werden sie gelöst, nicht die Atombindungen."
+ },
+ {
+  "unit": 11,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "Wasser: H-Brücken, jedes Molekül max. 4 (2 über H, 2 über freie EP) -> Netzwerk. Eis: jedes Molekül hat 4 feste Nachbarn, offene Struktur mit Hohlräumen -> geringere Dichte -> schwimmt (Dichteanomalie). Salz: Ionen werden hydratisiert, Hydrathülle, δ- O zu Na+, δ+ H zu Cl-. Öl: unpolar/hydrophob, Wasser bildet lieber H-Brücken untereinander, deshalb löst sich Öl nicht. Gleiches löst sich in Gleichem."
+ },
+ {
+  "unit": 11,
+  "lang": "de",
+  "source": "r5-jonas",
+  "text": "Wasser: H-Brücken, jedes Molekül bis zu 4 H-Brücken (2 über H, 2 über freie EP) -> Netzwerk. Eis: jedes Molekül hat 4 feste Nachbarn, offene Struktur mit Hohlräumen -> geringere Dichte -> schwimmt (Dichteanomalie). Salz: Ionen werden hydratisiert, Hydrathülle, δ- O zu Na+, δ+ H zu Cl-. Öl und Wasser stoßen sich nicht ab, die Wassermoleküle ziehen sich untereinander stärker an (H-Brücken) und lassen das Öl draußen. Gleiches löst sich in Gleichem."
+ },
+ {
+  "unit": 7,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "To conduct you need mobile charge carriers, i.e. charged particles that are free to move. Metals: delocalised valence electrons moving through a lattice of positive cations. Ionic solids don't conduct because the ions are locked in the lattice; once molten or in aqueous solution the ions are mobile, so cations drift to the cathode (-) and anions to the anode (+). Simple molecular substances like sugar don't conduct, polar or not, because the molecules are neutral overall. Graphite is the odd one out among covalent structures (delocalised pi electrons). Pure water conducts very slightly from autoionisation."
+ },
+ {
+  "unit": 7,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "To conduct you need mobile charge carriers, i.e. charged particles that are free to move. Metals: the outer (valence) electrons are delocalised and move freely among the positive metal ions, and they carry the current. Ionic solids don't conduct because the ions are locked in the lattice; once molten or in aqueous solution the ions are mobile, so cations drift to the cathode (-) and anions to the anode (+). Simple molecular substances like sugar don't conduct, polar or not, because the molecules are neutral overall. Graphite is the odd one out among covalent structures (delocalised pi electrons). Pure water conducts very slightly from autoionisation."
+ },
+ {
+  "unit": 8,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "Bromine is nonpolar so the only intermolecular forces are London dispersion forces (induced dipole-induced dipole). Electron density fluctuates, so at any instant a molecule has a temporary dipole, which induces a dipole in the neighbouring molecule and they attract. Strength depends on polarisability: more electrons / a bigger, more diffuse electron cloud gives stronger dispersion, and a larger contact surface area (long chains vs branched) increases it. Stronger IMFs mean a higher bp, which is why F2 and Cl2 are gases, Br2 a liquid and I2 a solid. Boiling only overcomes the IMFs; the covalent Br-Br bond stays intact."
+ },
+ {
+  "unit": 8,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "Bromine is nonpolar so the only intermolecular forces are London dispersion forces (induced dipole-induced dipole). Electron density fluctuates, so at any instant a molecule has a temporary dipole, which induces a dipole in the neighbouring molecule and they attract. Strength depends on polarisability: more electrons / a bigger, more diffuse electron cloud gives stronger dispersion, and a larger contact surface area (long chains vs branched) increases it. Stronger intermolecular forces mean a higher boiling point, which is why F2 and Cl2 are gases, Br2 a liquid and I2 a solid at room temperature. Boiling only separates whole molecules, the covalent Br-Br bond stays intact."
+ },
+ {
+  "unit": 9,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "Dipole-dipole forces are electrostatic attractions between permanent dipoles: the δ- end of one polar molecule lines up with the δ+ end of its neighbour (Keesom interactions). Only molecules with a net dipole moment have them - if the bond dipoles cancel by symmetry, as in CO2, there's no net dipole and only dispersion. They act in addition to London forces, not instead of them, and for most small molecules dispersion is actually the bigger contribution. So they matter mainly when you compare molecules of similar size/electron count, e.g. acetone vs butane, where the polar one boils higher; with a big enough difference in electrons dispersion wins, e.g. HI boils higher than HCl. All of these are much weaker than covalent bonds, so boiling doesn't break bonds within molecules."
+ },
+ {
+  "unit": 10,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "A hydrogen bond forms when an H covalently bonded to N, O or F (the donor) is attracted to a lone pair on an N, O or F of another molecule (the acceptor). Those three are small and very electronegative, so the H is strongly δ+ and the lone pair is compact enough for a close approach. (Strictly, IUPAC also allows weaker ones like O-H...S or C-H...O.) Water has 2 donors and 2 lone pairs, so each molecule can be involved in up to four H-bonds and builds an extended network, whereas NH3 and HF are limited by having only one lone pair / one H. That's why H2O, and to a lesser extent HF and NH3, boil way above the trend in their groups. H-bonds are still intermolecular (~20 kJ/mol vs ~460 kJ/mol for O-H), so boiling breaks H-bonds, not O-H bonds."
+ },
+ {
+  "unit": 11,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "Liquid water is held together by an extensive, constantly rearranging hydrogen-bond network: each molecule can donate two (via its H atoms) and accept two (via its lone pairs), so up to four per molecule, about 3.5 on average in the liquid. In ice that network locks into an open tetrahedral lattice with lots of empty space, so ice (0.917 g/cm3) is less dense than the liquid and floats. Salt dissolves because ion-dipole attractions in the hydration shells (δ- O towards Na+, δ+ H towards Cl-) roughly compensate for the lattice enthalpy, and the entropy gain tips it over (dissolving NaCl is actually slightly endothermic). Oil doesn't dissolve, not because it repels water (there's weak dispersion attraction) but because water has to restructure around the hydrocarbon, which costs a lot of entropy (the hydrophobic effect). Basically like dissolves like."
+ },
+ {
+  "unit": 11,
+  "lang": "en",
+  "source": "r5-priya",
+  "text": "Liquid water is held together by an extensive, constantly rearranging hydrogen-bond network: each molecule can donate two (via its H atoms) and accept two (via its lone pairs), so up to four per molecule, about 3.5 on average in the liquid. In ice that network locks into an open tetrahedral lattice with lots of empty space, so ice (0.917 g/cm3) is less dense than the liquid and floats. Salt dissolves because ion-dipole attractions in the hydration shells (δ- O towards Na+, δ+ H towards Cl-) roughly compensate for the lattice enthalpy, and the entropy gain tips it over (dissolving NaCl is actually slightly endothermic). Oil and water don't repel each other (there's weak dispersion attraction). Water molecules attract each other more strongly than they attract oil, so they stay together and leave the oil out, though at room temperature the real cost is mostly entropic, because water has to restructure around the hydrocarbon (the hydrophobic effect). Basically like dissolves like."
+ },
+ {
+  "unit": 8,
+  "lang": "en",
+  "source": "probe",
+  "text": "The stronger the attraction, the higher the boiling point."
+ },
+ {
+  "unit": 8,
+  "lang": "en",
+  "source": "probe",
+  "text": "When it boils, the molecules move apart but the bonds inside them stay."
+ },
+ {
+  "unit": 7,
+  "lang": "en",
+  "source": "probe",
+  "text": "Sugar molecules aren't charged overall, so nothing can carry the current."
+ },
+ {
+  "unit": 9,
+  "lang": "en",
+  "source": "probe",
+  "text": "The two dipoles in CO2 cancel out, so there is no dipole-dipole attraction."
+ },
+ {
+  "unit": 8,
+  "lang": "de",
+  "source": "probe",
+  "text": "Je stärker die Anziehung, desto höher der Siedepunkt."
+ },
+ {
+  "unit": 8,
+  "lang": "de",
+  "source": "probe",
+  "text": "Wenn es siedet, trennen sich die Moleküle, aber die Bindungen in ihnen bleiben."
+ },
+ {
+  "unit": 7,
+  "lang": "de",
+  "source": "probe",
+  "text": "Festes Salz leitet nicht, da die Ionen im Gitter fest sitzen."
+ },
+ {
+  "unit": 7,
+  "lang": "de",
+  "source": "probe",
+  "text": "Festes Salz leitet nicht, denn die Ionen sitzen im Gitter fest."
+ },
+ {
+  "unit": 7,
+  "lang": "de",
+  "source": "probe",
+  "text": "Leitfähigkeit braucht bewegl. Ladungsträger."
+ },
+ {
+  "unit": 9,
+  "lang": "de",
+  "source": "probe",
+  "text": "Bei ähnl. Molekülmasse hat der polare Stoff einen höheren Sdp."
+ },
+ {
+  "unit": 10,
+  "lang": "de",
+  "source": "probe",
+  "text": "Beim Sieden werden nur die H-Brücken gelöst, nicht die kovalenten Bindungen."
+ },
+ {
+  "unit": 4,
+  "lang": "de",
+  "source": "probe",
+  "text": "Verschiebt man eine Schicht, liegen gleich geladene Ionen nebeneinander und stoßen sich ab."
+ },
+ {
+  "unit": 4,
+  "lang": "de",
+  "source": "probe",
+  "text": "Beim Schlag auf den Kristall zerspringt er."
+ },
+ {
+  "unit": 5,
+  "lang": "de",
+  "source": "probe",
+  "text": "Nach der Oktettregel bilden die Atome so viele Elektronenpaarbindungen, dass sie acht Valenzelektronen haben."
+ },
+ {
+  "unit": 5,
+  "lang": "de",
+  "source": "probe",
+  "text": "Jedes Atom bildet so viele Elektronenpaarbindungen, bis es acht Außenelektronen hat."
+ },
+ {
+  "unit": 5,
+  "lang": "de",
+  "source": "probe",
+  "text": "Chlor hat ein Oktett."
+ }
+]

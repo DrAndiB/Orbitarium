@@ -1,10 +1,13 @@
 # Orbitarium
 
 A planetarium for atoms: an offline chemistry learning app for Android, in English and German.
-Playable now: **unit 0** (the periodic table as a map) on the interactive periodic table, and
-**unit 6** (lone pairs and shape) on the Molecule Workbench, with the learner model, progress file
-and all 45 units on the map. The periodic table (overlays, element cards with a fun fact each, 3D
-landscape) is one tap away from every screen.
+Playable now: **units 0–11**, the first three modules of the curriculum: the periodic table as a map, shells and
+orbitals, effective nuclear charge, ionization, ionic and covalent bonding, molecular shape, conduction, and the forces
+between molecules (dispersion, dipole–dipole, hydrogen bonds, water and solubility). Each unit has seven steps
+(warm-up, puzzle, explore, predict, worked examples, explain back, wrap-up) built around a 3D simulation, with the
+learner model, progress file and all 46 units on the map. The periodic table is one tap away from every screen.
+
+How the app is developed (process, checks, release) is in [CLAUDE.md](CLAUDE.md) and [docs/process](docs/process).
 
 ## How it fits together
 
@@ -17,7 +20,7 @@ flowchart TB
     Runner[Unit runner] --- Assess[Assessment] --- Sched[Scheduler FSRS] --- Model[Learner model]
   end
   subgraph Sims[Simulation kit · Three.js]
-    WB[Molecule Workbench]
+    OV[Orbital Viewer] --- LB[Lattice Builder] --- CF[Charge Field] --- WB[Molecule Workbench] --- CT[Conductivity tester] --- PB[Particle Box] --- HB[Hydrogen bonds]
   end
   subgraph Content[Content packs · EN + DE]
     Units[Units] --- Bank[Question bank] --- Gloss[Glossary]

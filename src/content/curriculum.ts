@@ -185,7 +185,7 @@ export const MISCONCEPTIONS: Misconception[] = [
   { id: 'bond-type-sets-geometry', unit: 6, name: { en: 'Counting electron pairs instead of directions', de: 'Elektronenpaare statt Richtungen gezählt' } },
   { id: 'always-tetrahedral', unit: 6, name: { en: 'Bonds always meet at 109.5°', de: 'Bindungen treffen sich immer bei 109,5°' } },
   { id: 'polar-bonds-polar-molecule', unit: 6, name: { en: 'Polar bonds always make a polar molecule', de: 'Polare Bindungen ergeben immer ein polares Molekül' } },
-  { id: 'symmetric-means-nonpolar', unit: 6, name: { en: 'A symmetric-looking shape always cancels the pulls', de: 'Eine symmetrisch wirkende Gestalt hebt die Züge immer auf' } },
+  { id: 'symmetric-means-nonpolar', unit: 6, name: { en: 'A symmetric-looking shape always cancels the pulls', de: 'Eine symmetrisch wirkende Gestalt hebt die Bindungsdipole immer auf' } },
   { id: 'polarity-conduction', unit: 7, name: { en: 'Polarity as the cause of conduction', de: 'Polarität als Ursache der Leitfähigkeit' } },
   { id: 'dispersion-direction', unit: 8, name: { en: 'Trend the wrong way round: more electrons, weaker attraction', de: 'Trend falsch herum: mehr Elektronen, schwächere Anziehung' } },
   { id: 'hbond-donor-acceptor', unit: 10, name: { en: 'Hydrogen-bond donor and acceptor mixed up', de: 'Donor und Akzeptor einer Wasserstoffbrücke verwechselt' } },

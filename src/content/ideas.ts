@@ -34,7 +34,7 @@ function asciiRe(re: RegExp): RegExp {
 // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
 // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together. Cause and effect and contrast stay
 // together ("…, so …", "… but …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
-const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
+const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
 // A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
 // molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
 const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|after|before|unless|the (?:more|less|fewer|bigger|smaller|larger|higher|lower|stronger|weaker|longer|shorter|greater|heavier|lighter|closer|further|farther|faster|slower|hotter|colder|warmer|cooler|easier|harder|better|worse)|wenn|weil|da|sobald|obwohl|als|nachdem|bevor|während|falls|je)\b/;
@@ -64,9 +64,41 @@ function clausesOf(norm: string): string[] {
   return out.map((c) => c.trim()).filter(Boolean);
 }
 
+/**
+ * School shorthand, spelled out once for every unit, so unit patterns only need the full words. The learner's text is
+ * matched both as written and in this expanded form (a clause counts if either matches), so a pattern that does know
+ * the abbreviation keeps working. Lowercase; applied after abbreviation dots are removed.
+ */
+const SHORTHAND: [RegExp, string][] = [
+  [/\bvdw\b/g, 'van-der-waals'],
+  [/\bww\b/g, 'wechselwirkung'],
+  [/\bh-brücke(n?)\b/g, 'wasserstoffbrücke$1'],
+  [/\bh-br\b/g, 'wasserstoffbrücke'],
+  [/\bh-bonds?\b/g, 'hydrogen bond'],
+  [/\beps\b/g, 'elektronenpaare'],
+  [/\bep\b/g, 'elektronenpaar'],
+  [/\bsd[pt]\b/g, 'siedetemperatur'],
+  [/\bsm[pt]\b/g, 'schmelztemperatur'],
+  [/\bimfs\b/g, 'intermolecular forces'],
+  [/\bimf\b/g, 'intermolecular force'],
+  [/\bbp\b/g, 'boiling point'],
+  [/\bmp\b/g, 'melting point'],
+  [/\bbewegl\b/g, 'beweglich'],
+  [/(?<!\p{L})ähnl\b/gu, 'ähnlich'],
+  [/\blsg\b/g, 'lösung'],
+  [/\binduz\b/g, 'induziert'],
+  [/\bmolek\b/g, 'molekül'],
+  [/\bggü\b/g, 'gegenüber'],
+  [/\bzw\b/g, 'zwischen'],
+  [/\bm\.?w\.?\b/g, 'mit anderen worten'],
+];
+const expand = (s: string) => SHORTHAND.reduce((t, [re, w]) => t.replace(re, w), s);
+
 export function ideaHints(text: string, ideas: Idea[]): Set<string> {
   const norm = asciiCharges(text.replace(SHORT_ABBR, '$1').toLowerCase().replace(/[’‘`´]/g, "'")).replace(/\s+/g, ' ');
-  const clauses = clausesOf(norm);
+  const plain = clausesOf(norm);
+  const spelled = clausesOf(expand(norm.replace(ABBR, (m) => m.replace(/\./g, ''))));
+  const clauses = [...plain, ...spelled.filter((c) => !plain.includes(c))];
   const hits = new Set<string>();
   for (const idea of ideas) {
     // An idea that is itself a negative statement ("solid salt does not conduct", "no free charges") keeps a clause

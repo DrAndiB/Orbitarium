@@ -205,7 +205,7 @@ export const UNIT0 = {
 
   deeper: {
     id: 'u0-deeper', unit: 0, kind: 'choice', format: 'why', evidence: 'transfer', withConfidence: true, concepts: ['u0.blocks'], table: 'ie',
-    prompt: b('Go deeper: aluminium sits right of magnesium, yet it gives up its first electron more easily (578 against 738 kJ/mol). Why?', 'Tiefer gehen: Aluminium steht rechts neben Magnesium, gibt sein erstes Elektron aber leichter ab (578 gegen 738 kJ/mol). Warum?'),
+    prompt: b('Go deeper: aluminium sits right of magnesium, yet it gives up its first electron more easily (578 against 738 kJ/mol). Why?', 'Tiefer gehen: Aluminium steht rechts neben Magnesium, gibt sein erstes Elektron aber leichter ab (578 gegenüber 738 kJ/mol). Warum?'),
     options: [
       { text: b('Its newest electron is the first in 3p, a little higher in energy and partly shielded by the 3s pair', 'Sein neuestes Elektron ist das erste in 3p, energetisch etwas höher und teilweise vom 3s-Paar abgeschirmt'), correct: true },
       { text: b('Its extra proton pushes the outer electrons further out, away from the nucleus', 'Sein zusätzliches Proton drückt die Außenelektronen weiter nach außen, weg vom Kern') },

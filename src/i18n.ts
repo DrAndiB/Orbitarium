@@ -117,7 +117,7 @@ const UI: Record<string, Bi> = {
   tabElements: { en: 'Elements', de: 'Elemente' },
   tabEquations: { en: 'Equations', de: 'Gleichungen' },
   noTakeaways: { en: 'Your takeaway sentences collect here, one per unit.', de: 'Hier sammeln sich deine Kernaussagen, eine pro Einheit.' },
-  calibHelp: { en: 'Each dot compares how sure you were with how often you were right. On the line means well calibrated; below it means overconfident.', de: 'Jeder Punkt vergleicht, wie sicher du warst, mit deiner Trefferquote. Auf der Linie heißt gut kalibriert, darunter heißt zu selbstsicher.' },
+  calibHelp: { en: 'Each dot compares how sure you were with how often you were right. On the line means well calibrated; below it means overconfident.', de: 'Jeder Punkt vergleicht, wie sicher du warst, mit deiner Trefferquote. Ein Punkt auf der Linie bedeutet: gut kalibriert; darunter: zu selbstsicher.' },
   calibEmpty: { en: 'Answer a few questions with a confidence rating to see your calibration.', de: 'Beantworte ein paar Fragen mit Sicherheitsangabe, um deine Kalibrierung zu sehen.' },
   elementsHelp: { en: 'Elements light up once you have worked with them in a lesson or a simulation.', de: 'Elemente leuchten auf, sobald du in einer Lektion oder Simulation mit ihnen gearbeitet hast.' },
   spotted: { en: 'spotted', de: 'bemerkt' },

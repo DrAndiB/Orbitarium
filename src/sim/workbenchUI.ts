@@ -119,7 +119,7 @@ export class WorkbenchUI {
     if (settled && this.wb.showDipole) {
       this.readout.appendChild(h('div', { class: 'wb-polar' }, this.wb.isPolar()
         ? L({ en: 'polar molecule', de: 'polares Molekül' })
-        : this.wb.hasPolarBonds() ? L({ en: 'nonpolar: pulls cancel', de: 'unpolar: Züge heben sich auf' }) : L({ en: 'nonpolar: bonds barely polar', de: 'unpolar: Bindungen kaum polar' })));
+        : this.wb.hasPolarBonds() ? L({ en: 'nonpolar: pulls cancel', de: 'unpolar: Bindungsdipole heben sich auf' }) : L({ en: 'nonpolar: bonds barely polar', de: 'unpolar: Bindungen kaum polar' })));
       this.readout.appendChild(h('div', { class: 'wb-legend' }, h('i', { class: 'neg' }), 'δ−  ', h('i', { class: 'pos' }), 'δ+  ', h('span', { class: 'muted' }, L({ en: 'arrow points to δ−; colours as in textbook potential maps', de: 'Pfeil zeigt zu δ−; Farben wie in Potentialkarten im Lehrbuch' }))));
     }
   }
