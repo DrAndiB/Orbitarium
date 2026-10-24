@@ -13,6 +13,8 @@ import { BondUI } from '../sim/bondUI';
 import { ParticleBoxUI } from '../sim/particleBoxUI';
 import { ConductUI } from '../sim/conductUI';
 import { HBondUI } from '../sim/hbondUI';
+import { ZoomLadderUI } from '../sim/zoomLadderUI';
+import { LabBenchUI } from '../sim/labBenchUI';
 import { createTable, openTable, tableIcon } from './ptable';
 import { go } from '../router';
 import { onLeave } from './lifecycle';
@@ -101,6 +103,8 @@ function showStep(root: HTMLElement, player: UnitPlayer, step: number) {
     box: (opts) => { const ui = new ParticleBoxUI(opts); disposers.push(() => ui.dispose()); return ui; },
     conduct: (opts) => { const ui = new ConductUI(opts); disposers.push(() => ui.dispose()); return ui; },
     hbond: (opts) => { const ui = new HBondUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    ladder: (opts) => { const ui = new ZoomLadderUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    bench: (opts) => { const ui = new LabBenchUI(opts); disposers.push(() => ui.dispose()); return ui; },
   };
   player.steps[step](body, enable, ctx);
   root.append(ctaWrap);

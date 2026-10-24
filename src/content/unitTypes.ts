@@ -21,15 +21,34 @@ import type { Term } from './glossary';
  *   same box (unit 11: water with hexane, ethanol, 1-butanol, or 'NaCl' crystals).
  * - hbond (Molecule Workbench, hydrogen-bond view): molecule a alone, or a with partner b joined by the best
  *   hydrogen bond (`swap` gives the other direction where both work); `cluster` shows water with four neighbours.
+ * - ladder (Zoom Ladder, units 12–15): one sample seen on four rungs, grams → moles → count → particles. Samples,
+ *   equations and molar masses: src/content/stoich.ts. Three uses, chosen by which fields are set:
+ *   - sample (units 12, 13): `sub` (LADDER_SAMPLES id) with `grams` or `mol`; `compare` puts a second sample beside
+ *     it with the same mass (`by: 'mass'`, default) or the same amount (`by: 'moles'`); `breakdown` opens the formula
+ *     breakdown (atoms per particle, the molar-mass sum and each element's mass share).
+ *   - equation (unit 14): `eq` (EQUATIONS id) with `coeffs` (one per species, reactants then products; missing =
+ *     all 1); `trap` shows the subscript-change "fix" instead, labelled as a different substance.
+ *   - reaction (unit 15): `eq` with `amounts` in mol, one per reactant; `react` runs it until one reactant runs out;
+ *     `actual` (grams of the first product) adds the percent yield.
+ *   `rung` sets the zoom level shown (default 'grams' for sample, 'particles' for equation and reaction).
+ * - bench (Lab Bench, unit 16): `solute` (SOLUTES id); `grams` weighed into a `flask` (mL) and, with `made`, filled to
+ *   the mark; `water` instead dissolves the grams in that many mL of water in a beaker (not to a mark);
+ *   `dilute` pipettes `pipette` mL of the made solution into a new flask of `flask` mL and fills to the mark;
+ *   `sample` pours that many mL off into a beaker; `zoom` opens the particle inset.
  */
 export type ConductMaterial = 'Cu' | 'NaCl' | 'NaCl-melt' | 'NaCl-aq' | 'sugar-aq' | 'water';
+export type Rung = 'grams' | 'moles' | 'count' | 'particles';
 export type Show =
   | { engine: 'atom'; z: number; charge?: number; view?: 'shells' | 'clouds'; highlight?: string; pull?: number; jump?: [number, number]; size?: boolean }
   | { engine: 'lattice'; salt: string; compare?: string; mode?: 'transfer' | 'shift' | 'heat' | 'neighbours'; temp?: number }
   | { engine: 'bond'; a: string; b: string; order?: 1 | 2 | 3 }
   | { engine: 'conduct'; material: ConductMaterial; on?: boolean; reversed?: boolean }
   | { engine: 'box'; sub: string; temp?: number; compare?: string; view?: 'plain' | 'clouds' | 'dipoles' | 'hbonds'; dipoleOff?: boolean; mix?: string }
-  | { engine: 'hbond'; a: string; b?: string; swap?: boolean; cluster?: boolean };
+  | { engine: 'hbond'; a: string; b?: string; swap?: boolean; cluster?: boolean }
+  | { engine: 'ladder'; sub?: string; grams?: number; mol?: number; compare?: string; by?: 'mass' | 'moles'; breakdown?: boolean;
+      eq?: string; coeffs?: number[]; trap?: boolean; amounts?: number[]; react?: boolean; actual?: number; rung?: Rung }
+  | { engine: 'bench'; solute: string; grams?: number; flask?: number; made?: boolean; water?: number;
+      dilute?: { pipette: number; flask: number }; sample?: number; zoom?: boolean };
 
 /** A small data table for the puzzle. Cells are plain strings (formulas in {{…}} allowed) or bilingual text. */
 export interface DataTable {
