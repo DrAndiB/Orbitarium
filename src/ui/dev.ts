@@ -15,7 +15,7 @@ const MAKERS: Record<string, (compact: boolean, p: URLSearchParams) => { el: HTM
   conduct: (compact) => new ConductUI({ compact }),
   hbond: (compact) => new HBondUI({ compact }),
   ladder: (compact, p) => new ZoomLadderUI({ compact, mode: (p.get('mode') as Mode | null) ?? 'sample', start: p.get('start') ?? undefined }),
-  bench: (compact, p) => new LabBenchUI({ compact, start: p.get('start') ?? undefined }),
+  bench: (compact, p) => new LabBenchUI({ compact, start: p.get('start') ?? 'CuSO4-5H2O' }),
 };
 
 export function renderDev(root: HTMLElement, name: string, params: URLSearchParams) {
