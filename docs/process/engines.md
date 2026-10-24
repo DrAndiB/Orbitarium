@@ -19,16 +19,12 @@ src/ui/lab.ts; the dev route `#/dev/<name>` (src/ui/dev.ts, dev server only) mou
 | Conductivity tester | sim/conduct.ts, conductUI.ts | 7 | `conduct`: material, on, reversed | material, power, reverse, drift, noCurrent |
 | Particle Box | sim/particleBox.ts, particleBoxUI.ts | 8, 9, 11 (later 19, 21–25, 28) | `box`: sub, temp, compare, view, dipoleOff, mix | substance, temp, state, boil, melt, freeze, view, dipoleOff, mix, dissolved, hbonds |
 | Hydrogen-bond view | sim/hbond.ts, hbondUI.ts | 10 | `hbond`: a, b, swap, cluster | molecule, partner, swap, cluster |
+| Zoom Ladder | sim/zoomLadder.ts, zoomLadderUI.ts | 12–15 (later 31) | `ladder`: sub, grams, mol, compare, by, breakdown · eq, coeffs, trap · amounts, react, actual · rung | sample, mass, rung, compare, breakdown, equation, coeffs, balanced, subscript, react, yield |
+| Lab Bench | sim/labBench.ts, labBenchUI.ts | 16 (later 27, 29, 30, 32–34) | `bench`: solute, grams, flask, made, water, dilute, sample, zoom | solute, weighed, flask, made, beaker, diluted, sample, zoom |
+
+Notes on the two module-4 engines: data come from src/content/stoich.ts. The Zoom Ladder's balance holds up to 1000 g; reaction inputs are mol on the Moles and Count rungs, and a picture made from mol or g keeps the ratio with at most 12 molecules per reactant. The Lab Bench's balance holds 0–100 g; a new flask empties the bench; diluting needs a flask made to the mark; pouring off takes from flask 2 if it exists. Later units add instruments (pH meter, burette, electrodes) to the same bench, and oxidation states (unit 31) to the ladder.
 
 Still to build (curriculum.ts names them; the batch brief turns these intentions into a spec):
-- **Zoom Ladder** (units 12–15, 31): one sample seen at several scales on a ladder: grams on a balance → moles →
-  number of particles (6.022 × 10²³ per mole) → individual molecules and atoms. Units 12–13 count by weighing and use
-  molar masses (masses from elements.ts); unit 14 balances equations by counting atoms of each element on both sides at
-  the molecule rung; unit 15 runs a reaction at the molecule rung until one reactant runs out (limiting reagent, yield);
-  unit 31 tracks electrons for oxidation states.
-- **Lab Bench** (16, 27, 29, 30, 32–34): virtual glassware and instruments: balance, volumetric flask, pipette,
-  burette, indicator and pH meter, electrodes and voltmeter. Unit 16 makes solutions of a given concentration; later
-  units add pH, buffers, titration curves, galvanic cells, electrolysis and batteries.
 - **Energy Landscape** (17, 18, 20, 23): energy diagrams for reactions (bond energies, Hess cycles, free energy,
   activation energy and catalysts). Later units reuse the Particle Box and the Molecule Workbench (26, 35–45; the Workbench
 handles one central atom, so organic molecules need an extension).

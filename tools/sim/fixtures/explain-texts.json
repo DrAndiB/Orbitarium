@@ -424,5 +424,353 @@
   "lang": "de",
   "source": "probe",
   "text": "Chlor hat ein Oktett."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "u12-helper",
+  "text": "Atoms are much too small to count, so you weigh them instead, like counting screws by weighing the bag. A mole is just a number, about 6 times 10 to the 23, like a dozen but huge. One mole of carbon weighs 12 grams because the atomic mass number becomes grams. You divide the mass by the molar mass to get moles. Gold atoms are much heavier than aluminium atoms, so 100 g of gold has fewer atoms."
+ },
+ {
+  "unit": 12,
+  "lang": "de",
+  "source": "u12-helper",
+  "text": "Atome kann man nicht einzeln zählen, deshalb zählt man sie über die Masse mit der Waage. 1 mol = 6,022 · 10^23 Teilchen (Avogadro-Konstante N_A). Die molare Masse M in g/mol hat denselben Zahlenwert wie die Atommasse in u. n = m / M und N = n · N_A. Gleiche Masse bedeutet unterschiedliche Teilchenzahl, weil Al-Atome leichter sind als Au-Atome: leichtere Atome, mehr Teilchen."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "u12-helper",
+  "text": "A mole is a mass: one mole of anything weighs 12 grams. 100 g is 100 g, so the same mass of aluminium and gold has the same number of atoms. The balance just shows the mass."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "u12-helper",
+  "text": "If you weigh 100 g of each metal, they all have the same number of atoms."
+ },
+ {
+  "unit": 12,
+  "lang": "de",
+  "source": "u12-helper",
+  "text": "Ein Mol Gold ist schwerer, weil es mehr Atome enthält."
+ },
+ {
+  "unit": 12,
+  "lang": "de",
+  "source": "u12-helper",
+  "text": "Eine Waage kann keine Atome zählen. Ein Mol ist keine Anzahl von Teilchen. Die molare Masse hat nichts mit der Atommasse zu tun. Man teilt die Masse nicht durch die molare Masse. Leichtere Atome bedeuten nicht mehr Atome."
+ },
+ {
+  "unit": 13,
+  "lang": "en",
+  "source": "u13-helper",
+  "text": "Water is 89 % oxygen by mass because an oxygen atom is far heavier than a hydrogen atom."
+ },
+ {
+  "unit": 13,
+  "lang": "en",
+  "source": "u13-helper",
+  "text": "Hydrogen has two atoms, so it has the bigger share."
+ },
+ {
+  "unit": 13,
+  "lang": "en",
+  "source": "u13-helper",
+  "text": "Salt is a lattice with no separate molecules."
+ },
+ {
+  "unit": 13,
+  "lang": "de",
+  "source": "u13-helper",
+  "text": "M = Summe aus Anzahl · Atommasse."
+ },
+ {
+  "unit": 13,
+  "lang": "de",
+  "source": "u13-helper",
+  "text": "Man zählt jedes Element einmal, die Indizes sind egal. Kochsalz besteht aus NaCl-Molekülen."
+ },
+ {
+  "unit": 16,
+  "lang": "en",
+  "source": "u16-helper",
+  "text": "Concentration is how many moles of the stuff are in each litre of the solution. You dissolve it in a bit of water and then top it up to the line on the flask. If you add more water the amount of stuff stays the same, it is just spread through more liquid. If you pour some into a glass it is just as concentrated as what's left, there is just less of it. Glucose molecules are about three times heavier than salt, so there are fewer of them per gram, and salt splits into two ions, so the drips end up with about the same number of particles."
+ },
+ {
+  "unit": 16,
+  "lang": "de",
+  "source": "u16-helper",
+  "text": "c = n/V, also Stoffmenge pro Liter Lösung. Man löst den Stoff im Messkolben und füllt bis zur Eichmarke auf. Beim Verdünnen bleibt die Stoffmenge gleich, c1*V1 = c2*V2. Eine abgegossene Probe hat die gleiche Konzentration, nur weniger mol. NaCl zerfällt in zwei Ionen und Glucose ist dreimal so schwer, deshalb passen beide."
+ },
+ {
+  "unit": 16,
+  "lang": "en",
+  "source": "u16-helper",
+  "text": "The volume is the volume of water you add to the solid. A smaller portion is less concentrated because it has less salt in it. Blood only notices the grams per litre, so equal grams per litre means equal particles."
+ },
+ {
+  "unit": 16,
+  "lang": "de",
+  "source": "u16-helper",
+  "text": "Die Konzentration ist nicht Mol pro Liter. Man füllt nicht bis zur Marke auf. Beim Verdünnen bleibt die Stoffmenge nicht gleich. Eine Portion hat nicht dieselbe Konzentration. Salz zerfällt nicht in Ionen."
+ },
+ {
+  "unit": 15,
+  "lang": "en",
+  "source": "u15-helper",
+  "text": "It's like a recipe: the equation tells you how many of each you need, like 2 hydrogens for every oxygen. Whichever one runs out first stops the reaction and decides how much you can make, and the other one is left over. You can't just look at the grams, you have to change them into moles and divide by the number in front. In real life you get less than you calculated because some gets lost or spilled."
+ },
+ {
+  "unit": 15,
+  "lang": "en",
+  "source": "u15-helper",
+  "text": "The reactant with the smaller mass runs out first, so it is the limiting one. The coefficients give the mass ratio, 2 g of hydrogen to 1 g of oxygen."
+ },
+ {
+  "unit": 15,
+  "lang": "de",
+  "source": "u15-helper",
+  "text": "Das Edukt mit der kleineren Masse ist zuerst aufgebraucht. Die Koeffizienten geben das Massenverhältnis an."
+ },
+ {
+  "unit": 15,
+  "lang": "de",
+  "source": "u15-helper",
+  "text": "Die Gleichung legt kein Verhältnis fest. Das Edukt, das zuerst aufgebraucht ist, bestimmt nicht die Produktmenge. Man muss nicht durch die Koeffizienten teilen. Die Ausbeute ist nie unter 100 %."
+ },
+ {
+  "unit": 15,
+  "lang": "de",
+  "source": "u15-helper",
+  "text": "Das lim. Edukt ist zuerst aufgebraucht und bestimmt, wie viel Produkt entsteht."
+ },
+ {
+  "unit": 15,
+  "lang": "de",
+  "source": "u15-helper",
+  "text": "Das Edukt, das zuerst aufgebraucht ist, bestimmt, wie viel Produkt entsteht."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "When something burns the atoms just get rearranged, nothing is made or destroyed, so you need the same number of each kind of atom on both sides. You change the big numbers in front, never the small numbers, because that would make a different substance, like H2O2 instead of water. The numbers in front tell you how many molecules react, not how many grams. Magnesium gets heavier because it takes oxygen from the air. I start with the most complicated molecule and do the oxygen last."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "A balanced equation states conservation of atoms: every element appears in equal numbers on both sides. Only the stoichiometric coefficients may be adjusted; altering a subscript changes the identity of the compound. The coefficients give the mole ratio, and masses follow via the molar masses. Mass is conserved, so Mg gains the mass of the O2 it binds. Method: begin with the most complex species, balance free elements last, and multiply through by 2 to clear any fraction."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Bei der Reaktion werden die Atome nur umgeordnet, jede Atomsorte muss links und rechts gleich oft vorkommen. Man ändert nur die Koeffizienten, nie die Indizes, sonst entsteht ein anderer Stoff. Die Koeffizienten geben das Stoffmengenverhältnis an, nicht die Massen. Die Gesamtmasse bleibt gleich, Mg wird schwerer, weil Sauerstoff aus der Luft dazukommt. Man fängt mit dem kompliziertesten Stoff an und gleicht O2 zuletzt aus."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Atome werden weder erzeugt noch vernichtet. Ausgleichen geht nur über die Zahlen davor, ein geänderter Index wäre ein anderer Stoff (H2O2 statt H2O). Koeff. = Teilchenzahl bzw. Mol, Massen erst über die molare Masse. Erhaltung der Masse: Magnesium nimmt Masse durch den Sauerstoff auf. Zuerst das komplizierteste Molekül, Elemente zum Schluss, bei einem Bruch alles verdoppeln."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "atoms rearranged coefficients subscripts moles mass conserved oxygen magnesium heavier method complex last"
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Atome Koeffizienten Indizes Stoffmenge Massenerhaltung Sauerstoff Magnesium schwerer kompliziertester Stoff zuletzt"
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "Burning destroys matter, so the mass is lost. You balance an equation by changing the subscripts until the atoms match. The coefficients are the mass ratio, so 2 H2 + O2 means 2 g of hydrogen for 1 g of oxygen."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Beim Verbrennen wird Materie vernichtet, deshalb geht Masse verloren. Man gleicht aus, indem man die Indizes ändert, bis die Atome stimmen. Die Koeffizienten geben das Massenverhältnis an."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The atoms are not rearranged and the numbers of each element do not have to be the same. The coefficients don't give the number of molecules. The mass does not stay the same. You don't start with the most complex substance."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Die Atome werden nicht umgeordnet, und die Elemente müssen links und rechts nicht gleich oft vorkommen. Die Koeffizienten geben nicht die Teilchenzahl an. Die Masse bleibt nicht gleich. Man fängt nicht mit dem kompliziertesten Stoff an."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "A balanced equation states conservation of atoms: every element appears in equal numbers on both sides. Only the stoichiometric coefficients may be adjusted; altering a subscript changes the identity of the compound. The coefficients give the mole ratio, and masses follow via the molar masses. Mass is conserved, so Mg gains the mass of the O2 it binds. Method: begin with the most complex species, balance free elements last, and multiply through by 2 to clear any fraction."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "Magnesium gets heavier because oxygen from the air joins onto it. Nothing disappears in a reaction, the atoms just swap partners. You put numbers in front of the formulas to balance it and you leave the little numbers alone. The numbers in front count molecules, not grams. I do the biggest molecule first and the oxygen at the end, and if I get a half I double everything."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The same atoms are on each side, just joined up differently. The coefficients show how many molecules react."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "A candle gets lighter because the carbon dioxide and water vapour escape into the air."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "Changing a subscript would make a different substance, so you only change the coefficients."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The coefficients are not masses, they count particles."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "If you end up with 3.5 O2 you double all the coefficients."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Masse bleibt erhalten, Mg wird schwerer, weil O2 aus der Luft gebunden wird. Atome werden nur umgeordnet, links und rechts gleich viele Atome jeder Sorte. Nur Koeffizienten ändern, Indizes nie, sonst andere Verbindung. Koeffizienten = Teilchenverhältnis, nicht Massenverhältnis. Erst komplizierteste Formel, Elemente zuletzt, halbe Zahlen durch Verdoppeln weg."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Bei einer Reaktion geht kein Atom verloren und es kommt keins dazu."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Die Kerze wird leichter, weil die Gase in die Luft entweichen."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "You can change the subscripts to make it balance."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The coefficients tell you the masses of each substance."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Man ändert die Indizes, bis links und rechts gleich viele Atome stehen."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "Burning turns the wood into energy, and magnesium only looks heavier."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Die Masse ändert sich, weil beim Verbrennen Materie zu Energie wird."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The number of particles stays the same in a reaction."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Die Teilchen bleiben bei der Reaktion erhalten."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The atoms stay the same, they are only joined up differently."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "The mass of the magnesium goes up because it picks up oxygen."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Die Masse nimmt zu, weil Sauerstoff gebunden wird."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Magnesium nimmt an Masse zu, weil es Sauerstoff aus der Luft bindet."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "Magnesium is heavier after burning because it has combined with oxygen."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "2 H2 + O2 means two molecules of hydrogen react with one molecule of oxygen."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "2 H2 + O2 heißt, dass zwei Moleküle Wasserstoff mit einem Molekül Sauerstoff reagieren."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Man schreibt Zahlen vor die Formeln, die Indizes darf man nicht ändern."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "u14-helper",
+  "text": "Ich fange mit dem größten Molekül an und mache den Sauerstoff zum Schluss."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "u14-helper",
+  "text": "Balancing means each side has the same atoms because atoms are only rearranged. You use coefficients in front because changing subscripts gives a different chemical. Coefficients are mole ratios, the grams come from the molar masses. Mass stays the same overall, so magnesium gains the oxygen's mass. I balance the most complex molecule first and oxygen last, doubling to get rid of halves."
  }
 ]

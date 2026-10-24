@@ -31,7 +31,7 @@ is now defined by this count, no longer by 12 g of carbon-12).
 ### Unit 12, Counting by weighing (module 4)
 
 - Concepts: u12.too-many, u12.weigh-to-count, u12.mole, u12.molar-mass, u12.n-m-M, u12.equal-moles.
-- Engine: Zoom Ladder, sample mode. Explore creates `ctx.ladder({ mode: 'sample', start: 'C', grams: 12, samples:
+- Engine: Zoom Ladder, sample mode. Explore creates `ctx.ladder({ mode: 'sample', start: 'C', grams: 10, samples:
   ['C', 'Mg', 'Al', 'Fe', 'Cu', 'Au', 'Pb', 'H2', 'H2O'], controls: { compare: true } })`.
 - Tasks (event that ticks):
   - `zoom` **key**: visit all four rungs (`rung` events cover grams, moles, count, particles).

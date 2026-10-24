@@ -109,6 +109,59 @@ async def explore(pg):
     elif UNIT == 5:
         for b in ['H–H', 'H–Cl', 'Na–Cl', 'C–H', 'O–H', 'N≡N', 'F–F', 'H–Cl']: await click(pg, f".chip[data-id='{b}']", 1, 700)
         await setrange(pg, ".wb-equation input[type=range]", 4.3)
+    elif UNIT in (12, 13, 14, 15):
+        # Zoom Ladder. Chip rows by position (labels are translated): sample mode 0 = sample, 1 = compare with;
+        # equation and reaction modes 0 = reaction.
+        async def rung(r): await pg.locator(f".zl-rung[data-rung='{r}']").first.click(); await pg.wait_for_timeout(900)
+        async def chip(row, i): await pg.locator(".zl-chiprow").nth(row).locator(f".chip[data-id='{i}']").click(); await pg.wait_for_timeout(700)
+        async def mass(step, n=1):
+            for _ in range(n): await pg.locator(f".zl-mass-steps .zl-step[data-step='{step}']").first.click(); await pg.wait_for_timeout(80)
+            await pg.wait_for_timeout(700)
+        async def bd():   # (re)open the formula breakdown so it reports the current sample
+            b = pg.locator(".zl-bd-btn")
+            if await b.get_attribute("aria-expanded") == "true": await b.click(); await pg.wait_for_timeout(300)
+            await b.click(); await pg.wait_for_timeout(600)
+        async def coef(k, n):   # raise the coefficient of species k by n
+            for _ in range(n): await pg.locator(".zl-species").nth(k).locator(".zl-cbtn").nth(1).click(); await pg.wait_for_timeout(120)
+            await pg.wait_for_timeout(500)
+        async def amount(i, target):   # set reactant i to `target` in the current rung's unit (molecules, mol or g)
+            for _ in range(60):
+                t = (await pg.locator(".zl-amount").nth(i).locator(".zl-amount-val").inner_text()).replace(',', '.').replace(' ', '')
+                v = 0.0 if '×' in t or '·' in t else float(''.join(ch for ch in t.split()[0] if ch in '0123456789.') or 0)
+                d = round(target - v, 2)
+                if abs(d) < 0.005: break
+                steps = [float(x) for x in await pg.locator(".zl-amount").nth(i).locator(".zl-step").evaluate_all("els => els.map(e => e.dataset.step)")]
+                s = max((x for x in steps if (x > 0) == (d > 0) and abs(x) <= abs(d) + 1e-9), key=abs, default=None)
+                if s is None: break
+                await pg.locator(".zl-amount").nth(i).locator(f".zl-step[data-step='{s:g}']").first.click(); await pg.wait_for_timeout(80)
+            await pg.wait_for_timeout(300)
+        async def react(): await pg.locator(".zl-react").click(); await pg.wait_for_timeout(3500)
+        if UNIT == 12:
+            for r in ['moles', 'count', 'particles', 'grams']: await rung(r)
+            await mass('1', 2)                       # 10 g → 12 g of carbon ≈ 1 mol
+            await chip(0, 'H2O'); await mass('1', 6)  # 18 g of water ≈ 1 mol
+            await chip(1, 'Au'); await pg.locator("[data-by='mass']").click(); await pg.wait_for_timeout(600)
+            await pg.locator("[data-by='moles']").click(); await pg.wait_for_timeout(600)
+            await chip(1, ''); await chip(0, 'H2'); await mass('-10')   # 8 g of hydrogen: 2.4 × 10²⁴ molecules
+        elif UNIT == 13:
+            await bd()
+            for s in ['C6H12O6', 'Ca(OH)2', 'Fe2O3', 'Fe3O4', 'CO', 'N2']: await chip(0, s); await bd()
+            await chip(0, 'NaCl'); await rung('particles'); await rung('grams')
+        elif UNIT == 14:
+            await coef(0, 1); await coef(2, 1)                   # 2 H2 + O2 → 2 H2O
+            await rung('grams'); await rung('particles')
+            await pg.locator(".zl-trap-btn").click(); await pg.wait_for_timeout(600); await pg.locator(".zl-trap-btn").click(); await pg.wait_for_timeout(600)
+            await chip(0, 'ch4'); await coef(1, 1); await coef(3, 1)                        # CH4 + 2 O2 → CO2 + 2 H2O
+            await chip(0, 'nh3'); await coef(1, 2); await coef(2, 1)                        # N2 + 3 H2 → 2 NH3
+            await chip(0, 'c2h6'); await coef(0, 1); await coef(1, 6); await coef(2, 3); await coef(3, 5)   # 2 C2H6 + 7 O2 → 4 CO2 + 6 H2O
+        else:
+            await amount(0, 4); await amount(1, 2); await react()      # 4 H2 + 2 O2: nothing left over
+            await amount(1, 1); await react()                           # 4 H2 + 1 O2: O2 (the heavier) runs out
+            await rung('grams'); await amount(0, 2); await amount(1, 20); await react()   # set up in grams
+            ys = pg.locator(".zl-yield .zl-step[data-step='10']").first
+            await ys.wait_for(timeout=30000); await ys.click(); await pg.wait_for_timeout(600)   # the panel appears after the animation
+            await chip(0, 'nh3'); await rung('moles'); await amount(0, 1); await amount(1, 3); await react()   # 2 mol NH3
+            await rung('particles')
     elif UNIT == 16:
         step = lambda i: f".bench-steps button >> nth={i}"   # steps: −10 −1 −0.1 −0.01 +0.01 +0.1 +1 +10
         async def weigh(ones, tenths, hundredths):
@@ -136,7 +189,18 @@ async def main():
         pg.on("pageerror", lambda e: logs.append(f"PAGEERROR: {e}"))
         await pg.goto(BASE); await pg.wait_for_timeout(600)
         if LANG == "de": await pg.click("text=Deutsch"); await pg.wait_for_timeout(200)
-        await pg.click(".ob-choice.primary"); await pg.wait_for_timeout(600)
+        await pg.locator(".ob-choice").first.wait_for()
+        if await pg.locator(".ob-choice.primary").count():   # the personal progress seed (seed.local.md) is present
+            await pg.click(".ob-choice.primary"); await pg.wait_for_timeout(600)
+        else:                                                 # a fresh clone has no seed: take the diagnostic
+            await pg.goto(BASE + "#/welcome/diagnostic"); await pg.wait_for_timeout(600)
+            done = "button:has-text('Show me the sky'), button:has-text('Zeig mir den Himmel')"
+            for i in range(14):
+                if await pg.locator(done).count(): break
+                await answer(pg)
+                nxt = pg.locator("button:has-text('Next question'), button:has-text('Nächste Frage'), .stack > button:has-text('Continue'), .stack > button:has-text('Weiter')").first
+                if await nxt.count(): await nxt.click(); await pg.wait_for_timeout(300)
+            await pg.locator(done).first.click(); await pg.wait_for_timeout(600)
         await pg.goto(BASE + f"#/unit/{UNIT}"); await pg.wait_for_timeout(900)
         # 1 warm-up
         for i in range(10):

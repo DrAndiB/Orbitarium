@@ -300,7 +300,7 @@ function compactLadder(ctx: Parameters<UnitEngine['compact']>[0], shows: Show[],
 export const U12_SAMPLES = ['C', 'Mg', 'Al', 'Fe', 'Cu', 'Au', 'Pb', 'H2', 'H2O'];
 export const ENGINE_U12: UnitEngine = {
   explore(ctx, mark) {
-    const ui = ctx.ladder({ mode: 'sample', start: 'C', grams: 12, samples: U12_SAMPLES, controls: { compare: true } });
+    const ui = ctx.ladder({ mode: 'sample', start: 'C', grams: 10, samples: U12_SAMPLES, controls: { compare: true } });
     const rungs = new Set<Rung>(['grams']);
     ui.on('rung', (r: Rung) => { rungs.add(r); if (rungs.size === 4) mark('zoom'); });
     ui.on('mass', (id: string, g: number, mol: number, count: number) => {
