@@ -109,6 +109,22 @@ async def explore(pg):
     elif UNIT == 5:
         for b in ['H–H', 'H–Cl', 'Na–Cl', 'C–H', 'O–H', 'N≡N', 'F–F', 'H–Cl']: await click(pg, f".chip[data-id='{b}']", 1, 700)
         await setrange(pg, ".wb-equation input[type=range]", 4.3)
+    elif UNIT == 16:
+        step = lambda i: f".bench-steps button >> nth={i}"   # steps: −10 −1 −0.1 −0.01 +0.01 +0.1 +1 +10
+        async def weigh(ones, tenths, hundredths):
+            for i, n in ((6, ones), (5, tenths), (4, hundredths)):
+                for _ in range(n): await pg.locator(step(i)).click(); await pg.wait_for_timeout(60)
+            await pg.wait_for_timeout(900)   # 'weighed' settles after 700 ms
+        await click(pg, "[aria-label='Volumetric flask'] .chip[data-ml='250'], [aria-label='Messkolben'] .chip[data-ml='250']")
+        await weigh(6, 2, 4)                 # 6.24 g CuSO4·5H2O → 0.100 mol/L in 250 mL
+        await click(pg, "button:has-text('Dissolve and fill to the mark'), button:has-text('Lösen und bis zur Eichmarke')", 1, 1500)
+        await click(pg, "[aria-label='Bulb pipette'] .chip[data-ml='10'], [aria-label='Vollpipette'] .chip[data-ml='10']")
+        await click(pg, "[aria-label='New flask'] .chip[data-ml='100'], [aria-label='Neuer Messkolben'] .chip[data-ml='100']")
+        await click(pg, "button:has-text('Pipette into the new flask'), button:has-text('In den neuen Kolben pipettieren')", 1, 1500)
+        await click(pg, ".bench-group:has-text('Pour off a portion') .bench-acts button, .bench-group:has-text('Eine Portion abgießen') .bench-acts button", 1, 1200)
+        await click(pg, "button:has-text('Zoom in on the particles'), button:has-text('Teilchen zeigen')", 1, 800)
+        await weigh(5, 0, 0)
+        await click(pg, ".bench-group:has-text('beaker') .bench-acts button, .bench-group:has-text('Becherglas') .bench-acts button", 1, 1500)
 
 async def main():
     async with async_playwright() as p:
