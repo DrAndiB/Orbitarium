@@ -1,6 +1,6 @@
 // Unit 12 question bank: three or more variants per concept (predict, why, transfer), every trap option tagged.
 // Numbers from src/content/stoich.ts (atomic masses from elements.ts, N_A = 6.02214076 × 10²³ mol⁻¹): C 12.011,
-// Mg 24.305, Al 26.982, S 32.06, Fe 55.845, Cu 63.546, Ag 107.868, Au 196.967, Pb 207.21, H₂ 2.016, H₂O 18.015,
+// Mg 24.305, Al 26.982, S 32.06, Fe 55.845, Cu 63.546, Ag 107.868, Au 196.967, Pb 207.2 (CIAAW abridged, 207.2 ± 1.1), H₂ 2.016, H₂O 18.015,
 // sucrose C₁₂H₂₂O₁₁ 342.297 g/mol. Computed: 1 u = 1/N_A g = 1.66 × 10⁻²⁴ g; one C atom 1.99 × 10⁻²³ g; 100 g Al
 // 3.71 mol, Fe 1.79 mol, Ag 0.927 mol, Pb 0.483 mol; 2 mol Ag 215.7 g; 1 kg sucrose 2.92 mol; 1.2 × 10²⁴ Fe atoms
 // 1.99 mol, 111 g; 10 g Cu 0.157 mol, 10 g Al 0.371 mol (ratio 2.36); 20 g S 0.624 mol, 20 g Cu 0.315 mol (1.98);
@@ -25,7 +25,7 @@ export const BANK_U12: Item[] = [
     ],
     targets: ['mole-is-mass'],
     explain: b('1 g ÷ 2 × 10⁻²³ g per atom = 5 × 10²² atoms (more exactly, 1 g ÷ 12.011 g/mol × N_{A} = 5.0 × 10²²). The 12 in carbon\'s atomic mass is the mass of one atom in u, not a number of atoms.',
-      '1 g ÷ 2 · 10⁻²³ g pro Atom = 5 · 10²² Atome (genauer: 1 g ÷ 12,011 g/mol · N_{A} = 5,0 · 10²²). Die 12 in der Atommasse des Kohlenstoffs ist die Masse eines Atoms in u, keine Anzahl von Atomen.') },
+      '1 g : 2 · 10⁻²³ g pro Atom = 5 · 10²² Atome (genauer: 1 g : 12,011 g/mol · N_{A} = 5,0 · 10²²). Die 12 in der Atommasse des Kohlenstoffs ist die Masse eines Atoms in u, keine Anzahl von Atomen.') },
   { id: 'i12b', unit: 12, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u12.too-many', 'u12.weigh-to-count'],
     prompt: b('Why do chemists measure out atoms by weighing instead of counting them?', 'Warum messen Chemiker Atome durch Wiegen ab, statt sie zu zählen?'),
     options: [
@@ -46,7 +46,7 @@ export const BANK_U12: Item[] = [
       { text: b('About 6 seconds, since 6.022 is a small number', 'Etwa 6 Sekunden, denn 6,022 ist eine kleine Zahl') },
     ],
     explain: b('6.022 × 10²³ ÷ 10⁶ per second = 6.0 × 10¹⁷ seconds, and a year has about 3.2 × 10⁷ seconds: 1.9 × 10¹⁰ years. The power of ten, 10²³, is what makes the number huge; a balance does the same "counting" in a second.',
-      '6,022 · 10²³ ÷ 10⁶ pro Sekunde = 6,0 · 10¹⁷ Sekunden, und ein Jahr hat etwa 3,2 · 10⁷ Sekunden: 1,9 · 10¹⁰ Jahre. Die Zehnerpotenz 10²³ macht die Zahl riesig; eine Waage erledigt dasselbe „Zählen“ in einer Sekunde.') },
+      '6,022 · 10²³ : 10⁶ pro Sekunde = 6,0 · 10¹⁷ Sekunden, und ein Jahr hat etwa 3,2 · 10⁷ Sekunden: 1,9 · 10¹⁰ Jahre. Die Zehnerpotenz 10²³ macht die Zahl riesig; eine Waage erledigt dasselbe „Zählen“ in einer Sekunde.') },
 
   // ---------- u12.weigh-to-count ----------
   { id: 'i12d', unit: 12, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u12.weigh-to-count'], targets: ['equal-mass-equal-count'],
@@ -58,7 +58,7 @@ export const BANK_U12: Item[] = [
       { text: b('Impossible to say without counting', 'Ohne Zählen nicht zu sagen') },
     ],
     explain: b('Total mass ÷ mass of one = number: 1500 g ÷ 6 g = 250 screws. Chemists count atoms the same way, only the mass of one atom is tiny, so the number is huge.',
-      'Gesamtmasse ÷ Masse eines Stücks = Anzahl: 1500 g ÷ 6 g = 250 Schrauben. Chemiker zählen Atome genauso, nur ist die Masse eines Atoms winzig und die Anzahl deshalb riesig.') },
+      'Gesamtmasse : Masse eines Stücks = Anzahl: 1500 g : 6 g = 250 Schrauben. Chemiker zählen Atome genauso, nur ist die Masse eines Atoms winzig und die Anzahl deshalb riesig.') },
   { id: 'i12e', unit: 12, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u12.weigh-to-count'], targets: ['equal-mass-equal-count'],
     prompt: b('Counting by weighing works for a bag of identical screws. Why does it fail for a bag of mixed screws and nails?', 'Zählen durch Wiegen klappt bei einer Tüte gleicher Schrauben. Warum klappt es nicht bei einer Tüte mit gemischten Schrauben und Nägeln?'),
     options: [
@@ -73,12 +73,12 @@ export const BANK_U12: Item[] = [
     prompt: b('Chlorine is about 76 % chlorine-35 (34.97 u) and 24 % chlorine-37 (36.97 u). Why can a chemist still count chlorine atoms by weighing with one value, 35.45 g/mol?', 'Chlor besteht zu etwa 76 % aus Chlor-35 (34,97 u) und zu 24 % aus Chlor-37 (36,97 u). Warum kann man Chloratome trotzdem mit einem Wert, 35,45 g/mol, durch Wiegen zählen?'),
     options: [
       { text: b('Every chlorine atom has a mass of exactly 35.45 u', 'Jedes Chloratom hat genau die Masse 35,45 u'), mis: 'mass-is-one-atom' },
-      { text: b('Ordinary samples all have about the same isotope mix, so the average mass per atom is the same in each', 'Gewöhnliche Proben haben alle etwa dieselbe Isotopenmischung, also ist die mittlere Masse pro Atom in jeder gleich'), correct: true },
+      { text: b('Ordinary samples all have about the same isotope mix, so the average mass per atom is the same in each', 'Gewöhnliche Stoffportionen haben alle etwa dieselbe Isotopenmischung, also ist die mittlere Masse pro Atom in jeder gleich'), correct: true },
       { text: b('The isotopes have the same mass, only different numbers of protons', 'Die Isotope haben dieselbe Masse, nur verschieden viele Protonen') },
       { text: b('Chlorine-37 is too rare to matter', 'Chlor-37 ist zu selten, um eine Rolle zu spielen') },
     ],
     explain: b('No single atom has 35.45 u: each is 34.97 or 36.97 u. But in any ordinary sample about three in four are chlorine-35, so the average per atom is always about 35.45 u. A sample with a different mix, such as heavy water instead of water, needs its own molar mass.',
-      'Kein einzelnes Atom hat 35,45 u: Jedes hat 34,97 oder 36,97 u. Aber in jeder gewöhnlichen Probe sind etwa drei von vier Atomen Chlor-35, also liegt der Mittelwert pro Atom immer bei etwa 35,45 u. Eine Probe mit anderer Mischung, etwa schweres Wasser statt Wasser, braucht ihre eigene molare Masse.') },
+      'Kein einzelnes Atom hat 35,45 u: Jedes hat 34,97 oder 36,97 u. Aber in jeder gewöhnlichen Stoffportion sind etwa drei von vier Atomen Chlor-35, also liegt der Mittelwert pro Atom immer bei etwa 35,45 u. Eine Stoffportion mit anderer Mischung, etwa schweres Wasser statt Wasser, braucht ihre eigene molare Masse.') },
 
   // ---------- u12.mole ----------
   { id: 'i12g', unit: 12, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u12.mole'], targets: ['mole-is-mass'],
@@ -102,7 +102,7 @@ export const BANK_U12: Item[] = [
     explain: b('The old definition tied the count to a mass of carbon; the new one fixes the count itself. The number hardly moved (12 g of carbon-12 still holds 6.022 × 10²³ atoms to better than a billionth), but the mole is now plainly a number, like a dozen.',
       'Die alte Definition knüpfte die Anzahl an eine Masse Kohlenstoff; die neue legt die Anzahl selbst fest. Der Wert hat sich kaum bewegt (12 g Kohlenstoff-12 enthalten weiterhin 6,022 · 10²³ Atome, auf besser als ein Milliardstel), aber das Mol ist jetzt eindeutig eine Anzahl, wie ein Dutzend.') },
   { id: 'i12i', unit: 12, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u12.mole', 'u12.n-m-M'], targets: ['mole-is-mass'],
-    prompt: b('An iron sample holds 1.2 × 10²⁴ atoms. How many moles of iron is that?', 'Eine Eisenprobe enthält 1,2 · 10²⁴ Atome. Wie viel Mol Eisen sind das?'),
+    prompt: b('An iron sample holds 1.2 × 10²⁴ atoms. How many moles of iron is that?', 'Eine Stoffportion Eisen enthält 1,2 · 10²⁴ Atome. Wie viel Mol Eisen sind das?'),
     options: [
       { text: b('About 2 mol', 'Etwa 2 mol'), correct: true },
       { text: b('About 0.5 mol', 'Etwa 0,5 mol') },
@@ -110,7 +110,7 @@ export const BANK_U12: Item[] = [
       { text: b('About 56 mol, iron\'s molar mass', 'Etwa 56 mol, die molare Masse von Eisen'), mis: 'mole-is-mass' },
     ],
     explain: b('n = N ÷ N_{A} = 1.2 × 10²⁴ ÷ 6.022 × 10²³ ≈ 2.0 mol, whatever the element: a mole counts particles. Only the mass depends on iron: 2.0 mol × 55.845 g/mol ≈ 111 g.',
-      'n = N ÷ N_{A} = 1,2 · 10²⁴ ÷ 6,022 · 10²³ ≈ 2,0 mol, egal bei welchem Element: Ein Mol zählt Teilchen. Nur die Masse hängt vom Eisen ab: 2,0 mol · 55,845 g/mol ≈ 111 g.') },
+      'n = N : N_{A} = 1,2 · 10²⁴ : 6,022 · 10²³ ≈ 2,0 mol, egal bei welchem Element: Ein Mol zählt Teilchen. Nur die Masse hängt vom Eisen ab: 2,0 mol · 55,845 g/mol ≈ 111 g.') },
 
   // ---------- u12.molar-mass ----------
   { id: 'i12j', unit: 12, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u12.molar-mass'], table: 'mass', targets: ['mole-is-mass'],
@@ -122,7 +122,7 @@ export const BANK_U12: Item[] = [
       { text: b('32.06 g: the atomic mass, read in grams', '32,06 g: die Atommasse, in Gramm gelesen'), correct: true },
     ],
     explain: b('Sulfur\'s atomic mass is 32.06 u, so its molar mass is 32.06 g/mol: the same number, now in grams per mole. Its 16 protons give only about half the mass; the neutrons carry the rest.',
-      'Die Atommasse von Schwefel ist 32,06 u, also ist seine molare Masse 32,06 g/mol: derselbe Zahlenwert, jetzt in Gramm pro Mol. Seine 16 Protonen bringen nur etwa die Hälfte der Masse; den Rest tragen die Neutronen.') },
+      'Die Atommasse von Schwefel ist 32,06 u, also ist seine molare Masse 32,06 g/mol: derselbe Zahlenwert, jetzt in Gramm pro Mol. Seine 16 Protonen machen nur etwa die Hälfte der Masse aus; den Rest machen die Neutronen aus.') },
   { id: 'i12k', unit: 12, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u12.molar-mass'],
     prompt: b('Carbon\'s atomic mass is 12.011 u and its molar mass is 12.011 g/mol. Why the same number?', 'Die Atommasse von Kohlenstoff ist 12,011 u, seine molare Masse 12,011 g/mol. Warum derselbe Zahlenwert?'),
     options: [
@@ -143,24 +143,24 @@ export const BANK_U12: Item[] = [
       { text: b('97 g, so that the two masses add up to the right amount', '97 g, damit sich die beiden Massen richtig ergänzen') },
     ],
     explain: b('55.845 g of iron is 1 mol of iron atoms. The same number of sulfur atoms is 1 mol of sulfur: 32.06 g. Equal masses would give her about 1.7 times as many sulfur atoms as iron atoms (55.845 ÷ 32.06).',
-      '55,845 g Eisen sind 1 mol Eisenatome. Gleich viele Schwefelatome sind 1 mol Schwefel: 32,06 g. Gleiche Massen ergäben etwa 1,7-mal so viele Schwefelatome wie Eisenatome (55,845 ÷ 32,06).') },
+      '55,845 g Eisen sind 1 mol Eisenatome. Gleich viele Schwefelatome sind 1 mol Schwefel: 32,06 g. Gleiche Massen ergäben etwa 1,7-mal so viele Schwefelatome wie Eisenatome (55,845 : 32,06).') },
 
   // ---------- u12.n-m-M ----------
   { id: 'i12m', unit: 12, kind: 'estimate', format: 'estimate', concepts: ['u12.n-m-M'],
     prompt: b('How many moles are in 100 g of iron (molar mass 55.845 g/mol)? Use n = m / M.', 'Wie viel Mol sind 100 g Eisen (molare Masse 55,845 g/mol)? Rechne mit n = m / M.'),
     min: 0, max: 6, step: 0.1, answer: 1.8, tolerance: 0.1, suffix: ' mol',
-    near: [{ value: 5.6, tol: 0.1, note: b('5.6 multiplies instead of dividing (or divides M by m). Grams ÷ grams per mole leaves moles: 100 ÷ 55.845.', '5,6 multipliziert statt zu teilen (oder teilt M durch m). Gramm ÷ Gramm pro Mol ergibt Mol: 100 ÷ 55,845.') }],
-    explain: b('n = m / M = 100 g ÷ 55.845 g/mol = 1.79 mol. The units guide you: g ÷ (g/mol) = mol.', 'n = m / M = 100 g ÷ 55,845 g/mol = 1,79 mol. Die Einheiten zeigen den Weg: g ÷ (g/mol) = mol.') },
+    near: [{ value: 5.6, tol: 0.1, note: b('5.6 multiplies instead of dividing (or divides M by m). Grams ÷ grams per mole leaves moles: 100 ÷ 55.845.', '5,6 multipliziert statt zu teilen (oder teilt M durch m). Gramm : Gramm pro Mol ergibt Mol: 100 : 55,845.') }],
+    explain: b('n = m / M = 100 g ÷ 55.845 g/mol = 1.79 mol. The units guide you: g ÷ (g/mol) = mol.', 'n = m / M = 100 g : 55,845 g/mol = 1,79 mol. Die Einheiten zeigen den Weg: g : (g/mol) = mol.') },
   { id: 'i12n', unit: 12, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u12.n-m-M'], targets: ['mole-is-mass'],
     prompt: b('To turn a mass in grams into an amount in moles, you divide by the molar mass. Why divide?', 'Um eine Masse in Gramm in eine Stoffmenge in Mol umzurechnen, teilt man durch die molare Masse. Warum teilen?'),
     options: [
-      { text: b('The molar mass is the mass of one mole; dividing asks how many of those portions fit into the sample', 'Die molare Masse ist die Masse von einem Mol; Teilen fragt, wie viele solcher Portionen in die Probe passen'), correct: true },
+      { text: b('The molar mass is the mass of one mole; dividing asks how many of those portions fit into the sample', 'Die molare Masse ist die Masse von einem Mol; Teilen fragt, wie viele solcher Portionen in die Stoffportion passen'), correct: true },
       { text: b('Because a mole is a mass, and dividing converts grams into that larger mass unit', 'Weil ein Mol eine Masse ist und Teilen Gramm in diese größere Masseneinheit umrechnet'), mis: 'mole-is-mass' },
       { text: b('Dividing and multiplying give the same result here', 'Teilen und Malnehmen ergeben hier dasselbe') },
       { text: b('To remove the mass of the electrons', 'Um die Masse der Elektronen herauszurechnen') },
     ],
     explain: b('Like 1500 g of screws ÷ 6 g per screw = 250 screws: m ÷ (mass per mole) = number of moles. The units check it: g ÷ (g/mol) = mol.',
-      'Wie bei 1500 g Schrauben ÷ 6 g pro Schraube = 250 Schrauben: m ÷ (Masse pro Mol) = Zahl der Mol. Die Einheiten bestätigen es: g ÷ (g/mol) = mol.') },
+      'Wie bei 1500 g Schrauben : 6 g pro Schraube = 250 Schrauben: m : (Masse pro Mol) = Zahl der Mol. Die Einheiten bestätigen es: g : (g/mol) = mol.') },
   { id: 'i12o', unit: 12, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u12.n-m-M'], targets: ['mole-is-mass'],
     prompt: b('Table sugar, sucrose, has a molar mass of 342.30 g/mol. How many moles of sucrose are in a 1 kg bag?', 'Haushaltszucker, Saccharose, hat eine molare Masse von 342,30 g/mol. Wie viel Mol Saccharose sind in einer 1-kg-Packung?'),
     options: [
@@ -170,7 +170,7 @@ export const BANK_U12: Item[] = [
       { text: b('About 0.34 mol', 'Etwa 0,34 mol') },
     ],
     explain: b('n = m / M = 1000 g ÷ 342.30 g/mol = 2.92 mol. Big molecules mean few moles per kilogram; it is still 1.76 × 10²⁴ molecules.',
-      'n = m / M = 1000 g ÷ 342,30 g/mol = 2,92 mol. Große Moleküle bedeuten wenige Mol pro Kilogramm; es sind trotzdem 1,76 · 10²⁴ Moleküle.') },
+      'n = m / M = 1000 g : 342,30 g/mol = 2,92 mol. Große Moleküle bedeuten wenige Mol pro Kilogramm; es sind trotzdem 1,76 · 10²⁴ Moleküle.') },
   { id: 'i12p', unit: 12, kind: 'estimate', format: 'estimate', evidence: 'transfer', concepts: ['u12.n-m-M', 'u12.molar-mass'],
     prompt: b('A recipe needs 2.0 mol of silver (molar mass 107.868 g/mol). How many grams do you weigh out? Use m = n × M.', 'Eine Vorschrift verlangt 2,0 mol Silber (molare Masse 107,868 g/mol). Wie viel Gramm wiegst du ab? Rechne mit m = n · M.'),
     min: 0, max: 300, step: 1, answer: 216, tolerance: 2, suffix: ' g',
@@ -187,7 +187,7 @@ export const BANK_U12: Item[] = [
       { text: b('The copper, about 2.4 times as many', 'Das Kupfer, etwa 2,4-mal so viele') },
     ],
     explain: b('Aluminium atoms have less mass, so it takes more of them for 10 g: 10 ÷ 26.982 = 0.371 mol against 10 ÷ 63.546 = 0.157 mol of copper, 2.36 times as many.',
-      'Aluminiumatome haben weniger Masse, also braucht es mehr davon für 10 g: 10 ÷ 26,982 = 0,371 mol gegenüber 10 ÷ 63,546 = 0,157 mol Kupfer, 2,36-mal so viele.') },
+      'Aluminiumatome haben weniger Masse, also braucht es mehr davon für 10 g: 10 : 26,982 = 0,371 mol gegenüber 10 : 63,546 = 0,157 mol Kupfer, 2,36-mal so viele.') },
   { id: 'i12r', unit: 12, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u12.equal-moles'], targets: ['equal-mass-equal-count'],
     prompt: b('1 mol of sulfur is 32.06 g, 1 mol of copper 63.546 g. Why do these unequal masses hold the same number of atoms?', '1 mol Schwefel sind 32,06 g, 1 mol Kupfer 63,546 g. Warum enthalten diese ungleichen Massen gleich viele Atome?'),
     options: [
@@ -197,10 +197,10 @@ export const BANK_U12: Item[] = [
       { text: b('Sulfur atoms are bigger, so fewer fit in 32 g', 'Schwefelatome sind größer, also passen weniger in 32 g') },
     ],
     explain: b('A mole is the same count for every element. The mass of a mole follows the mass of one atom: 63.546 ÷ 32.06 ≈ 2, so a mole of copper weighs about twice as much. How tightly the atoms pack, or how big they are, does not change their number.',
-      'Ein Mol ist bei jedem Element dieselbe Anzahl. Die Masse eines Mols folgt der Masse eines Atoms: 63,546 ÷ 32,06 ≈ 2, also wiegt ein Mol Kupfer etwa doppelt so viel. Wie dicht die Atome gepackt sind oder wie groß sie sind, ändert ihre Anzahl nicht.') },
+      'Ein Mol ist bei jedem Element dieselbe Anzahl. Die Masse eines Mols folgt der Masse eines Atoms: 63,546 : 32,06 ≈ 2, also wiegt ein Mol Kupfer etwa doppelt so viel. Wie dicht die Atome gepackt sind oder wie groß sie sind, ändert ihre Anzahl nicht.') },
   { id: 'i12s', unit: 12, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u12.equal-moles', 'u12.n-m-M'], targets: ['equal-mass-equal-count'], mis: 'equal-mass-equal-count', table: 'mass',
     prompt: b('Four 100 g samples: aluminium, iron, silver, lead. Rank them by the number of atoms, most first. (Use the atomic masses in the periodic table.)', 'Vier Portionen von je 100 g: Aluminium, Eisen, Silber, Blei. Ordne sie nach der Zahl der Atome, die meisten zuerst. (Nutze die Atommassen im Periodensystem.)'),
-    order: [b('aluminium (26.982 u)', 'Aluminium (26,982 u)'), b('iron (55.845 u)', 'Eisen (55,845 u)'), b('silver (107.868 u)', 'Silber (107,868 u)'), b('lead (207.21 u)', 'Blei (207,21 u)')],
+    order: [b('aluminium (26.982 u)', 'Aluminium (26,982 u)'), b('iron (55.845 u)', 'Eisen (55,845 u)'), b('silver (107.868 u)', 'Silber (107,868 u)'), b('lead (207.2 u)', 'Blei (207,2 u)')],
     explain: b('Same mass, so the lightest atoms come first: 3.71 mol of aluminium, 1.79 mol of iron, 0.927 mol of silver, 0.483 mol of lead. The order is simply the reverse of the atomic masses.',
       'Gleiche Masse, also kommen die leichtesten Atome zuerst: 3,71 mol Aluminium, 1,79 mol Eisen, 0,927 mol Silber, 0,483 mol Blei. Die Reihenfolge ist einfach die Umkehrung der Atommassen.') },
   { id: 'i12t', unit: 12, kind: 'choice', format: 'odd', evidence: 'transfer', concepts: ['u12.equal-moles', 'u12.mole'], targets: ['equal-mass-equal-count'],
@@ -212,5 +212,5 @@ export const BANK_U12: Item[] = [
       { text: b('63.546 g of aluminium', '63,546 g Aluminium'), correct: true },
     ],
     explain: b('Three of them are 1 mol, 6.022 × 10²³ particles each, whatever their masses. 63.546 g of aluminium matches copper\'s mass, not its count: it is 63.546 ÷ 26.982 = 2.36 mol, far more atoms.',
-      'Drei davon sind 1 mol, je 6,022 · 10²³ Teilchen, egal wie schwer. 63,546 g Aluminium haben dieselbe Masse wie das Kupfer, aber nicht dieselbe Anzahl: 63,546 ÷ 26,982 = 2,36 mol, viel mehr Atome.') },
+      'Drei davon sind 1 mol, je 6,022 · 10²³ Teilchen, egal wie schwer. 63,546 g Aluminium haben dieselbe Masse wie das Kupfer, aber nicht dieselbe Anzahl: 63,546 : 26,982 = 2,36 mol, viel mehr Atome.') },
 ];
