@@ -44,8 +44,8 @@ another unit, a data value that is wrong), do NOT edit it: list it under "Reques
    sentences). At least one example should show where the simple model breaks (the "model you can break"
    pattern every student liked).
    Then `flaw`: a spot-the-flaw item (id `uN-flaw`, format 'flaw', evidence 'transfer', prompt exactly
-   "Where does this reasoning first go wrong?" / "Wo geht diese Überlegung zum ersten Mal schief?"), 4 lines,
-   one clearly first false step (`flaw`, 0-based index), later steps that are false only because they follow
+   "Where does this reasoning first go wrong?" / "Wo geht diese Überlegung zum ersten Mal schief?"), 3–5 lines
+   in the shape your batch brief assigns, one clearly first false step (`flaw`, 0-based index), later steps that are false only because they follow
    from it in `alsoFalse`, and a `near` note for the most tempting true step. The explanation names every step.
    And `deeper`: one optional harder item (id `uN-deeper`, evidence 'transfer'). Prefer one where the learner
    produces something (an estimate with the method in the prompt, or a rank with a twist), not recall.
@@ -137,8 +137,8 @@ Also export in the unit object:
   patterns in ASCII like /\bna\+|\bcl-/), and must NOT tick on a single result word without the mechanism. The
   tightened version must hit all five ideas in EN and DE (`npx tsx tools/sim/regress-hints.mts` reports any that do not).
   Common school shorthand (VdW, WW, H-Brücke, EP, Sdt./Sdp., Smp., IMF, bp, bewegl., ähnl., Lsg.) is spelled out by
-  the shared dictionary in ideas.ts, so patterns only need the full words. Add a learner text to
-  tools/sim/fixtures/explain-texts.json for every false hint you fix, so it stays fixed.
+  the shared dictionary in ideas.ts, so patterns only need the full words. For every false hint you fix, list the learner
+  text in your report under "Hint test texts"; the main session adds it to the fixture so it stays fixed.
 - German: school terms (Periode, Hauptgruppe on first use "Gruppe 17 (VII. Hauptgruppe)", Ionengitter, effektive
   Kernladung, EN/ΔEN, Partialladung δ+/δ−, Elektronenpaarbindung, Oktettregel); comparisons with "gegenüber", not
   "gegen"; "bedeutet", not "heißt", for "means"; no calques ("genaue Farbe", "Riesengitter", "Nettozug", "Zug" for a
@@ -180,9 +180,9 @@ Also export in the unit object:
 3. Explain-back: `npx tsx tools/sim/hint-explain.mts N en|de "<ticked idea numbers>" "<text>"` on at least: a correct
    plain-English answer, a correct technical answer, a correct German school-shorthand answer, a keyword list, an answer
    stating the unit's main misconception, and one that negates the ideas. Correct texts get no "couldn't find" hint on
-   ideas they state; the misconception and negated texts get no credit. Add these texts to
-   tools/sim/fixtures/explain-texts.json; then `npx tsx tools/sim/regress-hints.mts` must show only the changes you
-   intended (the main session updates the snapshot).
+   ideas they state; the misconception and negated texts get no credit. Do not edit the shared fixture file: list these
+   texts in your report under "Hint test texts" (unit, language, text); the main session adds them to
+   tools/sim/fixtures/explain-texts.json. `npx tsx tools/sim/regress-hints.mts` must show no changes in other units.
 4. `npx tsx tools/sim/audit-content.mts` stays "Problems: none" (once the main session has registered the unit).
 5. Every reading URL fetched with WebFetch and on topic; every number checked against the data files or a fetched
    source named in a comment.

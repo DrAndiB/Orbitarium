@@ -8,7 +8,8 @@ Keep it short: the guides hold everything that does not change.
 
 For each unit:
 
-- **Unit N, <title>** (module M). Concepts (ids and names as in curriculum.ts, six per unit).
+- **Unit N, <title>** (module M). Six concepts (ids `uN.<name>`, EN and DE names); the main session adds them to
+  curriculum.ts before any helper starts (units without content have only a placeholder concept there).
 - Engine: <name>; Show shape; the explore task ids, which are key, which is the challenge, and the engine event that
   ticks each one.
 - Hook and data: the puzzle idea, the real data it uses (with the data file or a source to fetch), ideas for the two

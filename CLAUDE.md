@@ -22,26 +22,28 @@ likes workflows and data flows shown visually. He reads English and German (nati
 - `tools/sim/`: checks and simulations (below). `docs/process/`: how to write units, build engines, review, and the
   batch-brief template. `android/`, `.github/workflows/android.yml`: the APK build.
 
-## Commands (run in the repo; the owner uses the same in PowerShell)
+## Commands (run in the repo; on Windows PowerShell write `python` for `python3`, otherwise the same)
 
     npm install
-    npm run dev                                   # dev server; #/dev/box, #/dev/conduct, #/dev/hbond mount one engine
+    npx vite --port 5174                          # dev server for flow.py (engine helpers use 5181–5189 each);
+                                                  # #/dev/box, #/dev/conduct, #/dev/hbond mount one engine
     npx tsc --noEmit -p .                         # must be clean before any commit
     npx tsx tools/sim/audit-content.mts           # content coverage, traps, glossary: must print "Problems: none"
     npx tsx tools/sim/lint-de.mts [unitNN]        # German wording rules: new units must have no errors or warnings
-                                                  # (units 0–6 still carry ~45 old warnings: clean them when touched)
+                                                  # (units 0–6 and the UI still carry 43 old warnings: clean them when touched)
     npx tsx tools/sim/regress-hints.mts [--update]# explain-back snapshot: tightened versions 5/5, no unintended changes
-    npx tsx tools/sim/rubric-test.ts              # wrong, negated and keyword-list answers get no credit
+    npx tsx tools/sim/rubric-test.ts [out.json]   # wrong, negated and keyword-list answers get no credit (✓/✗ line)
     npx tsx tools/sim/hint-explain.mts N de "1,2" "<text>"   # what the explain step shows for one text
     python3 tools/sim/flow.py http://localhost:5174/ de <dir> N   # walk unit N in a phone-sized browser
     npx tsx tools/sim/export-units.mts en <dir> 12,13          # student script + feedback key for reviews
-    npx tsx tools/sim/run.ts <out.json>           # ten-week learner model on the real units
+    npx tsx tools/sim/run.ts [out.json]           # ten-week learner model on the real units (default model-sim.json)
     npm run build:single && python3 tools/make_artifact.py <out.html>   # single-file web preview
 
 ## Release and secrets
 
-- Every push to `main` builds an APK and publishes it as release `build-N` (pre-release). Push only when tsc and the
-  checks pass: a half-finished push publishes a broken build or a failing run.
+- Every push to `main` builds an APK and publishes it as release `build-N` (pre-release). Andreas has agreed that
+  finished, checked work is committed and pushed to `main` this way. Push only when tsc and the checks pass: a
+  half-finished push publishes a broken build or a failing run.
 - Builds are signed with Andreas's own key from the repository secrets (ANDROID_KEYSTORE_B64,
   ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS), so each APK installs over the previous one and keeps progress.
   Certificate SHA-256 `3B:21:43:85:D7:91:F1:13:EA:AA:9A:B2:49:43:48:EB:3E:24:5D:9F:62:C0:05:7B:7E:7F:4F:CB:0B:1B:21:3C`;
@@ -50,8 +52,8 @@ likes workflows and data flows shown visually. He reads English and German (nati
 - The repo is public. Never commit a keystore, a password or `seed.local.md` (Andreas's personal progress seed;
   git-ignored; CI reads it from the SEED_PROGRESS secret).
 - Web preview: the claude.ai artifact https://claude.ai/artifact/GGQ15QkdxibE2FQ7VC6yQu (update it in place with the
-  Artifact tool and that url). Review history: Claude Doc "Orbitarium — Learner Simulation"
-  (https://claude.ai/artifact/4dsupNqDzzMWwJ5xx6vaJN), one section per batch.
+  Artifact tool and that url). Review history: the Claude Doc "Orbitarium — Learner Simulation" (artifact id
+  4dsupNqDzzMWwJ5xx6vaJN; edit it with the Claude Docs tools, one section per batch, newest on top).
 
 ## Conventions (details in docs/process/authoring.md)
 
@@ -76,8 +78,12 @@ conversation and started with its whole history. Work like this instead:
    helpers in parallel; unit helpers only need the engine spec, not the finished engine.
 3. **Pick the model by judgement needed:** engines, unit writing and Priya's accuracy check on the strongest model;
    Marie's walkthrough, German lint follow-ups, test runs and exports on a smaller one.
-4. **Wire and check** (main session): players, registry, playable list, engines.ts, lab, home blurbs, exporter,
-   flow.py branches; then tsc, audit, lint-de, regress-hints, rubric-test, flow.py in EN and DE. Commit and push.
+4. **Wire and check** (main session): unit players `src/units/uNN.ts`; `PLAYERS` in `src/ui/player.ts`;
+   `CONTENT_UNITS` in `src/content/registry.ts`; the playable list at the end of `src/content/curriculum.ts`; engine
+   wiring in `src/units/engines.ts`; `src/ui/lab.ts`; unit blurbs in `src/ui/home.ts`; `ENGINE[n]` and `showText` in
+   `tools/sim/export-units.mts`; an explore branch in `tools/sim/flow.py`. Add the helpers' hint test texts to
+   `tools/sim/fixtures/explain-texts.json` and update the snapshot. Then tsc, audit, lint-de, regress-hints,
+   rubric-test, flow.py in EN and DE. Commit and push.
 5. **One review round** (docs/process/review.md): three personas, sort-findings.py, one fix helper per unit, shared
    fixes in the main session, add every false hint to tools/sim/fixtures/explain-texts.json and update the snapshot.
 6. **Targeted re-check** of changed passages only (Priya, Jonas), one more small fix round if needed.

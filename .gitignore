@@ -6,3 +6,4 @@ dist-single/
 *.keystore
 *.jks
 seed.local.md
+model-sim.json

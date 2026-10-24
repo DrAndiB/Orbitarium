@@ -24,7 +24,7 @@ const { CONTENT_UNITS } = await import('../../src/content/registry');
 const { unitByN } = await import('../../src/content/curriculum');
 type Item = import('../../src/content/items').Item;
 
-const OUT = process.argv[2] ?? '/home/claude/sim-out/model-sim.json';
+const OUT = process.argv[2] ?? 'model-sim.json';
 const VARIANT = (process.argv[3] ?? 'base') as 'base' | 'fixed';
 const DAYS = 70;
 const START = '2026-10-26'; // a Monday

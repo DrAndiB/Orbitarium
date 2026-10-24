@@ -33,4 +33,8 @@ const rows = C.map((c) => {
   return { ...c, hints: hits.length, hits, salad };
 });
 for (const r of rows) console.log(`u${r.unit} ${r.kind.padEnd(34)} hints ${r.hints}/5${r.salad ? ' (keyword list)' : ''}  truly ${r.trulyCorrect}/5  hits: ${r.hits.join(',')}`);
-writeFileSync('/home/claude/sim-out/rubric-tests-after.json', JSON.stringify(rows, null, 1));
+// More credit than the text deserves is the failure that matters here (a wrong answer must not look right).
+const over = rows.filter((r) => r.hints > r.trulyCorrect);
+console.log(over.length ? `✗ ${over.length} texts get more credit than they deserve` : '✓ no text gets more credit than it deserves');
+if (process.argv[2]) writeFileSync(process.argv[2], JSON.stringify(rows, null, 1));
+if (over.length) process.exitCode = 1;
