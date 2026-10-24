@@ -42,7 +42,7 @@ const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|
 // space or the end follows, so "0.917" and "2.5" stay whole. A colon does not split: "Wasser: 2 Donoren, 2 Akzeptoren"
 // is one statement.
 // (?<!\p{L}) instead of \b: in JavaScript \b does not see a boundary before an umlaut ("ähnl.").
-const ABBR = /(?<!\p{L})(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\p{L}*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh)\./gu;
+const ABBR = /(?<!\p{L})(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\p{L}*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh|lim|theor)\./gu;
 /** "bewegl. ladungsträger": a short lowercase word with a full stop, followed by a lowercase word, is an abbreviation. */
 const SHORT_ABBR = /(?<!\p{L})([a-zäöüß]{1,6})\.(?=\s+[a-zäöüß])/gu;
 function clausesOf(norm: string): string[] {
@@ -88,6 +88,8 @@ const SHORTHAND: [RegExp, string][] = [
   [/\blsg\b/g, 'lösung'],
   [/\binduz\b/g, 'induziert'],
   [/\bmolek\b/g, 'molekül'],
+  [/\blim\b/g, 'limitierend'],
+  [/\btheor\b/g, 'theoretisch'],
   [/\bggü\b/g, 'gegenüber'],
   [/\bzw\b/g, 'zwischen'],
   [/\bm\.?w\.?\b/g, 'mit anderen worten'],
