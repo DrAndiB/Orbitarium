@@ -1,4 +1,204 @@
 // Review bank for unit 13 (written by the unit helper; see docs/process/authoring.md).
+// Three or more variants per concept (predict, why, transfer), every trap option tagged.
+// Numbers: molar masses and mass shares as src/content/stoich.ts computes them from the elements.ts atomic masses
+// (H 1.008, C 12.011, N 14.007, O 15.999, Mg 24.305, Al 26.982, S 32.06, Cl 35.45, Ca 40.078 u): CO₂ 44.009 (once
+// 28.010, 2 × CO 56.020), C₁₂H₂₂O₁₁ 342.297 (each element once 29.018), Al₂(SO₄)₃ 2 Al + 3 S + 12 O = 17 atoms,
+// (NH₄)₂SO₄ 15 atoms, NH₃ 17.031 (34.06 g = 2.000 mol), MgO 40.304, CaCl₂ 110.978, CH₄ C 74.9 % / H 25.1 %,
+// CaCO₃ 100.086 (Ca 40.04 %), Al₂O₃ Al 52.93 % (52.9 ÷ 26.98 = 1.961, 47.1 ÷ 16.00 = 2.944, ratio 1 : 1.50),
+// C₆H₆ 78.114 = 6 × CH 13.019 (C 92.3 %), C₂H₂ 26.038, glucose 6 O = 96.0 u against 12 H = 12.1 u.
+import type { Bi } from '../../i18n';
 import type { Item } from '../items';
 
-export const BANK_U13: Item[] = [];
+const b = (en: string, de: string): Bi => ({ en, de });
+
+export const BANK_U13: Item[] = [
+  // ---------- u13.formula-count ----------
+  { id: 'i13a', unit: 13, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u13.formula-count'], targets: ['formula-count-once'],
+    prompt: b('Aluminium sulfate, {{Al2(SO4)3}}, is used to clean drinking water. How many atoms are in one formula unit?', 'Aluminiumsulfat, {{Al2(SO4)3}}, wird zur Reinigung von Trinkwasser verwendet. Wie viele Atome enthält eine Formeleinheit?'),
+    options: [
+      { text: b('7: 2 Al, 1 S and 4 O', '7: 2 Al, 1 S und 4 O'), mis: 'formula-count-once' },
+      { text: b('9: 2 Al, 3 S and 4 O', '9: 2 Al, 3 S und 4 O'), mis: 'formula-count-once' },
+      { text: b('17: 2 Al, 3 S and 12 O', '17: 2 Al, 3 S und 12 O'), correct: true },
+      { text: b('3: one of each element', '3: eines von jedem Element') },
+    ],
+    explain: b('The 3 after the bracket counts the whole {{SO4}} group: 3 S and 3 × 4 = 12 O, plus the 2 Al. 2 + 3 + 12 = 17. Counting the 3 for sulfur only gives 9; ignoring it gives 7.',
+      'Die 3 hinter der Klammer zählt die ganze {{SO4}}-Gruppe: 3 S und 3 · 4 = 12 O, dazu die 2 Al. 2 + 3 + 12 = 17. Wer die 3 nur auf den Schwefel bezieht, kommt auf 9; wer sie übersieht, auf 7.') },
+  { id: 'i13b', unit: 13, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u13.formula-count'], targets: ['formula-count-once'],
+    prompt: b('Calcium hydroxide is written {{Ca(OH)2}}, with a bracket. Why not {{CaOH2}}?', 'Calciumhydroxid schreibt man {{Ca(OH)2}}, mit Klammer. Warum nicht {{CaOH2}}?'),
+    options: [
+      { text: b('Both mean the same; the bracket is only a matter of style', 'Beides bedeutet dasselbe; die Klammer ist nur eine Stilfrage'), mis: 'formula-count-once' },
+      { text: b('{{CaOH2}} would mean one O and two H; the bracket makes the 2 count O and H, two {{OH-}} ions', '{{CaOH2}} bedeutete ein O und zwei H; mit der Klammer zählt die 2 O und H, zwei {{OH-}}-Ionen'), correct: true },
+      { text: b('The bracket marks the light part of the formula', 'Die Klammer markiert den leichten Teil der Formel') },
+      { text: b('The bracket shows that OH is not bonded to calcium', 'Die Klammer zeigt, dass OH nicht mit Calcium verbunden ist') },
+    ],
+    explain: b('A subscript counts only the symbol just before it, so in {{CaOH2}} the 2 would belong to H alone. Each {{Ca2+}} needs two {{OH-}} ions, so the bracket groups O and H and the 2 counts both: 1 Ca, 2 O, 2 H.',
+      'Ein Index zählt nur das Symbol direkt davor, in {{CaOH2}} gehörte die 2 also allein zum H. Jedes {{Ca2+}} braucht zwei {{OH-}}-Ionen, deshalb fasst die Klammer O und H zusammen, und die 2 zählt beide: 1 Ca, 2 O, 2 H.') },
+  { id: 'i13c', unit: 13, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u13.formula-count'],
+    prompt: b('Rank by the number of atoms in one particle, most first: sucrose (table sugar) {{C12H22O11}}, glucose {{C6H12O6}}, ammonium sulfate {{(NH4)2SO4}}, calcium hydroxide {{Ca(OH)2}}.',
+      'Ordne nach der Zahl der Atome in einem Teilchen, die meisten zuerst: Saccharose (Haushaltszucker) {{C12H22O11}}, Glucose {{C6H12O6}}, Ammoniumsulfat {{(NH4)2SO4}}, Calciumhydroxid {{Ca(OH)2}}.'),
+    order: [b('sucrose, {{C12H22O11}}', 'Saccharose, {{C12H22O11}}'), b('glucose, {{C6H12O6}}', 'Glucose, {{C6H12O6}}'), b('ammonium sulfate, {{(NH4)2SO4}}', 'Ammoniumsulfat, {{(NH4)2SO4}}'), b('calcium hydroxide, {{Ca(OH)2}}', 'Calciumhydroxid, {{Ca(OH)2}}')],
+    explain: b('12 + 22 + 11 = 45; 6 + 12 + 6 = 24; ammonium sulfate 2 × (1 + 4) + 1 + 4 = 15, the 2 counting the whole {{NH4+}} ion; calcium hydroxide 1 + 2 × 2 = 5. Without the brackets ammonium sulfate would look like 10 atoms.',
+      '12 + 22 + 11 = 45; 6 + 12 + 6 = 24; Ammoniumsulfat 2 · (1 + 4) + 1 + 4 = 15, wobei die 2 das ganze {{NH4+}}-Ion zählt; Calciumhydroxid 1 + 2 · 2 = 5. Ohne Klammern sähe Ammoniumsulfat nach 10 Atomen aus.') },
+
+  // ---------- u13.molar-mass-sum ----------
+  { id: 'i13d', unit: 13, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u13.molar-mass-sum'], targets: ['formula-count-once'],
+    prompt: b('Atomic masses: C 12.011, O 15.999 u. The molar mass of carbon dioxide, {{CO2}}, is…', 'Atommassen: C 12,011; O 15,999 u. Die molare Masse von Kohlenstoffdioxid, {{CO2}}, beträgt…'),
+    options: [
+      { text: b('28.01 g/mol', '28,01 g/mol'), mis: 'formula-count-once' },
+      { text: b('44.01 g/mol', '44,01 g/mol'), correct: true },
+      { text: b('56.02 g/mol', '56,02 g/mol') },
+      { text: b('24.02 g/mol', '24,02 g/mol') },
+    ],
+    explain: b('One C and two O: 12.011 + 2 × 15.999 = 44.01 g/mol. 28.01 counts oxygen once (that is carbon monoxide, {{CO}}); 56.02 doubles the carbon too; 24.02 puts the 2 on carbon.',
+      'Ein C und zwei O: 12,011 + 2 · 15,999 = 44,01 g/mol. 28,01 zählt Sauerstoff nur einmal (das ist Kohlenstoffmonoxid, {{CO}}); 56,02 verdoppelt auch den Kohlenstoff; 24,02 bezieht die 2 auf den Kohlenstoff.') },
+  { id: 'i13e', unit: 13, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u13.molar-mass-sum', 'u13.mol-of-atoms'],
+    prompt: b('1 mol of H atoms has a mass of 1.008 g and 1 mol of O atoms 15.999 g. Why does 1 mol of water have a mass of 18.015 g?', '1 mol H-Atome hat die Masse 1,008 g, 1 mol O-Atome 15,999 g. Warum hat 1 mol Wasser die Masse 18,015 g?'),
+    options: [
+      { text: b('Joining the atoms adds mass: the bonds make up the difference', 'Das Verbinden der Atome bringt Masse dazu: Die Bindungen machen den Unterschied'), },
+      { text: b('1 mol of water molecules holds 2 mol of H atoms and 1 mol of O atoms, and their masses add up', '1 mol Wassermoleküle enthält 2 mol H-Atome und 1 mol O-Atome, und ihre Massen addieren sich'), correct: true },
+      { text: b('A molar mass is measured; it cannot be worked out from the atoms', 'Eine molare Masse wird gemessen; aus den Atomen lässt sie sich nicht berechnen') },
+      { text: b('The O atom counts twice because it sits in the middle of the molecule', 'Das O-Atom zählt doppelt, weil es in der Mitte des Moleküls sitzt') },
+    ],
+    explain: b('Each molecule has two H atoms and one O atom, so a mole of molecules has two moles of H atoms and one of O atoms: 2 × 1.008 + 15.999 = 18.015 g. Bonds do not add measurable mass, and nothing counts twice for its position.',
+      'Jedes Molekül hat zwei H-Atome und ein O-Atom, ein Mol Moleküle also zwei Mol H-Atome und ein Mol O-Atome: 2 · 1,008 + 15,999 = 18,015 g. Bindungen bringen keine messbare Masse dazu, und kein Atom zählt wegen seiner Lage doppelt.') },
+  { id: 'i13f', unit: 13, kind: 'estimate', format: 'estimate', evidence: 'transfer', concepts: ['u13.molar-mass-sum'], targets: ['formula-count-once'],
+    prompt: b('Table sugar is sucrose, {{C12H22O11}}. Atomic masses: C 12.011, H 1.008, O 15.999 u. Work out its molar mass in g/mol.', 'Haushaltszucker ist Saccharose, {{C12H22O11}}. Atommassen: C 12,011; H 1,008; O 15,999 u. Berechne ihre molare Masse in g/mol.'),
+    min: 20, max: 500, step: 1, answer: 342, tolerance: 1, suffix: ' g/mol',
+    near: [{ value: 29, tol: 3, note: b('29 adds each element once. The subscripts count 12 C, 22 H and 11 O atoms in every molecule.', '29 zählt jedes Element nur einmal. Die Indizes zählen 12 C, 22 H und 11 O in jedem Molekül.') }],
+    explain: b('12 × 12.011 + 22 × 1.008 + 11 × 15.999 = 144.13 + 22.18 + 175.99 = 342.30 g/mol.',
+      '12 · 12,011 + 22 · 1,008 + 11 · 15,999 = 144,13 + 22,18 + 175,99 = 342,30 g/mol.') },
+
+  // ---------- u13.mol-of-atoms ----------
+  { id: 'i13g', unit: 13, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u13.mol-of-atoms'], targets: ['formula-count-once'],
+    prompt: b('How many moles of oxygen atoms are in 1 mol of carbon dioxide, {{CO2}}?', 'Wie viel Mol Sauerstoffatome enthält 1 mol Kohlenstoffdioxid, {{CO2}}?'),
+    options: [
+      { text: b('1 mol: one mole of molecules, one mole of each element', '1 mol: ein Mol Moleküle, ein Mol von jedem Element'), mis: 'formula-count-once' },
+      { text: b('2 mol: two O atoms in every molecule', '2 mol: zwei O-Atome in jedem Molekül'), correct: true },
+      { text: b('3 mol: three atoms in every molecule', '3 mol: drei Atome in jedem Molekül') },
+      { text: b('0.5 mol: the oxygen is shared between two atoms', '0,5 mol: Der Sauerstoff verteilt sich auf zwei Atome') },
+    ],
+    explain: b('Every {{CO2}} molecule carries two O atoms, so there are twice as many O atoms as molecules: 2 mol, about 1.2 × 10²⁴ atoms. 3 mol is the total of all atoms, C and O together.',
+      'Jedes {{CO2}}-Molekül trägt zwei O-Atome, es gibt also doppelt so viele O-Atome wie Moleküle: 2 mol, etwa 1,2 · 10²⁴ Atome. 3 mol sind alle Atome zusammen, C und O.') },
+  { id: 'i13h', unit: 13, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u13.mol-of-atoms'],
+    prompt: b('Why does 1 mol of glucose, {{C6H12O6}}, contain 12 mol of hydrogen atoms?', 'Warum enthält 1 mol Glucose, {{C6H12O6}}, 12 mol Wasserstoffatome?'),
+    options: [
+      { text: b('Hydrogen is the lightest element, so it makes up the most moles', 'Wasserstoff ist das leichteste Element, also macht er die meisten Mol aus') },
+      { text: b('1 mol of glucose holds 12 g of hydrogen, and 1 g of hydrogen is 1 mol', '1 mol Glucose enthält 12 g Wasserstoff, und 1 g Wasserstoff ist 1 mol') },
+      { text: b('Every molecule carries 12 H atoms, so there are 12 times as many H atoms as molecules', 'Jedes Molekül trägt 12 H-Atome, es gibt also 12-mal so viele H-Atome wie Moleküle'), correct: true },
+      { text: b('1 mol of any substance holds 6.022 × 10²³ atoms in total, shared out by the formula', '1 mol eines Stoffes enthält insgesamt 6,022 · 10²³ Atome, verteilt nach der Formel') },
+    ],
+    explain: b('A mole counts particles, here molecules: 6.022 × 10²³ of them. Each brings 12 H atoms, so the H atoms number 12 × 6.022 × 10²³, which is 12 mol. The count of atoms, not their mass, is what multiplies; the last option mixes up moles of molecules with moles of atoms.',
+      'Ein Mol zählt Teilchen, hier Moleküle: 6,022 · 10²³ Stück. Jedes bringt 12 H-Atome mit, die H-Atome zählen also 12 · 6,022 · 10²³, das sind 12 mol. Es multipliziert sich die Zahl der Atome, nicht ihre Masse; die letzte Antwort verwechselt Mol Moleküle mit Mol Atomen.') },
+  { id: 'i13i', unit: 13, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u13.mol-of-atoms', 'u13.formula-count'], targets: ['formula-count-once'],
+    prompt: b('Ammonia, {{NH3}}, has a molar mass of 17.03 g/mol. How many moles of H atoms are in 34.06 g of ammonia?', 'Ammoniak, {{NH3}}, hat die molare Masse 17,03 g/mol. Wie viel Mol H-Atome stecken in 34,06 g Ammoniak?'),
+    options: [
+      { text: b('2 mol', '2 mol'), mis: 'formula-count-once' },
+      { text: b('3 mol', '3 mol') },
+      { text: b('6 mol', '6 mol'), correct: true },
+      { text: b('34 mol', '34 mol') },
+    ],
+    explain: b('34.06 g ÷ 17.03 g/mol = 2.00 mol of molecules, each with 3 H atoms: 3 × 2.00 = 6.0 mol of H atoms. 2 mol counts the molecules only; 3 mol would be the H in a single mole.',
+      '34,06 g ÷ 17,03 g/mol = 2,00 mol Moleküle mit je 3 H-Atomen: 3 · 2,00 = 6,0 mol H-Atome. 2 mol zählt nur die Moleküle; 3 mol wären die H-Atome in einem einzigen Mol.') },
+
+  // ---------- u13.formula-unit ----------
+  { id: 'i13j', unit: 13, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u13.formula-unit'], targets: ['ionic-molecules', 'formula-one-to-one'],
+    prompt: b('Calcium chloride, {{CaCl2}}, is spread on icy roads. What does its formula tell you?', 'Calciumchlorid, {{CaCl2}}, wird auf vereiste Straßen gestreut. Was sagt seine Formel?'),
+    options: [
+      { text: b('Each {{Ca2+}} is bonded to its own two {{Cl-}} in a small molecule', 'Jedes {{Ca2+}} ist mit seinen eigenen zwei {{Cl-}} zu einem kleinen Molekül verbunden'), mis: 'ionic-molecules' },
+      { text: b('The lattice holds two {{Cl-}} ions for every {{Ca2+}} ion', 'Das Ionengitter enthält zwei {{Cl-}}-Ionen auf jedes {{Ca2+}}-Ion'), correct: true },
+      { text: b('One {{Ca2+}} pairs with one {{Cl-}}, as in table salt', 'Ein {{Ca2+}} paart sich mit einem {{Cl-}}, wie im Kochsalz'), mis: 'formula-one-to-one' },
+      { text: b('Calcium chloride is made of molecules with three atoms each', 'Calciumchlorid besteht aus Molekülen mit je drei Atomen'), mis: 'ionic-molecules' },
+    ],
+    explain: b('Calcium chloride is an ion lattice: no ion has partners of its own, and the formula only gives the ratio, one {{Ca2+}} to two {{Cl-}}, so the charges cancel. That ratio is the [[formula-unit]]; 110.98 g/mol is the mass of a mole of them.',
+      'Calciumchlorid ist ein Ionengitter: Kein Ion hat eigene Partner, und die Formel gibt nur das Verhältnis an, ein {{Ca2+}} auf zwei {{Cl-}}, damit sich die Ladungen ausgleichen. Dieses Verhältnis ist die [[formula-unit]]; 110,98 g/mol ist die Masse von einem Mol davon.') },
+  { id: 'i13k', unit: 13, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u13.formula-unit'], targets: ['ionic-molecules'],
+    prompt: b('Books call 58.44 g/mol the mass of one mole of NaCl formula units, not of NaCl molecules. Why?', 'Bücher nennen 58,44 g/mol die Masse von einem Mol NaCl-Formeleinheiten, nicht von NaCl-Molekülen. Warum?'),
+    options: [
+      { text: b('NaCl molecules are too small to be counted one by one', 'NaCl-Moleküle sind zu klein, um sie einzeln zu zählen'), mis: 'ionic-molecules' },
+      { text: b('A formula unit has more mass than a molecule', 'Eine Formeleinheit hat mehr Masse als ein Molekül') },
+      { text: b('Solid salt is made of NaCl molecules that only split into ions in water', 'Festes Salz besteht aus NaCl-Molekülen, die erst im Wasser in Ionen zerfallen'), mis: 'ionic-molecules' },
+      { text: b('Salt is a lattice of ions with no separate molecules; NaCl only gives the 1 : 1 ratio', 'Salz ist ein Ionengitter ohne einzelne Moleküle; NaCl gibt nur das Verhältnis 1 : 1 an'), correct: true },
+    ],
+    explain: b('In the crystal every {{Na+}} sits among six {{Cl-}} and every {{Cl-}} among six {{Na+}}, so no pair belongs together. The ions are there in the solid already (unit 4). The arithmetic is the same as for a molecule: 22.99 + 35.45 = 58.44 g/mol.',
+      'Im Kristall sitzt jedes {{Na+}} zwischen sechs {{Cl-}} und jedes {{Cl-}} zwischen sechs {{Na+}}, kein Paar gehört also zusammen. Die Ionen gibt es schon im Feststoff (Einheit 4). Gerechnet wird wie bei einem Molekül: 22,99 + 35,45 = 58,44 g/mol.') },
+  { id: 'i13l', unit: 13, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u13.formula-unit', 'u13.mol-of-atoms'], targets: ['ionic-molecules'],
+    prompt: b('Magnesium oxide, {{MgO}} (40.30 g/mol), is a lattice of {{Mg2+}} and {{O2-}} ions. How many moles of ions are in 40.30 g of it?', 'Magnesiumoxid, {{MgO}} (40,30 g/mol), ist ein Ionengitter aus {{Mg2+}} und {{O2-}}. Wie viel Mol Ionen stecken in 40,30 g davon?'),
+    options: [
+      { text: b('1 mol: one mole of MgO molecules', '1 mol: ein Mol MgO-Moleküle'), mis: 'ionic-molecules' },
+      { text: b('2 mol: 1 mol of {{Mg2+}} and 1 mol of {{O2-}}', '2 mol: 1 mol {{Mg2+}} und 1 mol {{O2-}}'), correct: true },
+      { text: b('4 mol: the charges are 2+ and 2−', '4 mol: Die Ladungen sind 2+ und 2−') },
+      { text: b('0.5 mol: the two ions share one formula', '0,5 mol: Die zwei Ionen teilen sich eine Formel') },
+    ],
+    explain: b('40.30 g is 1 mol of formula units, and each formula unit stands for one {{Mg2+}} and one {{O2-}}: 2 mol of ions in all. The charges tell you the ratio, not how many ions there are.',
+      '40,30 g sind 1 mol Formeleinheiten, und jede Formeleinheit steht für ein {{Mg2+}} und ein {{O2-}}: zusammen 2 mol Ionen. Die Ladungen geben das Verhältnis an, nicht die Zahl der Ionen.') },
+  { id: 'i13m', unit: 13, kind: 'choice', format: 'odd', concepts: ['u13.formula-unit'], targets: ['ionic-molecules'],
+    prompt: b('Odd one out: which of these is made of molecules?', 'Was passt nicht? Welcher dieser Stoffe besteht aus Molekülen?'),
+    options: [
+      { text: b('sodium chloride, {{NaCl}}', 'Natriumchlorid, {{NaCl}}'), mis: 'ionic-molecules' },
+      { text: b('carbon dioxide, {{CO2}}', 'Kohlenstoffdioxid, {{CO2}}'), correct: true },
+      { text: b('magnesium oxide, {{MgO}}', 'Magnesiumoxid, {{MgO}}') },
+      { text: b('calcium carbonate, {{CaCO3}}', 'Calciumcarbonat, {{CaCO3}}') },
+    ],
+    explain: b('Carbon dioxide is made of two non-metals sharing electron pairs: real {{CO2}} molecules (unit 5). The other three contain metal ions in a lattice ({{Na+}}, {{Mg2+}}, {{Ca2+}}), so their formulas are formula units. Calcium carbonate has a group inside, the carbonate ion {{CO32-}}, but the solid is still an ion lattice.',
+      'Kohlenstoffdioxid besteht aus zwei Nichtmetallen, die Elektronenpaare teilen: echte {{CO2}}-Moleküle (Einheit 5). Die anderen drei enthalten Metall-Ionen in einem Gitter ({{Na+}}, {{Mg2+}}, {{Ca2+}}), ihre Formeln sind also Formeleinheiten. Calciumcarbonat enthält zwar eine Gruppe, das Carbonat-Ion {{CO32-}}, der Feststoff ist aber trotzdem ein Ionengitter.') },
+
+  // ---------- u13.mass-fraction ----------
+  { id: 'i13n', unit: 13, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u13.mass-fraction'], targets: ['atoms-count-share'],
+    prompt: b('Methane, {{CH4}}, has one carbon atom (12.01 u) and four hydrogen atoms (1.008 u each). Which element has the larger share of its mass?', 'Methan, {{CH4}}, hat ein Kohlenstoffatom (12,01 u) und vier Wasserstoffatome (je 1,008 u). Welches Element hat den größeren Massenanteil?'),
+    options: [
+      { text: b('hydrogen, about 80 %: four atoms out of five', 'Wasserstoff, etwa 80 %: vier von fünf Atomen'), mis: 'atoms-count-share' },
+      { text: b('neither: 50 % each', 'keines: je 50 %') },
+      { text: b('carbon, about 75 %', 'Kohlenstoff, etwa 75 %'), correct: true },
+      { text: b('hydrogen, about 60 %: there are four times as many H atoms', 'Wasserstoff, etwa 60 %: Es gibt viermal so viele H-Atome'), mis: 'atoms-count-share' },
+    ],
+    explain: b('4 × 1.008 = 4.03 u of hydrogen against 12.01 u of carbon, out of 16.04: carbon 74.9 %, hydrogen 25.1 %. Four H atoms together have only a third of the mass of one C atom.',
+      '4 · 1,008 = 4,03 u Wasserstoff gegenüber 12,01 u Kohlenstoff, von 16,04: Kohlenstoff 74,9 %, Wasserstoff 25,1 %. Vier H-Atome zusammen haben nur ein Drittel der Masse eines C-Atoms.') },
+  { id: 'i13o', unit: 13, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u13.mass-fraction'], targets: ['atoms-count-share'],
+    prompt: b('Glucose, {{C6H12O6}}, has twice as many H atoms as O atoms, yet oxygen is 53 % of its mass and hydrogen under 7 %. Why?', 'Glucose, {{C6H12O6}}, hat doppelt so viele H-Atome wie O-Atome, trotzdem macht Sauerstoff 53 % ihrer Masse aus und Wasserstoff unter 7 %. Warum?'),
+    options: [
+      { text: b('An O atom has about 16 times the mass of an H atom: 6 O bring 96 u, 12 H only 12 u', 'Ein O-Atom hat etwa die 16-fache Masse eines H-Atoms: 6 O bringen 96 u, 12 H nur 12 u'), correct: true },
+      { text: b('Shares follow the atom count, so the 53 % must include water stuck to the sample', 'Anteile folgen der Atomzahl, also müssen die 53 % am Stoff haftendes Wasser enthalten'), mis: 'atoms-count-share' },
+      { text: b('Hydrogen atoms lose most of their mass when they bond', 'Wasserstoffatome verlieren beim Binden den Großteil ihrer Masse') },
+      { text: b('Oxygen atoms are counted twice because they bond on both sides', 'Sauerstoffatome werden doppelt gezählt, weil sie nach zwei Seiten binden') },
+    ],
+    explain: b('A mass share weighs the atoms: count × atomic mass ÷ molar mass. 6 × 16.00 = 96.0 u of oxygen and 12 × 1.008 = 12.1 u of hydrogen, out of 180.16 u: 53.3 % against 6.7 %.',
+      'Ein Massenanteil wiegt die Atome: Anzahl · Atommasse ÷ molare Masse. 6 · 16,00 = 96,0 u Sauerstoff und 12 · 1,008 = 12,1 u Wasserstoff, von 180,16 u: 53,3 % gegenüber 6,7 %.') },
+  { id: 'i13p', unit: 13, kind: 'estimate', format: 'estimate', evidence: 'transfer', concepts: ['u13.mass-fraction'], targets: ['atoms-count-share'],
+    prompt: b('Chalk and limestone are calcium carbonate, {{CaCO3}}: molar mass 100.09 g/mol, calcium 40.08 u. What percentage of the mass is calcium? (Share = atoms × atomic mass ÷ molar mass.)', 'Kreide und Kalkstein sind Calciumcarbonat, {{CaCO3}}: molare Masse 100,09 g/mol, Calcium 40,08 u. Wie viel Prozent der Masse sind Calcium? (Anteil = Atome · Atommasse ÷ molare Masse.)'),
+    min: 0, max: 100, step: 1, answer: 40, tolerance: 1, suffix: ' %',
+    near: [{ value: 20, tol: 2, note: b('20 % is one atom in five. A mass share weighs the atoms, and calcium is the heaviest of them.', '20 % ist ein Atom von fünf. Ein Massenanteil wiegt die Atome, und Calcium ist das schwerste davon.') }],
+    explain: b('1 × 40.08 ÷ 100.09 = 40.0 %. Calcium is one atom in five but carries two fifths of the mass.',
+      '1 · 40,08 ÷ 100,09 = 40,0 %. Calcium ist ein Atom von fünf, trägt aber zwei Fünftel der Masse.') },
+
+  // ---------- u13.empirical ----------
+  { id: 'i13q', unit: 13, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u13.empirical'], targets: ['atoms-count-share'],
+    prompt: b('Analysis of a white powder gives 52.9 % aluminium and 47.1 % oxygen by mass. Atomic masses: Al 26.98, O 16.00 u. Its formula is…', 'Die Analyse eines weißen Pulvers ergibt 52,9 % Aluminium und 47,1 % Sauerstoff (Massenanteile). Atommassen: Al 26,98; O 16,00 u. Seine Formel ist…'),
+    options: [
+      { text: b('{{AlO}}: the two shares are about equal', '{{AlO}}: Die zwei Anteile sind etwa gleich'), mis: 'atoms-count-share' },
+      { text: b('{{Al2O3}}', '{{Al2O3}}'), correct: true },
+      { text: b('{{Al3O2}}', '{{Al3O2}}') },
+      { text: b('{{AlO2}}', '{{AlO2}}') },
+    ],
+    explain: b('In 100 g: 52.9 ÷ 26.98 = 1.96 mol Al and 47.1 ÷ 16.00 = 2.94 mol O. Divided by 1.96: 1 : 1.5, doubled to whole numbers 2 : 3, {{Al2O3}}. Equal mass shares do not mean equal numbers of atoms, because the atoms have different masses.',
+      'In 100 g: 52,9 ÷ 26,98 = 1,96 mol Al und 47,1 ÷ 16,00 = 2,94 mol O. Durch 1,96 geteilt: 1 : 1,5, verdoppelt zu ganzen Zahlen 2 : 3, {{Al2O3}}. Gleiche Massenanteile bedeuten keine gleiche Atomzahl, weil die Atome verschiedene Massen haben.') },
+  { id: 'i13r', unit: 13, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u13.empirical'], targets: ['atoms-count-share'],
+    prompt: b('Glucose and acetic acid both analyse as 40.0 % carbon, 6.7 % hydrogen and 53.3 % oxygen. Why can the analysis give {{CH2O}} but not tell which substance it was?', 'Glucose und Essigsäure ergeben bei der Analyse beide 40,0 % Kohlenstoff, 6,7 % Wasserstoff und 53,3 % Sauerstoff. Warum liefert die Analyse {{CH2O}}, kann aber nicht sagen, welcher Stoff es war?'),
+    options: [
+      { text: b('Mass shares grow with the number of atoms, so the bigger glucose molecule should show larger ones', 'Massenanteile wachsen mit der Zahl der Atome, also müsste das größere Glucosemolekül größere zeigen'), mis: 'atoms-count-share' },
+      { text: b('The analysis burns the sample and loses some of its atoms', 'Die Analyse verbrennt die Probe und verliert dabei einige Atome') },
+      { text: b('Both have the atom ratio 1 : 2 : 1, so the same shares; only the molar mass gives the count per molecule', 'Beide haben das Atomverhältnis 1 : 2 : 1, also dieselben Anteile; erst die molare Masse liefert die Anzahl pro Molekül'), correct: true },
+      { text: b('Glucose and acetic acid have the same molar mass', 'Glucose und Essigsäure haben dieselbe molare Masse') },
+    ],
+    explain: b('{{C6H12O6}} and {{C2H4O2}} are 6 and 2 copies of the {{CH2O}} ratio, and shares depend only on the ratio. The molar masses differ, 180.16 against 60.05 g/mol, and that is what tells them apart.',
+      '{{C6H12O6}} und {{C2H4O2}} sind das Verhältnis {{CH2O}} sechsmal und zweimal, und die Anteile hängen nur vom Verhältnis ab. Die molaren Massen unterscheiden sich, 180,16 gegenüber 60,05 g/mol, und daran erkennt man sie.') },
+  { id: 'i13s', unit: 13, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u13.empirical', 'u13.molar-mass-sum'],
+    prompt: b('Benzene is 92.3 % carbon and 7.7 % hydrogen, which gives the [[empirical-formula]] {{CH}} (13.02 g/mol). Its molar mass is measured as 78.11 g/mol. Its molecular formula is…', 'Benzol besteht zu 92,3 % aus Kohlenstoff und zu 7,7 % aus Wasserstoff, das ergibt die [[empirical-formula]] {{CH}} (13,02 g/mol). Seine molare Masse wird zu 78,11 g/mol gemessen. Seine Summenformel ist…'),
+    options: [
+      { text: b('{{CH}}', '{{CH}}') },
+      { text: b('{{C2H2}}', '{{C2H2}}') },
+      { text: b('{{C6H6}}', '{{C6H6}}'), correct: true },
+      { text: b('{{C6H12}}', '{{C6H12}}') },
+    ],
+    explain: b('78.11 ÷ 13.02 = 6, so six {{CH}} units: {{C6H6}}. {{C2H2}} (ethyne, 26.04 g/mol) has the same shares but a third of the mass; {{C6H12}} has a different ratio altogether, 1 : 2.',
+      '78,11 ÷ 13,02 = 6, also sechs {{CH}}-Einheiten: {{C6H6}}. {{C2H2}} (Ethin, 26,04 g/mol) hat dieselben Anteile, aber ein Drittel der Masse; {{C6H12}} hat ein ganz anderes Verhältnis, 1 : 2.') },
+];

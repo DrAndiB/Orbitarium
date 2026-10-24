@@ -104,6 +104,7 @@ export const LADDER_SAMPLES: LadderSample[] = [
   S('MgO', 'MgO', 'Magnesium oxide', 'Magnesiumoxid', 'formula-unit'),
   S('CaCO3', 'CaCO3', 'Calcium carbonate (chalk, limestone)', 'Calciumcarbonat (Kalk)', 'formula-unit'),
   S('Ca(OH)2', 'Ca(OH)2', 'Calcium hydroxide (slaked lime)', 'Calciumhydroxid (Löschkalk)', 'formula-unit'),
+  S('Mg(OH)2', 'Mg(OH)2', 'Magnesium hydroxide (milk of magnesia)', 'Magnesiumhydroxid (Magnesiamilch)', 'formula-unit'),
   S('FeO', 'FeO', 'Iron(II) oxide (wüstite)', 'Eisen(II)-oxid (Wüstit)', 'formula-unit'),
   S('Fe2O3', 'Fe2O3', 'Iron(III) oxide (haematite)', 'Eisen(III)-oxid (Hämatit)', 'formula-unit'),
   S('Fe3O4', 'Fe3O4', 'Iron(II,III) oxide (magnetite)', 'Eisen(II,III)-oxid (Magnetit)', 'formula-unit'),
