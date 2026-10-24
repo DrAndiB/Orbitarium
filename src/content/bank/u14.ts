@@ -93,7 +93,7 @@ export const BANK_U14: Item[] = [
     options: [
       { text: b('It does: 2 : 1 says two parts of hydrogen to one part of oxygen', 'Doch: 2 : 1 bedeutet zwei Teile Wasserstoff auf einen Teil Sauerstoff'), mis: 'coefficients-mass-ratio' },
       { text: b('Part of the oxygen is always lost as heat, so more is needed', 'Ein Teil des Sauerstoffs geht immer als Wärme verloren, deshalb braucht man mehr') },
-      { text: b('2 : 1 counts molecules, and an O₂ molecule has about 16 times the mass of an H₂ molecule', '2 : 1 zählt Moleküle, und ein O₂-Molekül hat etwa die 16-fache Masse eines H₂-Moleküls'), correct: true },
+      { text: b('2 : 1 counts molecules, and an O₂ molecule has about 16 times the mass of an H₂ molecule', '2 : 1 gibt Teilchenzahlen an, und ein O₂-Molekül hat etwa die 16-fache Masse eines H₂-Moleküls'), correct: true },
       { text: b('Gases have no fixed mass, so the grams cannot be worked out', 'Gase haben keine feste Masse, deshalb lassen sich die Gramm nicht berechnen') },
     ],
     explain: b('Two H₂ molecules react with one O₂ molecule. O₂ has a molar mass of 32.00 g/mol, H₂ of 2.016 g/mol, about 16 times less, so 1 g of hydrogen (0.496 mol) needs about 7.9 g of oxygen, not 0.5 g.', 'Zwei H₂-Moleküle reagieren mit einem O₂-Molekül. O₂ hat eine molare Masse von 32,00 g/mol, H₂ von 2,016 g/mol, etwa 16-mal weniger, also braucht 1 g Wasserstoff (0,496 mol) etwa 7,9 g Sauerstoff, nicht 0,5 g.') },
@@ -110,10 +110,10 @@ export const BANK_U14: Item[] = [
     prompt: b('2 {{H2}} + {{O2}} → 2 {{H2O}}. Molar masses: {{H2}} 2.016 g/mol, {{O2}} 32.00 g/mol. With how many grams of oxygen does 4 g of hydrogen burn?', '2 {{H2}} + {{O2}} → 2 {{H2O}}. Molare Massen: {{H2}} 2,016 g/mol, {{O2}} 32,00 g/mol. Mit wie viel Gramm Sauerstoff verbrennt 4 g Wasserstoff?'),
     min: 0, max: 80, step: 0.5, answer: 32, tolerance: 0.5, suffix: ' g',
     near: [
-      { value: 2, tol: 0.5, note: b('2 g reads the coefficients 2 : 1 as grams. They count molecules: first turn the 4 g into moles.', '2 g liest die Koeffizienten 2 : 1 als Gramm. Sie zählen Moleküle: Rechne die 4 g zuerst in Mol um.') },
+      { value: 2, tol: 0.5, note: b('2 g reads the coefficients 2 : 1 as grams. They count molecules: first turn the 4 g into moles.', '2 g liest die Koeffizienten 2 : 1 als Gramm. Sie geben Teilchenzahlen an: Rechne die 4 g zuerst in Mol um.') },
       { value: 64, tol: 0.5, note: b('64 g would be one O₂ for every H₂. The equation needs one O₂ for every two H₂.', '64 g wäre ein O₂ auf jedes H₂. Die Gleichung braucht ein O₂ auf zwei H₂.') },
     ],
-    explain: b('4 g ÷ 2.016 g/mol = 1.98 mol of H₂. Half as many moles of O₂: 0.99 mol × 32.00 g/mol = 31.7 g, about 32 g. Water then forms with 4 + 31.7 = 35.7 g.', '4 g ÷ 2,016 g/mol = 1,98 mol H₂. Halb so viel Mol O₂: 0,99 mol · 32,00 g/mol = 31,7 g, etwa 32 g. Es entstehen dann 4 + 31,7 = 35,7 g Wasser.') },
+    explain: b('4 g ÷ 2.016 g/mol = 1.98 mol of H₂. Half as many moles of O₂: 0.99 mol × 32.00 g/mol = 31.7 g, about 32 g. Water then forms with 4 + 31.7 = 35.7 g.', 'n(H₂) = 4 g : 2,016 g/mol = 1,98 mol. Halb so viel Mol O₂: 0,99 mol · 32,00 g/mol = 31,7 g, etwa 32 g. Es entstehen dann 4 + 31,7 = 35,7 g Wasser.') },
 
   // ---------- u14.mass ----------
   { id: 'i14l', unit: 14, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u14.mass'], targets: ['mass-lost-burning'],
@@ -196,7 +196,7 @@ export const BANK_U14: Item[] = [
       { text: b('A single H symbol is too small to read', 'Ein einzelnes H ist zu klein zum Lesen') },
       { text: b('The gas is made of H₂ molecules: two atoms joined by a shared pair', 'Das Gas besteht aus H₂-Molekülen: zwei Atome, verbunden durch ein gemeinsames Elektronenpaar'), correct: true },
     ],
-    explain: b('An equation names the particles that really react. Two H atoms share a pair of electrons (unit 5), and hydrogen gas consists of these H₂ molecules. The 2 is a subscript and counts atoms in one molecule; two moles would be written 2 H₂ in front.', 'Eine Reaktionsgleichung nennt die Teilchen, die wirklich reagieren. Zwei H-Atome teilen sich ein Elektronenpaar (Einheit 5), und Wasserstoffgas besteht aus diesen H₂-Molekülen. Die 2 ist ein Index und zählt die Atome in einem Molekül; zwei Mol schreibt man als Koeffizient davor.') },
+    explain: b('An equation names the particles that really react. Two H atoms share a pair of electrons (unit 5), and hydrogen gas consists of these H₂ molecules. The 2 is a subscript and counts atoms in one molecule; two moles would be written 2 H₂ in front.', 'Eine Reaktionsgleichung nennt die Teilchen, die wirklich reagieren. Zwei H-Atome teilen sich ein Elektronenpaar (Einheit 5), und Wasserstoffgas besteht aus diesen H₂-Molekülen. Die 2 ist ein Index und gibt die Zahl der Atome in einem Molekül an; zwei Mol schreibt man als Koeffizient davor.') },
   { id: 'i14u', unit: 14, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u14.diatomic', 'u14.coefficients'], targets: ['balance-by-subscript'],
     prompt: b('Potassium reacts with bromine, a red-brown liquid made of {{Br2}} molecules, to potassium bromide, KBr. Which equation is right?', 'Kalium reagiert mit Brom, einer rotbraunen Flüssigkeit aus {{Br2}}-Molekülen, zu Kaliumbromid, KBr. Welche Gleichung stimmt?'),
     options: [
