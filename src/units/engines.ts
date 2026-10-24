@@ -392,10 +392,7 @@ export const ENGINE_U16: UnitEngine = {
       mark('make');
       if (id === 'CuSO4-5H2O' && flask === 250 && Math.abs(c - 0.1) <= 0.001) mark('target');
     });
-    ui.on('diluted', (_id: string, c1: number, _pip: number, flask: number, c2: number) => {
-      mark('dilute');
-      if (flask === 100 && Math.abs(c2 - c1 / 10) <= 0.01 * c2) mark('tenfold');
-    });
+    ui.on('diluted', () => mark('dilute'));
     ui.on('sample', () => mark('sample'));
     ui.on('beaker', () => mark('beaker'));
     return benchEngine(ui);

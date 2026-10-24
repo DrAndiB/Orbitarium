@@ -459,7 +459,7 @@ export class LabBenchUI {
       ['V', 'L', (c) => gt(c) + litres(c.V)],
       ['c', 'mol/L', (c) => lt(c) + sig(c.c), 'c'],
       ...(small ? [['c', 'mmol/L', (c: Col) => lt(c) + sig(c.c * 1000)] as [string, string, (c: Col) => string]] : []),
-      ['β', 'g/L', (c) => lt(c) + sig(c.c * M)],
+      [L({ en: 'ρ', de: 'β' }), 'g/L', (c) => lt(c) + sig(c.c * M)],
     ];
     const table = h('table', { class: 'bench-table' },
       h('thead', null, h('tr', null, h('th', null), ...cols.map((c) => h('th', { class: c.planned ? 'planned' : '' }, h('span', null, c.head), h('small', { class: c.on ? 'on' : '' }, c.sub))))),
@@ -499,7 +499,7 @@ export class LabBenchUI {
       headRow.append(this.zoomBtn);
     }
     this.readout.replaceChildren(headRow, h('div', { class: 'bench-scroll' }, table), h('div', { class: 'bench-eqs' }, ...eqs));
-    if (!this.compact) this.readout.append(h('p', { class: 'muted small bench-key' }, L({ en: 'm mass, M molar mass, n amount of substance, V volume of the solution, c concentration, β mass concentration', de: 'm Masse, M molare Masse, n Stoffmenge, V Volumen der Lösung, c Stoffmengenkonzentration, β Massenkonzentration' })));
+    if (!this.compact) this.readout.append(h('p', { class: 'muted small bench-key' }, L({ en: 'm mass, M molar mass, n amount of substance, V volume of the solution, c concentration, ρ mass concentration', de: 'm Masse, M molare Masse, n Stoffmenge, V Volumen der Lösung, c Stoffmengenkonzentration, β Massenkonzentration' })));
   }
 
   /** The particle inset: one circle per vessel, dots in proportion to c. */

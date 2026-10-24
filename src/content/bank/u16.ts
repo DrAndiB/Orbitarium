@@ -30,9 +30,9 @@ export const BANK_U16: Item[] = [
       { text: b('B holds ten times as many moles, so it should look darker; the eye cannot tell', 'B enthält zehnmal so viel Stoffmenge und müsste dunkler aussehen; das Auge merkt es nur nicht') },
       { text: b('Copper sulfate always gives the same blue, however much is dissolved', 'Kupfersulfat ergibt immer dasselbe Blau, egal wie viel gelöst ist') },
       { text: b('Both hold the same moles per litre, 0.40 mol/L: ten times the moles in ten times the volume', 'Beide enthalten gleich viel Mol pro Liter, 0,40 mol/L: zehnmal so viel Stoffmenge in zehnmal so viel Volumen'), correct: true },
-      { text: b('The bigger flask holds the colour more weakly, which makes up for the extra moles', 'Der größere Kolben hält die Farbe schwächer, das gleicht die zusätzliche Stoffmenge aus') },
+      { text: b('The bigger flask spreads the colour over more glass, which makes up for the extra moles', 'Im größeren Kolben verteilt sich die Farbe auf mehr Glas, das gleicht die zusätzliche Stoffmenge aus') },
     ],
-    explain: b('How blue a solution looks through the same thickness depends on how many particles there are per volume, which is what c counts: 0.020 ÷ 0.050 = 0.20 ÷ 0.500 = 0.40 mol/L. n says how much there is in total; c says how crowded it is.', 'Wie blau eine Lösung bei gleicher Schichtdicke aussieht, hängt davon ab, wie viele Teilchen auf ein Volumen kommen, und genau das zählt c: 0,020 : 0,050 = 0,20 : 0,500 = 0,40 mol/L. n gibt an, wie viel insgesamt da ist; c gibt an, wie dicht es verteilt ist.') },
+    explain: b('How blue a solution looks through the same thickness depends on how many particles there are per volume, which is what c gives: 0.020 ÷ 0.050 = 0.20 ÷ 0.500 = 0.40 mol/L. n says how much there is in total; c says how crowded it is.', 'Wie blau eine Lösung bei gleicher Schichtdicke aussieht, hängt davon ab, wie viele Teilchen auf ein Volumen kommen, und genau das gibt c an: 0,020 : 0,050 = 0,20 : 0,500 = 0,40 mol/L. n gibt an, wie viel insgesamt da ist; c gibt an, wie dicht es verteilt ist.') },
   { id: 'i16c', unit: 16, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u16.concentration'],
     prompt: b('A drink contains 6.0 g of sugar per 100 mL; take it all as glucose (180.16 g/mol). What is the glucose concentration in mol/L?', 'Ein Getränk enthält 6,0 g Zucker pro 100 mL; nimm an, es ist alles Glucose (180,16 g/mol). Wie groß ist die Glucosekonzentration in mol/L?'),
     options: [
@@ -41,7 +41,7 @@ export const BANK_U16: Item[] = [
       { text: b('0.33 mol/L', '0,33 mol/L'), correct: true },
       { text: b('3.0 mol/L', '3,0 mol/L') },
     ],
-    explain: b('Per litre that is 60 g (β = 60 g/L), and 60 g ÷ 180.16 g/mol = 0.33 mol: c = 0.33 mol/L. 0.033 is the moles in 100 mL, not per litre; 60 is the grams per litre, not moles.', 'Pro Liter sind das 60 g (β = 60 g/L), und 60 g : 180,16 g/mol = 0,33 mol: c = 0,33 mol/L. 0,033 ist die Stoffmenge in 100 mL, nicht pro Liter; 60 sind die Gramm pro Liter, nicht Mol.') },
+    explain: b('Per litre that is 60 g (ρ = 60 g/L), and 60 g ÷ 180.16 g/mol = 0.33 mol: c = 0.33 mol/L. 0.033 is the moles in 100 mL, not per litre; 60 is the grams per litre, not moles.', 'Pro Liter sind das 60 g (β = 60 g/L), und 60 g : 180,16 g/mol = 0,33 mol: c = 0,33 mol/L. 0,033 ist die Stoffmenge in 100 mL, nicht pro Liter; 60 sind die Gramm pro Liter, nicht Mol.') },
 
   // ---------- u16.solution-volume ----------
   { id: 'i16d', unit: 16, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u16.solution-volume'], targets: ['volume-of-water'],
@@ -52,11 +52,11 @@ export const BANK_U16: Item[] = [
       { text: b('Put it in a 100 mL flask and add exactly 100 mL of water', 'Es in einen 100-mL-Messkolben geben und genau 100 mL Wasser dazugeben'), mis: 'volume-of-water' },
       { text: b('Dissolve it in 94 mL of water, since the salt itself takes up 6 mL', 'Es in 94 mL Wasser lösen, da das Salz selbst 6 mL einnimmt') },
     ],
-    explain: b('c = n / V counts per litre of solution, so the solution, not the water, must end at 100 mL. Filling a volumetric flask to its mark does exactly that, whatever volume the dissolved salt adds. Guessing the salt\'s share of the volume does not work: dissolved ions do not keep the volume of the crystal.', 'c = n / V zählt pro Liter Lösung, also muss die Lösung, nicht das Wasser, am Ende 100 mL betragen. Genau das erreicht das Auffüllen eines Messkolbens bis zur Marke, egal wie viel Volumen das gelöste Salz beiträgt. Den Volumenanteil des Salzes zu schätzen funktioniert nicht: Gelöste Ionen behalten nicht das Volumen des Kristalls.') },
+    explain: b('c = n / V counts per litre of solution, so the solution, not the water, must end at 100 mL. Filling a volumetric flask to its mark does exactly that, whatever volume the dissolved salt adds. Guessing the salt\'s share of the volume does not work: dissolved ions do not keep the volume of the crystal.', 'c = n / V bezieht sich auf einen Liter Lösung, also muss die Lösung, nicht das Wasser, am Ende 100 mL betragen. Genau das erreicht das Auffüllen eines Messkolbens bis zur Marke, egal wie viel Volumen das gelöste Salz beiträgt. Den Volumenanteil des Salzes zu schätzen funktioniert nicht: Gelöste Ionen behalten nicht das Volumen des Kristalls.') },
   { id: 'i16e', unit: 16, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u16.solution-volume'], targets: ['volume-of-water'],
     prompt: b('1.00 mol of sodium chloride stirred into 1.000 L of water does not give a solution of exactly 1.00 mol/L. Why?', '1,00 mol Natriumchlorid, in 1,000 L Wasser eingerührt, ergibt keine Lösung mit genau 1,00 mol/L. Warum?'),
     options: [
-      { text: b('It does: c counts the moles per litre of water added, so it is exactly 1.00 mol/L', 'Doch: c zählt die Mol pro Liter zugegebenes Wasser, also sind es genau 1,00 mol/L'), mis: 'volume-of-water' },
+      { text: b('It does: c counts the moles per litre of water added, so it is exactly 1.00 mol/L', 'Doch: c gibt die Mol pro Liter zugegebenes Wasser an, also sind es genau 1,00 mol/L'), mis: 'volume-of-water' },
       { text: b('Some of the salt reacts with the water and is lost', 'Ein Teil des Salzes reagiert mit dem Wasser und geht verloren') },
       { text: b('Part of the water evaporates while the salt dissolves', 'Ein Teil des Wassers verdunstet, während sich das Salz löst') },
       { text: b('The solution ends up slightly more than 1 L, so there is a little less than 1 mol per litre of it', 'Die Lösung hat am Ende etwas mehr als 1 L, also kommt etwas weniger als 1 mol auf einen Liter davon'), correct: true },
@@ -65,12 +65,12 @@ export const BANK_U16: Item[] = [
   { id: 'i16f', unit: 16, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u16.solution-volume'], targets: ['volume-of-water'],
     prompt: b('A home recipe for saline says: stir 9 g of salt into 1 litre of water. Hospital saline is 9 g in 1 litre of solution. Compared with hospital saline, the home version is…', 'Ein Hausrezept für Kochsalzlösung lautet: 9 g Salz in 1 Liter Wasser einrühren. Infusions-Kochsalzlösung enthält 9 g in 1 Liter Lösung. Verglichen mit ihr ist die selbst gemachte Lösung…'),
     options: [
-      { text: b('slightly weaker: its volume ends a little over 1 L', 'etwas schwächer: Ihr Volumen liegt am Ende etwas über 1 L'), correct: true },
+      { text: b('slightly more dilute: its volume ends a little over 1 L', 'etwas verdünnter: Ihr Volumen liegt am Ende etwas über 1 L'), correct: true },
       { text: b('exactly the same: V is the 1 L of water in both', 'genau gleich: V ist in beiden Fällen der 1 L Wasser'), mis: 'volume-of-water' },
-      { text: b('slightly stronger: the salt takes up some of the water', 'etwas stärker: Das Salz nimmt einen Teil des Wassers auf') },
-      { text: b('twice as strong: in water the salt splits into two ions', 'doppelt so stark: Im Wasser zerfällt das Salz in zwei Ionen') },
+      { text: b('slightly more concentrated: the salt takes up some of the water', 'etwas konzentrierter: Das Salz nimmt einen Teil des Wassers auf') },
+      { text: b('twice as concentrated: in water the salt splits into two ions', 'doppelt so konzentriert: Im Wasser zerfällt das Salz in zwei Ionen') },
     ],
-    explain: b('The salt adds a little volume, so the home version is slightly more than a litre of solution and a little more dilute; for 9 g the difference is small. Both split into the same ions in the same way, so that cannot make one of them stronger.', 'Das Salz bringt etwas Volumen mit, also ergibt das Hausrezept etwas mehr als einen Liter Lösung und ist ein wenig verdünnter; bei 9 g ist der Unterschied klein. Beide zerfallen auf dieselbe Weise in dieselben Ionen, das kann keine von beiden stärker machen.') },
+    explain: b('The salt adds a little volume, so the home version is slightly more than a litre of solution and a little more dilute; for 9 g the difference is small. Both split into the same ions in the same way, so that cannot make one of them more concentrated.', 'Das Salz bringt etwas Volumen mit, also ergibt das Hausrezept etwas mehr als einen Liter Lösung und ist ein wenig verdünnter; bei 9 g ist der Unterschied klein. Beide zerfallen auf dieselbe Weise in dieselben Ionen, das kann keine von beiden konzentrierter machen.') },
 
   // ---------- u16.make ----------
   { id: 'i16g', unit: 16, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u16.make'],
@@ -171,9 +171,9 @@ export const BANK_U16: Item[] = [
       { text: b('Salt is denser than sugar, so more of it fits into a litre', 'Salz hat eine größere Dichte als Zucker, also passt mehr davon in einen Liter') },
       { text: b('Glucose molecules stick together in pairs in water', 'Glucosemoleküle lagern sich im Wasser paarweise zusammen') },
     ],
-    explain: b('10 g ÷ 58.44 = 0.171 mol of NaCl, but 10 g ÷ 180.16 = 0.0555 mol of glucose: 3.08 times as many formula units. Each splits into Na⁺ and Cl⁻, so 2 × 3.08 ≈ 6.2 times as many particles. Grams per litre (β) do not count particles; c and the number of ions do.', '10 g : 58,44 = 0,171 mol NaCl, aber 10 g : 180,16 = 0,0555 mol Glucose: 3,08-mal so viele Formeleinheiten. Jede zerfällt in Na⁺ und Cl⁻, also 2 · 3,08 ≈ 6,2-mal so viele Teilchen. Gramm pro Liter (β) zählen keine Teilchen; das tun c und die Zahl der Ionen.') },
+    explain: b('10 g ÷ 58.44 = 0.171 mol of NaCl, but 10 g ÷ 180.16 = 0.0555 mol of glucose: 3.08 times as many formula units. Each splits into Na⁺ and Cl⁻, so 2 × 3.08 ≈ 6.2 times as many particles. Grams per litre (ρ) do not count particles; c and the number of ions do.', '10 g : 58,44 = 0,171 mol NaCl, aber 10 g : 180,16 = 0,0555 mol Glucose: 3,08-mal so viele Formeleinheiten. Jede zerfällt in Na⁺ und Cl⁻, also 2 · 3,08 ≈ 6,2-mal so viele Teilchen. Gramm pro Liter (β) geben keine Teilchenzahl an; das tun c und die Zahl der Ionen.') },
   { id: 'i16r', unit: 16, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u16.particles'], targets: ['grams-per-litre-counts'],
-    prompt: b('The oral rehydration solution recommended by WHO and UNICEF holds, per litre, 2.6 g of sodium chloride (58.44 g/mol) and 13.5 g of glucose (180.16 g/mol), with two other salts. Which of the two gives more dissolved particles?', 'Die Trinklösung gegen Durchfall, die WHO und UNICEF empfehlen, enthält pro Liter 2,6 g Natriumchlorid (58,44 g/mol) und 13,5 g Glucose (180,16 g/mol), dazu zwei weitere Salze. Welcher der beiden Stoffe liefert mehr gelöste Teilchen?'),
+    prompt: b('The oral rehydration solution recommended by WHO and UNICEF holds, per litre, 2.6 g of sodium chloride (58.44 g/mol) and 13.5 g of glucose (180.16 g/mol), with two other salts. Which of the two gives more dissolved particles?', 'Die orale Rehydratationslösung (Trinklösung gegen Durchfall), die WHO und UNICEF empfehlen, enthält pro Liter 2,6 g Natriumchlorid (58,44 g/mol) und 13,5 g Glucose (180,16 g/mol), dazu zwei weitere Salze. Welcher der beiden Stoffe liefert mehr gelöste Teilchen?'),
     options: [
       { text: b('Glucose, by about five times: it has five times the grams', 'Glucose, etwa fünfmal so viele: Sie hat fünfmal so viele Gramm'), mis: 'grams-per-litre-counts' },
       { text: b('About the same, since both come to roughly 0.05 mol', 'Etwa gleich viele, da beide auf etwa 0,05 mol kommen') },
@@ -188,5 +188,5 @@ export const BANK_U16: Item[] = [
       { value: 9, tol: 0.5, note: b('That is saline\'s grams, but glucose molecules are about three times heavier than NaCl formula units.', 'Das sind die Gramm der Kochsalzlösung, aber Glucosemoleküle sind etwa dreimal so schwer wie Formeleinheiten von NaCl.') },
       { value: 27.7, tol: 1.5, note: b('That matches 154 mmol, the NaCl formula units. Each splits into two ions; glucose stays whole, so it needs twice as many molecules.', 'Das passt zu 154 mmol, den Formeleinheiten NaCl. Jede zerfällt in zwei Ionen; Glucose bleibt ganz, braucht also doppelt so viele Moleküle.') },
     ],
-    explain: b('0.308 mol × 180.16 g/mol = 55.5 g. The real glucose drip uses 50 g per litre (278 mmol), close to it: both sit near blood\'s 275–295.', '0,308 mol · 180,16 g/mol = 55,5 g. Die echte Glucoselösung enthält 50 g pro Liter (278 mmol), nicht weit davon: Beide liegen nahe an den 275–295 des Bluts.') },
+    explain: b('0.308 mol × 180.16 g/mol = 55.5 g. The real glucose drip uses 50 g per litre (278 mmol), close to it: both sit near blood\'s 275–295 (iso-osmotic).', '0,308 mol · 180,16 g/mol = 55,5 g. Die echte Glucoselösung enthält 50 g pro Liter (278 mmol), nicht weit davon: Beide liegen nahe an den 275–295 des Bluts.') },
 ];
