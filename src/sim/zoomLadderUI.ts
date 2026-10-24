@@ -607,7 +607,7 @@ export class ZoomLadderUI {
       } else if (r === 'moles' || r === 'count') {
         const unit = r === 'moles' ? 'mol ' : `${x} ${naText().replace(' mol⁻¹', '')} `;
         rows.push([sp.map((s, i) => `${c[i]} ${unit}${formulaText(s.f)}`).slice(0, nr).join(' + ') + ' → ' + sp.slice(nr).map((s, i) => `${c[nr + i]} ${unit}${formulaText(s.f)}`).join(' + ')]);
-        rows.push([h('span', { class: 'muted' }, L({ en: 'The coefficients count particles: in mol, or in single molecules, the ratio is the same.', de: 'Die Koeffizienten zählen Teilchen: in Mol oder in einzelnen Molekülen, das Verhältnis bleibt gleich.' }))]);
+        rows.push([h('span', { class: 'muted' }, L({ en: 'The coefficients count particles: in mol, or in single molecules, the ratio is the same.', de: 'Die Koeffizienten geben Teilchenzahlen an: in Mol oder in einzelnen Molekülen, das Verhältnis bleibt gleich.' }))]);
       } else rows.push([h('span', { class: 'muted' }, L({ en: 'Each coefficient sets how many particles of that kind take part. Count the atoms of each element on both sides.', de: 'Jeder Koeffizient gibt an, wie viele Teilchen dieser Art beteiligt sind. Zähle die Atome jedes Elements auf beiden Seiten.' }))]);
     } else {
       const e = this.eq, a = this.result ? this.result.amounts : this.inputs;

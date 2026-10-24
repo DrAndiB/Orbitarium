@@ -337,7 +337,7 @@ export const UNIT14: UnitContent = {
           { text: b('6: one {{O2}} for each oxygen atom in the product', '6: ein {{O2}} für jedes Sauerstoffatom im Produkt') },
         ],
         explain: b('O₂ brings oxygen in pairs, Al₂O₃ takes it in threes; the smallest number both reach, their lowest common multiple, is 6: 3 O₂ and 2 Al₂O₃, which hold 4 Al. O₃ would make the count work but is ozone, a different gas, and 6 O₂ would bring 12 oxygen atoms, not 6.',
-          'O₂ bringt Sauerstoff paarweise, Al₂O₃ braucht ihn in Dreiergruppen; das kleinste gemeinsame Vielfache (kgV) von 2 und 3 ist 6: 3 O₂ und 2 Al₂O₃, die 4 Al enthalten. O₃ ließe die Bilanz stimmen, ist aber Ozon, ein anderes Gas, und 6 O₂ brächten 12 Sauerstoffatome statt 6.'),
+          'O₂ liefert Sauerstoff nur paarweise, Al₂O₃ braucht ihn in Dreiergruppen; das kleinste gemeinsame Vielfache (kgV) von 2 und 3 ist 6: 3 O₂ und 2 Al₂O₃, die 4 Al enthalten. O₃ ließe die Bilanz stimmen, ist aber Ozon, ein anderes Gas, und 6 O₂ lieferten 12 Sauerstoffatome statt 6.'),
       } as ChoiceItem,
       show: { engine: 'ladder', eq: 'al2o3', coeffs: [4, 3, 2] },
       revealText: b('4 Al + 3 O₂ → 2 Al₂O₃: 4 aluminium and 6 oxygen atoms on each side. Oxygen comes in pairs (O₂) but goes out in threes (Al₂O₃), so both sides meet at 6 oxygen atoms; two Al₂O₃ then need 4 Al. The picture shows 4 atoms, 3 molecules and 2 formula units: the same atoms, regrouped.',
@@ -345,7 +345,7 @@ export const UNIT14: UnitContent = {
       extra: {
         title: b('Find a number both sides can reach', 'Eine Zahl finden, die beide Seiten erreichen'),
         steps: [
-          b('Start with the most complex substance, Al₂O₃. It holds 3 oxygen atoms, while O₂ brings them in pairs.', 'Fang mit dem kompliziertesten Stoff an, Al₂O₃. Er enthält 3 Sauerstoffatome, O₂ bringt sie aber paarweise.'),
+          b('Start with the most complex substance, Al₂O₃. It holds 3 oxygen atoms, while O₂ brings them in pairs.', 'Fang mit dem kompliziertesten Stoff an, Al₂O₃. Er enthält 3 Sauerstoffatome, O₂ liefert sie aber nur paarweise.'),
           b('The smallest number that 2 and 3 both go into (the lowest common multiple) is 6: 3 O₂ on the left, 2 Al₂O₃ on the right.', 'Das kleinste gemeinsame Vielfache (kgV) von 2 und 3 ist 6: 3 O₂ links, 2 Al₂O₃ rechts.'),
           b('Two Al₂O₃ hold 4 aluminium atoms, so write 4 Al on the left.', 'Zwei Al₂O₃ enthalten 4 Aluminiumatome, also schreibst du links 4 Al.'),
           b('Check: 4 Al and 6 O on each side. Writing O₃ instead would balance the count but name ozone, a different gas.', 'Probe: 4 Al und 6 O auf jeder Seite. O₃ zu schreiben, ließe die Bilanz stimmen, wäre aber Ozon, ein anderes Gas.'),
@@ -395,7 +395,7 @@ export const UNIT14: UnitContent = {
       title: b('Ethane: half a molecule is not allowed', 'Ethan: kein halbes Molekül'), tag: 'C2H6', show: { engine: 'ladder', eq: 'c2h6', coeffs: [2, 7, 4, 6] },
       numbers: [{ v: '3.5', label: b('O₂ molecules one ethane molecule would need', 'O₂-Moleküle, die ein Ethanmolekül bräuchte') }, { v: '7', label: b('O₂ after doubling: 2 C₂H₆ + 7 O₂ → 4 CO₂ + 6 H₂O', 'O₂ nach dem Verdoppeln: 2 C₂H₆ + 7 O₂ → 4 CO₂ + 6 H₂O') }, { v: '14', label: b('O atoms on each side', 'O-Atome auf jeder Seite') }],
       body: b('Carbon first: 2 C go to 2 CO₂; hydrogen next: 6 H go to 3 H₂O. That makes 4 + 3 = 7 oxygen atoms on the right, but O₂ brings them in pairs, so one ethane would need 3½ O₂. Half a molecule cannot react, so double every coefficient.',
-        'Zuerst Kohlenstoff: 2 C ergeben 2 CO₂; dann Wasserstoff: 6 H ergeben 3 H₂O. Rechts stehen damit 4 + 3 = 7 Sauerstoffatome, O₂ bringt sie aber paarweise, ein Ethanmolekül bräuchte also 3½ O₂. Ein halbes Molekül kann nicht reagieren, also verdoppelst du alle Koeffizienten.'),
+        'Zuerst Kohlenstoff: 2 C ergeben 2 CO₂; dann Wasserstoff: 6 H ergeben 3 H₂O. Rechts stehen damit 4 + 3 = 7 Sauerstoffatome, O₂ liefert sie aber nur paarweise, ein Ethanmolekül bräuchte also 3½ O₂. Ein halbes Molekül kann nicht reagieren, also verdoppelst du alle Koeffizienten.'),
       soWhat: b('A ½ is allowed when the equation refers to 1 mol of one substance, as with energy values later (unit 17); in most exam answers write the smallest whole numbers.',
         'Ein ½ ist erlaubt, wenn man die Gleichung auf 1 mol eines Stoffs bezieht, wie später bei Energieangaben (Einheit 17); in den meisten Klausuren schreibst du die kleinsten ganzen Zahlen.'),
     },
@@ -431,8 +431,8 @@ export const UNIT14: UnitContent = {
     min: 1, max: 60, step: 0.5, answer: 25, tolerance: 0, suffix: '',
     near: [
       { value: 12.5, tol: 0, note: b('12.5 balances one octane molecule, but half an O₂ cannot react: double every coefficient.', '12,5 gleicht ein Octanmolekül aus, aber ein halbes O₂ kann nicht reagieren: Verdopple alle Koeffizienten.') },
-      { value: 50, tol: 0, note: b('50 is the number of oxygen atoms needed; each O₂ brings two of them.', '50 ist die Zahl der nötigen Sauerstoffatome; jedes O₂ bringt zwei davon mit.') },
-      { value: 17, tol: 0, note: b('17 counts product molecules (8 CO₂ + 9 H₂O). Count oxygen atoms instead: 16 + 9.', '17 zählt Produktmoleküle (8 CO₂ + 9 H₂O). Zähl stattdessen Sauerstoffatome: 16 + 9.') },
+      { value: 50, tol: 0, note: b('50 is the number of oxygen atoms needed; each O₂ brings two of them.', '50 ist die Zahl der nötigen Sauerstoffatome; jedes O₂ liefert zwei davon.') },
+      { value: 17, tol: 0, note: b('17 counts product molecules (8 CO₂ + 9 H₂O). Count oxygen atoms instead: 16 + 9.', '17 ist die Zahl der Produktmoleküle (8 CO₂ + 9 H₂O). Zähl stattdessen Sauerstoffatome: 16 + 9.') },
     ],
     explain: b('One octane gives 8 CO₂ and 9 H₂O: 16 + 9 = 25 oxygen atoms, so 12½ O₂. Double everything: 2 C₈H₁₈ + 25 O₂ → 16 CO₂ + 18 H₂O, with 16 C, 36 H and 50 O on each side.',
       'Ein Octan ergibt 8 CO₂ und 9 H₂O: 16 + 9 = 25 Sauerstoffatome, also 12½ O₂. Alles verdoppeln: 2 C₈H₁₈ + 25 O₂ → 16 CO₂ + 18 H₂O, mit 16 C, 36 H und 50 O auf jeder Seite.'),

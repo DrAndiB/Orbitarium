@@ -29,7 +29,7 @@ export const BANK_U15: Item[] = [
       { text: b('twice the mass of the methane, in grams', 'die doppelte Masse des Methans, in Gramm'), mis: 'coefficients-mass-ratio' },
     ],
     explain: b('Each CH₄ needs two O₂, so 3 mol of methane needs 6 mol of oxygen (192 g). The coefficients count molecules and moles; twice the mass would be only 96 g of oxygen.',
-      'Jedes CH₄ braucht zwei O₂, also brauchen 3 mol Methan 6 mol Sauerstoff (192 g). Die Koeffizienten zählen Moleküle und Mol; die doppelte Masse wären nur 96 g Sauerstoff.') },
+      'Jedes CH₄ braucht zwei O₂, also brauchen 3 mol Methan 6 mol Sauerstoff (192 g). Die Koeffizienten geben das Verhältnis der Moleküle und der Mol an; die doppelte Masse wären nur 96 g Sauerstoff.') },
   { id: 'i15b', unit: 15, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u15.ratio'], targets: ['coefficients-mass-ratio'],
     prompt: b('2 H₂ + O₂ → 2 H₂O. Why do 4 g of hydrogen burn with 32 g of oxygen, not with 2 g?', '2 H₂ + O₂ → 2 H₂O. Warum verbrennen 4 g Wasserstoff mit 32 g Sauerstoff und nicht mit 2 g?'),
     options: [
@@ -39,7 +39,7 @@ export const BANK_U15: Item[] = [
       { text: b('The 2 : 1 is a ratio of molecules; an O₂ molecule has about 16 times the mass of an H₂', 'Das 2 : 1 ist ein Verhältnis von Molekülen; ein O₂-Molekül hat etwa die 16-fache Masse eines H₂'), correct: true },
     ],
     explain: b('4 g of hydrogen is 2 mol of H₂, which needs 1 mol of O₂: 32 g. The coefficients count particles; masses follow from the molar masses (2.016 and 32.00 g/mol).',
-      '4 g Wasserstoff sind 2 mol H₂, und die brauchen 1 mol O₂: 32 g. Die Koeffizienten zählen Teilchen; die Massen folgen aus den molaren Massen (2,016 und 32,00 g/mol).') },
+      '4 g Wasserstoff sind 2 mol H₂, und die brauchen 1 mol O₂: 32 g. Die Koeffizienten geben das Verhältnis der Teilchen an; die Massen folgen aus den molaren Massen (2,016 und 32,00 g/mol).') },
   { id: 'i15c', unit: 15, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u15.ratio', 'u15.compare'], targets: ['ratio-ignored-limiting', 'coefficients-mass-ratio'],
     prompt: b('A camping stove burns 8 g of methane in 24 g of oxygen: CH₄ + 2 O₂ → CO₂ + 2 H₂O (CH₄ 16.04, O₂ 32.00, CO₂ 44.01 g/mol). How much carbon dioxide forms at most?', 'Ein Campingkocher verbrennt 8 g Methan mit 24 g Sauerstoff: CH₄ + 2 O₂ → CO₂ + 2 H₂O (CH₄ 16,04, O₂ 32,00, CO₂ 44,01 g/mol). Wie viel Kohlenstoffdioxid entsteht höchstens?'),
     options: [
@@ -201,5 +201,5 @@ export const BANK_U15: Item[] = [
       { text: b('Both gases, in equal amounts', 'Beide Gase, in gleichen Mengen') },
     ],
     explain: b('5 kg of oxygen is less than the 7.94 kg that 1 kg of hydrogen needs, so oxygen is limiting and hydrogen is in excess: 5 ÷ 7.94 = 63 % of the hydrogen burns. Engines do this on purpose: the light, unburned hydrogen leaves the nozzle fast and gives more thrust per kilogram of propellant.',
-      '5 kg Sauerstoff sind weniger als die 7,94 kg, die 1 kg Wasserstoff braucht, also limitiert der Sauerstoff, und der Wasserstoff liegt im Überschuss vor: 5 : 7,94 = 63 % des Wasserstoffs verbrennen. Triebwerke machen das absichtlich: Der leichte, unverbrannte Wasserstoff strömt schnell aus der Düse und bringt mehr Schub pro Kilogramm Treibstoff.') },
+      '5 kg Sauerstoff sind weniger als die 7,94 kg, die 1 kg Wasserstoff braucht, also limitiert der Sauerstoff, und der Wasserstoff liegt im Überschuss vor: 5 : 7,94 = 63 % des Wasserstoffs verbrennen. Triebwerke machen das absichtlich: Der leichte, unverbrannte Wasserstoff strömt schnell aus der Düse und ergibt mehr Schub pro Kilogramm Treibstoff.') },
 ];

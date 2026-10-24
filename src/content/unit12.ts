@@ -102,7 +102,7 @@ export const UNIT12: UnitContent = {
       zoom: b('Each rung shows the same sample at a different scale. From moles to count: N = n × N_{A}, where N_{A}, the [[avogadro]], is 6.022 × 10²³ per mole.',
         'Jede Stufe zeigt dieselbe Stoffportion in einem anderen Maßstab. Von Mol zur Teilchenzahl: N = n · N_{A}, mit der [[avogadro]] N_{A} = 6,022 · 10²³ pro Mol. Ältere deutsche Bücher nennen N_{A} manchmal Loschmidt-Zahl; „Loschmidt-Konstante“ bezeichnet meist etwas anderes, die Teilchenzahl pro Volumen eines Gases.'),
       onemol: b('1 mol of carbon is 12.011 g: the same number as its atomic mass, 12.011 u, now in grams per mole. That is its [[molar-mass]] M, and from grams to moles n = m / M. (UK GCSE books call the table number the relative atomic mass, Ar, with no unit.) Since 2019 the mole is defined by the count itself, exactly 6.02214076 × 10²³ particles.',
-        '1 mol Kohlenstoff sind 12,011 g: derselbe Zahlenwert wie seine Atommasse, 12,011 u, jetzt in Gramm pro Mol. Genau das ist mit [[molar-mass]] M gemeint, und von Gramm zu Mol gilt n = m / M. Seit 2019 ist das Mol über die Anzahl selbst definiert: genau 6,02214076 · 10²³ Teilchen.'),
+        '1 mol Kohlenstoff sind 12,011 g: derselbe Zahlenwert wie seine Atommasse, 12,011 u, jetzt in Gramm pro Mol. Genau das ist mit der [[molar-mass|molaren Masse]] M gemeint, und von Gramm zu Mol gilt n = m / M. Seit 2019 ist das Mol über die Anzahl selbst definiert: genau 6,02214076 · 10²³ Teilchen.'),
       'same-mass': b('Equal masses, unequal counts: the pan with the lighter atoms holds more of them. For carbon and gold the factor is 16.4, the ratio of their atomic masses (196.967 u ÷ 12.011 u).',
         'Gleiche Massen, verschieden viele Teilchen: Die Waagschale mit den leichteren Atomen enthält mehr davon. Bei Kohlenstoff und Gold ist der Faktor 16,4, das Verhältnis der Atommassen (196,967 u : 12,011 u).'),
       'same-moles': b('Equal amounts, equal counts: both pans hold the same number of particles, and the pan with the heavier particles is the heavier one.',
@@ -155,8 +155,8 @@ export const UNIT12: UnitContent = {
       item: {
         id: 'u12-foil', unit: 12, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'transfer',
         concepts: ['u12.equal-moles', 'u12.n-m-M'], targets: ['equal-mass-equal-count'],
-        prompt: b('A builder has 1 kg of iron nails (55.845 u, density 7.87 g/cm³), a cook 1 kg of aluminium foil (26.982 u, 2.70 g/cm³). Not every value given is needed. About how many times as many atoms are in the foil?',
-          'Ein Handwerker hat 1 kg Eisennägel (55,845 u, Dichte 7,87 g/cm³), eine Köchin 1 kg Aluminiumfolie (26,982 u, 2,70 g/cm³). Nicht jede Angabe wird gebraucht. Etwa wievielmal so viele Atome enthält die Folie?'),
+        prompt: b('A builder has 1 kg of iron nails (55.845 u, density 7.87 g/cm³), a cook 1 kg of aluminium foil (26.982 u, 2.698 g/cm³). Not every value given is needed. About how many times as many atoms are in the foil?',
+          'Ein Handwerker hat 1 kg Eisennägel (55,845 u, Dichte 7,87 g/cm³), eine Köchin 1 kg Aluminiumfolie (26,982 u, 2,698 g/cm³). Nicht jede Angabe wird gebraucht. Etwa wievielmal so viele Atome enthält die Folie?'),
         options: [
           { text: b('The same number: 1 kg is 1 kg', 'Gleich viele: 1 kg ist 1 kg'), mis: 'equal-mass-equal-count' },
           { text: b('About 2 times as many: each iron atom has about twice the mass', 'Etwa doppelt so viele: Jedes Eisenatom hat etwa die doppelte Masse'), correct: true },
@@ -188,7 +188,7 @@ export const UNIT12: UnitContent = {
       body: b('Water\'s molar mass is the masses of its three atoms added up: 2 × 1.008 + 15.999 = 18.015 g/mol (unit 13 does such sums in detail). So 18.015 g of water, about one mouthful, is 1 mol: 6.022 × 10²³ molecules. Counting them at one per second would take about 1.9 × 10¹⁶ years, over a million times the age of the universe (13.8 billion years).',
         'Die molare Masse von Wasser ist die Summe der Massen seiner drei Atome: 2 · 1,008 + 15,999 = 18,015 g/mol (Einheit 13 rechnet solche Summen genauer). 18,015 g Wasser, etwa ein Schluck, sind also 1 mol: 6,022 · 10²³ Moleküle. Sie im Sekundentakt zu zählen, würde etwa 1,9 · 10¹⁶ Jahre dauern, mehr als das Millionenfache des Alters des Universums (13,8 Milliarden Jahre).'),
       soWhat: b('That is why chemists weigh instead of counting: weighing out 18 g counts off 6.022 × 10²³ molecules in a second. Lab recipes are written in moles; what you weigh out is grams.',
-        'Deshalb wiegen Chemiker, statt zu zählen: Mit einer Waage zählt man so in einer Sekunde 6,022 · 10²³ Moleküle ab, man wiegt einfach 18 g ab. Laborvorschriften rechnen in Mol; abgewogen wird in Gramm.'),
+        'Deshalb wiegen Chemiker, statt zu zählen: Mit einer Waage zählt man so in einer Sekunde 6,022 · 10²³ Moleküle ab: Man wiegt einfach 18 g ab. Laborvorschriften rechnen in Mol; abgewogen wird in Gramm.'),
     },
     {
       title: b('A gold ring in atoms', 'Ein Goldring in Atomen'), tag: 'Au', show: { engine: 'ladder', sub: 'Au', grams: 5, rung: 'moles' },
@@ -204,7 +204,7 @@ export const UNIT12: UnitContent = {
       body: b('Weighing counts right only when the sample has the usual mix of [[isotope|isotopes]]. Chlorine\'s 35.45 u is an average of about 76 % chlorine-35 and 24 % chlorine-37; it works because every ordinary sample has that mix. Heavy water, D₂O, has deuterium (hydrogen with an extra neutron) in place of hydrogen: 20.03 g/mol, so 18 g of it is only 0.899 mol, about 10 % fewer molecules than the ladder shows for ordinary water.',
         'Wiegen zählt nur richtig, wenn die Stoffportion die übliche Mischung der [[isotope|Isotope]] hat. Die 35,45 u von Chlor sind ein Mittelwert aus etwa 76 % Chlor-35 und 24 % Chlor-37; das klappt, weil jede gewöhnliche Stoffportion diese Mischung hat. Schweres Wasser, D₂O, enthält statt Wasserstoff Deuterium (Wasserstoff mit einem zusätzlichen Neutron): 20,03 g/mol, also sind 18 g davon nur 0,899 mol, etwa 10 % weniger Moleküle, als die Leiter für gewöhnliches Wasser zeigt.'),
       soWhat: b('IUPAC calls this average the standard atomic weight: the same number as the average atomic mass in u. A lab working with isotope-enriched material, such as heavy water, must use that material\'s own molar mass.',
-        'Die IUPAC nennt diesen Mittelwert Standard-Atomgewicht; es hat denselben Zahlenwert wie die mittlere Atommasse in u. Ein Labor, das mit isotopenangereichertem Material wie schwerem Wasser arbeitet, muss dessen eigene molare Masse verwenden.'),
+        'Die IUPAC nennt diesen Mittelwert Standardatomgewicht (im Unterricht: relative Atommasse); er hat denselben Zahlenwert wie die mittlere Atommasse in u. Ein Labor, das mit isotopenangereichertem Material wie schwerem Wasser arbeitet, muss dessen eigene molare Masse verwenden.'),
     },
   ],
 
