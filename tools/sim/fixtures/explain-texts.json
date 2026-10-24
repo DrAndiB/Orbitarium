@@ -772,5 +772,107 @@
   "lang": "en",
   "source": "u14-helper",
   "text": "Balancing means each side has the same atoms because atoms are only rearranged. You use coefficients in front because changing subscripts gives a different chemical. Coefficients are mole ratios, the grams come from the molar masses. Mass stays the same overall, so magnesium gains the oxygen's mass. I balance the most complex molecule first and oxygen last, doubling to get rid of halves."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "Koeffizienten = Teilchen bzw. mol, nicht Gramm; Massen über M."
+ },
+ {
+  "unit": 14,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "Coefficients = particles or mol, not grams; masses via M."
+ },
+ {
+  "unit": 14,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "Koeffizienten = Massen."
+ },
+ {
+  "unit": 13,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "NaCl isn't molecular: it is an ionic lattice."
+ },
+ {
+  "unit": 13,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "NaCl ist nicht molekular: Es ist ein Ionengitter."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "100g of aluminium has more atoms than 100g of gold because an aluminium atom weighs less than a gold atom, so it takes more of them to make 100g."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "To count, you divide the weight by the molar mass to get the moles, then multiply by 6.022 x 10^23."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "Dividing the sample's mass by the mass of one particle gives the count."
+ },
+ {
+  "unit": 12,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "Divide the mass of the sample by the mass of one atom and you get the number of atoms."
+ },
+ {
+  "unit": 12,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "M in g/mol = Atommasse in u, z. B. C: 12,011 g/mol."
+ },
+ {
+  "unit": 12,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "Molare Masse in g/mol hat denselben Zahlenwert wie die Atommasse in u."
+ },
+ {
+  "unit": 16,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "Abgießen ändert c nicht, nur n."
+ },
+ {
+  "unit": 16,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "Abgießen ändert die Konzentration nicht, nur die Stoffmenge."
+ },
+ {
+  "unit": 16,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "Wenn man einen Teil abgießt, bleibt die Konzentration gleich, aber die Stoffmenge wird kleiner."
+ },
+ {
+  "unit": 16,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "same moles but more litres so it is weaker"
+ },
+ {
+  "unit": 15,
+  "lang": "de",
+  "source": "r7-fix",
+  "text": "kleinster Wert = limitierend (Unterschuss). Der bestimmt wie viel Produkt entsteht."
+ },
+ {
+  "unit": 15,
+  "lang": "en",
+  "source": "r7-fix",
+  "text": "The most you can make is the theoretical yield."
  }
 ]

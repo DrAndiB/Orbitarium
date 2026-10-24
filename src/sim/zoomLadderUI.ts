@@ -6,7 +6,9 @@ import { ZoomLadderStage, RUNGS, sci, gram, mols, molar, times, formulaText, kin
 import { N_A, molarMass, massShares, parseFormula, sideCount, ladderSample, equation, EQUATIONS, type Equation } from '../content/stoich';
 import type { Rung, Show } from '../content/unitTypes';
 import { h, chem, clear } from '../ui/dom';
-import { L, num, numTrim, type Bi } from '../i18n';
+import { L, num, numTrim, getLang, type Bi } from '../i18n';
+/** Division sign: German school maths writes ":", English "÷". */
+const div = () => (getLang() === 'de' ? ':' : '÷');
 import { buzz } from '../platform';
 import { touchElements } from '../model/learner';
 
@@ -588,7 +590,7 @@ export class ZoomLadderUI {
         const M = molarMass(f), n = g / M, k = kindOf(f);
         const tag = this.f2 ? [fchem(f), ': '] : [];
         if (r === 'grams') rows.push([...tag, h('i', null, 'm'), ` = ${gram(g)}`, h('span', { class: 'muted' }, `   M = ${molar(M)}`)]);
-        else if (r === 'moles') rows.push([...tag, h('i', null, 'n'), ' = ', h('i', null, 'm'), ' / ', h('i', null, 'M'), ` = ${gram(g)} ÷ ${molar(M)} = `, h('strong', null, mols(n))]);
+        else if (r === 'moles') rows.push([...tag, h('i', null, 'n'), ' = ', h('i', null, 'm'), ' / ', h('i', null, 'M'), ` = ${gram(g)} ${div()} ${molar(M)} = `, h('strong', null, mols(n))]);
         else if (r === 'count') rows.push([...tag, h('i', null, 'N'), ' = ', h('i', null, 'n'), ` ${x} `, NA(), ` = ${mols(n)} ${x} ${naText()} = `, h('strong', null, `${sci(n * N_A)} ${L(KIND_WORD[k].many)}`)]);
         else rows.push([...tag, this.particleLine(f)]);
       }
@@ -612,7 +614,7 @@ export class ZoomLadderUI {
       if (r === 'grams' || r === 'moles' || r === 'count') {
         e.reactants.forEach((s, i) => {
           const M = molarMass(s.f), n = a[i];
-          rows.push([fchem(s.f), ': ', h('i', null, 'n'), ' = ', h('i', null, 'm'), ' / ', h('i', null, 'M'), ` = ${gram(n * M)} ÷ ${molar(M)} = `, h('strong', null, mols(n))]);
+          rows.push([fchem(s.f), ': ', h('i', null, 'n'), ' = ', h('i', null, 'm'), ' / ', h('i', null, 'M'), ` = ${gram(n * M)} ${div()} ${molar(M)} = `, h('strong', null, mols(n))]);
         });
       } else if (this.rxBy !== 'particles') {
         const exact = this.result ? this.result.exact : this.picture(a).exact;
@@ -777,7 +779,7 @@ export class ZoomLadderUI {
         ? L({ en: 'Nothing left over: the amounts were in the ratio of the coefficients.', de: 'Nichts übrig: Die Mengen standen im Verhältnis der Koeffizienten.' })
         : h('span', null, h('strong', null, fchem(e.reactants[r.limiting].f), L({ en: ' runs out first', de: ' ist zuerst verbraucht' })), L({ en: ` (the limiting reactant).`, de: ` (das limitierende Edukt).` }))),
       h('table', { class: 'zl-rx-t' },
-        h('thead', null, h('tr', null, h('th', null, ''), h('th', null, h('i', null, 'n')), h('th', null, h('i', null, 'n'), ' ÷ ', L({ en: 'coeff.', de: 'Koeff.' })), h('th', null, L({ en: 'left over', de: 'übrig' })))),
+        h('thead', null, h('tr', null, h('th', null, ''), h('th', null, h('i', null, 'n')), h('th', null, h('i', null, 'n'), ` ${div()} `, L({ en: 'coeff.', de: 'Koeff.' })), h('th', null, L({ en: 'left over', de: 'übrig' })))),
         h('tbody', null, ...e.reactants.map((s, i) => h('tr', { class: i === r.limiting ? 'lim' : '' },
           h('td', null, fchem(s.f)), h('td', null, unitOf(r.amounts[i])), h('td', null, `${r.by === 'particles' ? numTrim(r.amounts[i] * N_A / s.c, 2) : numTrim(r.amounts[i] / s.c, 3)}`),
           h('td', null, r.leftover[i] > 0 && i !== r.limiting ? unitOf(r.leftover[i]) : '–'))))),
@@ -794,8 +796,8 @@ export class ZoomLadderUI {
   private yieldLine(): HTMLElement {
     const theo = this.theoretical(), pct = theo > 0 ? ((this.actual ?? 0) / theo) * 100 : 0;
     return h('div', { class: 'zl-yield-line' },
-      L({ en: 'Percent yield = actual ÷ theoretical × 100 % = ', de: 'Ausbeute in Prozent = tatsächlich ÷ theoretisch · 100 % = ' }),
-      `${gram(this.actual ?? 0)} ÷ ${gram(theo)} ${getTimes100()} = `, h('strong', null, `${num(pct, 1)} %`),
+      L({ en: 'Percent yield = actual ÷ theoretical × 100 % = ', de: 'Ausbeute in Prozent = tatsächlich : theoretisch · 100 % = ' }),
+      `${gram(this.actual ?? 0)} ${div()} ${gram(theo)} ${getTimes100()} = `, h('strong', null, `${num(pct, 1)} %`),
       pct > 100.05 ? h('span', { class: 'zl-yield-warn' }, L({ en: ' More than 100 %: the product is still wet or impure.', de: ' Über 100 %: Das Produkt ist noch feucht oder verunreinigt.' })) : null);
   }
 
