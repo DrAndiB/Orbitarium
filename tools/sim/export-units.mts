@@ -9,6 +9,7 @@ import type { Extra, Reading } from '../../src/content/unit06';
 import type { Bi } from '../../src/i18n';
 import { byZ } from '../../src/content/elements';
 import { substance, CONDUCTIVITY } from '../../src/content/substances';
+import { equation } from '../../src/content/stoich';
 
 const lang = (process.argv[2] ?? 'en') as 'en' | 'de';
 const out = process.argv[3] ?? '.';
@@ -25,7 +26,9 @@ const formula = (f: string) => {
   const m = /^(.*?)(\d?)([+-])$/.exec(f);
   let body = f, charge = '';
   if (m) { const [, b, d, sg] = m; if (d && (/^[A-Z][a-z]?$/.test(b) || /\d$/.test(b))) { body = b; charge = d + sg; } else { body = b + d; charge = sg; } }
-  return body.replace(/\d/g, (d) => SUB[+d]) + charge.split('').map((c) => SUP[c] ?? c).join('');
+  const sub = (x: string) => x.replace(/\d/g, (d) => SUB[+d]);
+  const hyd = /^(.*)·(\d+)(.*)$/.exec(body);
+  return (hyd ? `${sub(hyd[1])}·${hyd[2]}${sub(hyd[3])}` : sub(body)) + charge.split('').map((c) => SUP[c] ?? c).join('');
 };
 const plain = (b: Bi | string) => L(b)
   .replace(/\{\{([^}]+)\}\}/g, (_, f) => formula(f))
@@ -92,7 +95,8 @@ const showText = (s: Show) => {
   if (s.engine === 'box') { const sub = (id: string) => (id === 'NaCl' ? T('salt', 'Salz') : id === 'ice' ? T('a piece of ice', 'ein Stück Eis') : `${formula(substance(id).formula)} (${L(substance(id).name)})`); const v = s.view && s.view !== 'plain' ? T(`, ${({ clouds: 'electron clouds', dipoles: 'dipoles', hbonds: 'hydrogen bonds' } as Record<string, string>)[s.view]} shown`, `, ${({ clouds: 'Elektronenwolken', dipoles: 'Dipole', hbonds: 'Wasserstoffbrücken' } as Record<string, string>)[s.view]} eingeblendet`) : ''; return T(`the Particle Box shows ${sub(s.sub)}${s.mix ? ` with ${sub(s.mix)} poured in` : ''}${s.compare ? ` next to ${sub(s.compare)}` : ''} at ${s.temp ?? 20} °C${v}${s.dipoleOff ? ', dipole switched off (what-if)' : ''}`, `die Teilchenbox zeigt ${sub(s.sub)}${s.mix ? ` mit ${s.mix === 'ice' ? 'einem Stück Eis' : sub(s.mix)} dazugegeben` : ''}${s.compare ? ` neben ${sub(s.compare)}` : ''} bei ${s.temp ?? 20} °C${v}${s.dipoleOff ? ', Dipol ausgeschaltet (Was-wäre-wenn)' : ''}`); }
   if (s.engine === 'hbond') { const m = (id: string) => formula(substance(id)?.formula ?? id); return s.cluster ? T('the hydrogen-bond view shows water with four neighbours', 'die Wasserstoffbrücken-Ansicht zeigt Wasser mit vier Nachbarn') : T(`the hydrogen-bond view shows ${m(s.a)}${s.b ? ` with ${m(s.b)}${s.swap ? ', roles swapped' : ''}` : ''}`, `die Wasserstoffbrücken-Ansicht zeigt ${m(s.a)}${s.b ? ` mit ${m(s.b)}${s.swap ? ', Rollen getauscht' : ''}` : ''}`); }
   if (s.engine === 'ladder') {
-    const r4 = (x: number) => String(Number(x.toPrecision(4)));
+    const r4 = (x: number) => { const s0 = String(Number(x.toPrecision(4))); return lang === 'de' ? s0.replace('.', ',') : s0; };
+    const eqName = (id?: string) => { const e = id ? equation(id) : undefined; return e ? L(e.name) : id ?? ''; };
     const R: Record<string, Bi> = { grams: { en: 'grams', de: 'Gramm' }, moles: { en: 'moles', de: 'Mol' }, count: { en: 'count', de: 'Anzahl' }, particles: { en: 'particles', de: 'Teilchen' } };
     const rung = s.rung ? T(`, zoomed to the ${R[s.rung].en} rung`, `, Stufe „${R[s.rung].de}“`) : '';
     if (s.sub) {
@@ -101,13 +105,14 @@ const showText = (s: Show) => {
       return T(`the Zoom Ladder shows ${amt} of ${formula(s.sub)}${cmp}${s.breakdown ? ', with the formula breakdown (atoms, molar-mass sum, mass shares)' : ''}${rung}`,
         `die Zoom-Leiter zeigt ${amt} ${formula(s.sub)}${cmp}${s.breakdown ? ', mit der Formel-Aufschlüsselung (Atome, Summe der molaren Masse, Massenanteile)' : ''}${rung}`);
     }
-    if (s.amounts) return T(`the Zoom Ladder runs the reaction "${s.eq}" with ${s.amounts.map(r4).join(' and ')} mol of the reactants${s.react ? ' until one runs out' : ''}${s.actual != null ? `, actual yield ${r4(s.actual)} g` : ''}${rung}`,
-      `die Zoom-Leiter lässt die Reaktion „${s.eq}“ mit ${s.amounts.map(r4).join(' und ')} mol der Edukte ablaufen${s.react ? ', bis eines aufgebraucht ist' : ''}${s.actual != null ? `, tatsächliche Ausbeute ${r4(s.actual)} g` : ''}${rung}`);
-    return T(`the Zoom Ladder shows the equation "${s.eq}"${s.coeffs ? ` with coefficients ${s.coeffs.join(', ')}` : ''}${s.trap ? ', with a subscript changed instead (marked as a different substance)' : ''} and the atom tally${rung}`,
-      `die Zoom-Leiter zeigt die Gleichung „${s.eq}“${s.coeffs ? ` mit den Koeffizienten ${s.coeffs.join(', ')}` : ''}${s.trap ? ', stattdessen mit geändertem Index (als anderer Stoff markiert)' : ''} und die Atombilanz${rung}`);
+    if (s.amounts) return T(`the Zoom Ladder runs the reaction "${eqName(s.eq)}" with ${s.amounts.map(r4).join(' and ')} mol of the reactants${s.react ? ' until one runs out' : ''}${s.actual != null ? `, actual yield ${r4(s.actual)} g` : ''}${rung}`,
+      `die Zoom-Leiter lässt die Reaktion „${eqName(s.eq)}“ mit ${s.amounts.map(r4).join(' und ')} mol der Edukte ablaufen${s.react ? ', bis eines aufgebraucht ist' : ''}${s.actual != null ? `, tatsächliche Ausbeute ${r4(s.actual)} g` : ''}${rung}`);
+    return T(`the Zoom Ladder shows the equation "${eqName(s.eq)}"${s.coeffs ? ` with coefficients ${s.coeffs.join(', ')}` : ''}${s.trap ? ', with a subscript changed instead (marked as a different substance)' : ''} and the atom tally${rung}`,
+      `die Zoom-Leiter zeigt die Gleichung „${eqName(s.eq)}“${s.coeffs ? ` mit den Koeffizienten ${s.coeffs.join(', ')}` : ''}${s.trap ? ', stattdessen mit geändertem Index (als anderer Stoff markiert)' : ''} und die Atombilanz${rung}`);
   }
   if (s.engine === 'bench') {
-    const what = `${s.grams != null ? String(Number(s.grams.toPrecision(4))) : '?'} g ${formula(s.solute.replace('-', '·'))}`;
+    const g4 = s.grams != null ? String(Number(s.grams.toPrecision(4))) : '?';
+    const what = `${lang === 'de' ? g4.replace('.', ',') : g4} g ${formula(s.solute.replace('-', '·'))}`;
     const base = s.water != null ? T(`dissolves ${what} in ${s.water} mL of water in a beaker (not to a mark)`, `löst ${what} in ${s.water} mL Wasser im Becherglas (nicht bis zu einer Marke)`)
       : T(`weighs ${what} into a ${s.flask} mL volumetric flask${s.made ? ' and fills it to the mark' : ''}`, `wiegt ${what} in einen ${s.flask}-mL-Messkolben${s.made ? ' und füllt bis zur Eichmarke auf' : ''}`);
     const dil = s.dilute ? T(`; pipettes ${s.dilute.pipette} mL into a new ${s.dilute.flask} mL flask and fills to the mark`, `; pipettiert ${s.dilute.pipette} mL in einen neuen ${s.dilute.flask}-mL-Kolben und füllt auf`) : '';
