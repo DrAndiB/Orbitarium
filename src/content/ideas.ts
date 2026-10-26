@@ -34,7 +34,7 @@ function asciiRe(re: RegExp): RegExp {
 // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
 // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together. Cause and effect and contrast stay
 // together ("…, so …", "… but …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
-const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|obgleich|auch wenn|although|even though|though|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
+const SOFT = /(,\s(?!(?:\d|δ|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|obgleich|auch wenn|although|even though|though|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
 // A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
 // molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
 // German verb-first conditions count as fronted too: "Ist ΔH negativ, gibt …", "Gießt man eine Portion ab, bleibt …".

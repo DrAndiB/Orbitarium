@@ -492,7 +492,7 @@ export class ParticleBoxUI {
     const histAxis = h('div', { class: 'pbox-axis', 'aria-hidden': 'true' });
     const histNote = h('div', { class: 'muted small' });
     const waysBody = h('div', { class: 'pbox-ways-body' });
-    const ways = h('details', { class: 'pbox-ways' }, h('summary', null, L({ en: 'Ways to arrange', de: 'Anordnungsmöglichkeiten' })), waysBody);
+    const ways = h('details', { class: 'pbox-ways' }, h('summary', null, L({ en: 'Ways to arrange (microstates)', de: 'Mikrozustände (Anordnungsmöglichkeiten)' })), waysBody);
     ways.addEventListener('toggle', () => { const s = this.stage.spread; if (ways.open && s) this.emit('ways', s.n); });
     const note = h('p', { class: 'muted small pbox-note' });
     const panel = h('div', { class: 'panel pbox-spread' },
@@ -594,12 +594,12 @@ export class ParticleBoxUI {
     w.forEach((v, k) => { p.wayBars[k].style.height = `${(v / max) * 100}%`; });
     const total = sci(Math.pow(2, n));
     p.waysBody.replaceChildren(
-      h('div', { class: 'pbox-sub' }, L({ en: `Arrangements with k of the ${n} particles on the left`, de: `Anordnungsmöglichkeiten mit k der ${n} Teilchen links` })),
+      h('div', { class: 'pbox-sub' }, L({ en: `Arrangements with k of the ${n} particles on the left`, de: `Mikrozustände mit k der ${n} Teilchen links` })),
       wb,
       n <= 10 ? h('div', { class: 'pbox-waynums' }, ...w.map((v) => h('span', null, sci(v)))) : '',
       h('div', { class: 'pbox-axis', 'aria-hidden': 'true' }, ...axis()),
       h('ul', { class: 'pbox-waylist small' },
-        h('li', null, L({ en: `In all: 2${sup(n)} = ${total} arrangements, each one equally likely.`, de: `Insgesamt: 2${sup(n)} = ${total} Anordnungsmöglichkeiten, jede gleich wahrscheinlich.` })),
+        h('li', null, L({ en: `In all: 2${sup(n)} = ${total} arrangements, each one equally likely.`, de: `Insgesamt: 2${sup(n)} = ${total} Mikrozustände, jeder gleich wahrscheinlich.` })),
         h('li', null, L({ en: `All ${n} on the left: 1 arrangement. Half and half (${half} left, ${n - half} right): ${sci(max)}.`, de: `Alle ${n} links: 1 Anordnungsmöglichkeit. Halb und halb (${half} links, ${n - half} rechts): ${sci(max)}.` })),
         h('li', { class: 'pbox-chance' }, this.chanceText(n) + '.')));
   }

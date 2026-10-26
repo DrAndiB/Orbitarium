@@ -2,7 +2,7 @@
 // Every value from thermo.ts (dH, dS, dG, crossover; OpenStax Chemistry 2e Appendix G, calcite from the CRC Handbook,
 // ice and water at their own temperatures from OpenStax section 10.3). ΔG = ΔH − T·ΔS/1000 in kJ/mol.
 // ice-melt +6.01 / +22.0: ΔG(263) +0.22, ΔG(283) −0.22, ΔG(298) −0.55; hcl −184.6 / +20.0: ΔG(298) −190.6;
-// c-co −110.5 / +89.4: ΔG(298) −137.1; caco3 +179.2 / +160.2: ΔG(298) +131, 1119 K; c2h5oh-burn −1366.9 / −138.7:
+// c-co −110.5 / +89.4: ΔG(298) −137.1; caco3 +179.2 / +160.2: ΔG(298) +131, 1119 K (model value; measured about 898 °C, source in unit20.ts); c2h5oh-burn −1366.9 / −138.7:
 // ΔG(298) −1325.6; water-boil +44.0 / +118.8: 370 K; water-boil-100 +40.65 / +108.9: 373 K; ethene-h2 −136.4 /
 // −120.8: 1129 K (856 °C); no2-dimer −55.3 / −175.8: 315 K; nh3 −91.8 / −198.1: 463 K; h2o2 −196.1 / +126.0:
 // ΔG(298) −234; h2-burn-l ΔG(298) −474; diamond-graphite ΔG(298) −2.9.
@@ -22,15 +22,15 @@ export const BANK_U20: Item[] = [
       { text: b('−6550 kJ/mol', '−6550 kJ/mol'), mis: 'units-j-kj' },
       { text: b('+6.01 kJ/mol', '+6,01 kJ/mol') },
     ],
-    explain: b('Turn ΔS into kJ first: 0.0220 kJ/(mol·K). ΔG = 6.01 − 298 × 0.0220 = 6.01 − 6.56 = −0.55 kJ/mol: just below zero, so at 25 °C ice can melt by itself. −6550 comes from using 22.0 J as if it were kJ; +12.57 adds the entropy term instead of subtracting it.',
-      'Rechne ΔS zuerst in kJ um: 0,0220 kJ/(mol·K). ΔG = 6,01 − 298 · 0,0220 = 6,01 − 6,56 = −0,55 kJ/mol: knapp unter null, also kann Eis bei 25 °C freiwillig schmelzen. −6550 entsteht, wenn man 22,0 J wie kJ verwendet; +12,57 addiert den Entropieterm, statt ihn abzuziehen.') },
+    explain: b('Convert ΔS to kJ/(mol·K) first: 0.0220 kJ/(mol·K). ΔG = 6.01 − 298 × 0.0220 = 6.01 − 6.56 = −0.55 kJ/mol: just below zero, so at 25 °C ice can melt by itself. −6550 comes from using 22.0 J as if it were kJ; +12.57 adds the entropy term instead of subtracting it.',
+      'Rechne ΔS zuerst in kJ/(mol·K) um: 0,0220 kJ/(mol·K). ΔG = 6,01 − 298 · 0,0220 = 6,01 − 6,56 = −0,55 kJ/mol: knapp unter null, also kann Eis bei 25 °C freiwillig schmelzen. −6550 entsteht, wenn man 22,0 J wie kJ verwendet; +12,57 addiert den Entropieterm, statt ihn abzuziehen.') },
   { id: 'i20b', unit: 20, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u20.gibbs'], targets: ['spontaneous-exothermic'],
     prompt: b('ΔG = ΔH − T·ΔS. Why does whether a reaction can run by itself depend on both ΔH and ΔS?', 'ΔG = ΔH − T·ΔS. Warum hängt es von ΔH und von ΔS ab, ob eine Reaktion freiwillig ablaufen kann?'),
     options: [
-      { text: b('Only ΔH really decides; ΔS is a small correction', 'Eigentlich entscheidet nur ΔH; ΔS ist eine kleine Korrektur'), mis: 'spontaneous-exothermic' },
+      { text: b('Only ΔH really decides; ΔS is just a small correction to it', 'Eigentlich entscheidet nur ΔH; ΔS ist nur eine kleine Korrektur dazu'), mis: 'spontaneous-exothermic' },
       { text: b('ΔS is the energy needed to start it, ΔH the energy given out', 'ΔS ist die Energie zum Starten, ΔH die abgegebene Energie') },
-      { text: b('Heat given out raises the entropy of the surroundings; ΔS is the change in the substances', 'Abgegebene Wärme erhöht die Entropie der Umgebung; ΔS ist die Änderung der Stoffe selbst'), correct: true },
-      { text: b('ΔH says whether it can run, ΔS how far it gets', 'ΔH gibt an, ob sie ablaufen kann, ΔS, wie weit sie kommt') },
+      { text: b('ΔH sets the entropy change of the surroundings, ΔS that of the substances', 'ΔH bestimmt die Entropieänderung der Umgebung, ΔS die der Stoffe selbst'), correct: true },
+      { text: b('ΔH says whether it can run at all, ΔS how far it gets', 'ΔH gibt an, ob sie überhaupt ablaufen kann, ΔS, wie weit sie kommt') },
     ],
     explain: b('What decides is whether the total entropy rises. Energy given out as heat spreads into the surroundings and raises their entropy (unit 19); ΔS is the change in the substances themselves. ΔG weighs both; for melting ice or burning limestone the ΔS part wins when it is warm enough, so ΔH alone cannot decide.',
       'Entscheidend ist, ob die Entropie insgesamt steigt. Als Wärme abgegebene Energie verteilt sich in der Umgebung und erhöht deren Entropie (Einheit 19); ΔS ist die Änderung der Stoffe selbst. ΔG wägt beides ab; beim Schmelzen von Eis oder beim Kalkbrennen gewinnt der ΔS-Anteil, wenn es warm genug ist, also kann ΔH allein nicht entscheiden.') },
@@ -63,15 +63,15 @@ export const BANK_U20: Item[] = [
       { text: b('At 25 °C it cannot run by itself: it is endergonic', 'Bei 25 °C kann es nicht freiwillig ablaufen: Es ist endergonisch'), correct: true },
       { text: b('It gives out 131 kJ/mol of heat to the surroundings', 'Es gibt 131 kJ/mol Wärme an die Umgebung ab') },
     ],
-    explain: b('ΔG > 0: limestone cannot decompose by itself at 25 °C, however long you wait; the reverse, quicklime taking up CO₂, can. Slowness is a different question, and the heat exchanged is ΔH, not ΔG.',
-      'ΔG > 0: Kalkstein kann bei 25 °C nicht freiwillig zerfallen, egal wie lange man wartet; die Rückreaktion, Branntkalk nimmt CO₂ auf, kann es. Langsamkeit ist eine andere Frage, und die ausgetauschte Wärme ist ΔH, nicht ΔG.') },
+    explain: b('ΔG > 0: at 25 °C and 1 bar of CO₂ limestone does not decompose by itself, however long you wait (almost only CaCO₃ is left at equilibrium); the reverse, quicklime taking up CO₂, can. Slowness is a different question, and the heat exchanged is ΔH, not ΔG.',
+      'ΔG > 0: Bei 25 °C und 1 bar CO₂ zerfällt Kalkstein nicht freiwillig, egal wie lange man wartet (im Gleichgewicht bleibt fast nur CaCO₃ übrig); die Rückreaktion, Branntkalk nimmt CO₂ auf, kann es. Langsamkeit ist eine andere Frage, und die ausgetauschte Wärme ist ΔH, nicht ΔG.') },
   { id: 'i20f', unit: 20, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u20.sign'], targets: ['spontaneous-exothermic', 'negative-dg-fast'],
     prompt: b('Why does ΔG < 0 mean that a reaction can run by itself?', 'Warum bedeutet ΔG < 0, dass eine Reaktion freiwillig ablaufen kann?'),
     options: [
       { text: b('The entropy of the substances and surroundings together rises', 'Die Entropie von Stoffen und Umgebung zusammen steigt'), correct: true },
-      { text: b('The products hold less energy than the reactants', 'Die Produkte enthalten weniger Energie als die Edukte'), mis: 'spontaneous-exothermic' },
-      { text: b('The reaction is fast enough to notice', 'Die Reaktion ist schnell genug, um sie zu bemerken'), mis: 'negative-dg-fast' },
-      { text: b('Heat flows into it from the surroundings', 'Wärme fließt aus der Umgebung hinein') },
+      { text: b('The products hold less energy than the reactants did', 'Die Produkte enthalten weniger Energie als vorher die Edukte'), mis: 'spontaneous-exothermic' },
+      { text: b('The reaction is fast enough for you to notice it', 'Die Reaktion ist schnell genug, dass man sie bemerkt'), mis: 'negative-dg-fast' },
+      { text: b('Heat flows into the substances from the surroundings', 'Wärme fließt aus der Umgebung in die Stoffe hinein') },
     ],
     explain: b('−ΔG ÷ T is the entropy gained by the substances and the surroundings together, and things run by themselves when that total rises (unit 19). Lower energy alone (ΔH < 0) is not enough, as NO₂ pairing at 100 °C shows, and ΔG says nothing about speed.',
       '−ΔG : T ist die Entropie, die Stoffe und Umgebung zusammen gewinnen, und Vorgänge laufen freiwillig ab, wenn diese Summe steigt (Einheit 19). Weniger Energie allein (ΔH < 0) reicht nicht, wie die Verbindung von NO₂ bei 100 °C zeigt, und über die Geschwindigkeit sagt ΔG nichts.') },
@@ -83,8 +83,8 @@ export const BANK_U20: Item[] = [
       { text: b('Exergonic: ΔG ≈ −1326 kJ/mol, so it can run by itself', 'Exergonisch: ΔG ≈ −1326 kJ/mol, also kann sie freiwillig ablaufen'), correct: true },
       { text: b('Neither: it needs a flame, so ΔG cannot be negative', 'Keins von beiden: Sie braucht eine Flamme, also kann ΔG nicht negativ sein'), mis: 'negative-dg-fast' },
     ],
-    explain: b('ΔG = −1366.9 + 298 × 0.1387 = −1366.9 + 41.3 = −1325.6 kJ/mol: exergonic. The falling entropy costs only 41 kJ/mol against 1367 kJ/mol given out. Needing a flame to start is about speed, not about ΔG.',
-      'ΔG = −1366,9 + 298 · 0,1387 = −1366,9 + 41,3 = −1325,6 kJ/mol: exergonisch. Die sinkende Entropie kostet nur 41 kJ/mol gegenüber 1367 kJ/mol, die abgegeben werden. Dass eine Flamme sie starten muss, betrifft die Geschwindigkeit, nicht ΔG.') },
+    explain: b('ΔG = −1366.9 + 298 × 0.1387 = −1366.9 + 41.3 = −1325.6 kJ/mol: exergonic. The falling entropy costs only 41 kJ/mol, while 1367 kJ/mol are given out. Needing a flame to start is about speed, not about ΔG.',
+      'ΔG = −1366,9 + 298 · 0,1387 = −1366,9 + 41,3 = −1325,6 kJ/mol: exergonisch. Die sinkende Entropie kostet nur 41 kJ/mol; abgegeben werden 1367 kJ/mol. Dass eine Flamme sie starten muss, betrifft die Geschwindigkeit, nicht ΔG.') },
 
   // ---------- u20.temperature ----------
   { id: 'i20h', unit: 20, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u20.temperature'], targets: ['t-irrelevant'],
@@ -102,8 +102,8 @@ export const BANK_U20: Item[] = [
     options: [
       { text: b('−T·ΔS grows with T: with ΔS > 0 it pulls ΔG down, with ΔS < 0 it pushes ΔG up', '−T·ΔS wächst mit T: Mit ΔS > 0 senkt es ΔG, mit ΔS < 0 hebt es ΔG an'), correct: true },
       { text: b('Heat only changes how fast reactions go, never which way they can run', 'Wärme ändert nur, wie schnell Reaktionen laufen, nie, in welche Richtung sie können'), mis: 't-irrelevant' },
-      { text: b('Heating turns endothermic reactions into exothermic ones', 'Erhitzen macht endotherme Reaktionen zu exothermen') },
-      { text: b('ΔH grows with temperature for one and shrinks for the other', 'ΔH wächst bei der einen mit der Temperatur und schrumpft bei der anderen') },
+      { text: b('Heating turns endothermic reactions into exothermic ones', 'Erhitzen macht aus endothermen Reaktionen exotherme') },
+      { text: b('ΔH grows with temperature for one reaction and shrinks for the other', 'ΔH wächst bei der einen Reaktion mit der Temperatur und schrumpft bei der anderen') },
     ],
     explain: b('In ΔG = ΔH − T·ΔS, T multiplies ΔS. Limestone has ΔS = +160.2 J/(mol·K), so heating makes ΔG more negative; NO₂ pairing has ΔS = −175.8 J/(mol·K), so heating makes ΔG more positive.',
       'In ΔG = ΔH − T·ΔS wird ΔS mit T multipliziert. Kalkstein hat ΔS = +160,2 J/(mol·K), also wird ΔG beim Erhitzen negativer; die Verbindung von NO₂ hat ΔS = −175,8 J/(mol·K), also wird ΔG beim Erhitzen positiver.') },
@@ -152,8 +152,8 @@ export const BANK_U20: Item[] = [
     prompt: b('Rank by the temperature where ΔG = 0, lowest first. Ice melting: +6.01 kJ/mol, +22.0 J/(mol·K). NO₂ pairing up: −55.3, −175.8. Water evaporating (25 °C data): +44.0, +118.8. Ammonia synthesis: −91.8, −198.1.',
       'Ordne nach der Temperatur, bei der ΔG = 0 ist, die niedrigste zuerst. Eis schmilzt: +6,01 kJ/mol, +22,0 J/(mol·K). NO₂ verbindet sich: −55,3; −175,8. Wasser verdampft (Daten bei 25 °C): +44,0; +118,8. Ammoniaksynthese: −91,8; −198,1.'),
     order: [b('Ice melting', 'Eis schmilzt'), b('NO₂ pairing up', 'NO₂ verbindet sich'), b('Water evaporating', 'Wasser verdampft'), b('Ammonia synthesis', 'Ammoniaksynthese')],
-    explain: b('T = ΔH ÷ ΔS with ΔS in kJ: ice 273 K, NO₂ 315 K, water 370 K, ammonia 463 K. Ice and water need T above it to run; NO₂ and ammonia need T below it.',
-      'T = ΔH : ΔS mit ΔS in kJ: Eis 273 K, NO₂ 315 K, Wasser 370 K, Ammoniak 463 K. Eis und Wasser brauchen eine Temperatur darüber, NO₂ und Ammoniak eine darunter.') },
+    explain: b('T = ΔH ÷ ΔS with ΔS in kJ/(mol·K): ice 273 K, NO₂ 315 K, water 370 K, ammonia 463 K. Ice and water need T above it to run; NO₂ and ammonia need T below it.',
+      'T = ΔH : ΔS mit ΔS in kJ/(mol·K): Eis 273 K, NO₂ 315 K, Wasser 370 K, Ammoniak 463 K. Eis und Wasser brauchen eine Temperatur darüber, NO₂ und Ammoniak eine darunter.') },
 
   // ---------- u20.four-cases ----------
   { id: 'i20o', unit: 20, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u20.four-cases'],
@@ -184,8 +184,8 @@ export const BANK_U20: Item[] = [
       { text: b('Ammonia synthesis: ΔH = −91.8 kJ/mol, ΔS = −198.1 J/(mol·K)', 'Ammoniaksynthese: ΔH = −91,8 kJ/mol, ΔS = −198,1 J/(mol·K)') },
       { text: b('Burning limestone: ΔH = +179.2 kJ/mol, ΔS = +160.2 J/(mol·K)', 'Kalkbrennen: ΔH = +179,2 kJ/mol, ΔS = +160,2 J/(mol·K)'), correct: true },
     ],
-    explain: b('Only when hot: ΔH > 0 and ΔS > 0, so the entropy term must outweigh ΔH (limestone above 1119 K). NO₂ pairing and ammonia run only when cold enough; hydrogen and chlorine at every temperature.',
-      'Nur bei Hitze: ΔH > 0 und ΔS > 0, also muss der Entropieterm ΔH übertreffen (Kalkstein oberhalb von 1119 K). Die Verbindung von NO₂ und die Ammoniaksynthese laufen nur bei genügend tiefer Temperatur ab, Wasserstoff und Chlor bei jeder Temperatur.') },
+    explain: b('Only when hot: ΔH > 0 and ΔS > 0, so the entropy term must outweigh ΔH (limestone above about 1119 K on this model). NO₂ pairing and ammonia run only when cold enough; hydrogen and chlorine at every temperature.',
+      'Nur bei Hitze: ΔH > 0 und ΔS > 0, also muss der Entropieterm ΔH übertreffen (Kalkstein nach dem Modell oberhalb von etwa 1119 K). Die Verbindung von NO₂ und die Ammoniaksynthese laufen nur bei genügend tiefer Temperatur ab, Wasserstoff und Chlor bei jeder Temperatur.') },
 
   // ---------- u20.not-rate ----------
   { id: 'i20r', unit: 20, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u20.not-rate'], targets: ['negative-dg-fast'],

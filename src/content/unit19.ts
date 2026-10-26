@@ -25,10 +25,10 @@ const together = (a: RegExp, c: RegExp, gap = 60) => new RegExp(`${src(a)}.{0,${
 
 // ---------- explain-back patterns ----------
 // Idea 1, some processes run by themselves although they take in energy.
-const RUN_EN = /(by (it|them)sel(f|ves)|on (its|their) own|spontaneous\w*|happen\w*|\bruns?\b|running|\boccur\w*|go(es)? ahead|feasible)/;
-const TAKEIN_EN = /(takes? in|taking in|taken in|absorb\w*|endotherm\w*|needs? (energy|heat)|costs? (energy|heat)|positive (δh|dh|delta h|enthalpy)|(δh|dh|delta h) (is )?(> ?0|positive)|from (the|their|its) surroundings|cools?\b|cooling|gets? cold\w*)/;
-const RUN_DE = /(von selbst|freiwillig\w*|spontan\w*|selbstständig|selbständig|ablauf\w*|läuft|laufen|passier\w*|geschieh\w*|geschehen)/;
-const TAKEIN_DE = /(endotherm\w*|aufnehm\w*|aufnimm\w*|aufgenommen|nimmt .{0,25}\bauf\b|(energie|wärme) (braucht|brauchen|benötigt|benötigen|kostet|kosten)|(braucht|brauchen|benötigt|benötigen|kostet|kosten) .{0,15}(energie|wärme)|(δh|dh) (ist )?(> ?0|positiv)|positiv\w* (δh|dh|reaktionsenthalpie)|aus der umgebung|kühlt|abkühl\w*|kalt\w*)/;
+const RUN_EN = /(by (it|them)sel(f|ves)|on (its|their) own|spontaneous\w*|happen\w*|\bruns?\b|running|\boccur\w*|go(es)? ahead|anyway|still (melt|run|work|dissolv|go|happen|occur)\w*|without (a |any )?(push|help)|feasible)/;
+const TAKEIN_EN = /(takes? in|taking in|taken in|tak(es|ing|en)( up)? (some |a lot of |lots of )?(energy|heat)|absorb\w*|endotherm\w*|needs? (energy|heat)|costs? (energy|heat)|(heat|energy) (is )?needed|soaks? up|positive (δh|dh|delta h|enthalpy)|(δh|dh|delta h) (is )?(> ?0|positive)|from (the|their|its) surroundings|(heat|energy) from (the|its|their) (room|air|surroundings)|cools?\b|cooling|gets? cold\w*)/;
+const RUN_DE = /(von selbst|von allein\w*|freiwillig\w*|spontan\w*|selbstständig|selbständig|ablauf\w*|läuft|laufen|passier\w*|geschieh\w*|geschehen|ohne (hilfe|antrieb|anstoß))/;
+const TAKEIN_DE = /(endotherm\w*|aufnehm\w*|aufnimm\w*|aufgenommen|nimmt .{0,25}\bauf\b|nimmt (wärme|energie)|zieht .{0,12}(wärme|energie)|(energie|wärme) (braucht|brauchen|benötigt|benötigen|kostet|kosten)|(braucht|brauchen|benötigt|benötigen|kostet|kosten) .{0,15}(energie|wärme)|(δh|dh) (ist )?(> ?0|positiv)|positiv\w* (δh|dh|reaktionsenthalpie)|aus der umgebung|kühlt|abkühl\w*|kalt\w*)/;
 // "Ice melts by itself, even though it absorbs energy": the comma splits the clause, so the concessive half counts alone.
 const CONCESSIVE_EN = new RegExp(`\\b(even though|although|though|despite|in spite of)\\b.{0,40}${src(TAKEIN_EN)}`);
 const CONCESSIVE_DE = new RegExp(`(obwohl|obgleich|auch wenn|trotz)\\b.{0,40}${src(TAKEIN_DE)}`);
@@ -38,25 +38,25 @@ const SPONT_EXO = {
   de: /^(?!.*nicht nur).*(nur exotherm\w*|nur (vorgänge|reaktionen),? (die|bei denen) .{0,30}(abgeben|frei)|endotherm\w*.{0,40}(nicht|nie|kein\w*) .{0,25}(ablauf\w*|laufen|läuft|von selbst|freiwillig)|(muss|müssen) .{0,20}(energie|wärme) (abgeben|freisetzen)|heimlich .{0,25}(ab|frei))/,
 };
 
-// Idea 2, entropy is a measure of the number of ways particles and their energy can be arranged.
+// Idea 2, entropy is a measure of the number of microstates: the ways to place the particles and share out their energy.
 const ENTROPY_EN = /(entrop\w*|δs|\bds\b|delta s)/;
-const WAYS_EN = /(ways?\b|arrangement\w*|arrang\w*|possibilit\w*|microstate\w*|configuration\w*|combination\w*|permutation\w*|number of states|how many states)/;
+const WAYS_EN = /(ways?\b|arrangement\w*|arrang\w*|possibilit\w*|microstate\w*|configuration\w*|combination\w*|permutation\w*|number of states|how many states|possible states|(energy|quantum) states|how many (different )?(places|positions|spots|options|choices))/;
 const ENTROPY_DE = /(entropie\w*|δs|\bds\b)/;
-const WAYS_DE = /(möglichkeit\w*|anordnung\w*|mikrozust\w*|zustände|kombination\w*|verteilungen|wie viele arten|zahl der arten)/;
+const WAYS_DE = /(möglichkeit\w*|anordnung\w*|mikrozust\w*|(?<!aggregat)zustände|kombination\w*|verteilungen|wie viele (arten|weisen|wege|orte|plätze|positionen)|zahl der arten|anzahl der (zustände|arten|weisen)|auf wie viele)/;
 const BOLTZMANN = /\bs ?= ?k\b.{0,6}ln/;
 const MESSINESS = {
-  en: /^(?!.*(\bnot\b|n't|\bno\b|\bnever\b|rather than|instead of)).*entrop\w*.{0,30}\b(visible|untidy|messy|messiness|mess|how messy)\b/,
-  de: /^(?!.*(nicht|kein|statt)).*entropie.{0,30}(sichtbar\w*|unaufgeräumt\w*|durcheinander im aussehen|chaos im aussehen|wie unordentlich)/,
+  en: /^(?!.*(\bnot\b|n't|\bno\b|\bnever\b|rather than|instead of)).*entrop\w*.{0,30}\b(visible|untidy|messy|messiness|mess|how messy|tidy|tidiness|chaotic|jumbled|scrambled)\b/,
+  de: /^(?!.*(nicht|kein|statt)).*entropie.{0,30}(sichtbar\w*|unaufgeräumt\w*|aufgeräumt\w*|durcheinander im aussehen|chaos im aussehen|wie unordentlich|wie ordentlich|wie chaotisch|chaotisch aus\w*)/,
 };
 
 // Idea 3, spreading happens because spread-out arrangements vastly outnumber the rest.
-const SPREAD_EN = /(spread\w*|mix\w*|evenly|half and half|50 ?: ?50|50 ?\/ ?50|dispers\w*|distribut\w*|fill\w* the (whole )?(box|room|space|container))/;
-const LIKELY_EN = /(more (ways|arrangements|possibilities|microstates|combinations|likely|probable)|far more|vastly more|many more|much more likely|outnumber\w*|most (ways|arrangements|likely|probable)|probab\w*|by chance|random\w*|unlikely|improbable|likel\w*|odds)/;
-const SPREAD_DE = /(verteil\w*|misch\w*|ausbreit\w*|breit\w* sich .{0,10}aus|gleichmäßig|halb und halb|50 ?: ?50|füll\w* .{0,15}(box|raum|behälter))/;
-const LIKELY_DE = /(mehr (möglichkeit|anordnung|mikrozust|kombination)\w*|überzahl|weit mehr|viel mehr|wahrscheinlich\w*|zufall\w*|zufällig\w*|unwahrscheinlich\w*|die meisten (möglichkeit|anordnung)\w*)/;
+const SPREAD_EN = /(spread\w*|mix\w*|evenly|half and half|50 ?: ?50|50 ?\/ ?50|dispers\w*|distribut\w*|diffus\w*|scatter\w*|gather\w*|bunch\w*|clump\w*|all (of them )?in one (place|corner|half|side)|fill\w* (up )?the (whole |entire )?(box|room|space|container))/;
+const LIKELY_EN = /(more (ways|arrangements|possibilities|microstates|combinations|likely|probable)|far more|vastly more|many more|much more likely|outnumber\w*|most (ways|arrangements|likely|probable)|probab\w*|by chance|chance|random\w*|unlikely|improbable|likel\w*|odds|statistic\w*|overwhelming\w*|by far|majority|way more|a lot more|lots more|so many more|more often)/;
+const SPREAD_DE = /(verteil\w*|misch\w*|ausbreit\w*|breit\w* sich .{0,10}aus|gleichmäßig|gleichverteil\w*|diffundier\w*|halb und halb|50 ?: ?50|zusammengeballt\w*|zusammenklump\w*|ansammlung\w*|sammelt sich|sammeln sich|füll\w* .{0,15}(box|raum|behälter))/;
+const LIKELY_DE = /(mehr (möglichkeit|anordnung|mikrozust|kombination)\w*|überzahl|weit mehr|viel mehr|weitaus mehr|deutlich mehr|sehr viel mehr|wahrscheinlich\w*|zufall\w*|zufällig\w*|unwahrscheinlich\w*|statistik\w*|statistisch\w*|häufiger|öfter|bei weitem|mehrheit|überwältigend\w*|die meisten (möglichkeit|anordnung)\w*)/;
 const WANT_SPACE = {
-  en: /^(?!.*(\bnot\b|n't|\bno\b|\bnever\b|without|rather than|instead of|nothing)).*(\b(want\w*|wish\w*|like\w*|tr(y|ies|ying) to get|seek\w*|prefer\w*|desire\w*) (more |the |extra |their |some |enough )?(own )?(room|space)\b|\b(to get|to have|to find) (more |extra |their own )?(room|space)\b)/,
-  de: /^(?!.*(nicht|kein|ohne|statt|nichts)).*((wollen|will|möchten|möchte|suchen|sucht|streben|strebt|versuchen|versucht)\w* .{0,25}(platz|raum)|(platz|raum) (haben )?(wollen|will|möchten|möchte)|um (mehr |genug )?(platz|raum) zu (haben|bekommen|gewinnen))/,
+  en: /^(?!.*(\bnot\b|n't|\bno\b|\bnever\b|without|rather than|instead of|nothing)).*(\b(want\w*|wish\w*|like\w*|need\w*|tr(y|ies|ying) to get|seek\w*|prefer\w*|desire\w*) (more |the |extra |their |some |enough )?(own )?(room|space)\b|\b(to get|to have|to find) (more |extra |their own )?(room|space)\b|\b(seek\w*|look\w* for|head\w* for) (out )?(the )?(emptier|empty|free|less crowded)\b)/,
+  de: /^(?!.*(nicht|kein|ohne|statt|nichts)).*((wollen|will|möchten|möchte|suchen|sucht|streben|strebt|versuchen|versucht|brauchen|braucht|benötigen|benötigt)\w* .{0,25}(platz|raum)|(platz|raum) (haben )?(wollen|will|möchten|möchte)|um (mehr |genug )?(platz|raum) zu (haben|bekommen|gewinnen)|(suchen|sucht|streben|strebt) .{0,20}(leer\w*|freie\w*))/,
 };
 
 // Idea 4, gas > liquid > solid.
@@ -65,36 +65,46 @@ const HIGHER_EN = /((higher|more|greater|larger|bigger|most|highest|largest|rise
 // "A gas has more entropy than a liquid", "S(gas) > S(liquid) > S(solid)", "gases have the highest entropy".
 const ORDER_EN = /s ?\(g\)\s?>\s?s ?\(l\)\s?>\s?s ?\(s\)|gas\w*\)?\s?>\s?(s\s?\()?liquid\w*\)?\s?>\s?(s\s?\()?solid|solid\w*\)?\s?<\s?(s\s?\()?liquid\w*\)?\s?<\s?(s\s?\()?gas/;
 const COMPARE_EN = /\b(gas(es)?|vapou?r|liquids?)\b.{0,30}\b(more|higher|greater|larger|bigger)\b.{0,15}(entrop\w*|ways|freedom).{0,25}\bthan\b.{0,15}\b(liquids?|solids?|ice|crystals?)\b|\b(gas(es)?|vapou?r)\b.{0,25}\b(highest|most|largest|greatest)\b.{0,5}\b(entrop\w*|ways|freedom)|\b(highest|most|largest|greatest)\b.{0,5}\b(entrop\w*|ways)\b.{0,25}\b(gas(es)?|vapou?r)\b/;
+// The same comparison in plain words, with the noun left out: "A gas has more than a liquid and a liquid more than a solid."
+// (More energy, heat, mass … than is a different statement and does not count.)
+const PLAINCOMPARE_EN = /\b(gas(es)?|vapou?r|liquids?)\b.{0,20}\b(more|higher|greater|larger|bigger)\b(?!\s+(energy|heat|mass|pressure|temperature|density|speed|weight))(\s\w+)?\s+than\b.{0,15}\b(liquids?|solids?|ice|crystals?)\b/;
+const FREEDOM_EN = /(freedom|free to move|free\w* (to )?mov\w*|move\w* (more )?freely|\bfreely\b|move around|mobil\w*)/;
 const LOWER_EN = /((lower\w*|decreas\w*|falls?|drops?|less|smaller)\b.{0,15}\bentrop\w*|entrop\w*.{0,20}\b(lower\w*|decreas\w*|falls?|drops?|goes down)\b)/;
 const ORDER_DE = /s ?\(g\)\s?>\s?s ?\(l\)\s?>\s?s ?\(s\)|gas\w*\)?\s?>\s?(s\s?\()?(flüssig\w*|fl\.?)\)?\s?>\s?(s\s?\()?fest|fest\w*\)?\s?<\s?(s\s?\()?(flüssig\w*|fl\.?)\)?\s?<\s?(s\s?\()?gas/;
 const COMPARE_DE = /(gas\w*|dampf\w*|flüssigkeit\w*).{0,30}(mehr|höhere|größere)\w* (entropie|möglichkeit\w*|bewegungsfreiheit).{0,25}als .{0,15}(flüssig\w*|fest\w*|eis|kristall\w*)|(am (größten|höchsten)|höchste\w*|größte\w*).{0,25}entropie.{0,20}(im |in |beim )?(gas|dampf)|entropie.{0,25}(im |in |beim )?(gas|dampf)\w*.{0,15}am (größten|höchsten)|(gas|dampf)\w*.{0,25}(die )?(höchste|größte) entropie/;
+const PLAINCOMPARE_DE = /(gas\w*|dampf|flüssigkeit\w*|flüssig\w*)\b.{0,20}\b(mehr|höhere\w*|größere\w*)\b(?!\s+(energie|wärme|masse|druck|temperatur|dichte|geschwindigkeit|gewicht))(\s\w+)?\s+als\b.{0,15}(flüssig\w*|fest\w*|eis|kristall\w*)/;
 const STATEPAIR_DE = /(gas\w*.{0,25}(flüssig|fest)\w*|(flüssig|fest)\w*.{0,25}gas\w*|fest\w*.{0,20}flüssig\w*|flüssig\w*.{0,20}fest\w*|schmelz\w*|schmilzt|sied\w*|verdampf\w*|verdunst\w*|sublim\w*)/;
 const HIGHER_DE = /(nimmt (die |der )?entropie\w* .{0,10}zu|(höher\w*|größer\w*|mehr|steigt|steigen|zunimmt|nimmt .{0,12}zu|am größten|am höchsten).{0,20}(entropie|möglichkeit\w*|bewegungsfreiheit)|(entropie|möglichkeit\w*|bewegungsfreiheit)\w*.{0,25}(höher|größer|mehr|steigt|steigen|zunimmt|nimmt .{0,12}zu|am größten|am höchsten))/;
+// "Die Entropie nimmt vom Feststoff über die Flüssigkeit zum Gas zu": the state words stand between the verb and its "zu".
+const RISES_DE = /(entropie\w*\s+nimmt\s.{0,50}\bzu\b|nimmt\s+(die\s+|der\s+)?entropie\w*\s.{0,50}\bzu\b|(zunahme|anstieg) (der|von) entropie)/;
+const FREEDOM_DE = /(bewegungsfreiheit|bewegungsmöglichkeit\w*|frei\w* beweg\w*|beweg\w* sich (freier|frei)|freier\b.{0,25}beweg\w*|\bfrei\b.{0,25}beweg\w*|beweglich\w*)/;
 const LOWER_DE = /(nimmt (die |der )?entropie\w* .{0,10}ab|(niedriger\w*|kleiner\w*|weniger|sinkt|sinken|abnimmt|nimmt .{0,12}ab).{0,15}entropie|entropie.{0,20}(niedriger|kleiner|sinkt|sinken|abnimmt|nimmt .{0,12}ab))/;
 
 // Idea 5, more moles of gas in the products: ΔS usually positive (fewer: negative).
-const GASMORE_EN = /(more (moles? of |molecules of |particles of )?gas\w*|(number|amount|moles?) of gas\w* (increases|rises|goes up|grows)|gas(eous)? (moles|molecules|particles) (increase|rise|go up)|(make|makes|making|made|form|forms|forming|formed|produce\w*|give|gives|giving|release\w*) (off |out )?(a |more |some |extra )?gas\b|(a )?gas (forms|is formed|is made|is produced|appears|is released|is given off)|δn ?\(?gas\)? ?> ?0)/;
-const FEWERGAS_EN = /((fewer|less) (moles? of |molecules of |particles of )?gas\w*|(number|amount|moles?) of gas\w* (decreases|falls|drops|goes down)|gas(eous)? (moles|molecules|particles) (decrease|fall|drop)|δn ?\(?gas\)? ?< ?0)/;
-const S_UP_EN = together(ENTROPY_EN, /(positive|> ?0|increas\w*|rises?|goes up|higher|bigger|larger|greater)/, 25);
+const GASMORE_EN = /(more (moles? of |molecules of |particles of )?gas\w*|(number|amount|moles?) of gas\w*( molecules| particles| atoms| moles)? (increases|rises|goes up|grows)|gas(eous)? (moles|molecules|particles) (increase|rise|go up)|(make|makes|making|made|form|forms|forming|formed|produce\w*|give|gives|giving|release\w*) (off |out )?(a |more |some |extra )?gas\b|(a )?gas (forms|is formed|is made|is produced|appears|is released|is given off)|δn ?\(?gas\)? ?> ?0)/;
+const FEWERGAS_EN = /((fewer|less) (moles? of |molecules of |particles of )?gas\w*|(number|amount|moles?) of gas\w*( molecules| particles| atoms| moles)? (decreases|falls|drops|goes down)|gas(eous)? (moles|molecules|particles) (decrease|fall|drop)|δn ?\(?gas\)? ?< ?0)/;
+const S_UP_EN = together(ENTROPY_EN, /(positive|> ?0|increas\w*|rises?|goes up|grows?|higher|bigger|larger|greater)/, 25);
 const S_DOWN_EN = together(ENTROPY_EN, /(negative|< ?0|decreas\w*|falls?|drops?|goes down|lower|smaller)/, 25);
+// "Mehr Mol Gas in den Produkten, ΔS > 0": the comma closes the clause before the sign is named, so the rule's first half,
+// with the products named, counts alone (the sign is the next clause: ", ΔS > 0" is the usual school shorthand).
 const GASMORE_DE = /(mehr (mol |teilchen |moleküle )?gas\w*|zunahme (der |an )?gas\w*|(gasteilchen|gasmolekül\w*|stoffmenge (an |der )?gas\w*|gasmenge)\w* (nimmt|nehmen) .{0,10}zu|(gasteilchen|gasmolekül\w*|gasmenge) .{0,15}(steigt|zunimmt)|ein gas (entsteht|bildet sich|wird frei)|gas entsteh\w*|entsteh\w* .{0,15}gas\w*|bildet .{0,15}gas\w*|δn ?\(?gas\)? ?> ?0)/;
 const FEWERGAS_DE = /(weniger (mol |teilchen |moleküle )?gas\w*|abnahme (der |an )?gas\w*|(gasteilchen|gasmolekül\w*|gasmenge)\w* (nimmt|nehmen) .{0,10}ab|δn ?\(?gas\)? ?< ?0)/;
-const S_UP_DE = any(together(ENTROPY_DE, /(positiv\w*|> ?0|steigt|steigen|zunimmt|nimmt .{0,12}zu|größer|höher|erhöht)/, 25), /nimmt (die |der )?entropie\w* .{0,10}zu/);
+const S_UP_DE = any(together(ENTROPY_DE, /(positiv\w*|> ?0|steigt|steigen|wächst|zunimmt|nimmt .{0,12}zu|größer|höher|erhöht)/, 25), /nimmt (die |der )?entropie\w* .{0,10}zu/);
 const S_DOWN_DE = any(together(ENTROPY_DE, /(negativ\w*|< ?0|sinkt|sinken|abnimmt|nimmt .{0,12}ab|kleiner|niedriger)/, 25), /nimmt (die |der )?entropie\w* .{0,10}ab/);
 
 export const UNIT19: UnitContent = {
   n: 19,
   title: b('Entropy', 'Entropie'),
-  lead: b('Why some changes run by themselves although they take in energy: entropy, the number of ways particles and their energy can be arranged, and how to tell when it goes up.',
-    'Warum manche Vorgänge von selbst ablaufen, obwohl sie Energie aufnehmen: die Entropie, ein Maß für die Zahl der Möglichkeiten, Teilchen und ihre Energie anzuordnen, und woran man erkennt, wann sie steigt.'),
+  lead: b('Why some changes run by themselves although they take in energy: entropy, a measure of the number of microstates (the ways to arrange the particles and share out their energy), and how to tell when it goes up.',
+    'Warum manche Vorgänge von selbst ablaufen, obwohl sie Energie aufnehmen: die Entropie, ein Maß für die Zahl der Mikrozustände, also der Möglichkeiten, die Teilchen und ihre Energie zu verteilen, und woran man erkennt, wann sie steigt.'),
 
   puzzle: {
     title: b('Cold, and still it happens', 'Kalt, und trotzdem läuft es ab'),
     lead: b('Squeeze an instant cold pack and a bag of water inside bursts: ammonium nitrate dissolves, and within seconds the pack is icy. An ice cube left on the table melts and cools what is around it. Unit 17 showed what a positive ΔH means: energy taken in from the surroundings.',
       'Drückst du eine Sofort-Kältekompresse, platzt innen ein Beutel mit Wasser: Ammoniumnitrat löst sich, und in Sekunden ist die Kompresse eiskalt. Ein Eiswürfel auf dem Tisch schmilzt und kühlt seine Umgebung. Einheit 17 hat gezeigt, was ein positives ΔH bedeutet: Energie, die aus der Umgebung aufgenommen wird.'),
     data: {
-      caption: b('Energy taken in (+) or given out (−) per mole, and what happens in a room at 20 °C. The value for ice is measured at 0 °C.',
-        'Aufgenommene (+) oder abgegebene (−) Energie pro Mol und was in einem Raum bei 20 °C passiert. Der Wert für Eis ist bei 0 °C gemessen.'),
+      caption: b('Energy taken in (+) or given out (−) per mole, and whether the change runs by itself in a room at 20 °C. The value for ice is measured at 0 °C.',
+        'Die Tabelle zeigt, wie viel Energie pro Mol aufgenommen (+) oder abgegeben (−) wird und ob der Vorgang bei 20 °C von selbst abläuft. Der Wert für Eis gilt bei 0 °C.'),
       head: [b('Change', 'Vorgang'), b('ΔH in kJ/mol', 'ΔH in kJ/mol'), b('Runs by itself at 20 °C?', 'Läuft bei 20 °C von selbst ab?')],
       rows: [
         { cells: [b('Ice melts: H₂O(s) → H₂O(l)', 'Eis schmilzt: H₂O(s) → H₂O(l)'), '+6.01', b('yes', 'ja')] },
@@ -107,24 +117,24 @@ export const UNIT19: UnitContent = {
       'Schmelzen und Lösen nehmen beide Energie auf: Im Energiediagramm geht es bergauf. Trotzdem laufen beide von selbst ab, während Gefrieren, bei dem Energie abgegeben wird, in einem warmen Raum nicht passiert. Warum laufen sie ab?'),
     question: {
       id: 'u19-puzzle', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'predict',
-      concepts: ['u19.not-energy', 'u19.probable'], targets: ['spontaneous-exothermic', 'particles-want-space'],
+      concepts: ['u19.not-energy', 'u19.probable'], targets: ['spontaneous-exothermic', 'particles-want-space', 'outside-energy'],
       prompt: b('Your best guess:', 'Deine beste Vermutung:'),
       options: [
-        { text: b('They secretly give out energy somewhere, or they could not run', 'Sie geben heimlich irgendwo Energie ab, sonst könnten sie nicht ablaufen'), mis: 'spontaneous-exothermic' },
-        { text: b('The particles want more room, so they push out of the crystal', 'Die Teilchen wollen mehr Platz, also drängen sie aus dem Kristall'), mis: 'particles-want-space' },
-        { text: b('The warm room supplies the energy, and that alone makes them run', 'Der warme Raum liefert die Energie, und das allein lässt sie ablaufen') },
-        { text: b('Spread-out particles and energy have vastly more ways to be arranged', 'Verteilte Teilchen und Energie haben weit mehr Anordnungsmöglichkeiten'), correct: true },
+        { text: b('They secretly give out energy somewhere else, or they could not run at all', 'Sie geben heimlich irgendwo anders Energie ab, sonst könnten sie gar nicht ablaufen'), mis: 'spontaneous-exothermic' },
+        { text: b('The particles want more room, so they push themselves out of the crystal', 'Die Teilchen wollen mehr Platz, also drängen sie sich aus dem Kristall heraus'), mis: 'particles-want-space' },
+        { text: b('There are fewer ways to arrange the particles, but the warm room pays in energy', 'Es gibt weniger Möglichkeiten, aber der warme Raum liefert die Energie dafür'), mis: 'outside-energy' },
+        { text: b('Spread-out particles and energy have vastly more ways to be arranged (microstates)', 'Verteilte Teilchen und verteilte Energie haben weit mehr Möglichkeiten (Mikrozustände)'), correct: true },
       ],
-      explain: b('Both take in energy (+6.01 and +25.7 kJ/mol): nothing is given out in secret. The warm room does supply that energy, but it does not explain the direction: the same room could take up the energy given out by freezing water, yet water does not freeze at 20 °C. They run because once the crystal breaks up, the particles and their energy can be arranged in vastly more ways; particles do not want anything, and the Particle Box shows how far the numbers outweigh everything else.',
-        'Beide nehmen Energie auf (+6,01 und +25,7 kJ/mol): Heimlich abgegeben wird nichts. Der warme Raum liefert diese Energie zwar, aber das erklärt nicht die Richtung: Derselbe Raum könnte auch die Energie aufnehmen, die gefrierendes Wasser abgibt, und doch gefriert Wasser bei 20 °C nicht. Sie laufen ab, weil sich Teilchen und Energie anordnen lassen, sobald der Kristall zerfällt, auf weit mehr Arten als vorher; Teilchen wollen nichts, und die Teilchenbox zeigt, wie weit diese Zahlen alles andere übertreffen.'),
+      explain: b('Both take in energy (+6.01 and +25.7 kJ/mol), so nothing is given out in secret. Warmth from the room does supply that energy, but a warm room is just as warm for freezing as for melting, and only melting happens: energy alone does not decide the direction. What decides is the number of microstates: once the crystal breaks up, the particles and their energy can be spread out in vastly more ways. The energy taken in lowers the entropy of the surroundings, but the melting ice gains more than they lose (unit 20 weighs the two).',
+        'Beide nehmen Energie auf (+6,01 und +25,7 kJ/mol), also wird nichts heimlich abgegeben. Der warme Raum liefert diese Energie zwar, aber ein warmer Raum ist für das Gefrieren genauso warm wie für das Schmelzen, und nur das Schmelzen läuft ab: Die Energie allein entscheidet nicht über die Richtung. Entscheidend ist die Zahl der Mikrozustände: Sobald der Kristall zerfällt, lassen sich die Teilchen und ihre Energie auf weit mehr Arten verteilen. Die aufgenommene Energie senkt die Entropie der Umgebung, aber das schmelzende Eis gewinnt mehr, als sie verliert (Einheit 20 wägt beides ab).'),
     } as ChoiceItem,
     after: b('Next: in the Particle Box, remove a partition and count how the particles spread.', 'Als Nächstes: Entferne in der Teilchenbox eine Trennwand und zähle, wie sich die Teilchen verteilen.'),
   },
 
   explore: {
-    title: b('The Particle Box: spreading out', 'Die Teilchenbox: Ausbreitung'),
-    intro: b('Each sphere is one argon atom in a box with a partition in the middle. Remove it and the atoms fly at random, bouncing off the walls and each other; nothing pulls them to the right. The readout counts ten times a second how many are on the left, and “Ways to arrange” counts the arrangements: each atom is either left or right, and every single arrangement is equally likely. [[entropy|Entropy]] S measures such ways, for where the particles are and for how their energy is shared out, in J/(mol·K): joules per kelvin for each mole. A process that can run by itself is called [[spontaneous]]; that says nothing about how fast it runs.',
-      'Jede Kugel ist ein Argonatom in einer Box mit einer Trennwand in der Mitte. Entfernst du sie, fliegen die Atome zufällig umher und prallen von den Wänden und voneinander ab; nichts zieht sie nach rechts. Die Anzeige zählt zehnmal pro Sekunde, wie viele links sind, und „Anordnungsmöglichkeiten“ (Fachwort: Mikrozustände) gibt die Zahl der Anordnungen an: Jedes Atom ist entweder links oder rechts, und jede einzelne Anordnung ist gleich wahrscheinlich. Die [[entropy|Entropie]] S ist ein Maß für solche Möglichkeiten, für die Orte der Teilchen und für die Verteilung ihrer Energie, in J/(mol·K): Joule pro Kelvin und Mol. Einen Vorgang, der von selbst ablaufen kann, nennt man [[spontaneous|freiwillig]] (oder spontan); über die Geschwindigkeit sagt das nichts.'),
+    title: b('Spreading out in the Particle Box', 'Ausbreitung in der Teilchenbox'),
+    intro: b('Each sphere is one argon atom in a box with a partition in the middle. Remove it and the atoms fly at random, bouncing off the walls and each other; nothing pulls them to the right. The readout counts ten times a second how many are on the left, and the panel “Ways to arrange” counts the arrangements (microstates): each atom is either left or right, and every single arrangement is equally likely. [[entropy|Entropy]] S measures the number of such microstates, the ways to place the particles and to share out their energy, in J/(mol·K): joules per mole and kelvin. A process that can run by itself is [[spontaneous]], however slowly.',
+      'Jede Kugel ist ein Argonatom in einer Box mit einer Trennwand in der Mitte. Entfernst du sie, fliegen die Atome zufällig umher und prallen von den Wänden und voneinander ab; nichts zieht sie nach rechts. Die Anzeige zählt zehnmal pro Sekunde, wie viele links sind, und das Feld „Anordnungsmöglichkeiten“ zählt die Anordnungen (Fachwort: Mikrozustände): Jedes Atom ist entweder links oder rechts, und jede einzelne Anordnung ist gleich wahrscheinlich. Die [[entropy|Entropie]] S ist ein Maß für die Zahl solcher Mikrozustände, also der Möglichkeiten, die Teilchen und ihre Energie zu verteilen, in J/(mol·K): Joule pro Mol und Kelvin. Einen Vorgang, der von selbst ablaufen kann, nennt man [[spontaneous|freiwillig]] (oder spontan), auch wenn er sehr langsam ist.'),
     tasks: [
       { id: 'open', key: true, text: b('Choose 10 particles and remove the partition. Where do the atoms go, and how does the count change?', 'Wähle die Teilchenzahl 10 und entferne die Trennwand. Wohin gehen die Atome, und wie ändert sich die Zählung?') },
       { id: 'back', key: true, text: b('Choose 4 particles, remove the partition and wait until all four are back on the left by chance.', 'Wähle 4 Teilchen, entferne die Trennwand und warte, bis zufällig alle vier wieder links sind.') },
@@ -138,25 +148,25 @@ export const UNIT19: UnitContent = {
         'Die Atome verteilen sich in der ganzen Box, und die Zählung schwankt um 5 : 5. Nichts schiebt sie: Jedes Atom bewegt sich zufällig, und es gibt weit mehr Anordnungen mit etwa der Hälfte auf jeder Seite als mit allen auf einer Seite.'),
       back: b('With four atoms it happens again and again. Each atom is on the left about half the time, so all four on the left at once is like four coins all landing heads: unusual, but not rare.',
         'Bei vier Atomen passiert es immer wieder. Jedes Atom ist etwa die Hälfte der Zeit links, also ist „alle vier gleichzeitig links“ wie vier Münzen, die alle Kopf zeigen: ungewöhnlich, aber nicht selten.'),
-      many: b('With 100 atoms the count stays close to 50 : 50, and all 100 on the left never comes back: the chance at a given moment is 1 in 1.27 · 10³⁰. Counting ten times a second, you would wait about 4 · 10²¹ years for it.',
-        'Bei 100 Atomen bleibt die Zählung nah an 50 : 50, und „alle 100 links“ kommt nie wieder: Die Wahrscheinlichkeit in einem Moment ist 1 zu 1,27 · 10³⁰. Bei zehn Zählungen pro Sekunde müsstest du etwa 4 · 10²¹ Jahre darauf warten.'),
+      many: b('With 100 atoms the count stays close to 50 : 50, and all 100 on the left practically never comes back: the chance at a given moment is 1 in 1.27 · 10³⁰. Counting ten times a second, you would wait about 4 · 10²¹ years for it.',
+        'Bei 100 Atomen bleibt die Zählung nah an 50 : 50, und „alle 100 links“ kommt praktisch nie wieder: Die Wahrscheinlichkeit in einem Moment ist 1 : 1,27 · 10³⁰. Bei zehn Zählungen pro Sekunde müsstest du etwa 4 · 10²¹ Jahre darauf warten.'),
       ways: b('For 10 atoms: 2¹⁰ = 1024 arrangements in all; 252 put five on each side, only 1 puts all ten on the left. Every single arrangement is equally likely; half and half wins because it has by far the most arrangements.',
         'Bei 10 Atomen: insgesamt 2¹⁰ = 1024 Anordnungen; 252 haben fünf auf jeder Seite, nur 1 hat alle zehn links. Jede einzelne Anordnung ist gleich wahrscheinlich; halb und halb gewinnt, weil es bei Weitem die meisten Anordnungen hat.'),
-      mix: b('The two gases mix and stay mixed. Unmixing is not forbidden, just as all atoms back on the left is not, but it is so improbable that you will not see it. Mixing raises the entropy, and so does dissolving: the ions of a cold pack spread through the water.',
-        'Die beiden Gase mischen sich und bleiben gemischt. Entmischen ist nicht verboten, genauso wenig wie „alle Atome wieder links“, aber so unwahrscheinlich, dass du es nicht sehen wirst. Mischen erhöht die Entropie, und Lösen auch: Die Ionen einer Kältekompresse verteilen sich im Wasser.'),
+      mix: b('The two gases mix and stay mixed. Unmixing is not forbidden, just as all atoms back on the left is not, but it is so improbable that you will not see it. Mixing raises the entropy, and so, usually, does dissolving: the ions of a cold pack spread through the water.',
+        'Die beiden Gase mischen sich und bleiben gemischt. Entmischen ist nicht verboten, genauso wenig wie „alle Atome wieder links“, aber so unwahrscheinlich, dass du es nicht sehen wirst. Mischen erhöht die Entropie, und Lösen meist auch: Die Ionen einer Kältekompresse verteilen sich im Wasser.'),
       melt: b('Ice takes in 6.01 kJ/mol to melt, yet at room temperature it melts by itself: in the liquid, the molecules can be placed, and can share out their energy, in far more ways than in the crystal (ΔS = +22.0 J/(mol·K)). Unit 20 weighs the energy against the ways: below 0 °C, freezing wins.',
         'Eis nimmt beim Schmelzen 6,01 kJ/mol auf und schmilzt bei Raumtemperatur trotzdem von selbst: In der Flüssigkeit lassen sich die Moleküle auf weit mehr Arten anordnen und ihre Energie verteilen als im Kristall (ΔS = +22,0 J/(mol·K)). Einheit 20 wägt die Energie gegen die Möglichkeiten ab: Unter 0 °C gewinnt das Gefrieren.'),
     },
     check: {
       id: 'u19-check', unit: 19, kind: 'choice', format: 'why', withConfidence: true, evidence: 'explain',
       concepts: ['u19.probable', 'u19.ways'], targets: ['particles-want-space', 'spontaneous-exothermic'],
-      prompt: b('With 100 atoms and the partition removed, the count stays close to 50 : 50 and never returns to all 100 on the left. Why?',
-        'Bei 100 Atomen ohne Trennwand bleibt die Zählung nah an 50 : 50 und kehrt nie zu „alle 100 links“ zurück. Warum?'),
+      prompt: b('With 100 atoms and the partition removed, the count stays close to 50 : 50 and practically never returns to all 100 on the left. Why?',
+        'Bei 100 Atomen ohne Trennwand bleibt die Zählung nah an 50 : 50 und kehrt praktisch nie zu „alle 100 links“ zurück. Warum?'),
       options: [
-        { text: b('Each atom seeks out the emptier side of the box', 'Jedes Atom sucht sich die leerere Seite der Box'), mis: 'particles-want-space' },
-        { text: b('Spreading out gives out energy, so the spread state is lower', 'Beim Ausbreiten wird Energie frei, also liegt der verteilte Zustand tiefer'), mis: 'spontaneous-exothermic' },
-        { text: b('Far more arrangements are close to half and half than far from it', 'Weit mehr Anordnungen liegen nah an halb und halb als weit davon entfernt'), correct: true },
-        { text: b('The atoms collide until they are evenly spaced, then stay put', 'Die Atome stoßen zusammen, bis sie gleichmäßig verteilt sind, und bleiben dann stehen') },
+        { text: b('Each atom seeks out the emptier side of the box, so the halves even out', 'Jedes Atom sucht sich die leerere Seite der Box, also gleichen sich die Hälften aus'), mis: 'particles-want-space' },
+        { text: b('Spreading out gives out energy, so the spread-out state sits lower', 'Beim Ausbreiten wird Energie frei, also liegt der verteilte Zustand tiefer'), mis: 'spontaneous-exothermic' },
+        { text: b('Far more arrangements lie near half and half than far from it', 'Weit mehr Anordnungen liegen nah an halb und halb als weit davon entfernt'), correct: true },
+        { text: b('The atoms settle into one even arrangement and then stay put', 'Die Atome stellen sich gleichmäßig auf und bleiben dann stehen') },
       ],
       explain: b('The atoms move at random, nothing sends them to the right, and spreading out does not change their energy. Of the 2¹⁰⁰ arrangements, an enormous number lie close to 50 : 50 and exactly one has all 100 on the left, so near half and half is what you almost always see.',
         'Die Atome bewegen sich zufällig, nichts schickt sie nach rechts, und beim Ausbreiten ändert sich ihre Energie nicht. Von den 2¹⁰⁰ Anordnungen liegt eine riesige Zahl nah an 50 : 50 und genau eine hat alle 100 links, also siehst du fast immer etwa halb und halb.'),
@@ -195,21 +205,21 @@ export const UNIT19: UnitContent = {
     {
       item: {
         id: 'u19-four', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'predict',
-        concepts: ['u19.ways', 'u19.probable'], targets: ['particles-want-space'],
+        concepts: ['u19.ways', 'u19.probable'], targets: ['unlikely-forbidden'],
         prompt: b('Six particles, A to F, move at random in a box with two halves. Each can be left or right: 64 arrangements in all, each equally likely. How many of them have three particles on each side, and what is the chance that all six are on the left at a given moment?',
           'Sechs Teilchen, A bis F, bewegen sich zufällig in einer Box mit zwei Hälften. Jedes kann links oder rechts sein: insgesamt 64 Anordnungen, jede gleich wahrscheinlich. Wie viele davon haben drei Teilchen auf jeder Seite, und wie groß ist die Wahrscheinlichkeit, dass in einem Moment alle sechs links sind?'),
         options: [
           { text: b('1 arrangement; all six on the left: 1 in 7', '1 Anordnung; alle sechs links: 1 zu 7') },
           { text: b('20 arrangements; all six on the left: 1 in 64', '20 Anordnungen; alle sechs links: 1 zu 64'), correct: true },
           { text: b('6 arrangements; all six on the left: 1 in 6', '6 Anordnungen; alle sechs links: 1 zu 6') },
-          { text: b('20 arrangements; all six on the left: never, each needs its room', '20 Anordnungen; alle sechs links: nie, jedes braucht seinen Platz'), mis: 'particles-want-space' },
+          { text: b('20 arrangements; all six on the left: never, it is not allowed', '20 Anordnungen; alle sechs links: nie, das ist nicht erlaubt'), mis: 'unlikely-forbidden' },
         ],
-        explain: b('Twenty of the 64 have three on each side: choose which three are on the left, 6 × 5 × 4 ÷ (3 × 2 × 1) = 20. All six on the left is a single arrangement, so 1 in 64; it does happen, only rarely, as the box showed for four particles. "1 in 7" counts the seven splits (6, 5, 4, 3, 2, 1 or 0 on the left), but those are not equally likely.',
-          'Zwanzig der 64 haben drei auf jeder Seite: Wähle, welche drei links sind, 6 · 5 · 4 : (3 · 2 · 1) = 20. Alle sechs links ist eine einzige Anordnung, also 1 zu 64; das kommt vor, nur selten, wie die Box bei vier Teilchen gezeigt hat. „1 zu 7“ zählt die sieben Aufteilungen (6, 5, 4, 3, 2, 1 oder 0 links), aber die sind nicht gleich wahrscheinlich.'),
+        explain: b('Twenty of the 64 have three on each side: choose which three are on the left, 6 × 5 × 4 ÷ (3 × 2 × 1) = 20. All six on the left is a single arrangement, so 1 in 64; it is not forbidden, only improbable, and it does happen, as the box showed for four particles. "1 in 7" counts the seven splits (6, 5, 4, 3, 2, 1 or 0 on the left), but those are not equally likely.',
+          'Zwanzig der 64 haben drei auf jeder Seite: Wähle, welche drei links sind, 6 · 5 · 4 : (3 · 2 · 1) = 20. Alle sechs links ist eine einzige Anordnung, also 1 zu 64; das ist nicht verboten, nur unwahrscheinlich, und es kommt vor, wie die Box bei vier Teilchen gezeigt hat. „1 zu 7“ zählt die sieben Aufteilungen (6, 5, 4, 3, 2, 1 oder 0 links), aber die sind nicht gleich wahrscheinlich.'),
       } as ChoiceItem,
       show: { engine: 'box', sub: 'Ar', spread: { n: 10, open: true } },
-      revealText: b('Twenty, and 1 in 64. Three on each side is twenty times as likely as all six on the left, and the gap grows fast with more particles: for 100, all on the left has a chance of 1 in 1.27 · 10³⁰. The picture shows ten argon atoms spreading once the partition is gone.',
-        'Zwanzig, und 1 zu 64. Drei auf jeder Seite ist zwanzigmal so wahrscheinlich wie alle sechs links, und der Abstand wächst mit mehr Teilchen schnell: Bei 100 Teilchen ist die Wahrscheinlichkeit für alle links 1 zu 1,27 · 10³⁰. Das Bild zeigt zehn Argonatome, die sich ohne Trennwand verteilen.'),
+      revealText: b('Twenty, and 1 in 64. Three on each side is twenty times as likely as all six on the left, and the gap grows fast with more particles: for 100, all on the left has a chance of 1 in 1.27 · 10³⁰. The picture uses ten argon atoms, not six, to show the spreading once the partition is gone.',
+        'Zwanzig, und 1 zu 64. Drei auf jeder Seite ist zwanzigmal so wahrscheinlich wie alle sechs links, und der Abstand wächst mit mehr Teilchen schnell: Bei 100 Teilchen ist die Wahrscheinlichkeit für alle links 1 zu 1,27 · 10³⁰. Das Bild zeigt zur Veranschaulichung zehn Argonatome, nicht sechs, die sich ohne Trennwand verteilen.'),
       extra: {
         title: b('Count them with letters', 'Zähl mit Buchstaben'),
         steps: [
@@ -231,10 +241,10 @@ export const UNIT19: UnitContent = {
         { v: '188.8 J/(mol·K)', label: b('standard entropy S° of water vapour at 25 °C', 'Standardentropie S° von Wasserdampf bei 25 °C') },
         { v: '+118.8 J/(mol·K)', label: b('ΔS when one mole of water evaporates', 'ΔS, wenn ein Mol Wasser verdampft') },
       ],
-      body: b('The standard entropy S° is measured at 25 °C and 1 bar, in joules per kelvin for each mole. In the vapour the molecules move freely through the whole space instead of jostling in a liquid, so there are far more ways to place them and share out their energy: S more than doubles. The rule for any substance: S(gas) > S(liquid) > S(solid).',
-        'Die Standardentropie S° wird bei 25 °C und 1 bar gemessen, in Joule pro Kelvin und Mol. Im Dampf bewegen sich die Moleküle frei durch den ganzen Raum, statt sich in einer Flüssigkeit zu drängen, also gibt es weit mehr Möglichkeiten, sie anzuordnen und ihre Energie zu verteilen: S wird mehr als doppelt so groß. Die Regel für jeden Stoff: S(Gas) > S(Flüssigkeit) > S(Feststoff).'),
-      soWhat: b('Evaporating takes in 44.0 kJ/mol, which is why sweat cools your skin. The rise in entropy is why water evaporates at all, far below its boiling point; spread thinly through the air, the vapour has even more ways than the table value counts.',
-        'Verdampfen nimmt 44,0 kJ/mol auf, deshalb kühlt Schweiß deine Haut. Der Anstieg der Entropie ist der Grund, warum Wasser weit unter seiner Siedetemperatur überhaupt verdunstet; dünn in der Luft verteilt hat der Dampf sogar noch mehr Möglichkeiten, als der Tabellenwert angibt.'),
+      body: b('The standard entropy S° is a table value for 25 °C and 1 bar, in joules per mole and kelvin. In the vapour the molecules move freely through the whole space instead of jostling in a liquid, so there are far more ways to place them and share out their energy: S more than doubles. The rule for any substance: S(gas) > S(liquid) > S(solid).',
+        'Die Standardentropie S° ist ein Tabellenwert für 25 °C und 1 bar, in Joule pro Mol und Kelvin. Im Dampf bewegen sich die Moleküle frei durch den ganzen Raum, statt sich in einer Flüssigkeit zu drängen, also gibt es weit mehr Möglichkeiten, sie anzuordnen und ihre Energie zu verteilen: S wird mehr als doppelt so groß. Die Regel für jeden Stoff: S(Gas) > S(Flüssigkeit) > S(Feststoff).'),
+      soWhat: b('Evaporating takes in 44.0 kJ/mol, which is why sweat cools your skin. The rise in entropy is why water evaporates at all, far below its boiling point.',
+        'Verdampfen nimmt 44,0 kJ/mol auf, deshalb kühlt Schweiß deine Haut. Der Anstieg der Entropie ist der Grund, warum Wasser weit unter seiner Siedetemperatur überhaupt verdunstet.'),
     },
     {
       title: b('Making ammonia', 'Ammoniak herstellen'), tag: 'NH3',
@@ -246,21 +256,21 @@ export const UNIT19: UnitContent = {
       ],
       body: b('Four moles of gas molecules become two. Fewer gas particles have fewer ways to be placed and to share out their energy, so the entropy falls: ΔS = 2 × 192.8 − (191.6 + 3 × 130.7) = −198.1 J/(mol·K). The rule of thumb: count the moles of gas on each side; more gas in the products usually means ΔS > 0, less gas means ΔS < 0.',
         'Aus vier Mol Gasmolekülen werden zwei. Weniger Gasteilchen haben weniger Möglichkeiten, sich anzuordnen und ihre Energie zu verteilen, also sinkt die Entropie: ΔS = 2 · 192,8 − (191,6 + 3 · 130,7) = −198,1 J/(mol·K). Die Faustregel: Vergleiche die Stoffmenge an Gas auf beiden Seiten; mehr Gas in den Produkten bedeutet meist ΔS > 0, weniger Gas ΔS < 0.'),
-      soWhat: b('The reaction can still run by itself at room temperature: it gives out 91.8 kJ/mol, and that heat raises the entropy of the surroundings by about 91 800 ÷ 298 = 308 J/(mol·K), more than the gases lose. Unit 20 turns this sum into ΔG.',
-        'Die Reaktion kann bei Raumtemperatur trotzdem von selbst ablaufen: Sie gibt 91,8 kJ/mol ab, und diese Wärme erhöht die Entropie der Umgebung um etwa 91 800 : 298 = 308 J/(mol·K), mehr als die Gase verlieren. Einheit 20 macht aus dieser Rechnung ΔG.'),
+      soWhat: b('The reaction can still run by itself at room temperature: it gives out 91.8 kJ/mol, and that heat raises the entropy of the surroundings by about 91 800 ÷ 298 = 308 J/(mol·K), more than the gases lose. The second law asks that the total rises; unit 20 turns this sum into ΔG.',
+        'Die Reaktion kann bei Raumtemperatur trotzdem von selbst ablaufen: Sie gibt 91,8 kJ/mol ab, und diese Wärme erhöht die Entropie der Umgebung um etwa 91 800 : 298 = 308 J/(mol·K), mehr als die Gase verlieren. Der Zweite Hauptsatz verlangt, dass die Gesamtentropie zunimmt; Einheit 20 macht aus dieser Rechnung ΔG.'),
     },
     {
       title: b('Where the model breaks: “entropy is disorder”', 'Wo das Modell an Grenzen stößt: „Entropie ist Unordnung“'), tag: 'S',
       show: { engine: 'box', sub: 'H2O', temp: -10 },
       numbers: [
-        { v: '−22.0 J/(mol·K)', label: b('for one mole of water as it freezes into ordered ice', 'für ein Mol Wasser, das zu geordnetem Eis gefriert') },
-        { v: '+22.8 J/(mol·K)', label: b('for the surroundings at −10 °C: 6010 J ÷ 263 K', 'für die Umgebung bei −10 °C: 6010 J : 263 K') },
+        { v: '−22.0 J/(mol·K)', label: b('for one mole of water as it freezes into ice', 'für ein Mol Wasser, das zu Eis gefriert') },
+        { v: '+22.8 J/(mol·K)', label: b('for the surroundings at −10 °C: 6010 J ÷ 263.15 K', 'für die Umgebung bei −10 °C: 6010 J : 263,15 K') },
         { v: '+0.8 J/(mol·K)', label: b('in all: the total rises, so freezing runs by itself', 'insgesamt: Die Summe steigt, also läuft das Gefrieren von selbst ab') },
       ],
-      body: b('Entropy counts ways, not visible mess. A shuffled pack of cards or an untidy room has no measurably higher thermodynamic entropy than a tidy one: moving a few large objects does not change how the energy of about 10²³ particles can be shared out. Water freezing at −10 °C turns into ordered ice and still runs by itself, because the 6.01 kJ/mol it gives off raises the entropy of the surroundings by slightly more than the water loses (taking ΔH and ΔS as constant below 0 °C: a model).',
-        'Entropie erfasst Möglichkeiten, nicht sichtbares Durcheinander. Ein gemischtes Kartenspiel oder ein unaufgeräumtes Zimmer hat keine messbar höhere Entropie als ein ordentliches: Ein paar große Gegenstände zu verschieben ändert nichts daran, wie sich die Energie von etwa 10²³ Teilchen verteilen lässt. Wasser, das bei −10 °C zu geordnetem Eis gefriert, läuft trotzdem von selbst ab, weil die abgegebenen 6,01 kJ/mol die Entropie der Umgebung etwas stärker erhöhen, als die des Wassers sinkt (ΔH und ΔS unter 0 °C als konstant angenommen: ein Modell).'),
-      soWhat: b('Many books call entropy a measure of disorder. In an exam you may write that, but add “the number of ways the particles and their energy can be arranged”: disorder you can see says nothing about energy, and it cannot explain why water freezes by itself below 0 °C.',
-        'Viele Bücher nennen die Entropie ein „Maß der Unordnung“. In der Klausur darfst du das schreiben, aber ergänze „die Zahl der Möglichkeiten, die Teilchen und ihre Energie anzuordnen“: Sichtbare Unordnung sagt nichts über die Energie und erklärt nicht, warum Wasser unter 0 °C von selbst gefriert.'),
+      body: b('Entropy counts ways, not visible mess: a shuffled pack of cards or an untidy room has no measurably higher entropy than a tidy one, because moving a few large objects hardly changes how the energy of about 10²³ particles can be shared out. Water that freezes at −10 °C into an ice crystal loses entropy, and still freezes by itself: the 6.01 kJ/mol it gives off raises the entropy of the surroundings by slightly more than the water loses (taking ΔH and ΔS as constant below 0 °C: a model).',
+        'Entropie erfasst Möglichkeiten, nicht sichtbares Durcheinander: Ein gemischtes Kartenspiel oder ein unaufgeräumtes Zimmer hat keine messbar höhere Entropie als ein aufgeräumtes, denn ein paar große Gegenstände zu verschieben ändert kaum, wie sich die Energie von etwa 10²³ Teilchen verteilen lässt. Wasser, das bei −10 °C zu einem Eiskristall gefriert, verliert Entropie und gefriert trotzdem von selbst: Die abgegebenen 6,01 kJ/mol erhöhen die Entropie der Umgebung etwas stärker, als die des Wassers sinkt (ΔH und ΔS unter 0 °C als konstant angenommen: ein Modell).'),
+      soWhat: b('Many books call entropy a measure of disorder. In an A-level, IB or Abitur exam you may write that, but add “the number of microstates, the ways to arrange the particles and share out their energy”: disorder you can see says nothing about energy, and it cannot explain why water freezes by itself below 0 °C.',
+        'Viele Bücher nennen die Entropie ein „Maß für die Unordnung“. In der Abiturklausur darfst du das schreiben, aber ergänze „die Zahl der Mikrozustände, also der Möglichkeiten, die Teilchen und ihre Energie zu verteilen“: Sichtbare Unordnung sagt nichts über die Energie und erklärt nicht, warum Wasser unter 0 °C von selbst gefriert.'),
     },
   ],
 
@@ -269,11 +279,11 @@ export const UNIT19: UnitContent = {
     prompt: b('Where does this reasoning first go wrong?', 'Wo geht diese Überlegung zum ersten Mal schief?'),
     lines: [
       b('A perfume bottle is opened in one corner of a closed room. Soon the scent is about the same everywhere in the room.', 'In einer Ecke eines geschlossenen Raums wird eine Parfümflasche geöffnet. Bald riecht es überall im Raum etwa gleich stark.'),
-      b('However long you wait, the scent never gathers back in that corner by itself.', 'Wie lange man auch wartet, der Duft sammelt sich nie von selbst wieder in dieser Ecke.'),
+      b('However long you wait, in a whole room of molecules the scent practically never gathers back in that corner by itself.', 'Wie lange man auch wartet: In einem ganzen Raum voller Moleküle sammelt sich der Duft praktisch nie von selbst wieder in dieser Ecke.'),
       b('So the perfume molecules must push each other apart, or seek out the emptier parts of the room.', 'Also müssen sich die Parfümmoleküle gegenseitig wegdrücken oder die leereren Teile des Raums aufsuchen.'),
     ],
     flaw: 2,
-    near: [{ step: 1, note: b('This one is true in practice: gathering back is not forbidden, only so improbable that it never happens. Ask what that tells you about why the scent spread.', 'Dieser Schritt stimmt in der Praxis: Zurückkehren ist nicht verboten, nur so unwahrscheinlich, dass es nie passiert. Frag dich, was das darüber sagt, warum sich der Duft verteilt hat.') }],
+    near: [{ step: 1, note: b('This one is true for a whole room, unlike four atoms in the box: gathering back is not forbidden, only so improbable that it practically never happens. Ask what that tells you about why the scent spread.', 'Dieser Schritt stimmt für einen ganzen Raum, anders als bei vier Atomen in der Box: Zurückkehren ist nicht verboten, nur so unwahrscheinlich, dass es praktisch nie passiert. Frag dich, was das darüber sagt, warum sich der Duft verteilt hat.') }],
     explain: b('Step 3 is the first wrong step. Steps 1 and 2 are what you observe, and both are true. Step 3 is wrong: nothing pushes the molecules towards empty space; each moves at random, and arrangements spread through the whole room vastly outnumber those gathered in one corner, so spreading is overwhelmingly likely and gathering back never happens in practice.',
       'Schritt 3 ist der erste falsche Schritt. Die Schritte 1 und 2 beschreiben, was man beobachtet, und beide stimmen. Schritt 3 ist falsch: Nichts drückt die Moleküle in leeren Raum; jedes bewegt sich zufällig, und Anordnungen, die über den ganzen Raum verteilt sind, sind gegenüber denen in einer Ecke weit in der Überzahl. Deshalb ist Ausbreiten überwältigend wahrscheinlich, und Zurückkehren passiert praktisch nie.'),
   } as FlawItem,
@@ -299,22 +309,22 @@ export const UNIT19: UnitContent = {
     ideas: [
       { id: 'endo', concept: 'u19.not-energy', idea: b('Some processes run by themselves although they take in energy', 'Manche Vorgänge laufen von selbst ab, obwohl sie Energie aufnehmen'), contra: SPONT_EXO,
         en: any(together(RUN_EN, TAKEIN_EN, 60), CONCESSIVE_EN), de: any(together(RUN_DE, TAKEIN_DE, 60), CONCESSIVE_DE) },
-      { id: 'ways', concept: 'u19.ways', idea: b('Entropy measures the number of ways the particles and their energy can be arranged', 'Die Entropie ist ein Maß für die Zahl der Möglichkeiten, die Teilchen und ihre Energie anzuordnen'), contra: MESSINESS,
+      { id: 'ways', concept: 'u19.ways', idea: b('Entropy measures the number of microstates: the ways to arrange the particles and share out their energy', 'Die Entropie ist ein Maß für die Zahl der Mikrozustände, also der Möglichkeiten, die Teilchen und ihre Energie zu verteilen'), contra: MESSINESS,
         en: any(together(ENTROPY_EN, WAYS_EN, 60), BOLTZMANN), de: any(together(ENTROPY_DE, WAYS_DE, 60), BOLTZMANN) },
       { id: 'probable', concept: 'u19.probable', idea: b('Particles spread out because spread-out arrangements vastly outnumber the rest', 'Teilchen verteilen sich, weil verteilte Anordnungen weit in der Überzahl sind'), contra: WANT_SPACE,
         en: any(together(SPREAD_EN, LIKELY_EN, 80), /\b(all|every)\b.{0,30}\b(on|in) (one side|one half|the left|one corner)\b.{0,40}(unlikely|improbable|rare|one arrangement|tiny chance|almost never|practically never|1 in)/),
         de: any(together(SPREAD_DE, LIKELY_DE, 80), /(alle|sämtliche)\b.{0,30}(links|auf einer seite|in einer hälfte|in einer ecke).{0,40}(unwahrscheinlich|selten|eine anordnung|praktisch nie|fast nie|1 zu)/) },
       { id: 'states', concept: 'u19.states', idea: b('Entropy rises from solid to liquid to gas, with freedom of movement', 'Die Entropie steigt von fest über flüssig zu gasförmig, mit der Bewegungsfreiheit'),
-        en: any(ORDER_EN, COMPARE_EN, together(STATEPAIR_EN, HIGHER_EN, 50),
-          together(/(freedom|free to move|move\w* (more )?freely|move around)/, /(entrop\w*|\bways\b|arrangements)/, 50), together(/(freez\w*|condens\w*)/, LOWER_EN, 40)),
-        de: any(ORDER_DE, COMPARE_DE, together(STATEPAIR_DE, HIGHER_DE, 50),
-          together(/(bewegungsfreiheit|frei beweg\w*|freier beweg\w*|beweg\w* sich (freier|frei))/, /(entropie|möglichkeit\w*)/, 50), together(/(gefrier\w*|erstarr\w*|kondens\w*)/, LOWER_DE, 40)) },
+        en: any(ORDER_EN, COMPARE_EN, PLAINCOMPARE_EN, together(STATEPAIR_EN, HIGHER_EN, 50),
+          together(FREEDOM_EN, /(entrop\w*|\bways\b|arrangements)/, 50), together(/(freez\w*|condens\w*)/, LOWER_EN, 40)),
+        de: any(ORDER_DE, COMPARE_DE, PLAINCOMPARE_DE, together(STATEPAIR_DE, HIGHER_DE, 50), together(STATEPAIR_DE, RISES_DE, 60),
+          together(FREEDOM_DE, /(entropie|möglichkeit\w*)/, 50), together(/(gefrier\w*|erstarr\w*|kondens\w*)/, LOWER_DE, 40)) },
       { id: 'gas', concept: 'u19.gas-moles', idea: b('More moles of gas in the products: ΔS is usually positive', 'Mehr Mol Gas in den Produkten: ΔS ist meist positiv'),
         en: any(together(GASMORE_EN, S_UP_EN, 60), together(FEWERGAS_EN, S_DOWN_EN, 60)),
         de: any(together(GASMORE_DE, S_UP_DE, 60), together(FEWERGAS_DE, S_DOWN_DE, 60)) },
     ] as Idea[],
-    tightened: b('Some processes run by themselves although they take in energy, such as ice melting at room temperature or a cold pack dissolving. Entropy measures the number of ways the particles and their energy can be arranged. Particles spread out and gases mix because spread-out arrangements vastly outnumber the others, not because particles want room. So entropy rises from solid to liquid to gas, and a reaction that makes more moles of gas usually has a positive ΔS.',
-      'Manche Vorgänge laufen von selbst ab, obwohl sie Energie aufnehmen, zum Beispiel schmelzendes Eis bei Raumtemperatur oder eine Kältekompresse. Die Entropie ist ein Maß für die Zahl der Möglichkeiten, die Teilchen und ihre Energie anzuordnen. Teilchen verteilen sich und Gase mischen sich, weil verteilte Anordnungen weit in der Überzahl sind, nicht weil die Teilchen Platz wollen. Deshalb steigt die Entropie von fest über flüssig zu gasförmig, und bei Reaktionen, bei denen mehr Mol Gas entstehen, ist ΔS meist positiv.'),
+    tightened: b('Some processes run by themselves although they take in energy, such as ice melting at room temperature or a cold pack dissolving; the energy taken in lowers the entropy of the surroundings, but the system gains more. Entropy measures the number of microstates, the ways to arrange the particles and share out their energy. Particles spread out and gases mix because spread-out arrangements vastly outnumber the others, not because particles want room. So entropy rises from solid to liquid to gas, and a reaction that makes more moles of gas usually has a positive ΔS.',
+      'Manche Vorgänge laufen von selbst ab, obwohl sie Energie aufnehmen, zum Beispiel schmelzendes Eis bei Raumtemperatur oder eine Kältekompresse; die aufgenommene Energie senkt die Entropie der Umgebung, aber das System gewinnt mehr. Die Entropie ist ein Maß für die Zahl der Mikrozustände, also der Möglichkeiten, die Teilchen und ihre Energie zu verteilen. Teilchen verteilen sich und Gase mischen sich, weil verteilte Anordnungen weit in der Überzahl sind, nicht weil die Teilchen Platz wollen. Deshalb steigt die Entropie von fest über flüssig zu gasförmig, und bei Reaktionen, bei denen mehr Mol Gas entstehen, ist ΔS meist positiv.'),
   },
 
   terms: ['entropy', 'spontaneous', 'endothermic', 'exothermic'],
@@ -327,12 +337,12 @@ export const UNIT19: UnitContent = {
       lookFor: [
         b('Its example N₂ + 3 H₂ → 2 NH₃: four molecules become two. Which way does it say the entropy goes? Compare with −198.1 J/(mol·K) in the second example.', ''),
         b('What reason does it give for dissolving raising the entropy? Compare with the cold pack in the puzzle.', ''),
-        b('It explains entropy with a messy room. After the third example, what would you add so the explanation is about particles and their energy?', ''),
+        b('It explains entropy with a messy room. Compare with the third worked example of this unit (“entropy is disorder”): what would you add so the explanation is about particles and their energy?', ''),
       ],
     },
     {
       lang: 'en', kind: 'deeper',
-      title: b('Entropy', 'Entropy'), source: 'OpenStax Chemistry 2e, section 16.2',
+      title: b('Entropy', 'Entropy'), source: 'OpenStax Chemistry 2e, section 16.2 (optional, university level)',
       url: 'https://openstax.org/books/chemistry-2e/pages/16-2-entropy',
       lookFor: [
         b('Its four particles in two boxes: how many microstates, and how many put two in each box? Compare with your answer in prediction 2.', ''),
@@ -356,13 +366,15 @@ export const UNIT19: UnitContent = {
     { id: 'spontaneous-exothermic', name: b('Only processes that release energy run by themselves', 'Nur exotherme Vorgänge laufen von selbst ab') },
     { id: 'entropy-messiness', name: b('Entropy is visible messiness', 'Entropie ist sichtbare Unordnung') },
     { id: 'particles-want-space', name: b('Particles spread because they want room', 'Teilchen verteilen sich, weil sie Platz wollen') },
+    { id: 'unlikely-forbidden', name: b('Very improbable means forbidden', 'Sehr Unwahrscheinliches ist verboten') },
+    { id: 'outside-energy', name: b('Energy from outside is what makes a process run', 'Energie von außen lässt einen Vorgang ablaufen') },
   ],
 
   glossary: {
     entropy: {
       en: 'entropy', de: 'Entropie', unit: 19,
-      def: { en: 'S, a measure of the number of ways the particles of a substance and their energy can be arranged, in J/(mol·K). It rises from solid to liquid to gas, and when substances mix or dissolve. Many books call it a measure of disorder.',
-        de: 'S, ein Maß für die Zahl der Möglichkeiten, die Teilchen eines Stoffes und ihre Energie anzuordnen, in J/(mol·K). Sie steigt von fest über flüssig zu gasförmig und beim Mischen und Lösen. Viele Bücher nennen sie ein Maß der Unordnung.' },
+      def: { en: 'S, a measure of the number of microstates: the ways the particles of a substance can be arranged and their energy shared out, in J/(mol·K). It rises from solid to liquid to gas, and usually when substances mix or dissolve. Many books call it a measure of disorder.',
+        de: 'S, ein Maß für die Zahl der Mikrozustände, also der Möglichkeiten, die Teilchen eines Stoffes und ihre Energie zu verteilen, in J/(mol·K). Sie steigt von fest über flüssig zu gasförmig und meist beim Mischen und Lösen. Viele Bücher nennen sie ein Maß für die Unordnung.' },
     },
     spontaneous: {
       en: 'spontaneous', de: 'freiwillig (spontan)', unit: 19,

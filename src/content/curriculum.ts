@@ -185,7 +185,7 @@ export const UNITS: UnitInfo[] = [
   ]),
   u(19, 5, 'Entropy', 'Entropie', 'Particle Box', 2, [
     c('u19.not-energy', 'Some processes run by themselves although they take in energy', 'Manche Vorgänge laufen von selbst ab, obwohl sie Energie aufnehmen'),
-    c('u19.ways', 'Entropy counts the ways the particles and their energy can be arranged', 'Entropie zählt die Möglichkeiten, Teilchen und ihre Energie anzuordnen'),
+    c('u19.ways', 'Entropy measures the number of microstates: the ways particles and their energy can be spread', 'Entropie ist ein Maß für die Zahl der Mikrozustände: der Möglichkeiten, Teilchen und Energie zu verteilen'),
     c('u19.probable', 'Spreading out happens because spread-out arrangements vastly outnumber the rest', 'Verteilung geschieht, weil verteilte Anordnungen weit in der Überzahl sind'),
     c('u19.states', 'Gas > liquid > solid: S rises with freedom of movement', 'Gas > Flüssigkeit > Feststoff: S steigt mit der Bewegungsfreiheit'),
     c('u19.gas-moles', 'More moles of gas in the products: ΔS is usually positive', 'Mehr Mol Gas in den Produkten: ΔS ist meist positiv'),
@@ -194,7 +194,7 @@ export const UNITS: UnitInfo[] = [
   u(20, 5, 'Free energy', 'Freie Enthalpie', 'Energy Landscape', 2, [
     c('u20.gibbs', 'ΔG = ΔH − T·ΔS combines energy and entropy', 'ΔG = ΔH − T·ΔS verbindet Energie und Entropie'),
     c('u20.sign', 'ΔG < 0: the reaction can run by itself (exergonic)', 'ΔG < 0: Die Reaktion kann von selbst ablaufen (exergonisch)'),
-    c('u20.temperature', 'Temperature weights the entropy term: T can flip the sign of ΔG', 'Die Temperatur gewichtet den Entropieterm: T kann das Vorzeichen von ΔG umkehren'),
+    c('u20.temperature', 'Temperature weights the entropy term: T can flip the sign of ΔG', 'Die Temperatur bestimmt, wie stark der Entropieterm zählt: T kann das Vorzeichen von ΔG umkehren'),
     c('u20.crossover', 'The switch happens at T = ΔH / ΔS', 'Der Wechsel liegt bei T = ΔH / ΔS'),
     c('u20.four-cases', 'Signs of ΔH and ΔS give four cases', 'Die Vorzeichen von ΔH und ΔS ergeben vier Fälle'),
     c('u20.not-rate', 'ΔG says whether, not how fast', 'ΔG sagt, ob, nicht wie schnell'),

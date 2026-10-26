@@ -84,7 +84,7 @@ function feedback(kind: 'right' | 'miss' | 'part', explain: Bi, o: FbOpts = {}):
     ...(o.notes ?? []).map((n) => h('div', { class: 'fb-note' }, rich(n))),
     o.fold && kind !== 'right' ? h('details', { class: 'fb-fold' }, h('summary', null, L({ en: 'The short explanation', de: 'Die kurze Erklärung' })), h('div', null, rich(explain))) : h('div', null, rich(explain)),
     o.sure && kind === 'miss' ? h('div', { class: 'sure-note' }, L({ en: 'You were sure about this one. Confident mistakes are the most useful ones to catch: this question will come back.', de: 'Hier warst du dir sicher. Selbstsichere Fehler lohnen sich am meisten: Diese Frage kommt wieder.' })) : null,
-    m ? h('div', { class: 'mis-note' }, L({ en: 'A common trap: ', de: 'Eine häufige Falle: ' }), L(m.name), L({ en: '. Lots of people fall into it. The app will bring it back on another day until it sticks.', de: '. Da tappen viele hinein. Die App fragt das an einem anderen Tag noch einmal ab, bis es sitzt.' })) : null,
+    m ? h('div', { class: 'mis-note' }, L({ en: 'A common trap: ', de: 'Eine häufige Falle: ' }), L(m.name), L({ en: '. Lots of people fall into it. The app will bring it back on another day until it sticks.', de: '. Viele machen diesen Fehler. Die App fragt das an einem anderen Tag noch einmal ab, bis es sitzt.' })) : null,
   );
 }
 

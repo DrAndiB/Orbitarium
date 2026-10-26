@@ -11,6 +11,12 @@
 // - diamond-graphite −1.89 / +3.36; ΔG(298) = −2.9.
 // - so2-so3 −197.8 / −188.1; crossover 1051.6 K → 1052 K (778 °C).
 // Sources fetched for values not in the data files (2026-10-26):
+// - Limestone, measured: the CO₂ equilibrium pressure over CaCO₃ reaches atmospheric pressure at 898 °C ("the
+//   equilibrium pressure must exceed total atmospheric pressure of 101 kPa, which happens at 898 °C", with a table of
+//   equilibrium pressures; Wikipedia, "Calcium carbonate", section on thermal decomposition). Cross-check: the fit
+//   Peq(atm) ≈ 4.083·10⁷·exp(−20474/T) of Valverde, Sanchez-Jimenez and Perez-Maqueda, "Limestone calcination nearby
+//   equilibrium" (idus.us.es), solved for 1 atm, gives 1168 K (895 °C). So the 845 °C (1119 K) from ΔH/ΔS at 25 °C is a
+//   model value and the text says so; the unit quotes "about 900 °C" for the measured value.
 // - Lime kilns: "During the kiln operations the limestone reaches temperatures as high as 900 °C" (EMEP/EEA emission
 //   inventory guidebook 2009, chapter 2.A.2 Lime production, eea.europa.eu).
 // - Haber process: "a high temperature of 450 °C and a high pressure of 200 atmospheres", iron catalyst, ammonia
@@ -45,11 +51,15 @@ const FORMULA = new RegExp(`${DG}\\s?=\\s?${DH}${MINUS}t${TIMES}${DS}|\\bg\\s?=\
 const GIBBS_EN = any(FORMULA,
   `${G_EN}.{0,40}(?:combin|balanc|weigh|account|depend|includ|bring|link|join|put|use|made|add|mix|sum|merg|unit)\\w*.{0,40}(?:${DH}|${DS}|enthalp\\w*|entrop\\w*|energy|heat|disorder|spreading)`,
   /(balance|trade-?off|competition|tug[ -]of[ -]war|contest|battle) (between|of) .{0,25}(enthalp|energy|heat|entrop)/,
-  `(?:enthalp\\w*|energy|heat|${DH})(?: change)? (?:against|versus|vs|minus|plus|together with|combined with|and) (?:the )?(?:temperature times |t times )?(?:the )?(?:entrop\\w*|${DS}|t${TIMES}${DS}|spreading|disorder)`);
+  `(?:enthalp\\w*|energy|heat|${DH})(?: change)? (?:against|versus|vs|minus|plus|together with|combined with|and) (?:the )?(?:temperature times |t times )?(?:the )?(?:entrop\\w*|${DS}|t${TIMES}${DS}|spreading|disorder)`,
+  `(?:subtract|take away|take off|deduct|minus)\\w* (?:the |off the )?(?:temperature times|t times|t${TIMES}${DS}|${DS} times)`);
 const GIBBS_DE = any(FORMULA,
   `${G_DE}.{0,40}(?:verbind|verknüpf|kombinier|berücksichtig|vereint|vereinigt|fasst|setzt sich|beinhaltet|enthält|hängt|abhängig|ergibt sich|bilanz|komm|steck|wäg|zusammen)\\w*.{0,40}(?:${DH}|${DS}|enthalpie\\w*|entropie\\w*|energie\\w*|wärme|unordnung)`,
   /(bilanz|zusammenspiel|wettstreit|wettkampf|konkurrenz|kräftemessen|abwägung) (aus|zwischen|von) .{0,25}(enthalpie|energie|wärme|entropie)/,
-  `(?:enthalpie\\w*|energie|wärme|${DH}) (?:gegen|gegenüber|minus|mit|zusammen mit) (?:der )?(?:temperatur mal |t mal )?(?:entropie\\w*|${DS}|t${TIMES}${DS})`);
+  `(?:enthalpie|energie|wärme)[\\wäöüß]*(?: ${DH})? (?:gegen|gegenüber|minus|mit|zusammen mit) (?:der )?(?:temperatur mal |t mal )?(?:entropie\\w*|${DS}|t${TIMES}${DS})|${DH} (?:gegen|gegenüber|minus|mit|zusammen mit) (?:der )?(?:temperatur mal |t mal )?(?:entropie\\w*|${DS}|t${TIMES}${DS})`,
+  // "zieht Temperatur mal Entropieänderung ab" (the "und" before it ends the clause)
+  `(?:zieh\\w*|ziehst|subtrahier\\w*|abzüglich|vermindert um) (?:man |du |dann )?(?:die |den )?(?:temperatur|t) mal`,
+  `(?:enthalpie|energie|wärme)[\\wäöüß]*,? .{0,20}(?:abzüglich|abgezogen|subtrahier\\w*|vermindert um)`);
 // Unit 19's misconception, contradicted: only exothermic changes run by themselves.
 const ONLY_EXO = {
   en: /^(?!.*(\bnot\b|n't|\bno\b|\bnever\b|entrop|δ ?s|\bds\b|every temperature|all temperatures|any temperature)).*\b(only|just)\b .{0,20}(exotherm\w*|(reactions?|processes|changes) that (release|give out|give off)).{0,40}(run|happen|go\b|spontan|by (it|them)sel|on (its|their) own|feasible|possible)/,
@@ -57,17 +67,39 @@ const ONLY_EXO = {
 };
 
 // Idea 2, the sign: ΔG < 0 means the reaction can run by itself (exergonic).
-const NEGG_EN = `(?:${G_EN}\\s?(?:is |becomes |turns |gets |goes |being |value is )?(?:< ?0|negative|below zero|less than zero|smaller than zero|under zero|minus)|negative ${G_EN})`;
-const POSG_EN = `(?:${G_EN}\\s?(?:is |becomes |turns |gets )?(?:> ?0|positive|above zero|greater than zero|more than zero)|positive ${G_EN})`;
-const RUN_EN = String.raw`(?:spontaneous\w*|(?:run|happen|go|proceed|occur|react)\w* (?:by (?:it|them)sel\w*|on (?:its|their) own|without (?:help|a push|outside help|energy input))|can (?:run|happen|go|proceed|occur|react)|feasible|exergonic|favou?r\w*|will happen|goes ahead|possible)`;
-const NEGG_DE = `(?:${G_DE}\\s?(?:ist |wird |kleiner |unter )?(?:< ?0|negativ\\w*|kleiner (?:als )?(?:null|0)|unter null)|negative\\w* ${G_DE})`;
-const POSG_DE = `(?:${G_DE}\\s?(?:ist |wird )?(?:> ?0|positiv\\w*|größer (?:als )?(?:null|0)|über null)|positive\\w* ${G_DE})`;
-const RUN_DE = String.raw`(?:freiwillig\w*|spontan\w*|von selbst|von allein\w*|selbstständig\w*|selbständig\w*|exergon\w*|läuft .{0,25}\bab\b|ablaufen|ablaufend|abläuft|läuft|möglich|begünstigt|kann .{0,20}(?:ablaufen|stattfinden|passieren|reagieren))`;
-const SIGN_EN = any(together(NEGG_EN, RUN_EN, 50), /exergonic\w*.{0,30}(< ?0|negative)/, /(< ?0|negative).{0,30}exergonic/);
-const SIGN_DE = any(together(NEGG_DE, RUN_DE, 50), /exergon\w*.{0,30}(< ?0|negativ)/, /(< ?0|negativ\w*).{0,30}exergon/);
+// Plain words for "ΔG": "the answer", "the result", "the sum" ("the" or "your" is required, so "the energy change" is not taken for it).
+const ANS_EN = String.raw`(?:the|your) (?:answer|result|sum|total|outcome|calculation)`;
+const NEGG_EN = `(?:${G_EN}\\s?(?:is |becomes |turns |gets |goes |being |value is |comes out |comes out as )?(?:< ?0|negative|below zero|less than zero|smaller than zero|under zero|minus)|negative ${G_EN}|${ANS_EN} (?:is |comes out |comes out as |turns out |ends up |being |gets )?(?:a )?(?:negative|minus|below zero|less than zero|under zero)|(?:you get|it gives|gives|getting) (?:a )?(?:negative|minus)(?: number| value| answer| result)?)`;
+const POSG_EN = `(?:${G_EN}\\s?(?:is |becomes |turns |gets )?(?:> ?0|positive|above zero|greater than zero|more than zero)|positive ${G_EN}|${ANS_EN} (?:is |comes out |turns out |ends up )?(?:a )?(?:positive|plus|above zero|greater than zero))`;
+// "non-spontaneous", "unfavourable", "infeasible" must not read as their opposites.
+const RUN_EN = String.raw`(?:(?<!non[- ]?)(?<!un)spontaneous\w*|(?:run|happen|go|proceed|occur|react|work)\w* (?:by (?:it|them)sel\w*|on (?:its|their) own|without (?:help|a push|outside help|energy input))|can (?:run|happen|go|proceed|occur|react|work)|(?<!in)feasible|(?<!non[- ]?)exergonic|(?<!un)favou?r\w*|will happen|goes ahead|(?<!im)possible|viable|allowed|no (?:push|help|energy input) (?:is )?(?:needed|required)|(?:doesn't|does not|won't|will not) need (?:a push|help|energy|anything)|(?:\bit|\bthey) can\s*$)`;
+const ANS_DE = String.raw`(?:(?:das|dein|dieses) (?:ergebnis|resultat)|(?:die|deine|diese) summe)`;
+const NEGG_DE = `(?:${G_DE}\\s?(?:ist |wird |kleiner |unter )?(?:< ?0|negativ\\w*|kleiner (?:als )?(?:null|0)|unter null)|negative\\w* ${G_DE}|${ANS_DE} (?:ist |wird |kommt .{0,12}heraus |ergibt )?(?:ein )?(?:negativ\\w*|kleiner (?:als )?(?:null|0)|unter null)|(?:ergibt sich|kommt|erhältst du|bekommst du|erhält man) (?:ein |etwas )?(?:negativ\\w*|minus))`;
+const POSG_DE = `(?:${G_DE}\\s?(?:ist |wird )?(?:> ?0|positiv\\w*|größer (?:als )?(?:null|0)|über null)|positive\\w* ${G_DE}|${ANS_DE} (?:ist |wird |kommt .{0,12}heraus )?(?:ein )?(?:positiv\\w*|größer (?:als )?(?:null|0)|über null))`;
+// "unfreiwillig", "unmöglich", "nonspontan" must not read as their opposites.
+const RUN_DE = String.raw`(?:(?<!un)freiwillig\w*|(?<!non[- ]?)(?<!un)spontan\w*|von selbst|von allein\w*|selbstständig\w*|selbständig\w*|(?<!non[- ]?)exergon\w*|läuft .{0,25}\bab\b|ablaufen|ablaufend|abläuft|läuft|(?<!un)möglich|(?<!un)begünstigt|kann .{0,20}(?:ablaufen|stattfinden|passieren|reagieren|laufen)|ohne (?:anstoß|hilfe|energiezufuhr|zusatz\w*))`;
+// One sentence that states both cases ("If ΔG < 0 it is spontaneous, if ΔG > 0 it is not"): the negation belongs to the
+// second half, so the match runs up to it (positive case second) or includes it word for word (positive case first;
+// the matcher accepts a negation inside a match only when the pattern's source contains it literally).
+const two = (...parts: string[]) => parts.join('.{0,40}');
+const NEGPAIR_EN = ['not', 'cannot', "can't", "won't", "isn't", "doesn't", 'never']
+  .flatMap((n) => ['spontaneous', 'run', 'happen', 'go', 'proceed', 'occur', 'react', 'work', 'feasible', 'possible', 'exergonic', 'favoured', 'favourable', 'by', 'on', 'allowed', 'viable', 'be'].map((w) => `${n} ${w}`)).join('|');
+const NEGPAIR_DE = ['nicht', 'nie'].flatMap((n) => ['freiwillig', 'spontan', 'ab', 'von', 'möglich', 'ablaufen', 'selbstständig', 'selbständig'].map((w) => `${n} ${w}`)).join('|');
+// "when it is positive it can't": the second half may say "it" for ΔG.
+const POSG2_EN = `(?:${POSG_EN}|\\b(?:it|that) (?:is |becomes )?(?:> ?0|positive|plus|above zero))`;
+const POSG2_DE = `(?:${POSG_DE}|\\b(?:es|das|er) (?:ist |wird )?(?:> ?0|positiv\\w*|über null))`;
+const SIGN_EN = any(
+  two(NEGG_EN, RUN_EN, POSG2_EN) + String.raw`.{0,40}(?:not|never|can't|cannot|won't|isn't|doesn't)\b`,
+  two(POSG2_EN, `(?:${NEGPAIR_EN})`, NEGG_EN, RUN_EN),
+  together(NEGG_EN, RUN_EN, 50), /exergonic\w*.{0,30}(< ?0|negative)/, /(< ?0|negative).{0,30}exergonic/);
+const SIGN_DE = any(
+  two(NEGG_DE, RUN_DE, POSG2_DE) + String.raw`.{0,40}(?:nicht|nie)\b`,
+  two(POSG2_DE, `(?:${NEGPAIR_DE})`, NEGG_DE, RUN_DE),
+  together(NEGG_DE, RUN_DE, 50), /exergon\w*.{0,30}(< ?0|negativ)/, /(< ?0|negativ\w*).{0,30}exergon/);
+
 const SIGN_CONTRA = {
-  en: new RegExp(`^(?!.*(\\bnot\\b|n't|\\bno\\b|\\bnever\\b|cannot|revers|backward|opposite|other direction)).*(?:${POSG_EN}.{0,40}(?:spontaneous|runs? by (?:it|them)sel|can run|exergonic|feasible)|${NEGG_EN}.{0,40}(?:endergonic|non-?spontaneous))`),
-  de: new RegExp(`^(?!.*(nicht|kein|\\bnie\\b|rück|umgekehrt|gegenrichtung)).*(?:${POSG_DE}.{0,40}(?:freiwillig|spontan|von selbst|exergon)|${NEGG_DE}.{0,40}(?:endergon|unfreiwillig))`),
+  en: new RegExp(`^(?!.*(\\bnot\\b|n't|\\bno\\b|\\bnever\\b|cannot|revers|backward|opposite|other direction)).*(?:${POSG_EN}.{0,40}(?:(?<!non[- ]?)(?<!un)spontaneous|runs? by (?:it|them)sel|can run|(?<!non[- ]?)exergonic|(?<!in)feasible)|${NEGG_EN}.{0,40}(?:endergonic|non-?spontaneous))`),
+  de: new RegExp(`^(?!.*(nicht|kein|\\bnie\\b|rück|umgekehrt|gegenrichtung)).*(?:${POSG_DE}.{0,40}(?:(?<!un)freiwillig|(?<!non[- ]?)(?<!un)spontan|von selbst|exergon)|${NEGG_DE}.{0,40}(?:endergon|unfreiwillig))`),
 };
 
 // Idea 3, temperature weights the entropy term and can flip the sign of ΔG.
@@ -77,15 +109,17 @@ const WEIGHT_EN = any(
   `t${TIMES}${DS}.{0,30}(?:grows?|bigger|larger|greater|increases?|rises?|wins?|outweigh\\w*|dominat\\w*|matters? more|counts? more)`,
   /entrop\w*.{0,30}(grows?|bigger|larger|greater|more important|wins?|outweigh\w*|dominat\w*|matters? more|counts? more|weighs? more|takes? over|stronger)/,
   `(?:weigh\\w*|multipl\\w*|scales?) .{0,20}(?:entrop\\w*|${DS})`,
-  /(dominat\w*|outweigh\w*|wins?|takes? over) .{0,10}(the )?entrop\w*/);
+  /(dominat\w*|outweigh\w*|wins?|takes? over) .{0,10}(the )?entrop\w*/,
+  `how (?:much|strongly|strong|heavily|big) .{0,25}(?:entrop\\w*|t${TIMES}${DS}).{0,15}(?:counts?|matters?|weighs?)`);
 const TEMP_IDEA_EN = any(together(TEMP_EN, FLIP_EN, 70), together(TEMP_EN, WEIGHT_EN, 40), /depends? on (the )?temperature/);
 const TEMP_DE = String.raw`(?:temperatur\w*|\btemp\b|\bt\b|erhitz\w*|erwärm\w*|heiß\w*|heiss\w*|kalt\w*|kälte\w*|kälter|kühl\w*|abkühl\w*|wärmer)`;
 const FLIP_DE = String.raw`(?:vorzeichen.{0,25}(?:umkehr\w*|ändern|ändert|wechsel\w*|umdreh\w*|kipp\w*|umschlag\w*|umspring\w*)|(?:kehrt|ändert|wechselt|kippt|dreht) .{0,25}vorzeichen|umkehr\w*|entscheid\w*|bestimm\w*|ausschlag\w*|umschlag\w*|umkipp\w*|kipp\w*|beeinfluss\w*)`;
 const WEIGHT_DE = any(
   `t${TIMES}${DS}.{0,30}(?:wächst|größer|steigt|nimmt zu|überwieg\\w*|gewinnt|dominier\\w*|wichtiger|stärker)`,
-  /entropie\w*.{0,30}(wächst|größer|wichtiger|überwieg\w*|gewinnt|dominier\w*|stärker|mehr gewicht|ins gewicht|setzt sich durch|\bmehr\b)/,
+  /entropie\w*.{0,30}(wächst|größer|wichtiger|überwieg\w*|gewinnt|dominier\w*|stärker|mehr gewicht|ins gewicht|setzt sich durch|\bmehr\b|zählt|zählen)/,
   `(?:gewicht\\w*|multiplizier\\w*|verstärk\\w*) .{0,20}(?:entropie\\w*|${DS})`,
-  /(überwieg\w*|gewinnt|dominier\w*|wächst|wichtiger|stärker) .{0,10}(der |die )?entropie\w*/);
+  /(überwieg\w*|gewinnt|dominier\w*|wächst|wichtiger|stärker) .{0,10}(der |die )?entropie\w*/,
+  `wie (?:stark|sehr|viel) .{0,25}(?:entropie\\w*|t${TIMES}${DS}).{0,15}(?:zählt|zählen|ins gewicht|gewicht)`);
 const TEMP_IDEA_DE = any(together(TEMP_DE, FLIP_DE, 70), together(TEMP_DE, WEIGHT_DE, 40), /hängt .{0,30}temperatur\w* ab/, /temperaturabhängig/);
 // The misconception: whether a reaction can run does not depend on temperature.
 const T_IRRELEVANT = {
@@ -120,7 +154,7 @@ const NEG_EN = "nothing about|nothing to do|doesn't say|doesn't tell|doesn't mea
 const NEG_DE = 'nichts über|nichts darüber|nichts zur|nichts zu|nicht wie|nicht, wie|nicht die|nicht über|nicht an|nicht aus|nicht schnell|nicht sofort|nicht unbedingt|nicht automatisch|nicht zwingend|nicht zwangsläufig|nicht gleich|nicht, dass|nicht dass|keine aussage|keine auskunft|keine information|keine informationen';
 const RATE_EN = String.raw`(?:fast|quick\w*|speed\w*|rate|how long|slow\w*|time|rapid\w*|immediate\w*|at once|right away|kinetic\w*)`;
 const NOTRATE_EN = any(
-  `(?:${G_EN}|spontan\\w*|exergonic|can run|runs? by (?:it|them)sel\\w*|feasib\\w*|the sign)\\b.{0,60}(?:${NEG_EN}).{0,40}${RATE_EN}`,
+  `(?:${G_EN}|spontan\\w*|exergonic|can run|runs? by (?:it|them)sel\\w*|feasib\\w*|the sign|\\bit\\b|\\bthis\\b|\\bthat\\b|the (?:answer|result|sum))\\b.{0,60}(?:${NEG_EN}).{0,40}${RATE_EN}`,
   /\bnot how (fast|quick\w*|long|soon)/, /\b(not the speed|not the rate|not speed|not rate)\b/,
   /\bwhether\b.{0,40}(not how|not when|not the speed|not the rate|not speed|not rate)/,
   `(?:${G_EN}|spontan\\w*|exergonic|can run)\\b.{0,50}(?:can|may|might|could) (?:still |also )?(?:be|run|go|happen) (?:very |extremely |incredibly |really |far too |too )?(?:slow\\w*|sluggish\\w*)`,
@@ -132,7 +166,7 @@ const NOTRATE_EN = any(
   /(spontan\w*|exergon\w*|by itself|δ ?g ?< ?0)\s?(≠|!=|=\/=|is not equal to|unequal to)\s?(fast|quick\w*|rapid\w*)/);
 const RATE_DE = String.raw`(?:schnell\w*|geschwindigkeit\w*|tempo|wie lange|langsam\w*|dauer\w*|zeit\w*|rasch\w*|sofort|kinetik\w*)`;
 const NOTRATE_DE = any(
-  `(?:${G_DE}|spontan\\w*|freiwillig\\w*|exergon\\w*|von selbst)\\b.{0,60}(?:${NEG_DE}).{0,40}${RATE_DE}`,
+  `(?:${G_DE}|spontan\\w*|freiwillig\\w*|exergon\\w*|von selbst|\\bes\\b|\\bdas\\b|\\bdies\\b|das vorzeichen|das ergebnis)\\b.{0,60}(?:${NEG_DE}).{0,40}${RATE_DE}`,
   /nicht wie (schnell|rasch|lange|bald)|nicht, wie (schnell|rasch|lange|bald)/,
   /nicht die (geschwindigkeit|reaktionsgeschwindigkeit)|nicht über die (geschwindigkeit|reaktionsgeschwindigkeit)/,
   /\bob\b.{0,40}(nicht wie schnell|nicht, wie schnell|nicht wann|nicht die geschwindigkeit)/,
@@ -157,45 +191,44 @@ export const UNIT20: UnitContent = {
 
   puzzle: {
     title: b('How hot must a lime kiln be?', 'Wie heiß muss ein Kalkofen sein?'),
-    lead: b('Quicklime, calcium oxide, is made by heating limestone, calcium carbonate, in a kiln: CaCO₃ → CaO + CO₂. At room temperature limestone stays limestone: whole cliffs and buildings are made of it. In a lime kiln the stone reaches about 900 °C.',
-      'Branntkalk, Calciumoxid, entsteht, wenn man Kalkstein, Calciumcarbonat, in einem Kalkofen erhitzt: CaCO₃ → CaO + CO₂. Bei Raumtemperatur bleibt Kalkstein Kalkstein: Ganze Felsen und Gebäude bestehen daraus. Im Kalkofen erreicht der Stein etwa 900 °C.'),
+    lead: b('Quicklime, calcium oxide, is made by heating limestone, calcium carbonate, in a kiln: CaCO₃ → CaO + CO₂. At room temperature limestone stays limestone: whole cliffs and buildings are made of it.',
+      'Branntkalk, Calciumoxid, entsteht, wenn man Kalkstein, Calciumcarbonat, in einem Kalkofen erhitzt: CaCO₃ → CaO + CO₂. Bei Raumtemperatur bleibt Kalkstein Kalkstein: Ganze Felsen und Gebäude bestehen daraus.'),
     data: {
-      caption: b('Burning limestone, per mole: measured at 25 °C and 1 bar. A plus sign means energy taken in or entropy gained. Kiln temperature: European Environment Agency.',
-        'Kalkbrennen, pro Mol: gemessen bei 25 °C und 1 bar. Ein Pluszeichen bedeutet aufgenommene Energie oder gewonnene Entropie. Ofentemperatur: Europäische Umweltagentur.'),
+      caption: b('Burning limestone, per mole: measured at 25 °C and 1 bar. A plus sign means energy taken in or entropy gained.',
+        'Kalkbrennen, pro Mol: gemessen bei 25 °C und 1 bar. Ein Pluszeichen bedeutet aufgenommene Energie oder gewonnene Entropie.'),
       head: [b('Quantity', 'Größe'), b('Value', 'Wert')],
       rows: [
         { cells: [b('ΔH, energy taken in', 'ΔH, aufgenommene Energie'), '+179.2 kJ/mol'] },
         { cells: [b('ΔS, entropy change (a gas forms)', 'ΔS, Entropieänderung (ein Gas entsteht)'), '+160.2 J/(mol·K)'] },
-        { cells: [b('temperature of the stone in a lime kiln', 'Temperatur des Steins im Kalkofen'), b('about 900 °C', 'etwa 900 °C')] },
       ],
       numeric: [1],
     },
-    clash: b('The reaction takes in energy, so energy alone says it should not run by itself. But a gas forms and the entropy rises, which pushes the other way (unit 19). Above which temperature can limestone decompose by itself?',
-      'Die Reaktion nimmt Energie auf, nach der Energie allein sollte sie also nicht freiwillig ablaufen. Aber es entsteht ein Gas, und die Entropie steigt, das wirkt in die andere Richtung (Einheit 19). Oberhalb welcher Temperatur kann Kalkstein freiwillig zerfallen?'),
+    clash: b('The reaction takes in energy, so energy alone says it should not run by itself. But a gas forms and the entropy rises, which pushes the other way (unit 19). Take ΔH and ΔS as fixed at these values, with CO₂ at 1 bar: above which temperature can limestone decompose by itself?',
+      'Die Reaktion nimmt Energie auf, nach der Energie allein sollte sie also nicht freiwillig ablaufen. Aber es entsteht ein Gas, und die Entropie steigt, das wirkt in die andere Richtung (Einheit 19). Nimm ΔH und ΔS bei diesen Werten als konstant an, CO₂ bei 1 bar: Oberhalb welcher Temperatur kann Kalkstein freiwillig zerfallen?'),
     question: {
       id: 'u20-puzzle', unit: 20, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'predict',
       concepts: ['u20.crossover', 'u20.temperature'], targets: ['units-j-kj', 'spontaneous-exothermic', 't-irrelevant'],
       prompt: b('Your best guess:', 'Deine beste Vermutung:'),
       options: [
-        { text: b('Above about 1 K: at almost any temperature', 'Oberhalb von etwa 1 K: bei fast jeder Temperatur'), mis: 'units-j-kj' },
-        { text: b('Never: it takes in energy, so it always needs a push', 'Nie: Sie nimmt Energie auf, braucht also immer einen Anstoß'), mis: 'spontaneous-exothermic' },
-        { text: b('Above about 845 °C (1119 K)', 'Oberhalb von etwa 845 °C (1119 K)'), correct: true },
-        { text: b('At room temperature too, if you wait long enough', 'Auch bei Raumtemperatur, wenn man lange genug wartet'), mis: 't-irrelevant' },
+        { text: b('Above about 1 K (−272 °C): the entropy term wins at almost any temperature', 'Oberhalb von etwa 1 K (−272 °C): Der Entropieterm überwiegt bei fast jeder Temperatur'), mis: 'units-j-kj' },
+        { text: b('Never: ΔH = +179.2 kJ/mol is positive, so it always needs a push', 'Nie: ΔH = +179,2 kJ/mol ist positiv, also braucht sie immer einen Anstoß'), mis: 'spontaneous-exothermic' },
+        { text: b('Above about 845 °C (1119 K): there the entropy term outweighs ΔH', 'Oberhalb von etwa 845 °C (1119 K): Dort ist der Entropieterm größer als ΔH'), correct: true },
+        { text: b('At 25 °C (298 K) too: temperature sets only the speed, so wait', 'Auch bei 25 °C (298 K): Die Temperatur bestimmt nur die Geschwindigkeit'), mis: 't-irrelevant' },
       ],
-      explain: b('The entropy term grows with temperature and must outweigh the 179.2 kJ/mol taken in: T = 179.2 kJ/mol ÷ 0.1602 kJ/(mol·K) = 1119 K, 845 °C. Using 160.2 without turning J into kJ gives 1.1 K, a thousand times too low. Below 1119 K no amount of waiting helps; kilns run a little above it (this is for CO₂ at 1 bar: where the CO₂ is swept away, decomposition starts lower, units 24–25).',
-        'Der Entropieterm wächst mit der Temperatur und muss die aufgenommenen 179,2 kJ/mol übertreffen: T = 179,2 kJ/mol : 0,1602 kJ/(mol·K) = 1119 K, also 845 °C. Wer 160,2 einsetzt, ohne J in kJ umzurechnen, erhält 1,1 K, tausendmal zu wenig. Unterhalb von 1119 K hilft kein Warten; Kalköfen arbeiten etwas darüber (das gilt für CO₂ bei 1 bar: Wird das CO₂ abgeführt, beginnt der Zerfall schon tiefer, Einheiten 24–25).'),
+      explain: b('The entropy term grows with temperature and must outweigh the 179.2 kJ/mol taken in: T = 179.2 kJ/mol ÷ 0.1602 kJ/(mol·K) = 1119 K, 845 °C. Using 160.2 without turning J into kJ gives 1.1 K, a thousand times too low. This is a model value, because ΔH and ΔS are held at their 25 °C values: measured, the CO₂ pressure over limestone reaches 1 bar at about 900 °C, and lime kilns bring the stone to about 900 °C (European Environment Agency). Below that, limestone does not decompose by itself at 1 bar of CO₂, however long you wait; where the CO₂ is swept away, it starts lower (units 24–25).',
+        'Der Entropieterm wächst mit der Temperatur und muss die aufgenommenen 179,2 kJ/mol übertreffen: T = 179,2 kJ/mol : 0,1602 kJ/(mol·K) = 1119 K, also 845 °C. Wer 160,2 einsetzt, ohne J in kJ umzurechnen, erhält 1,1 K, tausendmal zu wenig. Das ist ein Modellwert, weil ΔH und ΔS bei ihren 25-°C-Werten festgehalten werden: Gemessen erreicht der CO₂-Druck über Kalkstein 1 bar bei etwa 900 °C, und im Kalkofen wird der Stein auf etwa 900 °C gebracht (Europäische Umweltagentur). Darunter zerfällt Kalkstein bei 1 bar CO₂ nicht freiwillig, egal wie lange man wartet; wird das CO₂ abgeführt, beginnt der Zerfall tiefer (Einheiten 24–25).'),
     } as ChoiceItem,
     after: b('Next: set the temperature yourself in the Energy Landscape and watch the sign of ΔG.', 'Als Nächstes: Stell die Temperatur in der Energielandschaft selbst ein und beobachte das Vorzeichen von ΔG.'),
   },
 
   explore: {
-    title: b('The Energy Landscape: ΔH against T·ΔS', 'Die Energielandschaft: ΔH gegenüber T·ΔS'),
-    intro: b('Three bars: ΔH, the energy change (unit 17); −T·ΔS, the entropy change (unit 19) times the temperature in kelvin (K = °C + 273); and their sum ΔG, the change in [[gibbs-energy|Gibbs energy]]: ΔG = ΔH − T·ΔS. ΔG < 0: the reaction can run by itself ([[exergonic]], "[[spontaneous]]"); ΔG > 0: it cannot (endergonic). ΔS is given in J/(mol·K) and ΔH in kJ/mol, so divide ΔS by 1000 before you combine them. ΔH and ΔS are treated as constant with temperature and every gas is at 1 bar: a model.',
-      'Drei Balken: ΔH, die Enthalpieänderung (Einheit 17); −T·ΔS, die Entropieänderung (Einheit 19) mal die Temperatur in Kelvin (T in K = Temperatur in °C + 273); und ihre Summe ΔG, die Änderung der [[gibbs-energy|freien Enthalpie]] G (auch Gibbs-Energie). Das ist die Gibbs-Helmholtz-Gleichung: ΔG = ΔH − T·ΔS. ΔG < 0: Die Reaktion kann freiwillig ablaufen ([[exergonic|exergonisch]], [[spontaneous|spontan]]); ΔG > 0: Sie kann es nicht (endergonisch). ΔS wird in J/(mol·K) angegeben, ΔH in kJ/mol: Teile ΔS also durch 1000, bevor du rechnest. ΔH und ΔS werden als temperaturunabhängig angenommen, alle Gase bei 1 bar: ein Modell.'),
+    title: b('The Energy Landscape: ΔH against T·ΔS', 'Die Energielandschaft: ΔH und T·ΔS im Vergleich'),
+    intro: b('Three bars: ΔH, the energy change (unit 17); −T·ΔS, the entropy change (unit 19) times the temperature in kelvin (K = °C + 273), with a minus sign; and their sum ΔG, the change in [[gibbs-energy|Gibbs energy]]: ΔG = ΔH − T·ΔS. Where it comes from: the surroundings gain the entropy −ΔH ÷ T (unit 19), so the total entropy change is ΔS − ΔH ÷ T = −ΔG ÷ T. By the second law a change can run by itself when the total entropy rises, that is, when ΔG < 0 ([[exergonic]], "[[spontaneous]]"). ΔG > 0 (endergonic): it does not run by itself under these conditions, and at equilibrium mostly reactants remain (for gases at 1 bar, ΔG = −R·T·ln K, units 24–25). ΔS is given in J/(mol·K) and ΔH in kJ/mol, so divide ΔS by 1000 before you combine them. ΔH and ΔS are treated as constant with temperature and every gas is at 1 bar: a model.',
+      'Drei Balken: ΔH, die Enthalpieänderung (Einheit 17); −T·ΔS, die Entropieänderung (Einheit 19) mal die Temperatur in Kelvin (T in K = Temperatur in °C + 273), mit negativem Vorzeichen; und ihre Summe ΔG, die Änderung der [[gibbs-energy|freien Enthalpie]] G (auch Gibbs-Energie). Das ist die Gibbs-Gleichung ΔG = ΔH − T·ΔS (in der Schule oft „Gibbs-Helmholtz-Gleichung“ genannt). Woher sie kommt: Die Umgebung gewinnt die Entropie −ΔH : T (Einheit 19), die Gesamtänderung der Entropie ist also ΔS − ΔH : T = −ΔG : T. Nach dem Zweiten Hauptsatz kann ein Vorgang freiwillig ablaufen, wenn die Gesamtentropie steigt, also wenn ΔG < 0 ([[exergonic|exergonisch]], [[spontaneous|spontan]]). Ist ΔG > 0 (endergonisch), läuft er unter diesen Bedingungen nicht freiwillig ab, und im Gleichgewicht überwiegen die Edukte (bei Gasen mit 1 bar gilt ΔG = −R·T·ln K, Einheiten 24–25). ΔS wird in J/(mol·K) angegeben, ΔH in kJ/mol: Teile ΔS also durch 1000, bevor du rechnest. ΔH und ΔS werden als temperaturunabhängig angenommen, alle Gase bei 1 bar: ein Modell.'),
     tasks: [
       { id: 'ice', key: true, text: b('Start with ice melting. Slide the temperature across 0 °C (273 K) and watch the ΔG bar.', 'Beginne mit schmelzendem Eis. Schieb die Temperatur über 0 °C (273 K) und beobachte den ΔG-Balken.') },
       { id: 'lime', key: true, text: b('Pick burning limestone. Find the temperature above which it can decompose by itself.', 'Wähle das Kalkbrennen. Finde die Temperatur, oberhalb der Kalkstein freiwillig zerfallen kann.') },
-      { id: 'always', key: true, text: b('Find a reaction whose ΔG stays negative wherever you put the slider.', 'Finde eine Reaktion, deren ΔG negativ bleibt, wo auch immer der Regler steht.') },
+      { id: 'always', key: true, text: b('Find a reaction whose ΔG stays negative wherever you put the slider.', 'Finde eine Reaktion, deren ΔG negativ bleibt, egal, wo der Regler steht.') },
       { id: 'cold', text: b('Find a reaction that can run by itself only when it is cold enough.', 'Finde eine Reaktion, die nur dann freiwillig ablaufen kann, wenn es kalt genug ist.') },
       { id: 'reverse', text: b('Reverse a reaction. What happens to the signs of ΔH, ΔS and ΔG?', 'Kehre eine Reaktion um. Was passiert mit den Vorzeichen von ΔH, ΔS und ΔG?') },
       { id: 'never', challenge: true, text: b('Find a reaction that cannot run by itself at any temperature. None of the four does as written.', 'Finde eine Reaktion, die bei keiner Temperatur freiwillig ablaufen kann. Keine der vier tut das so, wie sie dasteht.') },
@@ -203,16 +236,16 @@ export const UNIT20: UnitContent = {
     notes: {
       ice: b('ΔG = 0 at 273 K: ice and water sit side by side. Below it ΔG > 0 and ice stays solid; above it the −T·ΔS bar outgrows ΔH, ΔG < 0, and ice melts by itself.',
         'ΔG = 0 bei 273 K: Eis und Wasser liegen nebeneinander vor. Darunter ist ΔG > 0, und Eis bleibt fest; darüber wird der −T·ΔS-Balken länger als ΔH, ΔG < 0, und Eis schmilzt freiwillig.'),
-      lime: b('ΔG = 0 at 1119 K (845 °C). Written out as in an exam: ΔS = 160.2 J/(mol·K) = 0.1602 kJ/(mol·K); T = ΔH ÷ ΔS = 179.2 ÷ 0.1602 = 1119 K. Answer: above about 845 °C limestone can decompose by itself, because there T·ΔS outweighs ΔH.',
-        'ΔG = 0 bei 1119 K (845 °C). So schreibst du es in der Klausur: ΔS = 160,2 J/(mol·K) = 0,1602 kJ/(mol·K); T = ΔH : ΔS = 179,2 : 0,1602 = 1119 K. Antwort: Oberhalb von etwa 845 °C kann Kalkstein freiwillig zerfallen, weil dort T·ΔS größer ist als ΔH.'),
+      lime: b('ΔG = 0 at 1119 K (845 °C). Written out as in an A-level, IB or Abitur exam: ΔS = 160.2 J/(mol·K) = 0.1602 kJ/(mol·K); T = ΔH ÷ ΔS = 179.2 ÷ 0.1602 = 1119 K. Answer: above about 845 °C limestone can decompose by itself, because there T·ΔS outweighs ΔH. This is a model value: ΔH and ΔS are held at their 25 °C values.',
+        'ΔG = 0 bei 1119 K (845 °C). So schreibst du es in der Klausur: ΔS = 160,2 J/(mol·K) = 0,1602 kJ/(mol·K); T = ΔH : ΔS = 179,2 : 0,1602 = 1119 K. Antwort: Oberhalb von etwa 845 °C kann Kalkstein freiwillig zerfallen, weil dort T·ΔS größer ist als ΔH. Das ist ein Modellwert: ΔH und ΔS werden bei ihren 25-°C-Werten festgehalten.'),
       always: b('Hydrogen peroxide: ΔH < 0 and ΔS > 0, so both bars point down and ΔG < 0 at every temperature.',
         'Wasserstoffperoxid: ΔH < 0 und ΔS > 0, also zeigen beide Balken nach unten, und ΔG < 0 bei jeder Temperatur.'),
       cold: b('ΔH < 0 and ΔS < 0: here −T·ΔS points up and grows as you heat, so ΔG < 0 only below the crossover.',
         'ΔH < 0 und ΔS < 0: Hier zeigt −T·ΔS nach oben und wächst beim Erhitzen, also ist ΔG < 0 nur unterhalb des Vorzeichenwechsels.'),
       reverse: b('Reversing flips the signs of ΔH, ΔS and so of ΔG. At any one temperature, if one direction can run by itself, the other cannot; the crossover temperature stays the same.',
         'Umkehren dreht die Vorzeichen von ΔH, ΔS und damit von ΔG um. Bei jeder Temperatur gilt: Kann die eine Richtung freiwillig ablaufen, kann es die andere nicht; die Temperatur des Vorzeichenwechsels bleibt gleich.'),
-      never: b('Hydrogen peroxide reversed: water and oxygen forming H₂O₂, ΔH = +196.1 kJ/mol, ΔS = −126.0 J/(mol·K). Both bars point up: ΔG > 0 at every temperature. It happens only when another process drives it.',
-        'Umgekehrtes Wasserstoffperoxid: Wasser und Sauerstoff bilden H₂O₂, ΔH = +196,1 kJ/mol, ΔS = −126,0 J/(mol·K). Beide Balken zeigen nach oben: ΔG > 0 bei jeder Temperatur. Es geschieht nur, wenn ein anderer Vorgang es antreibt.'),
+      never: b('The reverse of the H₂O₂ decomposition: water and oxygen forming H₂O₂, ΔH = +196.1 kJ/mol, ΔS = −126.0 J/(mol·K). Both bars point up: ΔG > 0 at every temperature. It happens only when another process drives it.',
+        'Die Umkehrung der H₂O₂-Zersetzung: Wasser und Sauerstoff bilden H₂O₂, ΔH = +196,1 kJ/mol, ΔS = −126,0 J/(mol·K). Beide Balken zeigen nach oben: ΔG > 0 bei jeder Temperatur. Es geschieht nur, wenn ein anderer Vorgang es antreibt.'),
     },
     check: {
       id: 'u20-check', unit: 20, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'predict',
@@ -224,8 +257,8 @@ export const UNIT20: UnitContent = {
         { text: b('Only above the temperature where T·ΔS outweighs ΔH', 'Nur oberhalb der Temperatur, bei der T·ΔS größer wird als ΔH'), correct: true },
         { text: b('At every temperature, if you wait long enough', 'Bei jeder Temperatur, wenn man lange genug wartet'), mis: 't-irrelevant' },
       ],
-      explain: b('ΔH > 0 pushes ΔG up; −T·ΔS pulls it down, more strongly the hotter it is. Above T = ΔH ÷ ΔS the entropy term wins: ice above 273 K, limestone above 1119 K.',
-        'ΔH > 0 drückt ΔG nach oben; −T·ΔS zieht es nach unten, umso stärker, je heißer es ist. Oberhalb von T = ΔH : ΔS gewinnt der Entropieterm: Eis oberhalb von 273 K, Kalkstein oberhalb von 1119 K.'),
+      explain: b('ΔH > 0 pushes ΔG up; −T·ΔS pulls it down, more strongly the hotter it is. Above T = ΔH ÷ ΔS the entropy term wins: ice above 273 K, limestone above about 1119 K (a model value).',
+        'ΔH > 0 drückt ΔG nach oben; −T·ΔS zieht es nach unten, umso stärker, je heißer es ist. Oberhalb von T = ΔH : ΔS gewinnt der Entropieterm: Eis oberhalb von 273 K, Kalkstein oberhalb von etwa 1119 K (ein Modellwert).'),
     } as ChoiceItem,
   },
 
@@ -246,12 +279,12 @@ export const UNIT20: UnitContent = {
           'Bei 273 K: ΔG = −55,3 + 273 · 0,1758 = −7,3 kJ/mol, die Verbindung ist begünstigt, und das Gas wird blasser. Bei 373 K: ΔG = −55,3 + 373 · 0,1758 = +10,3 kJ/mol, die Rückreaktion ist begünstigt, und das Gas wird dunkelbraun. Der Wechsel liegt bei 55,3 : 0,1758 = 315 K (41 °C).'),
       } as ChoiceItem,
       show: { engine: 'energy', reaction: 'no2-dimer', mode: 'gibbs', temp: 273 },
-      revealText: b('At 0 °C ΔG = −7.3 kJ/mol and the tube turns pale yellow; at 100 °C ΔG = +10.3 kJ/mol and it turns dark brown. ΔS < 0 here, so the −T·ΔS bar points up and outgrows ΔH above 315 K (41 °C). The tube always holds a mixture of both gases; ΔG says which one it holds more of, and units 24–25 show how much.',
-        'Bei 0 °C ist ΔG = −7,3 kJ/mol, und das Röhrchen wird blassgelb; bei 100 °C ist ΔG = +10,3 kJ/mol, und es wird dunkelbraun. Hier ist ΔS < 0, also zeigt der −T·ΔS-Balken nach oben und wird oberhalb von 315 K (41 °C) länger als ΔH. Im Röhrchen ist immer ein Gemisch beider Gase; ΔG gibt an, welches überwiegt, und die Einheiten 24–25 zeigen, wie stark.'),
+      revealText: b('At 0 °C ΔG = −7.3 kJ/mol and the tube turns paler (almost colourless); at 100 °C ΔG = +10.3 kJ/mol and it turns dark brown. ΔS < 0 here, so the −T·ΔS bar points up and outgrows ΔH above 315 K (41 °C). ΔG says which side is favoured; how much of each gas the tube holds also depends on the pressure (units 24–25).',
+        'Bei 0 °C ist ΔG = −7,3 kJ/mol, und das Röhrchen wird blasser (fast farblos); bei 100 °C ist ΔG = +10,3 kJ/mol, und es wird dunkelbraun. Hier ist ΔS < 0, also zeigt der −T·ΔS-Balken nach oben und wird oberhalb von 315 K (41 °C) länger als ΔH. ΔG gibt an, welche Seite begünstigt ist; wie viel von jedem Gas im Röhrchen ist, hängt auch vom Druck ab (Einheiten 24–25).'),
       extra: {
         title: b('ΔG at two temperatures', 'ΔG bei zwei Temperaturen'),
         steps: [
-          b('Turn ΔS into kJ: −175.8 J/(mol·K) = −0.1758 kJ/(mol·K).', 'ΔS in kJ umrechnen: −175,8 J/(mol·K) = −0,1758 kJ/(mol·K).'),
+          b('Convert ΔS to kJ/(mol·K): −175.8 J/(mol·K) = −0.1758 kJ/(mol·K).', 'ΔS in kJ/(mol·K) umrechnen: −175,8 J/(mol·K) = −0,1758 kJ/(mol·K).'),
           b('At 0 °C, T = 273 K: ΔG = −55.3 − 273 × (−0.1758) = −55.3 + 48.0 = −7.3 kJ/mol.', 'Bei 0 °C, T = 273 K: ΔG = −55,3 − 273 · (−0,1758) = −55,3 + 48,0 = −7,3 kJ/mol.'),
           b('At 100 °C, T = 373 K: ΔG = −55.3 + 373 × 0.1758 = −55.3 + 65.6 = +10.3 kJ/mol.', 'Bei 100 °C, T = 373 K: ΔG = −55,3 + 373 · 0,1758 = −55,3 + 65,6 = +10,3 kJ/mol.'),
           b('Answer: at 0 °C ΔG < 0, so colourless N₂O₄ is favoured and the tube looks paler; at 100 °C ΔG > 0, so brown NO₂ is favoured and the tube looks darker.', 'Antwort: Bei 0 °C ist ΔG < 0, also ist farbloses N₂O₄ begünstigt, und das Röhrchen wirkt blasser; bei 100 °C ist ΔG > 0, also ist braunes NO₂ begünstigt, und das Röhrchen wirkt dunkler.'),
@@ -270,12 +303,12 @@ export const UNIT20: UnitContent = {
           { text: b('Temperature changes only the speed, never whether it can run', 'Die Temperatur ändert nur die Geschwindigkeit, nie, ob sie ablaufen kann'), mis: 't-irrelevant' },
           { text: b('When cool it can run but is far too slow; heat buys speed', 'Kühl kann sie ablaufen, ist aber viel zu langsam; Wärme beschleunigt sie'), correct: true },
         ],
-        explain: b('ΔG < 0 below 190 °C says ammonia can form, not how fast: in the cool it forms far too slowly to be useful, even over a catalyst. At 450 °C it is fast enough, but there ΔG = +51.4 kJ/mol at 1 bar, so the plant works at about 200 atmospheres and removes the ammonia as it forms.',
-          'ΔG < 0 unter 190 °C gibt an, dass Ammoniak entstehen kann, nicht wie schnell: In der Kälte entsteht es selbst am Katalysator viel zu langsam. Bei 450 °C geht es schnell genug, dort ist aber ΔG = +51,4 kJ/mol bei 1 bar, also arbeitet die Anlage bei etwa 200 bar und entfernt das Ammoniak, sobald es entsteht.'),
+        explain: b('ΔG < 0 below 190 °C says ammonia can form, not how fast: in the cool it forms far too slowly to be useful, even over a catalyst. At 450 °C it is fast enough, but there ΔG = +51.4 kJ/mol at 1 bar, so at equilibrium little ammonia is left. High pressure (about 200 atmospheres) shifts the equilibrium towards fewer gas particles (4 → 2, Le Chatelier), and the plant cools the gas after each pass to condense out the ammonia and sends the rest round again.',
+          'ΔG < 0 unter 190 °C gibt an, dass Ammoniak entstehen kann, nicht wie schnell: In der Kälte entsteht es selbst am Katalysator viel zu langsam. Bei 450 °C geht es schnell genug, dort ist aber ΔG = +51,4 kJ/mol bei 1 bar, im Gleichgewicht liegt dann also wenig NH₃ vor. Hoher Druck (etwa 200 bar) verschiebt das Gleichgewicht zur Seite mit weniger Gasteilchen (4 → 2, Prinzip von Le Chatelier), und die Anlage kühlt das Gas nach jedem Durchgang ab, damit das Ammoniak kondensiert, und führt den Rest im Kreislauf zurück.'),
       } as ChoiceItem,
       show: { engine: 'energy', reaction: 'nh3', mode: 'gibbs', temp: 723 },
-      revealText: b('ΔG says whether a reaction can run, not how fast. Below 190 °C ammonia can form but far too slowly, so the plant runs at about 450 °C over an iron catalyst (unit 23), where ΔG = +51.4 kJ/mol for gases at 1 bar. A pressure of about 200 atmospheres and removing the ammonia as it forms still give a useful yield (units 24–25).',
-        'ΔG gibt an, ob eine Reaktion ablaufen kann, nicht wie schnell. Unter 190 °C kann Ammoniak entstehen, aber viel zu langsam, also läuft die Anlage bei etwa 450 °C an einem Eisenkatalysator (Einheit 23), wo ΔG = +51,4 kJ/mol für Gase bei 1 bar ist. Ein Druck von etwa 200 bar und das laufende Entfernen des Ammoniaks ergeben trotzdem eine brauchbare Ausbeute (Einheiten 24–25).'),
+      revealText: b('ΔG says whether a reaction can run, not how fast. Below 190 °C ammonia can form but far too slowly, so the plant runs at about 450 °C over an iron catalyst (unit 23), where ΔG = +51.4 kJ/mol for gases at 1 bar. A pressure of about 200 atmospheres, and cooling the gas after each pass to condense out the ammonia and recycle the rest, still give a useful yield (units 24–25).',
+        'ΔG gibt an, ob eine Reaktion ablaufen kann, nicht wie schnell. Unter 190 °C kann Ammoniak entstehen, aber viel zu langsam, also läuft die Anlage bei etwa 450 °C an einem Eisenkatalysator (Einheit 23), wo ΔG = +51,4 kJ/mol für Gase bei 1 bar ist. Ein Druck von etwa 200 bar und das Abkühlen des Gases nach jedem Durchgang, damit das Ammoniak kondensiert und der Rest im Kreislauf zurückläuft, ergeben trotzdem eine brauchbare Ausbeute (Einheiten 24–25).'),
       extra: {
         title: b('Can run, but how fast?', 'Kann ablaufen, aber wie schnell?'),
         steps: [
@@ -297,13 +330,13 @@ export const UNIT20: UnitContent = {
         { v: '+22.0 J/(mol·K)', label: b('ΔS, the entropy gained on melting', 'ΔS, die beim Schmelzen gewonnene Entropie') },
         { v: '273 K', label: b('where ΔG = 0: 6.01 ÷ 0.0220, that is 0 °C', 'dort ist ΔG = 0: 6,01 : 0,0220, also 0 °C') },
       ],
-      body: b('Turn ΔS into kJ first: 22.0 J/(mol·K) = 0.0220 kJ/(mol·K), so ΔG = 0 at T = 6.01 ÷ 0.0220 = 273 K. Below it ΔG > 0 and ice stays solid; above it ΔG < 0 and ice melts by itself. Read backwards, this is how the 22.0 is measured: the heat of melting divided by the melting temperature.',
-        'Rechne ΔS zuerst in kJ um: 22,0 J/(mol·K) = 0,0220 kJ/(mol·K), also ist ΔG = 0 bei T = 6,01 : 0,0220 = 273 K. Darunter ist ΔG > 0, und Eis bleibt fest; darüber ist ΔG < 0, und Eis schmilzt freiwillig. Rückwärts gelesen misst man so die 22,0: Schmelzwärme geteilt durch Schmelztemperatur.'),
+      body: b('Convert ΔS to kJ/(mol·K) first: 22.0 J/(mol·K) = 0.0220 kJ/(mol·K), so ΔG = 0 at T = 6.01 ÷ 0.0220 = 273 K. Below it ΔG > 0 and ice stays solid; above it ΔG < 0 and ice melts by itself.',
+        'Rechne ΔS zuerst in kJ/(mol·K) um: 22,0 J/(mol·K) = 0,0220 kJ/(mol·K), also ist ΔG = 0 bei T = 6,01 : 0,0220 = 273 K. Darunter ist ΔG > 0, und Eis bleibt fest; darüber ist ΔG < 0, und Eis schmilzt freiwillig.'),
       soWhat: b('A drink with ice cubes stays near 0 °C while ice is left: only there can ice and water sit side by side, and the heat flowing in goes into melting rather than warming.',
         'Ein Getränk mit Eiswürfeln bleibt nahe 0 °C, solange noch Eis da ist: Nur dort können Eis und Wasser nebeneinander bestehen, und die zufließende Wärme geht ins Schmelzen statt ins Erwärmen.'),
     },
     {
-      title: b('Diamonds last', 'Diamanten halten'), tag: 'C',
+      title: b('Diamond lasts although ΔG < 0', 'Diamant: beständig, obwohl ΔG < 0'), tag: 'C',
       show: { engine: 'energy', reaction: 'diamond-graphite', mode: 'gibbs', temp: 298 },
       numbers: [
         { v: '−1.89 kJ/mol', label: b('ΔH for diamond turning into graphite', 'ΔH für den Übergang von Diamant zu Graphit') },
@@ -311,9 +344,9 @@ export const UNIT20: UnitContent = {
         { v: '−2.9 kJ/mol', label: b('ΔG at 25 °C', 'ΔG bei 25 °C') },
       ],
       body: b('ΔH < 0 and ΔS > 0, so ΔG < 0 at every temperature (at 1 bar); at 25 °C ΔG = −1.89 − 298 × 0.00336 = −2.9 kJ/mol. Yet a diamond on a ring does not turn into pencil lead: its carbon atoms would first have to break strong bonds, and at room temperature that is far too slow to notice. ΔG says whether a change can run by itself, not how fast.',
-        'ΔH < 0 und ΔS > 0, also ist ΔG < 0 bei jeder Temperatur (bei 1 bar); bei 25 °C ist ΔG = −1,89 − 298 · 0,00336 = −2,9 kJ/mol. Trotzdem wird ein Diamant am Ring nicht zu Bleistiftmine: Seine Kohlenstoffatome müssten erst starke Bindungen spalten, und bei Raumtemperatur geschieht das unmerklich langsam. ΔG gibt an, ob ein Vorgang freiwillig ablaufen kann, nicht wie schnell: „Spontan“ bedeutet in der Chemie „freiwillig“, nicht „schnell“.'),
-      soWhat: b('Paper and wood are the same: burning them in air has ΔG < 0, yet they sit on a shelf for years until a flame starts them. Unit 21 shows the barrier that keeps them waiting.',
-        'Mit Papier und Holz ist es genauso: Ihre Verbrennung an der Luft hat ΔG < 0, trotzdem liegen sie jahrelang im Regal, bis eine Flamme sie entzündet. Einheit 21 zeigt die Hürde, die sie warten lässt.'),
+        'ΔH < 0 und ΔS > 0, also ist ΔG < 0 bei jeder Temperatur (bei 1 bar); bei 25 °C ist ΔG = −1,89 − 298 · 0,00336 = −2,9 kJ/mol. Trotzdem wird ein Diamant am Ring nicht zu Bleistiftmine: Seine Kohlenstoffatome müssten erst starke Bindungen spalten, und bei Raumtemperatur geschieht das unmerklich langsam. ΔG gibt an, ob ein Vorgang ablaufen kann, nicht wie schnell: „Spontan“ bedeutet in der Chemie „freiwillig“, nicht „schnell“.'),
+      soWhat: b('Paper and wood are the same: burning them in air has ΔG < 0, yet they sit on a shelf for years until a flame starts them. Unit 21 explains this barrier, the activation energy.',
+        'Mit Papier und Holz ist es genauso: Ihre Verbrennung an der Luft hat ΔG < 0, trotzdem liegen sie jahrelang im Regal, bis eine Flamme sie entzündet. Einheit 21 erklärt diese Hürde, die Aktivierungsenergie.'),
     },
     {
       title: b('Where the model breaks: boiling water', 'Wo das Modell an Grenzen stößt: siedendes Wasser'), tag: 'H2O(g)',
@@ -321,29 +354,29 @@ export const UNIT20: UnitContent = {
       numbers: [
         { v: '370 K', label: b('boiling point predicted from 25 °C data (44.0 ÷ 0.1188)', 'Siedetemperatur, vorhergesagt aus Daten bei 25 °C (44,0 : 0,1188)') },
         { v: '373 K', label: b('boiling point measured (100 °C)', 'Siedetemperatur, gemessen (100 °C)') },
-        { v: '40.65 kJ/mol', label: b('ΔH of boiling measured at 100 °C, against 44.0 at 25 °C', 'ΔH beim Sieden, gemessen bei 100 °C, gegenüber 44,0 bei 25 °C') },
+        { v: '40.65 kJ/mol', label: b('ΔH of boiling measured at 100 °C (44.0 at 25 °C)', 'ΔH beim Sieden, bei 100 °C gemessen (bei 25 °C: 44,0)') },
       ],
-      body: b('A formula is only as good as the numbers you put into it. With ΔH = 44.0 kJ/mol and ΔS = 118.8 J/(mol·K), both measured at 25 °C, ΔG = 0 at 44.0 ÷ 0.1188 = 370 K, 3 K below water\'s real boiling point. ΔH and ΔS themselves change with temperature: measured at 100 °C they are 40.65 kJ/mol and 108.9 J/(mol·K), which give 373 K.',
-        'Eine Formel ist nur so gut wie die Zahlen, die man einsetzt. Mit ΔH = 44,0 kJ/mol und ΔS = 118,8 J/(mol·K), beide bei 25 °C gemessen, ist ΔG = 0 bei 44,0 : 0,1188 = 370 K, 3 K unter der echten Siedetemperatur von Wasser. ΔH und ΔS hängen selbst von der Temperatur ab: Bei 100 °C gemessen betragen sie 40,65 kJ/mol und 108,9 J/(mol·K), und damit ergeben sich 373 K.'),
-      soWhat: b('In an exam, treat ΔH and ΔS as constant unless told otherwise, and add that the result is an estimate; the further from 25 °C, the larger the error can be.',
+      body: b('A formula is only as good as the numbers you put in, and ΔH and ΔS themselves change with temperature. Water: the 25 °C values give ΔG = 0 at 370 K, 3 K below the real boiling point; the values measured at 100 °C give 373 K. Limestone is the same: 845 °C from 25 °C data, about 900 °C measured.',
+        'Eine Formel ist nur so gut wie die Zahlen, die man einsetzt, und ΔH und ΔS hängen selbst von der Temperatur ab. Wasser: Mit den Werten bei 25 °C ist ΔG = 0 bei 370 K, 3 K unter der echten Siedetemperatur; mit den bei 100 °C gemessenen Werten ergeben sich 373 K. Beim Kalkstein ist es genauso: 845 °C aus den 25-°C-Daten, gemessen etwa 900 °C.'),
+      soWhat: b('In an A-level, IB or Abitur exam, treat ΔH and ΔS as constant unless told otherwise, and add that the result is an estimate; the further from 25 °C, the larger the error can be.',
         'In der Klausur nimmst du ΔH und ΔS als konstant an, wenn nichts anderes angegeben ist, und schreibst dazu, dass das Ergebnis eine Näherung ist; je weiter von 25 °C entfernt, desto größer kann der Fehler werden.'),
     },
   ],
 
   flaw: {
-    id: 'u20-flaw', unit: 20, kind: 'flaw', format: 'flaw', evidence: 'transfer', concepts: ['u20.gibbs', 'u20.crossover'], targets: ['units-j-kj'],
+    id: 'u20-flaw', unit: 20, kind: 'flaw', format: 'flaw', evidence: 'transfer', concepts: ['u20.gibbs', 'u20.crossover'],
     prompt: b('Where does this reasoning first go wrong?', 'Wo geht diese Überlegung zum ersten Mal schief?'),
     lines: [
-      b('For N₂ + 3 H₂ → 2 NH₃ at 298 K: ΔG = ΔH − T·ΔS = −91.8 − 298 × (−198.1) = +58 942 kJ/mol.', 'Für N₂ + 3 H₂ → 2 NH₃ bei 298 K: ΔG = ΔH − T·ΔS = −91,8 − 298 · (−198,1) = +58 942 kJ/mol.'),
-      b('ΔG is positive, so at 25 °C ammonia cannot form by itself.', 'ΔG ist positiv, also kann Ammoniak bei 25 °C nicht freiwillig entstehen.'),
+      b('For N₂ + 3 H₂ → 2 NH₃ (ΔH = −91.8 kJ/mol, ΔS = −0.1981 kJ/(mol·K)) at 300 °C: ΔG = ΔH − T·ΔS = −91.8 − 300 × (−0.1981) = −32.4 kJ/mol.', 'Für N₂ + 3 H₂ → 2 NH₃ (ΔH = −91,8 kJ/mol, ΔS = −0,1981 kJ/(mol·K)) bei 300 °C: ΔG = ΔH − T·ΔS = −91,8 − 300 · (−0,1981) = −32,4 kJ/mol.'),
+      b('ΔG is negative, so at 300 °C ammonia can form by itself.', 'ΔG ist negativ, also kann Ammoniak bei 300 °C freiwillig entstehen.'),
       b('ΔS is negative, so heating makes −T·ΔS larger and ΔG rise.', 'ΔS ist negativ, also wird −T·ΔS beim Erhitzen größer, und ΔG steigt.'),
-      b('So ammonia cannot form by itself at any temperature.', 'Also kann Ammoniak bei keiner Temperatur freiwillig entstehen.'),
+      b('So ammonia can form by itself even at 450 °C, where ΔG = −91.8 + 450 × 0.1981 = −2.7 kJ/mol.', 'Also kann Ammoniak sogar bei 450 °C freiwillig entstehen, wo ΔG = −91,8 + 450 · 0,1981 = −2,7 kJ/mol ist.'),
     ],
     flaw: 0,
     alsoFalse: [1, 3],
-    near: [{ step: 2, note: b('This one is true: with ΔS < 0, −T·ΔS is positive and grows with T. Look at the units in step 1.', 'Dieser Schritt stimmt: Mit ΔS < 0 ist −T·ΔS positiv und wächst mit T. Schau dir die Einheiten in Schritt 1 an.') }],
-    explain: b('Step 1 is the first wrong step: ΔS is in J/(mol·K) and must become −0.1981 kJ/(mol·K), so ΔG = −91.8 + 59.0 = −32.8 kJ/mol. Step 2 is then false: ammonia can form by itself at 25 °C. Step 3 is true: heating makes ΔG rise. Step 4 is false: ΔG < 0 at every temperature below 91.8 ÷ 0.1981 = 463 K.',
-      'Schritt 1 ist der erste falsche Schritt: ΔS steht in J/(mol·K) und muss zu −0,1981 kJ/(mol·K) werden, also ΔG = −91,8 + 59,0 = −32,8 kJ/mol. Damit ist Schritt 2 falsch: Ammoniak kann bei 25 °C freiwillig entstehen. Schritt 3 stimmt: Beim Erhitzen steigt ΔG. Schritt 4 ist falsch: ΔG < 0 bei jeder Temperatur unter 91,8 : 0,1981 = 463 K.'),
+    near: [{ step: 2, note: b('This one is true: with ΔS < 0, −T·ΔS is positive and grows with T. Look at the temperature in step 1.', 'Dieser Schritt stimmt: Mit ΔS < 0 ist −T·ΔS positiv und wächst mit T. Schau dir die Temperatur in Schritt 1 an.') }],
+    explain: b('Step 1 is the first wrong step: T must be in kelvin, and 300 °C = 573 K, so ΔG = −91.8 + 573 × 0.1981 = +21.7 kJ/mol. Step 2 is then false: at 300 °C ammonia cannot form by itself (at 1 bar). Step 3 is true: heating makes ΔG rise, to zero at 463 K (190 °C). Step 4 repeats the slip with 450 instead of 723 K and is false: at 450 °C ΔG = +51.4 kJ/mol.',
+      'Schritt 1 ist der erste falsche Schritt: T muss in Kelvin eingesetzt werden, und 300 °C sind 573 K, also ΔG = −91,8 + 573 · 0,1981 = +21,7 kJ/mol. Damit ist Schritt 2 falsch: Bei 300 °C kann Ammoniak nicht freiwillig entstehen (bei 1 bar). Schritt 3 stimmt: Beim Erhitzen steigt ΔG, bei 463 K (190 °C) bis auf null. Schritt 4 wiederholt den Fehler mit 450 statt 723 K und ist falsch: Bei 450 °C ist ΔG = +51,4 kJ/mol.'),
   } as FlawItem,
 
   deeper: {
@@ -367,15 +400,15 @@ export const UNIT20: UnitContent = {
         en: GIBBS_EN, de: GIBBS_DE },
       { id: 'sign', concept: 'u20.sign', idea: b('ΔG < 0: the reaction can run by itself (exergonic)', 'ΔG < 0: Die Reaktion kann freiwillig ablaufen (exergonisch)'), contra: { en: any(SIGN_CONTRA.en, DG_FAST.en), de: any(SIGN_CONTRA.de, DG_FAST.de) },
         en: SIGN_EN, de: SIGN_DE },
-      { id: 'temperature', concept: 'u20.temperature', idea: b('Temperature weights the entropy term, so it can flip the sign of ΔG', 'Die Temperatur gewichtet den Entropieterm und kann so das Vorzeichen von ΔG umkehren'), contra: T_IRRELEVANT,
+      { id: 'temperature', concept: 'u20.temperature', idea: b('Temperature sets how much the entropy term counts, so it can flip the sign of ΔG', 'Die Temperatur bestimmt, wie stark der Entropieterm zählt, und kann so das Vorzeichen von ΔG umkehren'), contra: T_IRRELEVANT,
         en: TEMP_IDEA_EN, de: TEMP_IDEA_DE },
-      { id: 'crossover', concept: 'u20.crossover', idea: b('The switch comes where ΔG = 0, at T = ΔH ÷ ΔS', 'Der Wechsel liegt bei ΔG = 0, also bei T = ΔH : ΔS'),
+      { id: 'crossover', concept: 'u20.crossover', idea: b('The switch comes where ΔG = 0, at T = ΔH ÷ ΔS (ΔS in kJ/(mol·K))', 'Der Wechsel liegt bei ΔG = 0, also bei T = ΔH : ΔS (ΔS in kJ/(mol·K))'),
         en: CROSS_EN, de: CROSS_DE },
       { id: 'rate', concept: 'u20.not-rate', idea: b('ΔG says whether a reaction can run, not how fast', 'ΔG gibt an, ob eine Reaktion ablaufen kann, nicht wie schnell'), contra: DG_FAST,
         en: NOTRATE_EN, de: NOTRATE_DE },
     ] as Idea[],
-    tightened: b('ΔG = ΔH − T·ΔS combines the energy change ΔH with the entropy change ΔS. When ΔG is negative, the reaction can run by itself: it is exergonic. Temperature weights the entropy term, so heating or cooling can flip the sign of ΔG; the switch comes where ΔG = 0, at T = ΔH ÷ ΔS with ΔS in kJ, 1119 K for limestone. ΔG says whether a reaction can run, not how fast: diamond turning into graphite has ΔG < 0 but is far too slow to notice.',
-      'ΔG = ΔH − T·ΔS verbindet die Enthalpieänderung ΔH mit der Entropieänderung ΔS. Ist ΔG negativ, kann die Reaktion freiwillig ablaufen: Sie ist exergonisch. Die Temperatur gewichtet den Entropieterm, deshalb kann Erhitzen oder Abkühlen das Vorzeichen von ΔG umkehren; der Wechsel liegt dort, wo ΔG = 0 ist, bei T = ΔH : ΔS mit ΔS in kJ, beim Kalkbrennen 1119 K. ΔG gibt an, ob eine Reaktion ablaufen kann, nicht wie schnell: Beim Übergang von Diamant zu Graphit ist ΔG negativ, aber er verläuft unmerklich langsam.'),
+    tightened: b('ΔG = ΔH − T·ΔS combines the energy change ΔH with the entropy change ΔS. When ΔG is negative, the reaction can run by itself: it is exergonic. Temperature sets how much the entropy term counts, so heating or cooling can flip the sign of ΔG; the switch comes where ΔG = 0, at T = ΔH ÷ ΔS with ΔS in kJ/(mol·K), 1119 K for limestone on this model. ΔG says whether a reaction can run, not how fast: diamond turning into graphite has ΔG < 0 but is far too slow to notice.',
+      'ΔG = ΔH − T·ΔS verbindet die Enthalpieänderung ΔH mit der Entropieänderung ΔS. Ist ΔG negativ, kann die Reaktion freiwillig ablaufen: Sie ist exergonisch. Die Temperatur bestimmt, wie stark der Entropieterm zählt, deshalb kann Erhitzen oder Abkühlen das Vorzeichen von ΔG umkehren; der Wechsel liegt dort, wo ΔG = 0 ist, bei T = ΔH : ΔS mit ΔS in kJ/(mol·K), beim Kalkbrennen nach dem Modell 1119 K. ΔG gibt an, ob eine Reaktion ablaufen kann, nicht wie schnell: Beim Übergang von Diamant zu Graphit ist ΔG negativ, aber er verläuft unmerklich langsam.'),
   },
 
   terms: ['gibbs-energy', 'exergonic', 'spontaneous', 'entropy', 'enthalpy'],
@@ -393,7 +426,7 @@ export const UNIT20: UnitContent = {
     },
     {
       lang: 'en', kind: 'deeper',
-      title: b('Free Energy', 'Free Energy'), source: 'OpenStax Chemistry 2e, section 16.4',
+      title: b('Free Energy (optional: the textbook version)', 'Free Energy (optional: the textbook version)'), source: 'OpenStax Chemistry 2e, section 16.4',
       url: 'https://openstax.org/books/chemistry-2e/pages/16-4-free-energy',
       lookFor: [
         b('Example 16.7 uses the same 44.01 kJ and 118.8 J/K for water evaporating as the boiling-water example here. What ΔG does it get at 298 K, and with which sign?', ''),
@@ -408,7 +441,7 @@ export const UNIT20: UnitContent = {
       lookFor: [
         b('', 'Natrium und Wasser bei −40 °C (233 K): In welcher Einheit setzt die Seite ΔS ein, und welches ΔG erhält sie? Vergleiche mit der Umrechnung von J in kJ in dieser Einheit.'),
         b('', 'Die vier Fälle: Welcher passt zum Kalkbrennen (ΔH = +179,2 kJ/mol, ΔS = +160,2 J/(mol·K)), und was sagt die Seite über die nötige Temperatur?'),
-        b('', 'Was vernachlässigt die Seite bei ΔH und ΔS? Vergleiche mit dem Beispiel zum siedenden Wasser (370 K gegenüber 373 K).'),
+        b('', 'Was vernachlässigt die Seite bei ΔH und ΔS? Vergleiche mit dem Beispiel zum siedenden Wasser (370 K und 373 K).'),
       ],
     },
   ],
@@ -423,7 +456,7 @@ export const UNIT20: UnitContent = {
     'gibbs-energy': {
       en: 'Gibbs energy (free energy)', de: 'freie Enthalpie (Gibbs-Energie)', unit: 20,
       def: { en: 'G. Its change ΔG = ΔH − T·ΔS combines a reaction\'s energy change and entropy change at constant temperature and pressure, in kJ/mol. ΔG < 0: the reaction can run by itself; ΔG says nothing about how fast.',
-        de: 'G. Ihre Änderung ΔG = ΔH − T·ΔS (Gibbs-Helmholtz-Gleichung) verbindet Enthalpie- und Entropieänderung einer Reaktion bei konstanter Temperatur und konstantem Druck, in kJ/mol. ΔG < 0: Die Reaktion kann freiwillig ablaufen; über die Geschwindigkeit sagt ΔG nichts.' },
+        de: 'G. Ihre Änderung ΔG = ΔH − T·ΔS (Gibbs-Gleichung) verbindet Enthalpie- und Entropieänderung einer Reaktion bei konstanter Temperatur und konstantem Druck, in kJ/mol. ΔG < 0: Die Reaktion kann freiwillig ablaufen; über die Geschwindigkeit sagt ΔG nichts.' },
       falseFriend: { en: 'German books say "freie Enthalpie" and write Δ_{r}G; "Gibbs-Energie" is the same quantity.', de: 'Englische Bücher sagen „Gibbs energy“ oder „free energy“.' },
     },
     exergonic: {
