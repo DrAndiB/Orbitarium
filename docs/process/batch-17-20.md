@@ -73,7 +73,8 @@ inverted German word order, and plain words ("heat", "Wärme", "the most you can
 
 - Concepts: u18.path, u18.reverse, u18.scale, u18.formation, u18.products-reactants, u18.unmeasurable.
 - Engine: Energy Landscape, hess mode. Explore creates `ctx.energy({ mode: 'hess', start: 'c-co', reactions: ['c-co',
-  'diamond-graphite', 'caco3'], steps: ['c-co2', 'co-co2', 'diamond-burn'], controls: { elements: true } })`.
+  'diamond-graphite', 'caco3'], steps: ['c-co2', 'co-co2', 'co-co2-x2', 'diamond-burn'], controls: { elements: true } })`. 'co-co2-x2' is
+  2 CO + O₂ → 2 CO₂ (−566.0): the route C → CO through it needs it halved, which is what the `double` challenge asks.
   Predictions and examples use other reactions (thermite, lime-slake, ch4-burn, ethene-h2, c2h5oh-burn).
 - Tasks:
   - `co` **key**: build a complete route for C → CO (`route('c-co', steps, true, dH)`).

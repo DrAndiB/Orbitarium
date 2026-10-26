@@ -162,6 +162,51 @@ async def explore(pg):
             await ys.wait_for(timeout=30000); await ys.click(); await pg.wait_for_timeout(600)   # the panel appears after the animation
             await chip(0, 'nh3'); await rung('moles'); await amount(0, 1); await amount(1, 3); await react()   # 2 mol NH3
             await rung('particles')
+    elif UNIT in (17, 18, 20):
+        # Energy Landscape: reaction chips carry data-id; buttons are found by their text in EN or DE.
+        async def chip(i): await pg.locator(f".chip[data-id='{i}']").first.click(); await pg.wait_for_timeout(900)
+        async def btn(en, de, w=1400): await pg.locator(f"button:has-text('{en}'), button:has-text('{de}')").first.click(); await pg.wait_for_timeout(w)
+        async def card(i): await pg.locator(".nrg-tray .nrg-card").nth(i).click(); await pg.wait_for_timeout(700)
+        async def flip(k): await pg.locator(".nrg-step").nth(k).locator(".nrg-step-acts button").first.click(); await pg.wait_for_timeout(700)
+        async def half(k): await pg.locator(".nrg-step").nth(k).locator(".nrg-step-acts button").nth(1).click(); await pg.wait_for_timeout(700)
+        async def clear_route():
+            while await pg.locator(".nrg-step .nrg-step-acts button[aria-label='Remove'], .nrg-step .nrg-step-acts button[aria-label='Entfernen']").count():
+                await pg.locator(".nrg-step .nrg-step-acts button[aria-label='Remove'], .nrg-step .nrg-step-acts button[aria-label='Entfernen']").first.click(); await pg.wait_for_timeout(300)
+        if UNIT == 17:
+            for r in ['hcl', 'h2o', 'nh3', 'ethene']:
+                await chip(r)
+                await btn('Break the bonds', 'Bindungen spalten', 2000); await btn('Make the new bonds', 'Neue Bindungen knüpfen', 2000)
+                m = pg.locator("button:has-text('Measured'), button:has-text('Messwert')").first
+                if await m.get_attribute('aria-pressed') != 'true': await m.click(); await pg.wait_for_timeout(600)
+        elif UNIT == 18:
+            # tray order = steps option order: c-co2, co-co2, co-co2-x2, diamond-burn (cards on the route are disabled)
+            await card(0); await card(1); await flip(1)                       # C → CO: c-co2 − co-co2
+            await clear_route(); await card(0); await card(2); await flip(1); await half(1)   # c-co2 − ½ (2 CO + O2 → 2 CO2)
+            await btn('Via the elements', 'Über die Elemente')
+            await chip('diamond-graphite'); await card(3); await card(0); await flip(1)
+            await chip('caco3'); await btn('Via the elements', 'Über die Elemente')
+        else:
+            async def temp(v):
+                await pg.evaluate(f"""() => {{ const i=document.querySelector(".nrg-temp input[type=range]"); i.value='{v}'; i.dispatchEvent(new Event('input')); i.dispatchEvent(new Event('change')); }}""")
+                await pg.wait_for_timeout(500)
+            await temp(260); await temp(290)                                  # ice across 273 K
+            await chip('caco3'); await temp(1000); await temp(1200)           # limestone across 1119 K
+            await chip('no2-dimer'); await temp(330); await temp(300)         # NO2 across 315 K
+            await chip('h2o2'); await temp(400)                               # runs at every temperature
+            await btn('Reverse the reaction', 'Reaktion umkehren', 800)       # never runs
+    elif UNIT == 19:
+        await pg.locator(".chip[data-n='10']").first.click(); await pg.wait_for_timeout(800)
+        await pg.locator(".pbox-wallbtn").first.click(); await pg.wait_for_timeout(2500)          # open with 10
+        await pg.locator(".chip[data-n='4']").first.click(); await pg.wait_for_timeout(800)
+        await pg.locator(".pbox-wallbtn").first.click(); await pg.wait_for_timeout(30000)         # wait for all 4 back left
+        await pg.locator(".pbox-ways summary").first.click(); await pg.wait_for_timeout(600)
+        await pg.locator(".pbox-switch input[type=checkbox], input[role=switch]").first.check(); await pg.wait_for_timeout(1500)
+        await pg.locator(".chip[data-n='100']").first.click(); await pg.wait_for_timeout(800)
+        if await pg.locator("input[role=switch]").first.is_checked(): await pg.locator("input[role=switch]").first.uncheck(); await pg.wait_for_timeout(600)
+        await pg.locator(".pbox-wallbtn").first.click(); await pg.wait_for_timeout(2500)          # open with 100
+        await pg.locator("[aria-label='Substance'] .chip[data-id='H2O'], [aria-label='Stoff'] .chip[data-id='H2O']").first.click(); await pg.wait_for_timeout(1200)
+        await setrange(pg, ".pbox input[type=range]", -10); await pg.wait_for_timeout(1500); await setrange(pg, ".pbox input[type=range]", 20)
+        await pg.wait_for_timeout(1500)
     elif UNIT == 16:
         step = lambda i: f".bench-steps button >> nth={i}"   # steps: −10 −1 −0.1 −0.01 +0.01 +0.1 +1 +10
         async def weigh(ones, tenths, hundredths):

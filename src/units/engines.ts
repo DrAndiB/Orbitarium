@@ -427,7 +427,7 @@ export const ENGINE_U17: UnitEngine = {
 
 // ---------- unit 18: Hess's law ----------
 export const U18_TARGETS = ['c-co', 'diamond-graphite', 'caco3'];
-export const U18_STEPS = ['c-co2', 'co-co2', 'diamond-burn'];
+export const U18_STEPS = ['c-co2', 'co-co2', 'co-co2-x2', 'diamond-burn'];
 export const ENGINE_U18: UnitEngine = {
   explore(ctx, mark) {
     const ui = ctx.energy({ mode: 'hess', start: 'c-co', reactions: U18_TARGETS, steps: U18_STEPS, controls: { elements: true } });

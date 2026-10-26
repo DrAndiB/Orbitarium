@@ -11,7 +11,8 @@ import { ConductUI } from '../sim/conductUI';
 import { HBondUI } from '../sim/hbondUI';
 import { ZoomLadderUI } from '../sim/zoomLadderUI';
 import { LabBenchUI } from '../sim/labBenchUI';
-import { U2_IONS, U8_SUBS, U9_SUBS, U11_MIXES, U12_SAMPLES, U13_SAMPLES, U14_EQS, U15_EQS, U16_SOLUTES } from '../units/engines';
+import { EnergyLandscapeUI } from '../sim/energyLandscapeUI';
+import { U2_IONS, U8_SUBS, U9_SUBS, U11_MIXES, U12_SAMPLES, U13_SAMPLES, U14_EQS, U15_EQS, U16_SOLUTES, U17_REACTIONS, U18_TARGETS, U18_STEPS, U20_REACTIONS } from '../units/engines';
 import { onLeave } from './lifecycle';
 import { go } from '../router';
 
@@ -30,10 +31,13 @@ const ENGINES: LabEngine[] = [
   { name: { en: 'Zoom Ladder: equations', de: 'Zoom-Leiter: Reaktionsgleichungen' }, units: [14], open: () => new ZoomLadderUI({ mode: 'equation', start: 'ch4', equations: [...new Set([...U14_EQS, 'c3h8', 'al2o3', 'fe2o3', 'nacl', 'caco3', 'zn', 'photo', 'glucose'])], controls: { trap: true } }) },
   { name: { en: 'Zoom Ladder: reactions', de: 'Zoom-Leiter: Reaktionen' }, units: [15], open: () => new ZoomLadderUI({ mode: 'reaction', start: 'nh3', equations: [...new Set([...U15_EQS, 'c3h8', 'al2o3', 'nacl', 'zn'])], controls: { yield: true } }) },
   { name: { en: 'Lab Bench', de: 'Labortisch' }, units: [16], open: () => new LabBenchUI({ start: 'CuSO4-5H2O', solutes: U16_SOLUTES, controls: { dilute: true, sample: true, beaker: true, zoom: true } }) },
+  { name: { en: 'Energy Landscape: bonds', de: 'Energielandschaft: Bindungen' }, units: [17], open: () => new EnergyLandscapeUI({ mode: 'bonds', start: 'hcl', reactions: [...U17_REACTIONS, 'hf', 'ch4'] }) },
+  { name: { en: 'Energy Landscape: Hess cycles', de: 'Energielandschaft: Hess-Kreisprozesse' }, units: [18], open: () => new EnergyLandscapeUI({ mode: 'hess', start: 'c-co', reactions: U18_TARGETS, steps: U18_STEPS }) },
+  { name: { en: 'Spreading out (entropy)', de: 'Ausbreitung (Entropie)' }, units: [19], open: () => new ParticleBoxUI({ start: 'Ar', subs: ['Ar', 'H2O'], temp: 20, controls: { spread: true, temp: true, compare: false } }) },
+  { name: { en: 'Energy Landscape: free energy', de: 'Energielandschaft: Freie Enthalpie' }, units: [20], open: () => new EnergyLandscapeUI({ mode: 'gibbs', start: 'caco3', reactions: [...U20_REACTIONS, 'nh3', 'water-boil', 'so2-so3'] }) },
 ];
 
 const COMING: { name: string; units: string; phase: number }[] = [
-  { name: 'Energy Landscape', units: '17, 18, 20, 23', phase: 2 },
 ];
 
 export function renderLab(root: HTMLElement) {

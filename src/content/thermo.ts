@@ -76,6 +76,7 @@ export const REACTIONS: Reaction[] = [
   R('c2h5oh-burn', 'Ethanol burns', 'Ethanol verbrennt', [t(1, 'C2H5OH(l)'), t(3, 'O2(g)')], [t(2, 'CO2(g)'), t(3, 'H2O(l)')]),
   R('c-co2', 'Carbon burns to carbon dioxide', 'Kohlenstoff verbrennt zu Kohlenstoffdioxid', [t(1, 'C(graphite)'), t(1, 'O2(g)')], [t(1, 'CO2(g)')]),
   R('co-co2', 'Carbon monoxide burns', 'Kohlenstoffmonoxid verbrennt', [t(1, 'CO(g)'), t(0.5, 'O2(g)')], [t(1, 'CO2(g)')]),
+  R('co-co2-x2', 'Carbon monoxide burns (whole numbers)', 'Kohlenstoffmonoxid verbrennt (ganze Zahlen)', [t(2, 'CO(g)'), t(1, 'O2(g)')], [t(2, 'CO2(g)')]),
   R('c-co', 'Carbon to carbon monoxide', 'Kohlenstoff zu Kohlenstoffmonoxid', [t(1, 'C(graphite)'), t(0.5, 'O2(g)')], [t(1, 'CO(g)')]),
   R('diamond-burn', 'Diamond burns', 'Diamant verbrennt', [t(1, 'C(diamond)'), t(1, 'O2(g)')], [t(1, 'CO2(g)')]),
   R('diamond-graphite', 'Diamond turns into graphite', 'Diamant wird zu Graphit', [t(1, 'C(diamond)')], [t(1, 'C(graphite)')]),
