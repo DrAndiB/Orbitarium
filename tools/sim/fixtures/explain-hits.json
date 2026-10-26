@@ -358,5 +358,7 @@
  "u18 r9-fix en | Everything is measured directly.": "·····",
  "u20 r10-recheck en | ΔG < 0: exergonic, ΔG > 0: endergonic.": "·2···",
  "u20 r10-recheck en | ΔG < 0: spontaneous/exergonic, ΔG > 0: non-spontaneous.": "·2···",
- "u20 r10-recheck de | ΔG < 0: exergonisch, ΔG > 0: endergonisch.": "·2···"
+ "u20 r10-recheck de | ΔG < 0: exergonisch, ΔG > 0: endergonisch.": "·2···",
+ "u17 r10-recheck de | ΔH < 0 exotherm, ΔH > 0 endotherm.": "··3··",
+ "u20 r10-recheck de | ΔG < 0 freiwillig (exergonisch), ΔG > 0 endergonisch.": "·2···"
 }

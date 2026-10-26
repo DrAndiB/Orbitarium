@@ -2038,5 +2038,17 @@
   "lang": "de",
   "source": "r10-recheck",
   "text": "ΔG < 0: exergonisch, ΔG > 0: endergonisch."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r10-recheck",
+  "text": "ΔH < 0 exotherm, ΔH > 0 endotherm."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "r10-recheck",
+  "text": "ΔG < 0 freiwillig (exergonisch), ΔG > 0 endergonisch."
  }
 ]
