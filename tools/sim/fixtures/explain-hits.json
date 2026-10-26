@@ -296,7 +296,7 @@
  "u20 r9-fix en | You take the energy change and subtract temperature times the entropy ": "1····",
  "u20 r9-fix de | Wenn das Ergebnis negativ ist, läuft die Reaktion von selbst ab. Es sa": "·2··5",
  "u20 r9-fix de | Man nimmt die Enthalpieänderung und zieht Temperatur mal Entropieänder": "1····",
- "u20 r9-fix en | ΔG < 0: spontaneous, ΔG > 0: non-spontaneous.": "·····",
+ "u20 r9-fix en | ΔG < 0: spontaneous, ΔG > 0: non-spontaneous.": "·2···",
  "u18 r9-fix en | ΔH is the same however you get there.": "1····",
  "u18 r9-fix en | It only matters where you start and where you end up.": "1····",
  "u18 r9-fix en | The route doesn't matter, only the start and end.": "1····",
@@ -355,5 +355,8 @@
  "u18 r9-fix de | Wenn man Produkte minus Edukte rechnet, bekommt man ΔH.": "···4·",
  "u18 r9-fix en | Hess lets you find ΔH for steps you can't measure directly.": "list",
  "u18 r9-fix en | With a cycle you can get the lattice energy, which nobody can measure ": "····5",
- "u18 r9-fix en | Everything is measured directly.": "·····"
+ "u18 r9-fix en | Everything is measured directly.": "·····",
+ "u20 r10-recheck en | ΔG < 0: exergonic, ΔG > 0: endergonic.": "·2···",
+ "u20 r10-recheck en | ΔG < 0: spontaneous/exergonic, ΔG > 0: non-spontaneous.": "·2···",
+ "u20 r10-recheck de | ΔG < 0: exergonisch, ΔG > 0: endergonisch.": "·2···"
 }

@@ -34,7 +34,7 @@ function asciiRe(re: RegExp): RegExp {
 // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
 // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together. Cause and effect and contrast stay
 // together ("…, so …", "… but …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
-const SOFT = /(,\s(?!(?:\d|δ|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|obgleich|auch wenn|although|even though|though|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
+const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|obgleich|auch wenn|although|even though|though|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
 // A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
 // molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
 // German verb-first conditions count as fronted too: "Ist ΔH negativ, gibt …", "Gießt man eine Portion ab, bleibt …".
@@ -58,6 +58,9 @@ function clausesOf(norm: string): string[] {
       // Inside a fronted subordinate part ("je mehr Elektronen und je größer …, desto …") an "and" does not split either.
       if (!joined && FRONTED.test(cur.trim()) && !delim.startsWith(',')) { cur += delim + next; continue; }
       if (!joined && delim.startsWith(',') && FRONTED.test(cur.trim())) { cur += delim + next; joined = true; continue; }
+      // ", ΔS > 0" completes the part before it ("Mehr Gas in den Produkten, ΔS > 0") unless that part already states
+      // its own Δ-comparison ("ΔG < 0: exergonic, ΔG > 0: endergonic" are two statements).
+      if (delim.startsWith(',') && /^\s*δ/.test(next) && !/δ\S* ?[<>=≈]/.test(cur)) { cur += delim + next; continue; }
       out.push(cur); cur = next; joined = false;
     }
     out.push(cur);

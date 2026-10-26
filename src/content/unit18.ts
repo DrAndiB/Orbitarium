@@ -295,8 +295,8 @@ export const UNIT18: UnitContent = {
       ],
       body: b('In 2 Al + Fe₂O₃ → Al₂O₃ + 2 Fe, aluminium and iron are elements with an enthalpy of formation of zero, so only the two oxides matter. Δ_{r}H = −1676 − (−824.2) = −851.8 kJ/mol. Aluminium oxide sits much further below its elements than iron oxide does, and that gap is what the reaction gives out.',
         'Bei 2 Al + Fe₂O₃ → Al₂O₃ + 2 Fe sind Aluminium und Eisen Elemente mit der Standardbildungsenthalpie null, also kommt es nur auf die beiden Oxide an. Δ_{r}H = −1676 − (−824,2) = −851,8 kJ/mol. Aluminiumoxid liegt viel weiter unter seinen Elementen als Eisenoxid, und genau diesen Unterschied gibt die Reaktion ab.'),
-      soWhat: b('Rail welders use thermite: the molten iron it gives, at about 2400 °C, fills the gap between two rail ends and joins them as it sets.',
-        'Beim Schweißen von Eisenbahnschienen nutzt man die Thermitreaktion: Das flüssige Eisen, das dabei mit etwa 2400 °C entsteht, füllt die Lücke zwischen zwei Schienenenden und verbindet sie beim Erstarren.'),
+      soWhat: b('Rail welders use thermite: the molten steel it gives (the iron from the reaction plus alloying additions in the charge), at about 2400 °C, fills the gap between two rail ends and joins them as it sets.',
+        'Beim Schweißen von Eisenbahnschienen nutzt man die Thermitreaktion: Der flüssige Stahl, der dabei mit etwa 2400 °C entsteht (Eisen aus der Reaktion und Legierungszusätze der Füllung), füllt die Lücke zwischen zwei Schienenenden und verbindet sie beim Erstarren.'),
     },
     {
       title: b('Methane: vapour or liquid water', 'Methan: Wasserdampf oder flüssiges Wasser'), tag: 'CH4',

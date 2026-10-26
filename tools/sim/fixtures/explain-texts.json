@@ -2020,5 +2020,23 @@
   "lang": "en",
   "source": "r9-fix",
   "text": "Everything is measured directly."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "r10-recheck",
+  "text": "ΔG < 0: exergonic, ΔG > 0: endergonic."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "r10-recheck",
+  "text": "ΔG < 0: spontaneous/exergonic, ΔG > 0: non-spontaneous."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "r10-recheck",
+  "text": "ΔG < 0: exergonisch, ΔG > 0: endergonisch."
  }
 ]
