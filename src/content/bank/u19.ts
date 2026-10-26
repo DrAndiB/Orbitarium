@@ -1,4 +1,242 @@
 // Review bank for unit 19 (written by the unit helper; see docs/process/authoring.md).
+// Numbers with dH() and dS() in thermo.ts (OpenStax Chemistry 2e, Appendix G): water-boil +44.0 kJ/mol; ice-melt
+// +22.0 J/(mol·K); water-boil-100 +108.9; so2-so3 −188.1 (2 × 256.76 − (2 × 248.2 + 205.2)); c-co2 +2.9
+// (213.8 − 5.74 − 205.2); caco3 +160.2; water-boil +118.8; c-co +89.4; no2-dimer −175.8. S°: graphite 5.74,
+// diamond 2.38 J/(mol·K). CO₂ sublimes at −78.5 °C (substances.ts). Counting: 2³ = 8; C(10, 5) = 252 of 2¹⁰ = 1024;
+// 2²⁰ = 1 048 576.
+// Sources fetched for values not in the data files:
+// - Ammonium nitrate dissolving: ΔH_soln = +25.7 kJ/mol (LibreTexts, Introductory Chemistry (CK-12), 17.13 "Heat of
+//   Solution").
+// - Ba(OH)₂·8H₂O(s) + 2 NH₄Cl(s) → 2 NH₃(g) + 10 H₂O(l) + BaCl₂(s): cools to about −20 °C, ΔH about +164 kJ/mol,
+//   ΔS about +591 J/(mol·K) (Royal Society of Chemistry, Education, "Endothermic solid–solid reactions",
+//   edu.rsc.org/experiments/endothermic-solid-solid-reactions/739.article).
+import type { Bi } from '../../i18n';
 import type { Item } from '../items';
 
-export const BANK_U19: Item[] = [];
+const b = (en: string, de: string): Bi => ({ en, de });
+
+export const BANK_U19: Item[] = [
+  // ---------- u19.not-energy ----------
+  { id: 'i19a', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u19.not-energy'], targets: ['spontaneous-exothermic', 'particles-want-space'],
+    prompt: b('A dish of water left on a windowsill at 20 °C is dry after a few days. Each mole that evaporates takes in about 44 kJ from its surroundings. What does this show?',
+      'Eine Schale Wasser auf der Fensterbank ist bei 20 °C nach ein paar Tagen trocken. Jedes Mol, das verdunstet, nimmt etwa 44 kJ aus der Umgebung auf. Was zeigt das?'),
+    options: [
+      { text: b('Evaporating must give out energy somewhere, or it could not happen', 'Verdunsten muss irgendwo Energie abgeben, sonst könnte es nicht passieren'), mis: 'spontaneous-exothermic' },
+      { text: b('A process can run by itself although it takes in energy', 'Ein Vorgang kann von selbst ablaufen, obwohl er Energie aufnimmt'), correct: true },
+      { text: b('The water molecules want to escape into the room', 'Die Wassermoleküle wollen in den Raum entkommen'), mis: 'particles-want-space' },
+      { text: b('Sunlight is needed: without it, water would never evaporate', 'Sonnenlicht ist nötig: Ohne es würde Wasser nie verdunsten') },
+    ],
+    explain: b('Evaporating takes in energy (ΔH = +44.0 kJ/mol), yet it runs by itself, even in the dark: the vapour spreading through the air has vastly more ways to be arranged. Molecules do not want anything; spreading out is simply overwhelmingly likely.',
+      'Verdunsten nimmt Energie auf (ΔH = +44,0 kJ/mol) und läuft trotzdem von selbst ab, auch im Dunkeln: Der Dampf, der sich in der Luft verteilt, hat weit mehr Anordnungsmöglichkeiten. Moleküle wollen nichts; Ausbreiten ist einfach überwältigend wahrscheinlich.') },
+  { id: 'i19b', unit: 19, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u19.not-energy'], targets: ['spontaneous-exothermic'],
+    prompt: b('A student writes: “Only processes that give out energy can run by themselves.” What is the best reason this is wrong?',
+      'Jemand schreibt: „Nur Vorgänge, die Energie abgeben, können von selbst ablaufen.“ Was ist der beste Grund, warum das falsch ist?'),
+    options: [
+      { text: b('It is not wrong: melting ice only looks spontaneous, because the room heats it', 'Es ist nicht falsch: Schmelzendes Eis wirkt nur freiwillig, weil der Raum es erwärmt'), mis: 'spontaneous-exothermic' },
+      { text: b('Processes that give out energy never run by themselves either', 'Vorgänge, die Energie abgeben, laufen auch nie von selbst ab') },
+      { text: b('Ice melts by itself at 20 °C although it takes in energy: the gain in ways wins', 'Eis schmilzt bei 20 °C von selbst, obwohl es Energie aufnimmt: Der Gewinn an Möglichkeiten überwiegt'), correct: true },
+      { text: b('The energy taken in is given back later, so overall energy is given out', 'Die aufgenommene Energie wird später zurückgegeben, also wird insgesamt Energie abgegeben'), mis: 'spontaneous-exothermic' },
+    ],
+    explain: b('Melting ice takes in 6.01 kJ/mol and still runs by itself at room temperature, because the liquid has far more ways to arrange its molecules and their energy. The room does supply the energy, but the same room does not make water freeze, so energy alone does not decide the direction.',
+      'Schmelzendes Eis nimmt 6,01 kJ/mol auf und läuft bei Raumtemperatur trotzdem von selbst ab, weil die Flüssigkeit weit mehr Möglichkeiten hat, ihre Moleküle und deren Energie anzuordnen. Der Raum liefert zwar die Energie, aber derselbe Raum lässt Wasser nicht gefrieren: Die Energie allein entscheidet nicht über die Richtung.') },
+  { id: 'i19c', unit: 19, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u19.not-energy', 'u19.gas-moles'], targets: ['spontaneous-exothermic', 'particles-want-space'],
+    prompt: b('Two white solids, barium hydroxide crystals and ammonium chloride, are stirred together. The mixture turns slushy, smells of ammonia and cools to about −20 °C, freezing the beaker to a wet board. What drives this reaction?',
+      'Zwei weiße Feststoffe, Bariumhydroxid-Kristalle und Ammoniumchlorid, werden verrührt. Das Gemisch wird matschig, riecht nach Ammoniak und kühlt auf etwa −20 °C ab, sodass das Becherglas an einem nassen Brett festfriert. Was treibt diese Reaktion an?'),
+    options: [
+      { text: b('It gives out energy, and that is why the beaker gets cold', 'Sie gibt Energie ab, und deshalb wird das Becherglas kalt'), mis: 'spontaneous-exothermic' },
+      { text: b('The ammonia molecules want to escape into the air', 'Die Ammoniakmoleküle wollen in die Luft entkommen'), mis: 'particles-want-space' },
+      { text: b('Stirring supplies the energy the reaction needs', 'Das Rühren liefert die Energie, die die Reaktion braucht') },
+      { text: b('A gas and a liquid form from two solids: a huge gain in ways', 'Aus zwei Feststoffen entstehen ein Gas und eine Flüssigkeit: ein riesiger Gewinn an Möglichkeiten'), correct: true },
+    ],
+    explain: b('The reaction takes in about 164 kJ/mol, which is why it gets so cold. It runs because ammonia gas and ten moles of liquid water form from solids: ΔS is about +591 J/(mol·K). Stirring only brings the solids into contact.',
+      'Die Reaktion nimmt etwa 164 kJ/mol auf, deshalb wird sie so kalt. Sie läuft ab, weil aus Feststoffen Ammoniakgas und zehn Mol flüssiges Wasser entstehen: ΔS ist etwa +591 J/(mol·K). Das Rühren bringt die Feststoffe nur in Kontakt.') },
+
+  // ---------- u19.ways ----------
+  { id: 'i19d', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u19.ways'],
+    prompt: b('Three particles, A, B and C, can each be in the left or the right half of a box. How many different arrangements are there?',
+      'Drei Teilchen, A, B und C, können jeweils in der linken oder rechten Hälfte einer Box sein. Wie viele verschiedene Anordnungen gibt es?'),
+    options: [
+      { text: b('3', '3') },
+      { text: b('4', '4') },
+      { text: b('6', '6') },
+      { text: b('8', '8'), correct: true },
+    ],
+    explain: b('Each particle has 2 choices: 2 × 2 × 2 = 8 arrangements. There are only 4 splits (3, 2, 1 or 0 on the left), but they hold 1, 3, 3 and 1 arrangements.',
+      'Jedes Teilchen hat 2 Möglichkeiten: 2 · 2 · 2 = 8 Anordnungen. Es gibt nur 4 Aufteilungen (3, 2, 1 oder 0 links), aber zu ihnen gehören 1, 3, 3 und 1 Anordnungen.') },
+  { id: 'i19e', unit: 19, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u19.ways', 'u19.states'], targets: ['entropy-messiness', 'particles-want-space'],
+    prompt: b('Why does one mole of a gas have a much higher entropy than one mole of the same substance as a solid?',
+      'Warum hat ein Mol eines Gases eine viel höhere Entropie als ein Mol desselben Stoffes als Feststoff?'),
+    options: [
+      { text: b('A gas looks far more chaotic than a neat crystal', 'Ein Gas sieht viel chaotischer aus als ein ordentlicher Kristall'), mis: 'entropy-messiness' },
+      { text: b('Its particles can be in far more places and share out energy in far more ways', 'Seine Teilchen können an weit mehr Orten sein und ihre Energie auf weit mehr Arten verteilen'), correct: true },
+      { text: b('Its particles have pushed apart to get the room they want', 'Seine Teilchen haben sich auseinandergedrängt, um den Platz zu bekommen, den sie wollen'), mis: 'particles-want-space' },
+      { text: b('A gas holds more energy, and entropy is the energy it stores', 'Ein Gas enthält mehr Energie, und Entropie ist die gespeicherte Energie') },
+    ],
+    explain: b('Entropy is a measure of the number of ways: gas particles can be anywhere in the container and move freely, so there are vastly more arrangements of the particles and their energy. How it looks plays no part, and entropy is not an amount of energy (its unit is J/(mol·K), not kJ/mol).',
+      'Die Entropie ist ein Maß für die Zahl der Möglichkeiten: Gasteilchen können überall im Behälter sein und sich frei bewegen, also gibt es weit mehr Anordnungen der Teilchen und ihrer Energie. Wie es aussieht, spielt keine Rolle, und Entropie ist keine Energiemenge (ihre Einheit ist J/(mol·K), nicht kJ/mol).') },
+  { id: 'i19f', unit: 19, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u19.ways'], targets: ['entropy-messiness'],
+    prompt: b('Diamond and graphite are both pure solid carbon. In diamond each atom is held rigidly by four strong bonds in every direction; graphite is made of flat layers that are only loosely held to each other. Which has the higher standard entropy at 25 °C?',
+      'Diamant und Graphit sind beide reiner, fester Kohlenstoff. Im Diamant wird jedes Atom von vier starken Bindungen in alle Richtungen starr gehalten; Graphit besteht aus flachen Schichten, die nur locker aneinander haften. Was hat bei 25 °C die höhere Standardentropie?'),
+    options: [
+      { text: b('Diamond: its atoms are packed more tightly', 'Diamant: Seine Atome sind dichter gepackt') },
+      { text: b('Graphite: its loose layers let the atoms vibrate in more ways', 'Graphit: Seine lockeren Schichten lassen die Atome auf mehr Arten schwingen'), correct: true },
+      { text: b('Graphite: it is black and flaky, so it looks more disordered', 'Graphit: Er ist schwarz und blättrig, sieht also ungeordneter aus'), mis: 'entropy-messiness' },
+      { text: b('Both the same: same atoms in the same state', 'Beide gleich: gleiche Atome im gleichen Aggregatzustand') },
+    ],
+    explain: b('Graphite, 5.74 J/(mol·K), against 2.38 for diamond. Entropy also counts the ways energy can be shared out: graphite\'s atoms and layers can vibrate more freely, while diamond\'s rigid network allows fewer ways. How black or flaky a solid looks plays no part.',
+      'Graphit, 5,74 J/(mol·K), gegenüber 2,38 für Diamant. Die Entropie erfasst auch, auf wie viele Arten sich Energie verteilen lässt: Die Atome und Schichten im Graphit können freier schwingen, das starre Netz im Diamant lässt weniger Möglichkeiten zu. Wie schwarz oder blättrig ein Feststoff aussieht, spielt keine Rolle.') },
+
+  // ---------- u19.probable ----------
+  { id: 'i19g', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u19.probable'], targets: ['particles-want-space'],
+    prompt: b('Ten atoms move at random in a box after the partition is removed. Over a few minutes, which will you see more often: exactly five on each side, or all ten on the left?',
+      'Zehn Atome bewegen sich zufällig in einer Box, nachdem die Trennwand entfernt wurde. Was siehst du in ein paar Minuten öfter: genau fünf auf jeder Seite oder alle zehn links?'),
+    options: [
+      { text: b('Both equally often: every arrangement is equally likely', 'Beides gleich oft: Jede Anordnung ist gleich wahrscheinlich') },
+      { text: b('Five on each side; all ten on the left never, as atoms need room', 'Fünf auf jeder Seite; alle zehn links nie, weil Atome Platz brauchen'), mis: 'particles-want-space' },
+      { text: b('All ten on the left, because that is where they started', 'Alle zehn links, weil sie dort angefangen haben') },
+      { text: b('Five on each side, far more often: it has far more arrangements', 'Fünf auf jeder Seite, viel öfter: Dazu gehören weit mehr Anordnungen'), correct: true },
+    ],
+    explain: b('Each single arrangement is equally likely, but 252 of the 1024 arrangements have five on each side and only 1 has all ten on the left, so 5 : 5 comes up 252 times as often. All ten on the left does happen, about once in 1024 counts.',
+      'Jede einzelne Anordnung ist gleich wahrscheinlich, aber 252 der 1024 Anordnungen haben fünf auf jeder Seite und nur 1 hat alle zehn links, also kommt 5 : 5 252-mal so oft vor. Alle zehn links kommt durchaus vor, etwa einmal in 1024 Zählungen.') },
+  { id: 'i19h', unit: 19, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u19.probable', 'u19.mixing'], targets: ['spontaneous-exothermic'],
+    prompt: b('Argon and neon have mixed in a box. Why do they never unmix by themselves?',
+      'Argon und Neon haben sich in einer Box gemischt. Warum entmischen sie sich nie von selbst?'),
+    options: [
+      { text: b('Unmixing would take in energy, and that cannot happen by itself', 'Entmischen würde Energie aufnehmen, und das kann nicht von selbst passieren'), mis: 'spontaneous-exothermic' },
+      { text: b('Unmixed arrangements are a vanishingly small share of all arrangements', 'Entmischte Anordnungen sind ein verschwindend kleiner Teil aller Anordnungen'), correct: true },
+      { text: b('Each atom is now attracted to atoms of the other gas', 'Jedes Atom wird jetzt von den Atomen des anderen Gases angezogen') },
+      { text: b('Unmixing is forbidden by a law of nature', 'Entmischen ist durch ein Naturgesetz verboten') },
+    ],
+    explain: b('Nothing forbids it, and no energy is involved: these gases mix without giving out or taking in heat. But with every extra atom, the share of arrangements that have all the argon on one side and all the neon on the other halves, so even for a handful of atoms it almost never comes up, and for a real sample never.',
+      'Nichts verbietet es, und Energie spielt keine Rolle: Diese Gase mischen sich, ohne Wärme abzugeben oder aufzunehmen. Aber mit jedem weiteren Atom halbiert sich der Anteil der Anordnungen, bei denen das ganze Argon auf einer Seite und das ganze Neon auf der anderen ist; schon bei einer Handvoll Atome kommt das fast nie vor, bei einer echten Stoffprobe nie.') },
+  { id: 'i19i', unit: 19, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u19.probable', 'u19.ways'],
+    prompt: b('For 10 atoms, the chance that all are on the left at a given moment is 1 in 1024 (2¹⁰). What is it for 20 atoms?',
+      'Bei 10 Atomen ist die Wahrscheinlichkeit, dass in einem Moment alle links sind, 1 zu 1024 (2¹⁰). Wie groß ist sie bei 20 Atomen?'),
+    options: [
+      { text: b('1 in 2048', '1 zu 2048') },
+      { text: b('1 in about a million', '1 zu etwa einer Million'), correct: true },
+      { text: b('1 in 400', '1 zu 400') },
+      { text: b('1 in 20 480', '1 zu 20 480') },
+    ],
+    explain: b('Each extra atom halves the chance: 2²⁰ = 1 048 576, about a million. Doubling the atoms from 10 to 20 squares the number (1024 × 1024). For the 10²³ atoms of a real sample it never happens.',
+      'Jedes weitere Atom halbiert die Wahrscheinlichkeit: 2²⁰ = 1 048 576, etwa eine Million. Die doppelte Zahl an Atomen, 20 statt 10, quadriert die Zahl (1024 · 1024). Bei den 10²³ Atomen einer echten Stoffprobe passiert es nie.') },
+  { id: 'i19j', unit: 19, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u19.probable'], targets: ['particles-want-space', 'spontaneous-exothermic'],
+    prompt: b('A drop of ink in a glass of still water slowly spreads until the whole glass is evenly coloured. What makes it spread?',
+      'Ein Tropfen Tinte in einem Glas mit ruhigem Wasser verteilt sich langsam, bis das ganze Glas gleichmäßig gefärbt ist. Was lässt ihn sich verteilen?'),
+    options: [
+      { text: b('The ink particles want more room, so they move away from each other', 'Die Tintenteilchen wollen mehr Platz, also entfernen sie sich voneinander'), mis: 'particles-want-space' },
+      { text: b('Spreading gives out energy, so the ink spreads to give it out', 'Beim Verteilen wird Energie frei, also verteilt sich die Tinte, um sie abzugeben'), mis: 'spontaneous-exothermic' },
+      { text: b('Random motion: spread-out arrangements vastly outnumber gathered ones', 'Zufällige Bewegung: Verteilte Anordnungen sind gegenüber gesammelten weit in der Überzahl'), correct: true },
+      { text: b('Gravity pulls the ink down and then sideways', 'Die Schwerkraft zieht die Tinte nach unten und dann zur Seite') },
+    ],
+    explain: b('The ink particles are jostled at random by water molecules. Arrangements with the ink spread through the whole glass vastly outnumber those with it gathered in one drop, so spreading is what happens, and the reverse never does. Nothing wants room, and no energy needs to be given out.',
+      'Die Tintenteilchen werden von Wassermolekülen zufällig angestoßen. Anordnungen, bei denen die Tinte im ganzen Glas verteilt ist, sind gegenüber denen mit der Tinte in einem Tropfen weit in der Überzahl, also verteilt sie sich, und umgekehrt passiert es nie. Nichts will Platz, und es muss keine Energie frei werden.') },
+
+  // ---------- u19.states ----------
+  { id: 'i19k', unit: 19, kind: 'rank', format: 'rank', concepts: ['u19.states'],
+    prompt: b('Put these in order of entropy per mole, lowest first. All three are water, H₂O.', 'Ordne nach der Entropie pro Mol, die niedrigste zuerst. Alle drei sind Wasser, H₂O.'),
+    order: [b('ice', 'Eis'), b('liquid water', 'flüssiges Wasser'), b('water vapour', 'Wasserdampf')],
+    explain: b('Solid < liquid < gas: liquid water has 70.0 and water vapour 188.8 J/(mol·K) at 25 °C, and melting ice raises the entropy by 22.0 J/(mol·K) at 0 °C. The more freely the molecules move, the more ways there are to place them and share out their energy.',
+      'Feststoff < Flüssigkeit < Gas: Flüssiges Wasser hat bei 25 °C 70,0 und Wasserdampf 188,8 J/(mol·K), und Schmelzen erhöht die Entropie bei 0 °C um 22,0 J/(mol·K). Je freier sich die Moleküle bewegen, desto mehr Möglichkeiten gibt es, sie anzuordnen und ihre Energie zu verteilen.') },
+  { id: 'i19l', unit: 19, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u19.states'], targets: ['entropy-messiness', 'particles-want-space'],
+    prompt: b('When ice melts, the entropy of water rises by 22.0 J/(mol·K); when water boils at 100 °C, by 108.9 J/(mol·K). Why is the jump on boiling so much bigger?',
+      'Wenn Eis schmilzt, steigt die Entropie des Wassers um 22,0 J/(mol·K); wenn Wasser bei 100 °C siedet, um 108,9 J/(mol·K). Warum ist der Sprung beim Sieden so viel größer?'),
+    options: [
+      { text: b('A gas looks far more disordered than a liquid', 'Ein Gas sieht viel ungeordneter aus als eine Flüssigkeit'), mis: 'entropy-messiness' },
+      { text: b('In the gas the molecules finally get the space they want', 'Im Gas bekommen die Moleküle endlich den Platz, den sie wollen'), mis: 'particles-want-space' },
+      { text: b('Steam is hotter, and entropy depends only on temperature', 'Dampf ist heißer, und die Entropie hängt nur von der Temperatur ab') },
+      { text: b('Gas molecules roam the whole space: far more new ways than a crystal loosening', 'Gasmoleküle bewegen sich im ganzen Raum: weit mehr neue Möglichkeiten als beim Lockern eines Kristalls'), correct: true },
+    ],
+    explain: b('Melting only loosens the crystal: the molecules still touch their neighbours. In a gas they move through the whole of a far larger space, so the number of ways to place them and share out their energy jumps far more. Looks and wishes play no part.',
+      'Beim Schmelzen lockert sich nur der Kristall: Die Moleküle berühren noch ihre Nachbarn. In einem Gas bewegen sie sich durch einen viel größeren Raum, also steigt die Zahl der Möglichkeiten, sie anzuordnen und ihre Energie zu verteilen, viel stärker. Aussehen und Wünsche spielen keine Rolle.') },
+  { id: 'i19m', unit: 19, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u19.states'],
+    prompt: b('Dry ice, solid carbon dioxide, turns straight into a gas at −78.5 °C without melting. What is the sign of ΔS for CO₂(s) → CO₂(g)?',
+      'Trockeneis, fester Kohlenstoffdioxid, wird bei −78,5 °C direkt gasförmig, ohne zu schmelzen. Welches Vorzeichen hat ΔS für CO₂(s) → CO₂(g)?'),
+    options: [
+      { text: b('Positive: from solid straight to gas, a big rise in freedom', 'Positiv: vom Feststoff direkt zum Gas, ein großer Gewinn an Bewegungsfreiheit'), correct: true },
+      { text: b('Zero: no new substance forms, so nothing changes', 'Null: Es entsteht kein neuer Stoff, also ändert sich nichts') },
+      { text: b('Negative: it takes in energy, so entropy must fall', 'Negativ: Es nimmt Energie auf, also muss die Entropie sinken') },
+      { text: b('Negative: the gas is very cold, so its molecules hardly move', 'Negativ: Das Gas ist sehr kalt, also bewegen sich seine Moleküle kaum') },
+    ],
+    explain: b('ΔS is positive: going from a solid to a gas is the largest rise in freedom of movement there is. A change of state changes entropy even though the substance stays the same, and taking in energy does not lower it.',
+      'ΔS ist positiv: Vom Feststoff zum Gas ist der größte Gewinn an Bewegungsfreiheit, den es gibt. Ein Wechsel des Aggregatzustands ändert die Entropie, obwohl der Stoff derselbe bleibt, und aufgenommene Energie senkt sie nicht.') },
+
+  // ---------- u19.gas-moles ----------
+  { id: 'i19n', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u19.gas-moles'],
+    prompt: b('In the contact process for making sulfuric acid: 2 SO₂(g) + O₂(g) → 2 SO₃(g). What is the sign of ΔS?',
+      'Im Kontaktverfahren zur Herstellung von Schwefelsäure: 2 SO₂(g) + O₂(g) → 2 SO₃(g). Welches Vorzeichen hat ΔS?'),
+    options: [
+      { text: b('Positive: SO₃ is a bigger molecule with more atoms', 'Positiv: SO₃ ist ein größeres Molekül mit mehr Atomen') },
+      { text: b('About zero: there are only gases on both sides', 'Etwa null: Auf beiden Seiten stehen nur Gase') },
+      { text: b('Negative: three moles of gas become two', 'Negativ: Aus drei Mol Gas werden zwei'), correct: true },
+      { text: b('Positive: the reaction gives out energy', 'Positiv: Die Reaktion gibt Energie ab') },
+    ],
+    explain: b('ΔS = −188.1 J/(mol·K): 3 mol of gas become 2 mol, so there are fewer gas particles to place and fewer ways. Gases on both sides do not make ΔS zero when the amount of gas changes; ΔH is a separate question.',
+      'ΔS = −188,1 J/(mol·K): Aus 3 mol Gas werden 2 mol, also gibt es weniger Gasteilchen anzuordnen und weniger Möglichkeiten. Gase auf beiden Seiten machen ΔS nicht null, wenn sich die Stoffmenge an Gas ändert; ΔH ist eine andere Frage.') },
+  { id: 'i19o', unit: 19, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u19.gas-moles'], targets: ['entropy-messiness', 'particles-want-space'],
+    prompt: b('Why does a reaction that makes more moles of gas usually have ΔS > 0?', 'Warum hat eine Reaktion, bei der mehr Mol Gas entstehen, meist ΔS > 0?'),
+    options: [
+      { text: b('Each extra mole of gas adds particles that roam the whole space: vastly more ways', 'Jedes zusätzliche Mol Gas bringt Teilchen, die sich im ganzen Raum bewegen: weit mehr Möglichkeiten'), correct: true },
+      { text: b('A gas looks more disordered than solids and liquids', 'Ein Gas sieht ungeordneter aus als Feststoffe und Flüssigkeiten'), mis: 'entropy-messiness' },
+      { text: b('The gas particles want the extra room, so they spread', 'Die Gasteilchen wollen den zusätzlichen Platz, also verteilen sie sich'), mis: 'particles-want-space' },
+      { text: b('Making a gas always gives out energy', 'Wenn ein Gas entsteht, wird immer Energie frei') },
+    ],
+    explain: b('Gas particles have far more freedom than those in solids and liquids, so each extra mole of gas multiplies the number of ways to place the particles and share out their energy. Making a gas can take in energy (limestone) or give it out; that is ΔH, not ΔS.',
+      'Gasteilchen haben weit mehr Bewegungsfreiheit als Teilchen in Feststoffen und Flüssigkeiten, also vervielfacht jedes zusätzliche Mol Gas die Zahl der Möglichkeiten, die Teilchen anzuordnen und ihre Energie zu verteilen. Wenn ein Gas entsteht, kann Energie aufgenommen (Kalkbrennen) oder abgegeben werden; das ist ΔH, nicht ΔS.') },
+  { id: 'i19p', unit: 19, kind: 'choice', format: 'odd', evidence: 'transfer', concepts: ['u19.gas-moles'],
+    prompt: b('Three of these have ΔS > 0, one has ΔS < 0. Which is the odd one out?', 'Drei davon haben ΔS > 0, einer hat ΔS < 0. Welcher fällt heraus?'),
+    options: [
+      { text: b('CaCO₃(s) → CaO(s) + CO₂(g)', 'CaCO₃(s) → CaO(s) + CO₂(g)') },
+      { text: b('2 NO₂(g) → N₂O₄(g)', '2 NO₂(g) → N₂O₄(g)'), correct: true },
+      { text: b('H₂O(l) → H₂O(g)', 'H₂O(l) → H₂O(g)') },
+      { text: b('C(s) + ½ O₂(g) → CO(g)', 'C(s) + ½ O₂(g) → CO(g)') },
+    ],
+    explain: b('2 NO₂ → N₂O₄ turns 2 mol of gas into 1: ΔS = −175.8 J/(mol·K). The others make more gas: limestone +160.2 (0 → 1 mol), evaporating water +118.8 (0 → 1 mol), carbon to carbon monoxide +89.4 (½ → 1 mol).',
+      '2 NO₂ → N₂O₄ macht aus 2 mol Gas 1 mol: ΔS = −175,8 J/(mol·K). Bei den anderen entsteht mehr Gas: Kalkbrennen +160,2 (0 → 1 mol), Verdampfen von Wasser +118,8 (0 → 1 mol), Kohlenstoff zu Kohlenstoffmonoxid +89,4 (½ → 1 mol).') },
+  { id: 'i19q', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u19.gas-moles'],
+    prompt: b('Carbon burns: C(s) + O₂(g) → CO₂(g). One mole of gas goes in, one mole comes out. What do you expect for ΔS?',
+      'Kohlenstoff verbrennt: C(s) + O₂(g) → CO₂(g). Ein Mol Gas geht hinein, ein Mol kommt heraus. Was erwartest du für ΔS?'),
+    options: [
+      { text: b('Strongly positive: burning gives out heat and light', 'Stark positiv: Beim Verbrennen werden Wärme und Licht frei') },
+      { text: b('Strongly negative: two substances become one', 'Stark negativ: Aus zwei Stoffen wird einer') },
+      { text: b('Close to zero: the moles of gas do not change', 'Nahe null: Die Stoffmenge an Gas ändert sich nicht'), correct: true },
+      { text: b('Strongly positive: CO₂ has more atoms than O₂', 'Stark positiv: CO₂ hat mehr Atome als O₂') },
+    ],
+    explain: b('ΔS = +2.9 J/(mol·K): with one mole of gas on each side the big terms nearly cancel, and the small solid carbon used up adds little. Count the moles of gas first; the heat a reaction gives out is a separate question (ΔH).',
+      'ΔS = +2,9 J/(mol·K): Mit einem Mol Gas auf jeder Seite heben sich die großen Beiträge fast auf, und der verbrauchte feste Kohlenstoff trägt wenig bei. Vergleiche zuerst die Stoffmenge an Gas; die abgegebene Wärme ist eine andere Frage (ΔH).') },
+
+  // ---------- u19.mixing ----------
+  { id: 'i19r', unit: 19, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u19.mixing'],
+    prompt: b('Argon fills the left half of a box and neon the right half, 10 atoms each, both at 20 °C. The partition is removed. What happens?',
+      'Argon füllt die linke Hälfte einer Box, Neon die rechte, je 10 Atome, beide bei 20 °C. Die Trennwand wird entfernt. Was passiert?'),
+    options: [
+      { text: b('They stay in their halves: each gas keeps its own side', 'Sie bleiben in ihren Hälften: Jedes Gas behält seine Seite') },
+      { text: b('They mix, then the heavier argon settles back to the left', 'Sie mischen sich, dann sammelt sich das schwerere Argon wieder links') },
+      { text: b('They mix only if the box is heated to supply energy', 'Sie mischen sich nur, wenn die Box geheizt wird und Energie liefert') },
+      { text: b('They mix, and each half soon holds both gases in about equal numbers', 'Sie mischen sich, und bald enthält jede Hälfte beide Gase in etwa gleicher Zahl'), correct: true },
+    ],
+    explain: b('Each atom moves at random through the whole box, so the count of argon atoms on the left wobbles around 5. Mixed arrangements vastly outnumber unmixed ones: mixing runs by itself, raises the entropy and needs no heating.',
+      'Jedes Atom bewegt sich zufällig durch die ganze Box, also schwankt die Zahl der Argonatome links um 5. Gemischte Anordnungen sind gegenüber entmischten weit in der Überzahl: Mischen läuft von selbst ab, erhöht die Entropie und braucht keine Heizung.') },
+  { id: 'i19s', unit: 19, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u19.mixing', 'u19.not-energy'], targets: ['spontaneous-exothermic', 'particles-want-space'],
+    prompt: b('Dissolving ammonium nitrate in water takes in 25.7 kJ/mol, yet it dissolves by itself. Why?',
+      'Das Lösen von Ammoniumnitrat in Wasser nimmt 25,7 kJ/mol auf, und trotzdem löst es sich von selbst. Warum?'),
+    options: [
+      { text: b('It gives the energy out again later, once fully dissolved', 'Es gibt die Energie später wieder ab, wenn alles gelöst ist'), mis: 'spontaneous-exothermic' },
+      { text: b('The ions want to get away from each other into the water', 'Die Ionen wollen voneinander weg ins Wasser'), mis: 'particles-want-space' },
+      { text: b('Its ions spread through the whole solution: far more ways than in the crystal', 'Seine Ionen verteilen sich in der ganzen Lösung: weit mehr Möglichkeiten als im Kristall'), correct: true },
+      { text: b('The water pulls the ions out, and that gives out energy', 'Das Wasser zieht die Ionen heraus, und dabei wird Energie frei') },
+    ],
+    explain: b('Dissolving takes in energy overall, which is why a cold pack gets cold. It runs because the ions, locked in a crystal before, spread and mix through the whole solution: vastly more ways to arrange them and their energy. Dissolving is a balance of energy and entropy, never energy alone.',
+      'Das Lösen nimmt insgesamt Energie auf, deshalb wird eine Kältekompresse kalt. Es läuft ab, weil sich die Ionen, vorher in einem Kristall festgehalten, in der ganzen Lösung verteilen und mischen: weit mehr Möglichkeiten, sie und ihre Energie anzuordnen. Beim Lösen kommt es immer auf Energie und Entropie zusammen an, nie auf die Energie allein.') },
+  { id: 'i19t', unit: 19, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u19.mixing', 'u19.probable'], targets: ['particles-want-space', 'spontaneous-exothermic'],
+    prompt: b('Air is a mixture of nitrogen and oxygen. Oxygen molecules are a little heavier, yet in a closed room the air never separates into a nitrogen layer above an oxygen layer. Why?',
+      'Luft ist ein Gemisch aus Stickstoff und Sauerstoff. Sauerstoffmoleküle sind etwas schwerer, und doch trennt sich die Luft in einem geschlossenen Raum nie in eine Stickstoffschicht über einer Sauerstoffschicht. Warum?'),
+    options: [
+      { text: b('Nitrogen and oxygen molecules attract each other strongly', 'Stickstoff- und Sauerstoffmoleküle ziehen sich stark an') },
+      { text: b('Mixed arrangements vastly outnumber separated ones, and the molecules move at random', 'Gemischte Anordnungen sind weit in der Überzahl, und die Moleküle bewegen sich zufällig'), correct: true },
+      { text: b('Each kind of molecule seeks out the space the other leaves', 'Jede Molekülsorte sucht sich den Platz, den die andere frei lässt'), mis: 'particles-want-space' },
+      { text: b('Separating would take in energy, which cannot happen by itself', 'Entmischen würde Energie aufnehmen, und das kann nicht von selbst passieren'), mis: 'spontaneous-exothermic' },
+    ],
+    explain: b('The molecules fly at random, and mixed arrangements vastly outnumber separated ones, so mixed air is what you always find. Gravity\'s pull on the slightly heavier O₂ is far too weak to win against that in a room, and the attractions between N₂ and O₂ molecules are tiny.',
+      'Die Moleküle fliegen zufällig umher, und gemischte Anordnungen sind gegenüber getrennten weit in der Überzahl, also findest du immer gemischte Luft. Die Schwerkraft auf das etwas schwerere O₂ ist in einem Raum viel zu schwach, um dagegen anzukommen, und die Anziehung zwischen N₂- und O₂-Molekülen ist winzig.') },
+];

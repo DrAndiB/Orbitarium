@@ -34,7 +34,7 @@ function asciiRe(re: RegExp): RegExp {
 // A comma ends a clause unless it opens or closes a subordinate clause ("ein Atom, das Elektronen abgibt, wird
 // kleiner"; "je mehr …, desto …"), so the parts of one statement stay together. Cause and effect and contrast stay
 // together ("…, so …", "… but …", "…, deshalb …"); a list of numbers ("2, 8, 18") is not split either.
-const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
+const SOFT = /(,\s(?!(?:\d|so\b|and so|therefore|which means|der|die|das|dem|den|deren|dessen|welche\w*|weil|da|denn|wie|wieviel\w*|how|weshalb|wodurch|wobei|womit|wohingegen|wenn|dass|ob|obwohl|obgleich|auch wenn|although|even though|though|sodass|desto|umso|deshalb|daher|also|wird|werden|ist|sind|hat|haben|bleibt|bleiben|which|who|whose|where|because|since|as|hence|thus|whereby)\b)|\s(?:and|while|whereas|und|während|sondern)\s(?!\d))/;
 // A clause that opens with a subordinate part keeps its main clause after the first comma: "When it boils, the
 // molecules move apart"; "The stronger the attraction, the higher the boiling point"; "Wenn es siedet, trennen sich …".
 // German verb-first conditions count as fronted too: "Ist ΔH negativ, gibt …", "Gießt man eine Portion ab, bleibt …".
@@ -43,7 +43,7 @@ const FRONTED = /^(when|whenever|if|because|since|as|once|although|though|while|
 // space or the end follows, so "0.917" and "2.5" stay whole. A colon does not split: "Wasser: 2 Donoren, 2 Akzeptoren"
 // is one statement.
 // (?<!\p{L}) instead of \b: in JavaScript \b does not see a boundary before an umlaut ("ähnl.").
-const ABBR = /(?<!\p{L})(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\p{L}*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh|lim|theor)\./gu;
+const ABBR = /(?<!\p{L})(bzw|z\. ?b|d\. ?h|u\. ?a|ca|max|min|sdp|sdt|smp|vgl|evtl|ggf|usw|etc|e\.g|i\.e|approx|vs|resp|bp|mp|no|bewegl|ähnl|\p{L}*lsg|temp|induz|perm|molek|elektr|pos|neg|vollst|entspr|abh|lim|theor|fl|gasf)\./gu;
 /** "bewegl. ladungsträger": a short lowercase word with a full stop, followed by a lowercase word, is an abbreviation. */
 const SHORT_ABBR = /(?<!\p{L})([a-zäöüß]{1,6})\.(?=\s+[a-zäöüß])/gu;
 function clausesOf(norm: string): string[] {
@@ -90,6 +90,8 @@ const SHORTHAND: [RegExp, string][] = [
   [/\binduz\b/g, 'induziert'],
   [/\bmolek\b/g, 'molekül'],
   [/\blim\b/g, 'limitierend'],
+  [/(?<!\p{L})fl(?!\p{L})/gu, 'flüssig'],
+  [/(?<!\p{L})gasf(?!\p{L})/gu, 'gasförmig'],
   [/\btheor\b/g, 'theoretisch'],
   [/\bggü\b/g, 'gegenüber'],
   [/\bzw\b/g, 'zwischen'],
