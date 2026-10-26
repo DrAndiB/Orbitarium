@@ -4,11 +4,13 @@ Orbitarium is Andreas's offline chemistry learning app for Android, in English a
 curriculum (10 modules, units 0–45, listed in src/content/curriculum.ts). Private first. Vite + TypeScript (strict,
 noUnusedLocals) + Three.js, wrapped with Capacitor; GitHub Actions builds the APK.
 
-**Status:** units 0–16 are playable and reviewed (modules 1–4: periodic table, atoms, bonding, forces between
-molecules, the mole), shipped as build-32 on 2026-10-24. **Next:** module 5, units 17–20 (bond energy and enthalpy,
-Hess's law, entropy, free energy); they need the Energy Landscape engine (17, 18, 20) and reuse the Particle Box (19).
-Open from batch 12–16: a fold-out for the "where the model breaks" cards, an honest minutes estimate in the unit header,
-a standing hint line on spot-the-flaw items, and the progress-file download in the web preview (the viewer blocks it).
+**Status:** units 0–20 are playable and reviewed (modules 1–5: periodic table, atoms, bonding, forces between
+molecules, the mole, thermodynamics), shipped as build-42 on 2026-10-26. **Next:** module 6, units 21–25 (collisions and
+activation energy, rate and temperature, catalysts, dynamic equilibrium, Le Chatelier): the Particle Box (21, 22, 24,
+25) and the Energy Landscape (23: add the activation hump and a catalyst; energyLandscape.ts marks where).
+Open, owner decisions: units take 36–43 min for a careful beginner against the header's 27 (honest header or more
+trimming); estimate items use a slider, reviewers ask for a number field; a fold-out for the "where the model breaks"
+cards; the progress-file download in the web preview (the viewer blocks it).
 
 **Owner preferences:** Andreas works on Windows: give command-line examples for PowerShell, not bash or curl. He
 likes workflows and data flows shown visually. He reads English and German (native German).
@@ -105,3 +107,10 @@ once used up the account's usage window in about 90 minutes and stalled the batc
 - Fix a unit with about ten findings or fewer in the main session instead of a helper.
 - Priya's accuracy review is the most expensive step (about 2½ hours, 100+ tool calls); give her a numbers list from
   stoich.ts up front so she checks claims rather than recomputing every value.
+
+**Batch 17–20** (about 3.9 M helper tokens: build 1.8 M, review 0.5 M, fixes 1.1 M, re-checks and last fixes 0.5 M;
+three helpers at a time, no usage stall). With a numbers list up front Priya's review took 9 minutes instead of 2½ hours.
+- Shared matcher changes (src/content/ideas.ts) can create new false hints elsewhere: after each one run regress-hints
+  AND ask the re-checkers to retest the reported texts. Fixture now 362 texts.
+- Check before helpers write that no prediction is answered on screen earlier (explore panels, chips, notes) and
+  that every challenge can actually be solved with the options given.
