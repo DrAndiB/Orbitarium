@@ -444,6 +444,23 @@ export const ENGINE_U18: UnitEngine = {
   compact: (ctx, shows) => compactEnergy(ctx, shows, 'hess', 'c-co'),
 };
 
+// ---------- unit 19: entropy (Particle Box, spreading view) ----------
+export const ENGINE_U19: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.box({ start: 'Ar', subs: ['Ar', 'H2O'], temp: 20, controls: { spread: true, temp: true, compare: false } });
+    ui.on('partition', (open: boolean, n: number) => { if (open && n === 10) mark('open'); if (open && n === 100) mark('many'); });
+    ui.on('allLeft', (n: number) => { if (n === 4) mark('back'); });
+    ui.on('ways', () => mark('ways'));
+    ui.on('mixed', (on: boolean) => { if (on) mark('mix'); });
+    ui.on('melt', (id: string) => { if (id === 'H2O') mark('melt'); });
+    return boxEngine(ui);
+  },
+  compact(ctx, shows) {
+    const first = firstShow(shows, 'box');
+    return boxEngine(ctx.box({ start: first?.sub ?? 'Ar', temp: first?.temp ?? 20, compact: true }));
+  },
+};
+
 // ---------- unit 20: free energy ----------
 export const U20_REACTIONS = ['ice-melt', 'caco3', 'no2-dimer', 'h2o2'];
 export const ENGINE_U20: UnitEngine = {
