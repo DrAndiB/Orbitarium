@@ -441,7 +441,16 @@ export const ENGINE_U18: UnitEngine = {
     });
     return energyEngine(ui);
   },
-  compact: (ctx, shows) => compactEnergy(ctx, shows, 'hess', 'c-co'),
+  // Example 3 (Born–Haber) uses the Lattice Builder from unit 4: the compact view holds both and shows the one asked for.
+  compact(ctx, shows) {
+    const energy = compactEnergy(ctx, shows, 'hess', 'c-co');
+    const lat = firstShow(shows, 'lattice');
+    if (!lat) return energy;
+    const lattice = latticeEngine(ctx.lattice({ start: lat.salt, compact: true }));
+    const el = document.createElement('div');
+    el.append(energy.el, lattice.el);
+    return { el, show: (s: Show) => { const isLat = s.engine === 'lattice'; energy.el.style.display = isLat ? 'none' : ''; lattice.el.style.display = isLat ? '' : 'none'; (isLat ? lattice : energy).show(s); } };
+  },
 };
 
 // ---------- unit 19: entropy (Particle Box, spreading view) ----------
