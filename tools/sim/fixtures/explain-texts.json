@@ -1264,5 +1264,407 @@
   "lang": "en",
   "source": "u20-helper",
   "text": "ΔG = ΔH − TΔS. Only exothermic reactions can run by themselves."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "To start a reaction you have to break the old bonds and that takes energy in. Then you make the new bonds and that gives energy out. You take the second number away from the first, and if the answer has a minus the reaction gives out heat, like the hand warmer. It isn't exact because the numbers in the tables are rounded."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Breaking the old bonds takes energy in, and making the new bonds gives energy out. The reaction gives out heat if the new bonds are stronger than the old ones, and then the ΔH is negative, which is called exothermic. To work it out you take the energy of the bonds formed away from the energy of the bonds broken. It isn't exact because the table gives an average for each sort of bond, not the real one in your molecule."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Bindungen spalten braucht Energie, Bindungen knüpfen setzt Energie frei. ΔH = E(gespalten) − E(geknüpft). ΔH < 0 exotherm, ΔH > 0 endotherm. Bindungsenthalpien sind nur Näherungen."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Bindungen spalten braucht Energie, Bindungen knüpfen setzt Energie frei. ΔH = E(gespalten) − E(geknüpft). Sind die neuen Bindungen stärker als die alten, wird mehr frei als man reinsteckt, ΔH < 0, exotherm. ΔH > 0 endotherm. Die Werte in der Tabelle sind Mittelwerte über viele Moleküle, deshalb weicht die Schätzung vom Messwert ab."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Breaking bonds is always endothermic and bond formation is always exothermic. The flame's energy comes from forming the C=O and O-H bonds, which are stronger in total than the C-H and O=O bonds broken. Delta H is approx. sum of bond enthalpies broken minus sum of bond enthalpies formed; if negative the reaction is exothermic and heat flows to the surroundings, if positive it is endothermic. Only approximate because tabulated bond enthalpies are mean values averaged over many compounds and only apply to gases."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Breaking the bonds of a molecule needs energy, but making the bonds gives off heat."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "It costs energy to pull the atoms apart and you get energy back when they join up again."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The new bonds are stronger so heat comes out."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "It gets hot because the new bonds give out more energy than the old ones took."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You get more energy back from the new bonds than you put in to break the old ones."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The bonds that form are stronger than the bonds that break."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Minus means the reaction gives out heat, plus means it takes in heat."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "If delta H is negative the surroundings get warmer. If it is positive things get cold."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Heat goes out when ΔH is below zero, that is called exothermic."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "A negative number means it is exothermic and warms up the room."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Energy in minus energy out."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You add up the bonds you break, add up the bonds you make, and subtract the second from the first."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Work out the energy to break the bonds minus the energy you get back from making the new ones."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The table values are only averages, so the answer is not exact."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Bond energies in tables are just approximate."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The table gives an average for each sort of bond, not the real one in your molecule."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The table values are averages over lots of different molecules."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Breaking bonds releases energy."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Breaking the bonds gives out heat and making them costs energy."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Making bonds costs energy."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "A negative ΔH means the reaction takes in energy."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "An exothermic reaction has a positive ΔH."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Negative means it gets cold."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The old bonds are stronger than the new bonds, so energy comes out."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The numbers in the tables are rounded, so it is not exact."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Breaking bonds does not cost energy."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Bonds formed minus bonds broken gives the energy change."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "bonds, energy, ΔH, exothermic, endothermic, average, broken, formed, stronger, table, negative"
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Das Spalten von Bindungen kostet Energie, beim Bilden neuer Bindungen wird Wärme frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Der Bindungsbruch benötigt Energie, und die Bindungsbildung setzt Energie frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Man muss die alten Bindungen aufbrechen und das kostet Energie. Dann entstehen neue Bindungen und dabei wird Energie frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Minus bedeutet, die Reaktion wird warm und gibt Energie an die Umgebung ab."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die Reaktion ist endotherm, wenn ΔH größer als null ist."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die Reaktion ist exotherm: ΔH < 0, die Wärme geht an die Umgebung."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die neuen Bindungen sind fester als die alten, deshalb wird Energie frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Es wird mehr Energie frei, als man zum Spalten braucht."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Beim Verbrennen von Methan entstehen CO₂ und H₂O, deren Bindungen insgesamt stärker sind als die gespaltenen in CH₄ und O₂."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Man rechnet gespaltene Bindungen minus geknüpfte."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Energie rein minus Energie raus."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Bindungsenthalpien sind nur Näherungen."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die Werte in der Tabelle sind Durchschnittswerte, das Ergebnis ist daher nur ungefähr."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die Bindungsenthalpien sind Mittelwerte."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Beim Spalten von Bindungen wird Energie frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Beim Knüpfen von Bindungen braucht man Energie."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Ein negatives ΔH bedeutet, dass die Reaktion Energie aufnimmt."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die alten Bindungen sind stärker als die neuen, deshalb wird Energie frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die Bindungsenthalpien sind gerundet."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Spalten kostet keine Energie."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Mehr Mol Gas in den Produkten, ΔS > 0."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Ein Gas hat mehr als eine Flüssigkeit und eine Flüssigkeit mehr als ein Feststoff."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Die Entropie nimmt vom Feststoff über die Flüssigkeit zum Gas zu."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Je freier sich die Teilchen bewegen können, desto größer ist die Entropie."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "A gas has more than a liquid and a liquid more than a solid."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "More moles of gas in the products, ΔS > 0."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "If the number of gas molecules goes down, ΔS is negative."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The more freely the particles can move, the higher the entropy."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Mehr Gas in den Produkten, ΔS < 0."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "If ΔG is negative the reaction is spontaneous, if ΔG is positive it is not spontaneous."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You take the energy change and subtract temperature times the entropy change."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Wenn das Ergebnis negativ ist, läuft die Reaktion von selbst ab. Es sagt nicht, wie schnell sie abläuft."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Man nimmt die Enthalpieänderung und zieht Temperatur mal Entropieänderung ab."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "ΔG < 0: spontaneous, ΔG > 0: non-spontaneous."
  }
 ]
