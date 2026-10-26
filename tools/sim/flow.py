@@ -200,9 +200,10 @@ async def explore(pg):
         await pg.locator(".chip[data-n='4']").first.click(); await pg.wait_for_timeout(800)
         await pg.locator(".pbox-wallbtn").first.click(); await pg.wait_for_timeout(30000)         # wait for all 4 back left
         await pg.locator(".pbox-ways summary").first.click(); await pg.wait_for_timeout(600)
-        await pg.locator(".pbox-switch input[type=checkbox], input[role=switch]").first.check(); await pg.wait_for_timeout(1500)
+        # the two-gases switch is a styled toggle (its checkbox is visually hidden): flip it through its change event
+        await pg.evaluate("""() => { const i=document.querySelector('.pbox input[role=switch]'); if (i && !i.checked) { i.checked = true; i.dispatchEvent(new Event('change')); } }"""); await pg.wait_for_timeout(1500)
         await pg.locator(".chip[data-n='100']").first.click(); await pg.wait_for_timeout(800)
-        if await pg.locator("input[role=switch]").first.is_checked(): await pg.locator("input[role=switch]").first.uncheck(); await pg.wait_for_timeout(600)
+        await pg.evaluate("""() => { const i=document.querySelector('.pbox input[role=switch]'); if (i && i.checked) { i.checked = false; i.dispatchEvent(new Event('change')); } }"""); await pg.wait_for_timeout(600)
         await pg.locator(".pbox-wallbtn").first.click(); await pg.wait_for_timeout(2500)          # open with 100
         await pg.locator("[aria-label='Substance'] .chip[data-id='H2O'], [aria-label='Stoff'] .chip[data-id='H2O']").first.click(); await pg.wait_for_timeout(1200)
         await setrange(pg, ".pbox input[type=range]", -10); await pg.wait_for_timeout(1500); await setrange(pg, ".pbox input[type=range]", 20)
