@@ -1,11 +1,13 @@
 // The Particle Box as a screen component: the 3D box (or two), substance chips, a second box to compare,
 // views (electron clouds, dipoles, hydrogen bonds), the dipole what-if, mixing into water, the temperature
-// slider with melting- and boiling-point marks, and a facts panel with the measured data.
+// slider with melting- and boiling-point marks, and a facts panel with the measured data. Unit 19: the spreading
+// view (a partition, a live left/right count, a histogram and the ways to arrange N particles in two halves).
 import './particleBox.css';
-import { ParticleBoxStage, TWIN, MIXES, stateAt, pointsOf, type MixId, type View, type PhaseState } from './particleBox';
+import { ParticleBoxStage, TWIN, MIXES, stateAt, pointsOf, SPREAD_NS, GAS_COLOR, waysOf, type MixId, type View, type PhaseState } from './particleBox';
+import { sci, sup } from './zoomLadder';
 import { substance, WATER, type Substance } from '../content/substances';
 import { h, chem, clear } from '../ui/dom';
-import { L, num, type Bi } from '../i18n';
+import { L, num, getLang, type Bi } from '../i18n';
 import { buzz } from '../platform';
 import { touchElements } from '../model/learner';
 import type { Show } from '../content/unitTypes';
@@ -22,7 +24,10 @@ export interface ParticleBoxUIOptions {
   compact?: boolean;
   /** unit 11: what can be poured into the water (requires start 'H2O') */
   mixes?: string[];
-  controls?: { compare?: boolean; views?: ('clouds' | 'dipoles' | 'hbonds')[]; whatIf?: boolean; temp?: boolean };
+  /** unit 19: start in the spreading view (with controls.spread the default is { n: 10 }) */
+  spread?: { n: number; open?: boolean; mixed?: boolean };
+  /** spread (unit 19): the "Spread out" chips and the spreading view's panel; it also makes views and whatIf default to off */
+  controls?: { compare?: boolean; views?: ('clouds' | 'dipoles' | 'hbonds')[]; whatIf?: boolean; temp?: boolean; spread?: boolean };
 }
 type Fn = (...a: any[]) => void;
 
@@ -58,10 +63,29 @@ export class ParticleBoxUI {
   private listeners = new Map<string, Set<Fn>>();
   private readonly compact: boolean;
   private mixOptions: MixId[];
+  // ---- spreading view (unit 19) ----
+  private heat?: HTMLElement;
+  private markKey?: HTMLElement;
+  private spreadRow?: HTMLElement;
+  private sp?: {
+    panel: HTMLElement; btn: HTMLButtonElement; mixIn: HTMLInputElement; mixLabel: HTMLElement; msg: HTMLElement;
+    hist: HTMLElement; histBars: HTMLElement[]; histAxis: HTMLElement; histNote: HTMLElement;
+    ways: HTMLDetailsElement; waysBody: HTMLElement; wayBars: HTMLElement[]; note: HTMLElement;
+  };
+  /** the live left/right count in the HUD */
+  private split = h('div', { class: 'pbox-tag right pbox-split' });
+  private splitNums: HTMLElement[] = [];
+  /** the spreading view has been on at least once (until then nothing of it touches the ordinary box) */
+  private spreadUsed = false;
+  /** n and gas the panel's bars were built for */
+  private builtFor = '';
+  private lastAllLeft = 0;
+  private hitUntil = 0;
 
   constructor(opts: ParticleBoxUIOptions = {}) {
     this.compact = !!opts.compact;
-    const c = { compare: true, views: ['clouds', 'dipoles', 'hbonds'] as View[], whatIf: true, temp: true, ...opts.controls };
+    const spreadCtl = !!opts.controls?.spread;
+    const c = { compare: true, views: (spreadCtl ? [] : ['clouds', 'dipoles', 'hbonds']) as View[], whatIf: !spreadCtl, temp: true, spread: false, ...opts.controls };
     const subs = opts.subs ?? DEFAULT_SUBS;
     this.mixOptions = (opts.mixes ?? (opts.start === 'H2O' ? MIXES : [])).filter((m): m is MixId => (MIXES as string[]).includes(m));
 
@@ -87,6 +111,11 @@ export class ParticleBoxUI {
         this.mixRow = this.mixChips();
         this.el.append(this.mixRow);
       }
+      if (c.spread) {
+        this.spreadRow = this.spreadChips();
+        this.el.append(this.spreadRow);
+        this.spreadPanel();
+      }
       if (c.views.length) {
         const views: View[] = ['plain', ...c.views];
         this.viewRow = h('div', { class: 'chip-row wrap pbox-views', role: 'group', 'aria-label': L({ en: 'What to show', de: 'Was gezeigt wird' }) },
@@ -104,13 +133,16 @@ export class ParticleBoxUI {
     this.facts = h('div', { class: this.compact ? 'pbox-facts-line' : 'panel pbox-facts' });
     this.el.append(this.facts);
 
-    for (const evt of ['substance', 'temp', 'state', 'boil', 'melt', 'freeze', 'dipoleOff', 'mix', 'dissolved', 'hbonds']) this.stage.on(evt, (...a: unknown[]) => { this.emit(evt, ...a); });
+    for (const evt of ['substance', 'temp', 'state', 'boil', 'melt', 'freeze', 'dipoleOff', 'mix', 'dissolved', 'hbonds', 'allLeft']) this.stage.on(evt, (...a: unknown[]) => { this.emit(evt, ...a); });
     this.stage.on('frame', () => this.refreshDynamic());
+    this.stage.on('spreadFrame', () => this.refreshSpread());
 
     this.stage.temp = opts.temp ?? 20;
     this.load(1, opts.start ?? subs[0] ?? 'Ar', true);
     if (opts.compare) this.load(2, opts.compare, true);
     this.setTemp(this.stage.temp, true);
+    const sp = opts.spread ?? (c.spread && !this.compact ? { n: 10 } : undefined);
+    if (sp) this.enterSpread(sp.n, sp, opts.temp ?? 20);
   }
 
   on(evt: string, f: Fn) { if (!this.listeners.has(evt)) this.listeners.set(evt, new Set()); this.listeners.get(evt)!.add(f); return () => this.listeners.get(evt)!.delete(f); }
@@ -142,16 +174,21 @@ export class ParticleBoxUI {
     this.tempIn = h('input', { type: 'range', min: '-100', max: '100', step: '1', value: '20', 'aria-label': L({ en: 'Temperature in °C', de: 'Temperatur in °C' }) }) as HTMLInputElement;
     this.tempIn.addEventListener('input', () => this.setTemp(+this.tempIn!.value));
     this.marks = h('div', { class: 'pbox-marks', 'aria-hidden': 'true' });
-    return h('div', { class: 'wb-equation heat pbox-heat' },
+    this.markKey = h('div', { class: 'pbox-markkey muted small' },
+      h('span', null, h('i', { class: 'bp' }), L({ en: 'boiling point', de: 'Siedetemperatur' })),
+      h('span', null, h('i', { class: 'mp' }), L({ en: 'melting point', de: 'Schmelztemperatur' })));
+    this.heat = h('div', { class: 'wb-equation heat pbox-heat' },
       h('label', { class: 'wb-eq-head' }, h('span', null, L({ en: 'Temperature', de: 'Temperatur' })), this.tempOut),
       h('div', { class: 'pbox-range' }, this.tempIn, this.marks),
-      h('div', { class: 'pbox-markkey muted small' },
-        h('span', null, h('i', { class: 'bp' }), L({ en: 'boiling point', de: 'Siedetemperatur' })),
-        h('span', null, h('i', { class: 'mp' }), L({ en: 'melting point', de: 'Schmelztemperatur' }))));
+      this.markKey);
+    return this.heat;
   }
 
   /** Slider range: from the lowest melting point − 40 to the highest boiling point + 60 (mixing: −20 to 110). */
   private range(): [number, number] {
+    // the spreading view: the gas stays a gas, from 20 °C above its boiling point (at least −150 °C) to 400 °C
+    const sv = this.stage.spread;
+    if (sv) return [Math.max(-150, Math.ceil(((sv.gas.bp ?? -200) + 20) / 10) * 10), 400];
     const b = this.stage.boxes;
     if (b[0].mix) return [-20, 110];
     const subs = [b[0].sub, ...(this.stage.compare ? [b[1].sub] : [])];
@@ -172,6 +209,7 @@ export class ParticleBoxUI {
     const row = box === 1 ? this.chips1 : this.chips2;
     row?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.id === (id ?? ''))));
     if (id && !this.compact) touchElements(symbols(substance(id).formula));
+    this.syncSpread();
     this.fitRange();
     if (!quiet) buzz('light');
     this.refresh();
@@ -185,6 +223,7 @@ export class ParticleBoxUI {
     this.chips1?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.id === 'H2O')));
     this.chips2?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.id === '')));
     this.mixRow?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.mix === (mix ?? ''))));
+    this.syncSpread();
     this.fitRange();
     this.setTemp(this.stage.temp, true);
     buzz('light');
@@ -219,6 +258,7 @@ export class ParticleBoxUI {
 
   /** Show what a reveal or worked example asks for. */
   show(sh: Extract<Show, { engine: 'box' }>) {
+    if (sh.spread) { this.showSpread(sh, sh.spread); return; }
     const T = sh.temp ?? (sh.mix === 'ice' ? 0 : 20);
     this.stage.temp = T;
     if (sh.mix && (MIXES as string[]).includes(sh.mix)) {
@@ -238,6 +278,7 @@ export class ParticleBoxUI {
     this.chips1?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.id === b0.sub.id)));
     this.chips2?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.id === (this.stage.compare ? this.stage.boxes[1].sub.id : ''))));
     this.mixRow?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.mix === (b0.mix ?? ''))));
+    this.syncSpread();
     this.fitRange();
     this.stage.setTemp(T);
     if (this.tempIn) this.tempIn.value = String(T);
@@ -249,6 +290,7 @@ export class ParticleBoxUI {
   private stateOf(box: 0 | 1): PhaseState { return this.stage.boxes[box].state; }
 
   private refresh() {
+    if (this.stage.spread) { this.refreshSpreadView(); return; }
     const st = this.stage, b0 = st.boxes[0], b1 = st.boxes[1];
     const T = st.temp;
     // HUD: formula and state per box
@@ -343,6 +385,7 @@ export class ParticleBoxUI {
 
   /** Lines that change while the model runs: dissolved molecules or ions, hydrogen bonds. */
   private refreshDynamic() {
+    if (this.stage.spread) return;
     const b = this.stage.boxes[0];
     const inf = b.info();
     const parts: (string | Node)[] = [];
@@ -366,5 +409,232 @@ export class ParticleBoxUI {
     this.dyn.replaceChildren(...parts.map((p) => h('div', null, p)));
   }
 
+  // ---------- spreading view (unit 19) ----------
+
+  /** Switch to the spreading view with n particles (null: back to the ordinary box). Emits spread(n). */
+  setSpread(n: number | null) {
+    if (n === null) { if (this.stage.spread) this.load(1, this.stage.boxes[0].sub.id); return; }
+    const wasN = this.stage.spread?.n;
+    this.enterSpread(n);
+    buzz('light');
+    this.emit('spread', n);
+    if (this.sp?.ways.open && wasN !== n) this.emit('ways', n);
+  }
+
+  /** Remove the partition or put it back (all particles to the left). Emits partition(open, n). */
+  setPartition(open: boolean) {
+    const s = this.stage.spread;
+    if (!s || s.open === open) return;
+    this.stage.setPartition(open);
+    this.lastAllLeft = 0; this.hitUntil = 0;
+    buzz('light');
+    this.refresh();
+    this.emit('partition', open, s.n);
+  }
+
+  /** Two gases: a second gas fills the right half, the partition goes back in. Emits mixed(on). */
+  setMixed(on: boolean) {
+    const s = this.stage.spread;
+    if (!s) return;
+    this.stage.setMixed(on);
+    this.lastAllLeft = 0; this.hitUntil = 0;
+    buzz('light');
+    this.refresh();
+    this.emit('mixed', on);
+  }
+
+  private enterSpread(n: number, o: { open?: boolean; mixed?: boolean } = {}, T?: number) {
+    const cur = this.stage.spread;
+    const temp = T ?? this.stage.temp;
+    this.stage.temp = temp;
+    this.stage.setSpread(n, cur ? cur.gas.id : this.stage.boxes[0].sub.id, { open: o.open, mixed: o.mixed ?? cur?.mixed ?? false });
+    this.spreadUsed = true;
+    this.lastAllLeft = 0; this.hitUntil = 0;
+    this.spreadPanel();
+    this.syncSpread();
+    this.fitRange();
+    this.setTemp(temp, true);
+  }
+
+  private showSpread(sh: Extract<Show, { engine: 'box' }>, sp: { n: number; open?: boolean; mixed?: boolean }) {
+    const T = sh.temp ?? 20;
+    this.stage.temp = T;
+    this.stage.setSpread(sp.n, sh.sub, { open: sp.open, mixed: sp.mixed });
+    this.spreadUsed = true;
+    this.lastAllLeft = 0; this.hitUntil = 0;
+    this.spreadPanel();
+    this.syncSpread();
+    this.fitRange();
+    const [lo, hi] = this.range();
+    const t = Math.max(lo, Math.min(hi, T));
+    this.stage.setTemp(t);
+    if (this.tempIn) this.tempIn.value = String(t);
+    this.refresh();
+  }
+
+  private spreadChips(): HTMLElement {
+    const label = { en: 'Spread out: number of particles', de: 'Ausbreiten: Teilchenzahl' };
+    return h('div', { class: 'pbox-chiprow pbox-spreadrow' },
+      h('div', { class: 'pbox-row-label' }, L(label)),
+      h('div', { class: 'chip-row', role: 'group', 'aria-label': L(label) },
+        ...SPREAD_NS.map((n) => h('button', { class: 'chip small', type: 'button', 'data-n': String(n), 'aria-pressed': 'false', onclick: () => this.setSpread(n) }, String(n)))));
+  }
+
+  /** The spreading view's panel: made once, hidden while the ordinary box shows. Not in compact mode. */
+  private spreadPanel() {
+    if (this.sp || this.compact) return;
+    const btn = h('button', { class: 'btn small pbox-wallbtn', type: 'button', onclick: () => { const s = this.stage.spread; if (s) this.setPartition(!s.open); } });
+    const mixIn = h('input', { type: 'checkbox', role: 'switch' });
+    mixIn.addEventListener('change', () => this.setMixed(mixIn.checked));
+    const mixLabel = h('span');
+    const msg = h('div', { class: 'pbox-msg', 'aria-live': 'polite' });
+    const hist = h('div', { class: 'pbox-bars hist', 'aria-hidden': 'true' });
+    const histAxis = h('div', { class: 'pbox-axis', 'aria-hidden': 'true' });
+    const histNote = h('div', { class: 'muted small' });
+    const waysBody = h('div', { class: 'pbox-ways-body' });
+    const ways = h('details', { class: 'pbox-ways' }, h('summary', null, L({ en: 'Ways to arrange', de: 'Anordnungsmöglichkeiten' })), waysBody);
+    ways.addEventListener('toggle', () => { const s = this.stage.spread; if (ways.open && s) this.emit('ways', s.n); });
+    const note = h('p', { class: 'muted small pbox-note' });
+    const panel = h('div', { class: 'panel pbox-spread' },
+      btn,
+      h('label', { class: 'switch' }, mixIn, h('span', { class: 'switch-track', 'aria-hidden': 'true' }), mixLabel),
+      msg,
+      h('div', { class: 'pbox-histwrap' },
+        h('div', { class: 'pbox-sub' }, L({ en: 'How often each split came up since the partition was removed', de: 'Wie oft jede Aufteilung vorkam, seit die Trennwand entfernt wurde' })),
+        hist, histAxis, histNote),
+      ways, note);
+    panel.hidden = true;
+    const ref: HTMLElement | undefined = this.heat ?? this.facts;
+    if (ref && ref.parentNode === this.el) this.el.insertBefore(panel, ref); else this.el.append(panel);
+    this.sp = { panel, btn, mixIn, mixLabel, msg, hist, histBars: [], histAxis, histNote, ways, waysBody, wayBars: [], note };
+  }
+
+  /** Controls that belong to one view only, shown or hidden as the spreading view comes and goes. */
+  private syncSpread() {
+    if (!this.spreadUsed) return;
+    const s = this.stage.spread, on = !!s;
+    this.spreadRow?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', String(!!s && (b as HTMLElement).dataset.n === String(s.n))));
+    if (this.sp) this.sp.panel.hidden = !on;
+    if (!this.compact) this.facts.hidden = on;
+    for (const el of [this.viewRow, this.mixRow, this.chips2, this.markKey]) if (el) el.hidden = on;
+    if (on) {
+      this.chips1?.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      this.stageEl.classList.remove('two');
+      if (this.whatIf) this.whatIf.hidden = true;
+    }
+  }
+
+  private chanceText(n: number): string {
+    const t = sci(Math.pow(2, n));
+    return L({ en: `Chance that all ${n} are on the left at a given moment: 1 in ${t}`, de: `Wahrscheinlichkeit, dass in einem Moment alle ${n} links sind: 1 zu ${t}` });
+  }
+
+  /** "10 argon atoms" / "10 Argonatome" */
+  private atoms(g: Substance, n: number): string {
+    return getLang() === 'de' ? `${n} ${L(g.name)}atome` : `${n} ${L(g.name)} atoms`;
+  }
+
+  /** Everything that changes only with the state: HUD, legend, labels, the panel's texts and bars. */
+  private refreshSpreadView() {
+    const s = this.stage.spread!, T = this.stage.temp, A = s.gas, B = s.gasB;
+    this.hud.replaceChildren(
+      h('div', { class: 'pbox-tag' },
+        h('div', { class: 'wb-formula' }, chem(A.formula), s.mixed ? ' + ' : '', s.mixed ? chem(B.formula) : ''),
+        h('div', { class: 'pbox-state gas' }, `${L(STATE.gas)} · ${deg(T)}`)),
+      this.split);
+    // one gas: "left: 7 · right: 3"; two gases: a small table, one row per gas
+    const nums = [h('b'), h('b'), h('b'), h('b')];
+    this.splitNums = s.mixed ? nums : nums.slice(0, 2);
+    const gasCell = (k: 0 | 1) => h('span', { class: 'g' }, h('i', { class: 'dot', style: `background:${GAS_COLOR[k]}` }), chem((k ? B : A).formula));
+    this.split.replaceChildren(s.mixed
+      ? h('div', { class: 'pbox-split-grid' },
+        h('span', null), h('span', { class: 'h' }, L({ en: 'left', de: 'links' })), h('span', { class: 'h' }, L({ en: 'right', de: 'rechts' })),
+        gasCell(0), nums[0], nums[1], gasCell(1), nums[2], nums[3])
+      : h('div', { class: 'pbox-split-row' }, L({ en: 'left: ', de: 'links: ' }), nums[0], ' · ', L({ en: 'right: ', de: 'rechts: ' }), nums[1]));
+    const smaller = smallerAtom(A.id, B.id);
+    this.legend.replaceChildren(s.mixed
+      ? h('span', null, h('i', { style: `background:${GAS_COLOR[0]}` }), `${L(A.name)} (${A.formula}) `, h('i', { style: `background:${GAS_COLOR[1]}` }),
+        L({ en: `${L(B.name)} (${B.formula}), drawn ${smaller ? 'smaller: a smaller' : 'larger: a larger'} atom`, de: `${L(B.name)} (${B.formula}), ${smaller ? 'kleiner gezeichnet: ein kleineres' : 'größer gezeichnet: ein größeres'} Atom` }))
+      : '');
+    this.legend.hidden = !s.mixed;
+    const wall = s.open ? L({ en: 'partition removed', de: 'Trennwand entfernt' }) : L({ en: 'partition in place', de: 'Trennwand eingesetzt' });
+    const who = this.atoms(A, s.n) + (s.mixed ? L({ en: ' and ', de: ' und ' }) + this.atoms(B, s.n) : '');
+    this.stage.setLabel(`${L({ en: 'Particle Box, spreading view', de: 'Teilchenbox, Ausbreitung' })}: ${who}, ${wall}, ${deg(T)}`);
+    if (this.tempOut) this.tempOut.textContent = deg(T);
+    if (this.marks) clear(this.marks);
+    if (this.compact) this.facts.replaceChildren(h('div', null, `${who} · ${wall}`), h('div', null, this.chanceText(s.n)));
+    const p = this.sp;
+    if (p) {
+      p.btn.textContent = !s.open ? L({ en: 'Remove the partition', de: 'Trennwand entfernen' })
+        : s.mixed ? L({ en: 'Put it back (each gas back in its half)', de: 'Trennwand einsetzen (jedes Gas zurück in seine Hälfte)' })
+          : L({ en: 'Put it back (all particles to the left)', de: 'Trennwand einsetzen (alle Teilchen nach links)' });
+      p.mixIn.checked = s.mixed;
+      p.mixLabel.textContent = L({ en: `Two gases: ${L(B.name)} in the right half`, de: `Zwei Gase: ${L(B.name)} in der rechten Hälfte` });
+      const key = `${s.n}|${A.id}|${s.mixed}|${getLang()}`;
+      if (key !== this.builtFor) { this.builtFor = key; this.buildBars(s); }
+      p.note.textContent = s.mixed
+        ? L({ en: `Each sphere is one particle (one ${L(A.name)} or ${L(B.name)} atom). A real sample holds about 10²³ particles (unit 12).`, de: `Jede Kugel ist ein Teilchen (ein ${L(A.name)}- oder ${L(B.name)}atom). Eine echte Stoffprobe enthält etwa 10²³ Teilchen (Einheit 12).` })
+        : L({ en: `Each sphere is one particle (one ${L(A.name)} atom). A real sample holds about 10²³ particles (unit 12).`, de: `Jede Kugel ist ein Teilchen (ein ${L(A.name)}atom). Eine echte Stoffprobe enthält etwa 10²³ Teilchen (Einheit 12).` });
+    }
+    this.refreshSpread();
+  }
+
+  /** The histogram's and the ways panel's bars for n particles. */
+  private buildBars(s: NonNullable<ParticleBoxStage['spread']>) {
+    const p = this.sp!, n = s.n;
+    const bars = (el: HTMLElement) => { const b = Array.from({ length: n + 1 }, () => h('i')); el.classList.toggle('dense', n > 40); el.replaceChildren(...b); return b; };
+    const axis = () => [h('span', null, '0'), h('span', null, s.mixed
+      ? L({ en: `k = ${L(s.gas.name)} atoms on the left`, de: `k = ${L(s.gas.name)}atome links` })
+      : L({ en: 'k = particles on the left', de: 'k = Teilchen links' })), h('span', null, String(n))];
+    p.histBars = bars(p.hist);
+    p.histAxis.replaceChildren(...axis());
+    const w = waysOf(n), half = Math.floor(n / 2), max = w[half];
+    const wb = h('div', { class: 'pbox-bars ways', 'aria-hidden': 'true' });
+    p.wayBars = bars(wb);
+    w.forEach((v, k) => { p.wayBars[k].style.height = `${(v / max) * 100}%`; });
+    const total = sci(Math.pow(2, n));
+    p.waysBody.replaceChildren(
+      h('div', { class: 'pbox-sub' }, L({ en: `Arrangements with k of the ${n} particles on the left`, de: `Anordnungsmöglichkeiten mit k der ${n} Teilchen links` })),
+      wb,
+      n <= 10 ? h('div', { class: 'pbox-waynums' }, ...w.map((v) => h('span', null, sci(v)))) : '',
+      h('div', { class: 'pbox-axis', 'aria-hidden': 'true' }, ...axis()),
+      h('ul', { class: 'pbox-waylist small' },
+        h('li', null, L({ en: `In all: 2${sup(n)} = ${total} arrangements, each one equally likely.`, de: `Insgesamt: 2${sup(n)} = ${total} Anordnungsmöglichkeiten, jede gleich wahrscheinlich.` })),
+        h('li', null, L({ en: `All ${n} on the left: 1 arrangement. Half and half (${half} left, ${n - half} right): ${sci(max)}.`, de: `Alle ${n} links: 1 Anordnungsmöglichkeit. Halb und halb (${half} links, ${n - half} rechts): ${sci(max)}.` })),
+        h('li', { class: 'pbox-chance' }, this.chanceText(n) + '.')));
+  }
+
+  /** The live parts, about eight times a second: the count, the histogram, the message. */
+  private refreshSpread() {
+    const s = this.stage.spread;
+    if (!s) return;
+    const nums = this.splitNums;
+    if (nums.length >= 2) { nums[0].textContent = String(s.left); nums[1].textContent = String(s.n - s.left); }
+    if (nums.length >= 4) { nums[2].textContent = String(s.leftB); nums[3].textContent = String(s.n - s.leftB); }
+    const p = this.sp;
+    if (!p) return;
+    let max = 0;
+    for (let k = 0; k <= s.n; k++) if (s.hist[k] > max) max = s.hist[k];
+    p.histBars.forEach((b, k) => { b.style.height = max ? `${(s.hist[k] / max) * 100}%` : '0'; b.classList.toggle('now', s.open && k === s.left); });
+    p.wayBars.forEach((b, k) => b.classList.toggle('now', k === s.left));
+    const note = s.open
+      ? L({ en: `Counted ten times a second: ${num(s.samples, 0)} counts so far.`, de: `Zehnmal pro Sekunde gezählt: bisher ${num(s.samples, 0)} Zählungen.` })
+      : L({ en: 'Remove the partition, then the counting starts.', de: 'Entferne die Trennwand, dann beginnt die Zählung.' });
+    if (p.histNote.textContent !== note) p.histNote.textContent = note;
+    const now = performance.now();
+    if (s.allLeft > this.lastAllLeft) this.hitUntil = now + 3000;
+    this.lastAllLeft = s.allLeft;
+    const hit = now < this.hitUntil;
+    const who = s.mixed ? this.atoms(s.gas, s.n) : String(s.n);
+    const text = !s.open ? ''
+      : hit ? L({ en: `All ${who} are back on the left, by chance. Held for a moment so you can see it.`, de: `Alle ${who} sind zufällig wieder links. Kurz angehalten, damit du es siehst.` })
+        : L({ en: `Times all ${who} were back on the left at once: ${s.allLeft}`, de: `So oft waren alle ${who} gleichzeitig wieder links: ${s.allLeft}` });
+    p.msg.classList.toggle('hit', hit);
+    if (p.msg.textContent !== text) p.msg.textContent = text;
+  }
+
   dispose() { this.stage.dispose(); this.listeners.clear(); }
 }
+
+/** Is the second gas the smaller atom? (van der Waals radii: He < Ne < Ar < Kr < Xe) */
+const smallerAtom = (a: string, b: string) => ['He', 'Ne', 'Ar', 'Kr', 'Xe'].indexOf(b) < ['He', 'Ne', 'Ar', 'Kr', 'Xe'].indexOf(a);

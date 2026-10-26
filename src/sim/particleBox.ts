@@ -2,7 +2,8 @@
 // The state on screen always follows the measured melting and boiling points (substances.ts); the motion is a
 // model tuned to look right: Lennard-Jones attraction, a Langevin thermostat and weak gravity, so a liquid pools on
 // the floor while a gas fills the box. Views overlay flickering electron clouds (dispersion), permanent dipoles
-// that turn head to tail, or hydrogen bonds. Unit 11 pours a second substance into the water.
+// that turn head to tail, or hydrogen bonds. Unit 11 pours a second substance into the water. Unit 19 adds the
+// spreading view: gas particles behind a partition in the left half, counted once the partition is out.
 import * as THREE from 'three';
 import { Stage3D } from './stage';
 import { SUBSTANCES, substance, WATER, type Substance } from '../content/substances';
@@ -951,6 +952,284 @@ export class ParticleBox {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+// Spreading view (unit 19): N gas particles start in the left half behind a partition. Remove it and count how
+// many are on the left. Plain spheres, no clouds; the particles move like an ideal gas (straight lines, elastic
+// bounces off the walls and off each other), faster when hotter: speed ∝ √(T/M).
+
+/** Particle numbers offered in the spreading view. */
+export const SPREAD_NS = [4, 10, 40, 100];
+/** Van der Waals radii in pm (Bondi 1964), only to draw two noble gases in proportion to each other. */
+const VDW: Record<string, number> = { He: 140, Ne: 154, Ar: 188, Kr: 202, Xe: 216 };
+/** The gas the spreading view shows for a substance: a noble gas as it is, anything else as argon. */
+export const spreadGas = (id: string) => (VDW[id] ? id : 'Ar');
+/** The second gas for mixing: neon, or argon when the first one is neon. */
+export const secondGas = (id: string) => (spreadGas(id) === 'Ne' ? 'Ar' : 'Ne');
+/** Colours of the first and the second gas (never the red and blue of charges). */
+export const GAS_COLOR = ['#c9c3e6', '#5fd4c4'];
+/** Number of arrangements with k of n particles in the left half, C(n, k), for k = 0 … n. */
+export function waysOf(n: number): number[] {
+  const out = [1];
+  for (let k = 1; k <= n; k++) out.push((out[k - 1] * (n - k + 1)) / k);
+  return out;
+}
+
+const SPREAD_CAP = 200;              // two gases with 100 particles each
+const WALL = 0.035;                  // half thickness of the partition
+const HALF_VOL = HX * 2 * HY * 2 * HZ;
+const SPREAD_STEP = 1 / 150;
+const kelvin = (T: number) => Math.max(5, T + 273.15);
+
+export class SpreadBox {
+  readonly group = new THREE.Group();
+  gas: Substance = substance('Ar');
+  gasB: Substance = substance('Ne');
+  n = 10;
+  open = false;
+  mixed = false;
+  temp = 20;
+  /** particles of the first and of the second gas in the left half now */
+  left = 0;
+  leftB = 0;
+  /** how often each k (first gas on the left) came up since the partition was removed, counted ten times a second */
+  readonly hist = new Float64Array(101);
+  samples = 0;
+  /** times all n came back to the left at once since the partition was removed */
+  allLeft = 0;
+  /** seconds the motion stays held after all came back to the left, so it can be seen */
+  hold = 0;
+  private count = 0;
+  private readonly x = new Float64Array(SPREAD_CAP); private readonly y = new Float64Array(SPREAD_CAP); private readonly z = new Float64Array(SPREAD_CAP);
+  private readonly vx = new Float64Array(SPREAD_CAP); private readonly vy = new Float64Array(SPREAD_CAP); private readonly vz = new Float64Array(SPREAD_CAP);
+  /** 0 first gas, 1 second gas */
+  private readonly b = new Uint8Array(SPREAD_CAP);
+  private r = 0.4;
+  private rB = 0.33;
+  private readonly mesh: THREE.InstancedMesh;
+  private readonly wall = new THREE.Group();
+  private readonly wallFill: THREE.MeshBasicMaterial;
+  private readonly wallEdge: THREE.LineBasicMaterial;
+  private readonly trace: THREE.LineSegments;
+  private readonly traceMat: THREE.LineDashedMaterial;
+  /** 0: partition in place, 1: lifted out */
+  private lift = 0;
+  /** some particle of the first gas has been on the right since the partition was removed */
+  private armed = false;
+  private acc = 0;
+  private sampleAcc = 0;
+
+  constructor(private readonly opts: { compact: boolean; reducedMotion: boolean }) {
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * HX, 2 * HY, 2 * HZ)), new THREE.LineBasicMaterial({ color: 0x9aa3bf, transparent: true, opacity: 0.45 }));
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(2 * HX, 2 * HZ), new THREE.MeshBasicMaterial({ color: 0x9aa3bf, transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = FLOOR + 0.002;
+    // the partition: a pane in the middle (the plane x = 0) with a frame
+    this.wallFill = new THREE.MeshBasicMaterial({ color: 0xb8c2e0, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false });
+    this.wallEdge = new THREE.LineBasicMaterial({ color: 0xdfe5f5, transparent: true, opacity: 0.85 });
+    const pane = new THREE.Mesh(new THREE.PlaneGeometry(2 * HZ, 2 * HY), this.wallFill);
+    pane.rotation.y = Math.PI / 2;
+    this.wall.add(pane, new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * WALL, 2 * HY, 2 * HZ)), this.wallEdge));
+    // where the partition stood, once it is out: a dashed frame marks the middle
+    const c = [[-HY, -HZ], [-HY, HZ], [HY, HZ], [HY, -HZ]];
+    const pts: number[] = [];
+    for (let k = 0; k < 4; k++) { const a = c[k], b = c[(k + 1) % 4]; pts.push(0, a[0], a[1], 0, b[0], b[1]); }
+    const tg = new THREE.BufferGeometry();
+    tg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+    this.traceMat = new THREE.LineDashedMaterial({ color: 0xdfe5f5, dashSize: 0.18, gapSize: 0.14, transparent: true, opacity: 0.35 });
+    this.trace = new THREE.LineSegments(tg, this.traceMat);
+    this.trace.computeLineDistances();
+    this.trace.visible = false;
+    const seg = opts.compact ? 14 : 16;
+    this.mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(1, seg, seg - 4), new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.02 }), SPREAD_CAP);
+    this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    this.mesh.frustumCulled = false;
+    this.mesh.count = 0;
+    const col = new THREE.Color(GAS_COLOR[0]);
+    for (let i = 0; i < SPREAD_CAP; i++) this.mesh.setColorAt(i, col);
+    this.group.add(edges, floor, this.wall, this.trace, this.mesh);
+  }
+
+  /** Load n particles of a gas (and as many of a second gas on the right); open: already spread through the box. */
+  setup(gasId: string, n: number, mixed: boolean, open: boolean) {
+    this.gas = substance(spreadGas(gasId));
+    this.gasB = substance(secondGas(gasId));
+    this.n = Math.max(1, Math.min(100, Math.round(n)));
+    this.mixed = mixed;
+    // each sphere one particle; with many particles the spheres are drawn smaller, so the gas stays a gas
+    this.r = Math.min(radiusOf(this.gas), Math.cbrt((0.12 * HALF_VOL * 3) / (4 * Math.PI * this.n)));
+    this.rB = (this.r * VDW[this.gasB.id]) / VDW[this.gas.id];
+    this.count = this.n * (mixed ? 2 : 1);
+    const cA = new THREE.Color(GAS_COLOR[0]), cB = new THREE.Color(GAS_COLOR[1]);
+    for (let i = 0; i < this.count; i++) { this.b[i] = i < this.n ? 0 : 1; this.mesh.setColorAt(i, this.b[i] ? cB : cA); }
+    this.mesh.count = this.count;
+    if (this.mesh.instanceColor) this.mesh.instanceColor.needsUpdate = true;
+    this.open = open;
+    this.lift = open ? 1 : 0;
+    this.place(open);
+    this.clearCounts();
+    this.countLeft();
+    this.armed = open && this.left < this.n;
+    this.draw();
+  }
+
+  /** Remove the partition, or put it back with every particle in its own half again. */
+  setOpen(open: boolean) {
+    if (open === this.open) return;
+    this.open = open;
+    if (open) this.lift = this.opts.reducedMotion ? 1 : 0;
+    else { this.lift = 0; this.place(false); }
+    this.clearCounts();
+    this.countLeft();
+    this.armed = false;
+    this.draw();
+  }
+
+  /** Hotter, faster: all speeds scale with √T (in K). */
+  setTemp(T: number) {
+    const f = Math.sqrt(kelvin(T) / kelvin(this.temp));
+    this.temp = T;
+    for (let i = 0; i < this.count; i++) { this.vx[i] *= f; this.vy[i] *= f; this.vz[i] *= f; }
+  }
+
+  private clearCounts() {
+    this.hist.fill(0);
+    this.samples = 0; this.allLeft = 0; this.hold = 0; this.sampleAcc = 0; this.acc = 0;
+  }
+
+  private countLeft() {
+    let a = 0, bl = 0;
+    for (let i = 0; i < this.count; i++) if (this.x[i] < 0) { if (this.b[i]) bl++; else a++; }
+    this.left = a; this.leftB = bl;
+  }
+
+  /** Spread of one velocity component for a gas: √(T/M), scaled so argon at 20 °C crosses half the box in about 2 s. */
+  private sigma(M: number) {
+    return (this.opts.reducedMotion ? 0.65 : 1.5) * Math.sqrt((kelvin(this.temp) / 293.15) * (39.95 / M));
+  }
+
+  /** Random places without overlaps (in the own half, or anywhere when spread) and random velocities. */
+  private place(spread: boolean) {
+    const { x, y, z, b } = this;
+    for (let i = 0; i < this.count; i++) {
+      const r = b[i] ? this.rB : this.r;
+      const x0 = spread ? -HX + r : b[i] ? WALL + r : -HX + r;
+      const x1 = spread ? HX - r : b[i] ? HX - r : -WALL - r;
+      for (let tries = 0; tries < 40; tries++) {
+        x[i] = x0 + Math.random() * (x1 - x0);
+        y[i] = (Math.random() * 2 - 1) * (HY - r);
+        z[i] = (Math.random() * 2 - 1) * (HZ - r);
+        let ok = true;
+        for (let j = 0; j < i && ok; j++) {
+          const rr = r + (b[j] ? this.rB : this.r) + 0.02;
+          ok = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2 + (z[i] - z[j]) ** 2 >= rr * rr;
+        }
+        if (ok) break;
+      }
+    }
+    // already spread: at least one particle of the first gas on the right, so the picture shows it
+    if (spread) {
+      this.countLeft();
+      if (this.left === this.n) for (let i = 0; i < this.count; i++) if (!b[i]) { x[i] = -x[i]; break; }
+    }
+    for (const g of [0, 1]) {
+      const M = g ? this.gasB.M : this.gas.M, s = this.sigma(M);
+      let sum = 0, m = 0;
+      for (let i = 0; i < this.count; i++) {
+        if (b[i] !== g) continue;
+        this.vx[i] = s * gauss(); this.vy[i] = s * gauss(); this.vz[i] = s * gauss();
+        sum += this.vx[i] ** 2 + this.vy[i] ** 2 + this.vz[i] ** 2; m++;
+      }
+      // a few particles: scale so their mean energy matches the temperature exactly
+      const f = m && sum > 0 ? Math.sqrt((3 * s * s * m) / sum) : 1;
+      for (let i = 0; i < this.count; i++) if (b[i] === g) { this.vx[i] *= f; this.vy[i] *= f; this.vz[i] *= f; }
+    }
+  }
+
+  private step(h: number) {
+    const { x, y, z, vx, vy, vz, b } = this, n = this.count, closed = !this.open;
+    for (let i = 0; i < n; i++) {
+      x[i] += vx[i] * h; y[i] += vy[i] * h; z[i] += vz[i] * h;
+      const r = b[i] ? this.rB : this.r;
+      const ax = HX - r, ay = HY - r, az = HZ - r;
+      if (x[i] > ax) { x[i] = 2 * ax - x[i]; vx[i] = -Math.abs(vx[i]); } else if (x[i] < -ax) { x[i] = -2 * ax - x[i]; vx[i] = Math.abs(vx[i]); }
+      if (y[i] > ay) { y[i] = 2 * ay - y[i]; vy[i] = -Math.abs(vy[i]); } else if (y[i] < -ay) { y[i] = -2 * ay - y[i]; vy[i] = Math.abs(vy[i]); }
+      if (z[i] > az) { z[i] = 2 * az - z[i]; vz[i] = -Math.abs(vz[i]); } else if (z[i] < -az) { z[i] = -2 * az - z[i]; vz[i] = Math.abs(vz[i]); }
+      if (closed) {
+        const edge = WALL + r;
+        if (!b[i] && x[i] > -edge) { x[i] = -edge; vx[i] = -Math.abs(vx[i]); }
+        else if (b[i] && x[i] < edge) { x[i] = edge; vx[i] = Math.abs(vx[i]); }
+      }
+    }
+    // elastic collisions between spheres (masses from the molar masses)
+    const mA = this.gas.M, mB = this.gasB.M;
+    for (let i = 0; i < n; i++) {
+      const ri = b[i] ? this.rB : this.r, mi = b[i] ? mB : mA;
+      for (let j = i + 1; j < n; j++) {
+        const rr = ri + (b[j] ? this.rB : this.r);
+        const dx = x[i] - x[j];
+        if (dx > rr || dx < -rr) continue;
+        const dy = y[i] - y[j], dz = z[i] - z[j];
+        const d2 = dx * dx + dy * dy + dz * dz;
+        if (d2 >= rr * rr || d2 < 1e-12) continue;
+        const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, nz = dz / d;
+        const rel = (vx[i] - vx[j]) * nx + (vy[i] - vy[j]) * ny + (vz[i] - vz[j]) * nz;
+        if (rel < 0) {
+          const mj = b[j] ? mB : mA, ki = (2 * mj * rel) / (mi + mj), kj = (2 * mi * rel) / (mi + mj);
+          vx[i] -= ki * nx; vy[i] -= ki * ny; vz[i] -= ki * nz;
+          vx[j] += kj * nx; vy[j] += kj * ny; vz[j] += kj * nz;
+        }
+        const push = (rr - d) / 2;
+        x[i] += nx * push; y[i] += ny * push; z[i] += nz * push;
+        x[j] -= nx * push; y[j] -= ny * push; z[j] -= nz * push;
+      }
+    }
+  }
+
+  /** Advance and redraw. Returns true when all n particles of the first gas have just come back to the left. */
+  tick(dt: number): boolean {
+    if (this.open && this.lift < 1) this.lift = Math.min(1, this.lift + dt / 0.6);
+    let back = false;
+    if (this.hold > 0) this.hold = Math.max(0, this.hold - dt);
+    else {
+      this.acc = Math.min(this.acc + dt, 3 * SPREAD_STEP);
+      while (this.acc >= SPREAD_STEP) { this.step(SPREAD_STEP); this.acc -= SPREAD_STEP; }
+      this.countLeft();
+      if (this.open) {
+        if (this.left < this.n) this.armed = true;
+        else if (this.armed) { this.armed = false; this.allLeft++; this.hold = 1.2; back = true; }
+        this.sampleAcc += dt;
+        while (this.sampleAcc >= 0.1) { this.sampleAcc -= 0.1; this.hist[this.left]++; this.samples++; }
+      }
+    }
+    this.draw();
+    return back;
+  }
+
+  private draw() {
+    for (let i = 0; i < this.count; i++) {
+      const r = this.b[i] ? this.rB : this.r;
+      tmpM.makeScale(r, r, r).setPosition(this.x[i], this.y[i], this.z[i]);
+      this.mesh.setMatrixAt(i, tmpM);
+    }
+    this.mesh.instanceMatrix.needsUpdate = true;
+    const l = this.open ? this.lift : 0;
+    this.wall.visible = l < 1;
+    this.wall.position.y = l * (2 * HY + 0.3);
+    this.wallFill.opacity = 0.28 * (1 - l);
+    this.wallEdge.opacity = 0.85 * (1 - l);
+    this.trace.visible = this.open;
+    this.traceMat.opacity = this.hold > 0 ? 0.95 : 0.35 * l;
+  }
+
+  dispose() {
+    this.group.traverse((o) => {
+      const m = o as THREE.Mesh;
+      m.geometry?.dispose?.();
+      const mat = m.material as THREE.Material | undefined;
+      mat?.dispose?.();
+    });
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------
 // The stage: one box, or two side by side
 
 export class ParticleBoxStage extends Stage3D {
@@ -960,6 +1239,10 @@ export class ParticleBoxStage extends Stage3D {
   private lastHb = 0;
   private lastDiss = 0;
   private compareOn = false;
+  /** the spreading view (unit 19), made the first time it is used */
+  private sb: SpreadBox | null = null;
+  private spreadOn = false;
+  private lastSpread = 0;
 
   constructor(host: HTMLElement, private readonly compact = false) {
     super(host, { distance: compact ? 15 : 13, minDistance: 7, maxDistance: 30, autoRotate: false });
@@ -975,6 +1258,46 @@ export class ParticleBoxStage extends Stage3D {
   }
 
   get compare() { return this.compareOn; }
+  /** The spreading view while it is on, else null. */
+  get spread(): SpreadBox | null { return this.spreadOn ? this.sb : null; }
+
+  /** Unit 19: switch box 1 to the spreading view with n particles of a gas (null: back to the ordinary box). */
+  setSpread(n: number | null, gasId = 'Ar', o: { open?: boolean; mixed?: boolean } = {}) {
+    if (n === null) { this.leaveSpread(); return; }
+    if (!this.sb) {
+      this.sb = new SpreadBox({ compact: this.compact, reducedMotion: this.reducedMotion });
+      this.root.add(this.sb.group);
+    }
+    if (this.compareOn) { this.compareOn = false; this.layout(); }
+    if (!this.spreadOn) this.aimSpread();
+    this.spreadOn = true;
+    this.boxes[0].group.visible = false;
+    this.sb.group.visible = true;
+    this.sb.temp = this.temp;
+    this.sb.setup(gasId, n, !!o.mixed, !!o.open);
+  }
+
+  /** Remove the partition, or put it back (every particle back in its own half). */
+  setPartition(open: boolean) { if (this.spreadOn) this.sb!.setOpen(open); }
+
+  /** Two gases: a second gas fills the right half; the partition goes back in. */
+  setMixed(on: boolean) { if (this.spreadOn) { const s = this.sb!; s.setup(s.gas.id, s.n, on, false); } }
+
+  private leaveSpread() {
+    if (!this.spreadOn) return;
+    this.spreadOn = false;
+    this.sb!.group.visible = false;
+    this.boxes[0].group.visible = true;
+    this.aim(!!this.boxes[0].mix);
+  }
+
+  /** Left and right read best almost from the front. */
+  private aimSpread() {
+    const dir = new THREE.Vector3(2.2, 2.4, 12.6).normalize();
+    const dist = this.camera.position.distanceTo(this.controls.target);
+    this.controls.target.set(0, -0.3, 0);
+    this.camera.position.copy(this.controls.target).addScaledVector(dir, dist);
+  }
 
   private layout() {
     const two = this.compareOn;
@@ -989,6 +1312,7 @@ export class ParticleBoxStage extends Stage3D {
 
   /** Load a substance into box 1 or 2 (box 2 null: no comparison). */
   load(box: 1 | 2, id: string | null, mix: MixId | null = null) {
+    if (this.spreadOn && (box === 1 || id !== null)) this.leaveSpread();
     if (box === 2) {
       this.compareOn = id !== null;
       if (id) { const b = this.boxes[1]; b.temp = this.temp; b.load(id); b.setView(this.view); }
@@ -1014,6 +1338,7 @@ export class ParticleBoxStage extends Stage3D {
   }
 
   setMix(mix: MixId | null) {
+    this.leaveSpread();
     this.aim(!!mix);
     const b = this.boxes[0];
     b.temp = this.temp;
@@ -1023,6 +1348,8 @@ export class ParticleBoxStage extends Stage3D {
   }
 
   setTemp(T: number) {
+    // the spreading view: only the speeds change (the hidden box 1 takes the temperature when it comes back)
+    if (this.spreadOn) { this.temp = T; this.sb!.setTemp(T); this.emit('temp', T); return; }
     const prevT = this.temp;
     this.temp = T;
     const active = this.compareOn ? this.boxes : [this.boxes[0]];
@@ -1053,6 +1380,12 @@ export class ParticleBoxStage extends Stage3D {
   }
 
   protected tick(dt: number, t: number) {
+    if (this.spreadOn) {
+      if (this.sb!.tick(dt)) this.emit('allLeft', this.sb!.n);
+      // the live readout: about eight times a second
+      if (t - this.lastSpread > 0.12 || t < this.lastSpread) { this.lastSpread = t; this.emit('spreadFrame'); }
+      return;
+    }
     const active = this.compareOn ? this.boxes : [this.boxes[0]];
     let dissolvedChanged = false;
     for (const b of active) if (b.tick(dt, t)) dissolvedChanged = true;
@@ -1071,6 +1404,7 @@ export class ParticleBoxStage extends Stage3D {
 
   dispose() {
     for (const b of this.boxes) b.dispose();
+    this.sb?.dispose();
     super.dispose();
   }
 }
