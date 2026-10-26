@@ -4,9 +4,11 @@
 // 2 H₂ + O₂ 1370 / 1856 / −486; ethane → ethene + H₂ +128; ethyne + H₂ → ethene 1273 − 1441 = −168 (only H–H and C–H:
 // 436 − 830 = −394). Measured with dH() in thermo.ts: nh3 −91.8, hcl −184.6, ch4-burn-g −802.6, caco3 +179.2,
 // thermite −851.8, ice-melt +6.01.
-// Sources (fetched): C–H in methane 1662/4 = 415.5 kJ/mol and C=O in carbon dioxide +805 kJ/mol (LibreTexts, Physical and
-// Theoretical Chemistry, Supplemental Modules, "Bond Enthalpies"). Dissolving ammonium nitrate is endothermic (instant
-// cold packs; qualitative only here, unit 19 gives the value).
+// Sources (fetched): C–H in methane 1662/4 = 415.5 kJ/mol and C=O in carbon dioxide +805 kJ/mol, a mean of two different
+// steps (≈532 + ≈1076 = 1609; LibreTexts, Physical and Theoretical Chemistry, Supplemental Modules, "Bond Enthalpies").
+// Dissolving ammonium nitrate is endothermic (instant cold packs; qualitative only here, unit 19 gives the value).
+// Condensing water at 100 °C gives out 40.65 kJ/mol (water-boil-100 in thermo.ts); burning methane to liquid instead of
+// vapour water gives out 890.6 − 802.6 = 88.0 kJ/mol more = 2 × 44.0 (thermo.ts, water-boil at 25 °C).
 import type { Bi } from '../../i18n';
 import type { Item } from '../items';
 
@@ -22,7 +24,7 @@ export const BANK_U17: Item[] = [
       { text: b('Nothing: no new substance forms, so no energy changes', 'Nichts: Es entsteht kein neuer Stoff, also ändert sich keine Energie') },
       { text: b('218 kJ are taken in, half for each atom', '218 kJ werden aufgenommen, die Hälfte für jedes Atom') },
     ],
-    explain: b('Breaking a bond always costs energy: 436 kJ per mole of H–H bonds. The atoms end higher in energy than the molecule. Nothing is given out until new bonds form.', 'Eine Bindung zu spalten kostet immer Energie: 436 kJ pro Mol H–H-Bindungen. Die Atome liegen danach energetisch höher als das Molekül. Abgegeben wird erst etwas, wenn neue Bindungen entstehen.') },
+    explain: b('Breaking a bond always costs energy: 436 kJ per mole of H–H bonds. The atoms end higher in energy than the molecule. Nothing is given out until new bonds form.', 'Eine Bindung zu spalten kostet immer Energie: 436 kJ pro Mol H–H-Bindungen. Die Atome liegen danach energetisch höher als das Molekül. Abgegeben wird erst etwas, wenn neue Bindungen geknüpft werden.') },
   { id: 'i17b', unit: 17, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u17.break-make'], targets: ['breaking-releases'],
     prompt: b('Why does breaking a covalent bond always cost energy?', 'Warum kostet das Spalten einer Atombindung immer Energie?'),
     options: [
@@ -80,7 +82,7 @@ export const BANK_U17: Item[] = [
       { text: b('Nothing: ΔH is about bonds, not about heat', 'Nichts: ΔH betrifft Bindungen, nicht Wärme') },
       { text: b('They cool down, because 91.8 kJ are used up', 'Sie kühlt ab, weil 91,8 kJ verbraucht werden'), mis: 'dh-sign' },
     ],
-    explain: b('ΔH is the change for the system, the reacting substances. Negative means the system ends with less energy: 91.8 kJ per mole of reaction went to the surroundings, which warm up. The reaction is exothermic.', 'ΔH ist die Änderung für das System, die reagierenden Stoffe. Negativ bedeutet, dass das System am Ende weniger Energie hat: 91,8 kJ pro Mol Formelumsatz gingen an die Umgebung, die sich erwärmt. Die Reaktion ist exotherm.') },
+    explain: b('ΔH is the change for the system, the reacting substances. Negative means the system ends with less energy: 91.8 kJ per mole of reaction went to the surroundings, which warm up. The reaction is exothermic.', 'ΔH ist die Änderung für das System, die reagierenden Stoffe. Negativ bedeutet, dass das System am Ende weniger Energie hat: 91,8 kJ pro Mol (bezogen auf die Reaktionsgleichung) gingen an die Umgebung, die sich erwärmt. Die Reaktion ist exotherm.') },
   { id: 'i17h', unit: 17, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u17.sign'], targets: ['dh-sign'],
     prompt: b('Why does an exothermic reaction have a negative ΔH?', 'Warum hat eine exotherme Reaktion ein negatives ΔH?'),
     options: [
@@ -139,7 +141,7 @@ export const BANK_U17: Item[] = [
     ],
     explain: b('1662 ÷ 4 = 415.5: the table value is a mean. Each C–H bond broken in turn takes a different amount, because what is left of the molecule changes, and tables also average over many molecules. That is why estimates from such values are approximate.', '1662 : 4 = 415,5: Der Tabellenwert ist ein Mittelwert. Jede C–H-Bindung, die nacheinander gespalten wird, kostet etwas anderes, weil sich der Rest des Moleküls ändert, und Tabellen mitteln zusätzlich über viele Moleküle. Deshalb sind Schätzungen mit solchen Werten nur Näherungen.') },
   { id: 'i17n', unit: 17, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u17.average'], targets: ['breaking-releases'],
-    prompt: b('Bond energies predict H₂ + Cl₂ almost exactly (−185 against −184.6 kJ/mol) but methane burning poorly (−682 against −802.6). Why?', 'Mit Bindungsenthalpien trifft man H₂ + Cl₂ fast genau (−185 gegenüber −184,6 kJ/mol), die Verbrennung von Methan aber schlecht (−682 gegenüber −802,6). Warum?'),
+    prompt: b('Bond energies predict H₂ + Cl₂ almost exactly (−185 estimated, −184.6 measured, in kJ/mol) but methane burning poorly (−682 estimated, −802.6 measured). Why?', 'Mit Bindungsenthalpien trifft man H₂ + Cl₂ fast genau (geschätzt −185, gemessen −184,6 kJ/mol), die Verbrennung von Methan aber schlecht (geschätzt −682, gemessen −802,6). Warum?'),
     options: [
       { text: b('Some of methane\'s bonds give out energy as they break', 'Einige Bindungen im Methan geben beim Spalten Energie ab'), mis: 'breaking-releases' },
       { text: b('Methane burns too fast for its energy to be measured', 'Methan verbrennt zu schnell, um seine Energie zu messen') },
@@ -148,14 +150,14 @@ export const BANK_U17: Item[] = [
     ],
     explain: b('A two-atom molecule has only one bond, so its table value is measured on exactly that molecule. C=O and C–H values are averages over many molecules; the C=O bonds in CO₂ are stronger than average, so the estimate gives out too little.', 'Ein zweiatomiges Molekül hat nur eine Bindung, also ist sein Tabellenwert genau an diesem Molekül gemessen. Die Werte für C=O und C–H sind Mittelwerte über viele Moleküle; die C=O-Bindungen in CO₂ sind stärker als der Durchschnitt, also gibt die Schätzung zu wenig ab.') },
   { id: 'i17o', unit: 17, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u17.average'],
-    prompt: b('A table gives C=O as 741 kJ/mol, an average over many molecules. In carbon dioxide, each of its two C=O bonds takes about 805 kJ/mol. Using 741, the energy given out when one mole of CO₂ forms from its atoms comes out…', 'Eine Tabelle gibt für C=O 741 kJ/mol an, einen Mittelwert über viele Moleküle. In Kohlenstoffdioxid kostet jede seiner beiden C=O-Bindungen etwa 805 kJ/mol. Mit 741 gerechnet, wird die Energie, die beim Bilden von einem Mol CO₂ aus seinen Atomen frei wird, …'),
+    prompt: b('A table gives C=O as 741 kJ/mol, an average over many molecules. In carbon dioxide, the two C=O bonds take about 805 kJ/mol each on average (the two steps differ). Using 741, the energy given out when one mole of CO₂ forms from its atoms comes out…', 'Eine Tabelle gibt für C=O 741 kJ/mol an, einen Mittelwert über viele Moleküle. In Kohlenstoffdioxid kosten die beiden C=O-Bindungen im Mittel je etwa 805 kJ/mol (die beiden Schritte unterscheiden sich). Mit 741 gerechnet, wird die Energie, die beim Bilden von einem Mol CO₂ aus seinen Atomen frei wird, …'),
     options: [
       { text: b('about 64 kJ too small', 'etwa 64 kJ zu klein') },
       { text: b('about 128 kJ too large', 'etwa 128 kJ zu groß') },
       { text: b('exactly right, since averages fit every molecule', 'genau richtig, weil Mittelwerte zu jedem Molekül passen') },
       { text: b('about 128 kJ too small', 'etwa 128 kJ zu klein'), correct: true },
     ],
-    explain: b('Two bonds, each about 64 kJ/mol stronger than the average: 2 × (805 − 741) = 128 kJ more is really given out. Averages fit no single molecule exactly.', 'Zwei Bindungen, jede etwa 64 kJ/mol stärker als der Mittelwert: 2 · (805 − 741) = 128 kJ mehr werden tatsächlich frei. Mittelwerte passen zu keinem einzelnen Molekül genau.') },
+    explain: b('Two bonds, on average about 64 kJ/mol stronger than the table value: 2 × (805 − 741) = 128 kJ more is really given out. Averages fit no single molecule exactly.', 'Zwei Bindungen, im Mittel etwa 64 kJ/mol stärker als der Tabellenwert: 2 · (805 − 741) = 128 kJ mehr werden tatsächlich frei. Mittelwerte passen zu keinem einzelnen Molekül genau.') },
 
   // ---------- u17.diagram ----------
   { id: 'i17p', unit: 17, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u17.diagram', 'u17.sign'], targets: ['dh-sign'],
@@ -176,8 +178,26 @@ export const BANK_U17: Item[] = [
       { text: b('Separated atoms are hotter, so they sit higher', 'Getrennte Atome sind heißer, also liegen sie höher') },
     ],
     explain: b('Every bond lowers the energy of the atoms it joins, so taking all bonds apart always costs energy: the atoms sit above any arrangement of molecules made from them. Reactants and products are both somewhere below, and ΔH is their difference.', 'Jede Bindung senkt die Energie der Atome, die sie verbindet, also kostet das Trennen aller Bindungen immer Energie: Die Atome liegen über jeder Anordnung von Molekülen, die aus ihnen besteht. Edukte und Produkte liegen beide irgendwo darunter, und ΔH ist ihr Unterschied.') },
+  { id: 'i17s', unit: 17, kind: 'choice', format: 'why', evidence: 'explain', withConfidence: true, concepts: ['u17.break-make', 'u17.diagram'], targets: ['vapour-carries-energy', 'breaking-releases'],
+    prompt: b('Steam at 100 °C scalds worse than water at 100 °C, although both have the same temperature. What is the main reason?', 'Dampf von 100 °C verbrüht stärker als Wasser von 100 °C, obwohl beide dieselbe Temperatur haben. Was ist der Hauptgrund?'),
+    options: [
+      { text: b('The steam holds more heat, which it simply hands to the skin', 'Der Dampf enthält mehr Wärme, die er einfach an die Haut weitergibt'), mis: 'vapour-carries-energy' },
+      { text: b('Steam moves faster, so it hits the skin harder', 'Dampf bewegt sich schneller und trifft die Haut härter') },
+      { text: b('The bonds inside steam molecules break on the skin and release energy', 'Die Bindungen in den Dampfmolekülen brechen auf der Haut auf und setzen Energie frei'), mis: 'breaking-releases' },
+      { text: b('Steam condenses on the skin, which gives out about 41 kJ per mole', 'Dampf kondensiert auf der Haut, dabei werden etwa 41 kJ pro Mol frei'), correct: true },
+    ],
+    explain: b('Condensing one mole of steam to liquid water at 100 °C gives out about 41 kJ, the same energy that boiling takes in. That is far more than the water then gives out by cooling down, so most of the burn comes from the condensing. The bonds inside the molecules stay as they are, and breaking them would cost energy, not release it.', 'Wenn ein Mol Dampf bei 100 °C zu flüssigem Wasser kondensiert, werden etwa 41 kJ frei, genau die Energie, die das Sieden aufnimmt. Das ist weit mehr, als das Wasser danach beim Abkühlen abgibt, also kommt der größte Teil der Verbrühung vom Kondensieren. Die Bindungen in den Molekülen bleiben, wie sie sind, und sie zu spalten würde Energie kosten, nicht freisetzen.') },
+  { id: 'i17t', unit: 17, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u17.diagram', 'u17.break-make'], targets: ['vapour-carries-energy', 'breaking-releases'],
+    prompt: b('Burning methane gives out 802.6 kJ/mol when the water ends up as vapour and 890.6 kJ/mol when it ends up as liquid (both at 25 °C). Where do the extra 88.0 kJ/mol come from?', 'Beim Verbrennen von Methan werden 802,6 kJ/mol frei, wenn das Wasser als Dampf entsteht, und 890,6 kJ/mol, wenn es flüssig entsteht (beide bei 25 °C). Woher kommen die zusätzlichen 88,0 kJ/mol?'),
+    options: [
+      { text: b('Two moles of water condense: 2 × 44.0 kJ more is given out', 'Zwei Mol Wasser kondensieren: Dabei werden 2 · 44,0 kJ zusätzlich frei'), correct: true },
+      { text: b('In the first case the vapour carries that energy away with it', 'Im ersten Fall nimmt der Dampf diese Energie mit'), mis: 'vapour-carries-energy' },
+      { text: b('Breaking the hydrogen bonds in liquid water releases it', 'Beim Spalten der Wasserstoffbrücken im flüssigen Wasser wird sie frei'), mis: 'breaking-releases' },
+      { text: b('Some of the CO₂ dissolves in the liquid water', 'Ein Teil des CO₂ löst sich im flüssigen Wasser') },
+    ],
+    explain: b('The only difference between the two cases is the state of the water: 2 mol of H₂O condense and give out 2 × 44.0 = 88.0 kJ more. Both end at 25 °C, so the vapour does not carry energy away; the molecules attracting each other in the liquid is what gives out the extra energy.', 'Der einzige Unterschied ist der Zustand des Wassers: 2 mol H₂O kondensieren und geben 2 · 44,0 = 88,0 kJ zusätzlich ab. Beide enden bei 25 °C, der Dampf nimmt also keine Energie mit; die Anziehung der Moleküle in der Flüssigkeit setzt die zusätzliche Energie frei.') },
   { id: 'i17r', unit: 17, kind: 'rank', format: 'rank', evidence: 'transfer', concepts: ['u17.diagram', 'u17.sign'], targets: ['dh-sign'], mis: 'dh-sign',
-    prompt: b('Rank by where the products sit on an energy diagram compared with the reactants, lowest first.', 'Ordne danach, wo die Produkte im Energiediagramm gegenüber den Edukten liegen, die tiefsten zuerst.'),
+    prompt: b('Rank by where the products sit on an energy diagram compared with the reactants, lowest first.', 'Ordne danach, wo die Produkte im Energiediagramm im Vergleich zu den Edukten liegen, die tiefsten zuerst.'),
     order: [
       b('thermite, ΔH = −851.8 kJ/mol', 'Thermitreaktion, ΔH = −851,8 kJ/mol'),
       b('hydrogen + chlorine, ΔH = −184.6 kJ/mol', 'Wasserstoff + Chlor, ΔH = −184,6 kJ/mol'),
