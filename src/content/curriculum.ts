@@ -225,7 +225,7 @@ export const UNITS: UnitInfo[] = [
   u(44, 10, 'Esters and condensation', 'Ester und Kondensation', 'Molecule Workbench', 3),
   u(45, 10, 'Polymers and biomolecules', 'Polymere und Biomoleküle', 'Molecule Workbench', 3),
 ];
-for (const n of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) unitByNumber(n).playable = true;
+for (const n of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]) unitByNumber(n).playable = true;
 function unitByNumber(n: number) { return UNITS.find((x) => x.n === n)!; }
 
 export const unitByN = (n: number) => UNITS.find((x) => x.n === n)!;

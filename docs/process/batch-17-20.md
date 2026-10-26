@@ -137,13 +137,13 @@ inverted German word order, and plain words ("heat", "Wärme", "the most you can
 
 - Concepts: u20.gibbs, u20.sign, u20.temperature, u20.crossover, u20.four-cases, u20.not-rate.
 - Engine: Energy Landscape, gibbs mode. Explore creates `ctx.energy({ mode: 'gibbs', start: 'ice-melt', reactions:
-  ['ice-melt', 'caco3', 'no2-dimer', 'h2o2'], controls: { temp: true } })`. Keep 'nh3' and 'water-boil' for
-  predictions and examples.
+  ['ice-melt', 'caco3', 'ethene-h2', 'h2o2'], controls: { temp: true } })`. Keep 'no2-dimer', 'nh3' and
+  'water-boil' for predictions and examples.
 - Tasks:
   - `ice` **key**: move the temperature across ice's melting point (`crossover('ice-melt', T)`).
   - `lime` **key**: find the temperature where limestone starts to decompose (`crossover('caco3', T)`).
   - `always` **key**: show a reaction that can run at every temperature (`reaction('h2o2')` then any `temp` event).
-  - `cold`: find a reaction that runs only when cold enough (`crossover('no2-dimer', T)`).
+  - `cold`: find a reaction that runs only when cold enough (`crossover('ethene-h2', T)`, 1129 K).
   - `reverse`: reverse a reaction (`reverse(id, true)`).
   - `never` **challenge**: find a reaction that cannot run by itself at any temperature (`reverse('h2o2', true)`:
     ΔH > 0, ΔS < 0).

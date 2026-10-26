@@ -18,8 +18,12 @@ import { UNIT13 } from './unit13';
 import { UNIT14 } from './unit14';
 import { UNIT15 } from './unit15';
 import { UNIT16 } from './unit16';
+import { UNIT17 } from './unit17';
+import { UNIT18 } from './unit18';
+import { UNIT19 } from './unit19';
+import { UNIT20 } from './unit20';
 
-export const CONTENT_UNITS: UnitContent[] = [UNIT1, UNIT2, UNIT3, UNIT4, UNIT5, UNIT7, UNIT8, UNIT9, UNIT10, UNIT11, UNIT12, UNIT13, UNIT14, UNIT15, UNIT16];
+export const CONTENT_UNITS: UnitContent[] = [UNIT1, UNIT2, UNIT3, UNIT4, UNIT5, UNIT7, UNIT8, UNIT9, UNIT10, UNIT11, UNIT12, UNIT13, UNIT14, UNIT15, UNIT16, UNIT17, UNIT18, UNIT19, UNIT20];
 
 for (const U of CONTENT_UNITS) {
   for (const m of U.misconceptions) if (!MISCONCEPTIONS.some((x) => x.id === m.id)) MISCONCEPTIONS.push({ ...m, unit: U.n });

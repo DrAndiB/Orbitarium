@@ -874,5 +874,395 @@
   "lang": "en",
   "source": "r7-fix",
   "text": "The most you can make is the theoretical yield."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "u17-helper",
+  "text": "When bonds break it costs energy, and when new bonds form energy comes out. The flame gives out heat because the new bonds are stronger than the old ones, so more energy comes out than goes in. If ΔH is negative the reaction is exothermic and warms the surroundings. You work it out as bonds broken minus bonds formed. The table numbers are only averages, so the answer is a bit off from the real measured value."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "u17-helper",
+  "text": "Bindungen spalten kostet Energie, beim Knüpfen wird Energie frei. Exotherm bedeutet ΔH < 0, die Energie geht an die Umgebung. ΔH = gespalten − geknüpft. Wenn die neuen Bindungen stärker sind, wird mehr Energie frei als aufgenommen. Die Tabellenwerte sind mittlere Bindungsenthalpien, deshalb weicht das Ergebnis vom Messwert ab."
+ },
+ {
+  "unit": 17,
+  "lang": "en",
+  "source": "u17-helper",
+  "text": "Breaking bonds releases energy, so burning methane gives out heat. A negative ΔH means the reaction takes in energy. The bonds formed are stronger."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "u17-helper",
+  "text": "Beim Spalten von Bindungen wird Energie frei. Ein negatives ΔH bedeutet, dass die Reaktion Energie aufnimmt. Es wird mehr Energie frei."
+ },
+ {
+  "unit": 17,
+  "lang": "de",
+  "source": "u17-helper",
+  "text": "Ist ΔH negativ, gibt die Reaktion Wärme an die Umgebung ab."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "It doesn't matter which way you go, the total energy change is the same. If you run a step backwards you flip the sign. Elements like oxygen count as zero. You take the products minus the reactants. That lets you work out values you can't measure, like for carbon monoxide."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "Enthalpy is a state function, so ΔH is path-independent. Reversing a reaction changes the sign of ΔH; scaling multiplies it. ΔfH° of elements in their standard states is zero by definition. ΔrH° = ΣΔfH°(products) − ΣΔfH°(reactants). Hess cycles such as the Born–Haber cycle give quantities like lattice enthalpies that are not directly measurable."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "u18-helper",
+  "text": "Satz von Hess: ΔH ist unabhängig vom Reaktionsweg, nur Anfangs- und Endzustand zählen. Bei Umkehrung ändert sich das Vorzeichen. Elemente haben ΔfH = 0. ΔrH = ΣΔfH(Produkte) − ΣΔfH(Edukte). So kann man z. B. ΔfH von CO berechnen, das man nicht direkt messen kann."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "u18-helper",
+  "text": "Egal auf welchem Weg, am Ende kommt dasselbe ΔH heraus. Das Vorzeichen ändert sich, wenn man die Reaktion umkehrt. Für Elemente ist die Bildungsenthalpie null. Man rechnet Produkte minus Edukte. Damit kann man Werte bestimmen, die sich nicht direkt messen lassen, zum Beispiel die Gitterenergie."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "u18-helper",
+  "text": "ΔH hängt nicht vom Weg ab. Umkehren = Vorzeichenwechsel. Elemente: ΔfH = 0. ΔrH = Produkte − Edukte. Mit dem Kreisprozess bestimmt man indirekt, was man nicht messen kann."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "The heat you get is the same whichever route you take. Run a step backwards and minus becomes plus. Elements have no enthalpy of formation. Subtract the reactants from the products. Hess's law lets you find values that are impossible to measure."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "Hess, route, cycle, reverse, sign, elements, zero, products, reactants, lattice energy"
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "ΔH depends on the route you take. A reversed step keeps its sign, so you add all the values. Elements like O2 have an enthalpy of formation that must be counted."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "u18-helper",
+  "text": "ΔH hängt vom Reaktionsweg ab. Ein umgekehrter Schritt behält sein Vorzeichen. Elemente wie O2 haben eine Bildungsenthalpie, die man mitrechnen muss."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "ΔH does not stay the same on every route. Reversing a step does not change the sign. Elements do not count zero. It is not products minus reactants. Hess's law does not help with values you cannot measure."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "u18-helper",
+  "text": "ΔH ist nicht auf jedem Weg gleich. Beim Umkehren ändert sich das Vorzeichen nicht. Elemente haben nicht den Wert null. Man rechnet nicht Produkte minus Edukte. Mit dem Satz von Hess kann man keine Werte berechnen, die man nicht messen kann."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "u18-helper",
+  "text": "Das Vorzeichen ändert sich, wenn man die Reaktion umkehrt. Nur der Anfang und das Ende zählen, nicht der Weg. Null ist der Wert für Elemente im Standardzustand. Von den Produkten zieht man die Edukte ab. Den Wert für CO kann man nicht direkt messen, man berechnet ihn über einen Kreisprozess."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "However you get there, ΔH comes out the same. If you go backwards, the sign flips. Elements are zero. ΔH = products − reactants. It lets you calculate things nobody can measure directly."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "Since H is a state function, ΔrH is independent of the pathway. ΔH(reverse) = −ΔH(forward). By convention ΔfH° = 0 for elements in their reference states. The lattice enthalpy of NaCl is obtained indirectly from a Born–Haber cycle."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "Different routes give different amounts of heat. When you turn a step around its ΔH stays the same. O2 needs its bond energy of 498 as its value."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "u18-helper",
+  "text": "ΔH does not depend only on the start and the end. Elements are not zero."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-plain-en",
+  "text": "Ice can melt on its own even though it takes in heat from the room. Entropy is about how many ways you can arrange the particles and their energy. Things spread out because there are far more spread out arrangements, it is just chance. A gas has more entropy than a liquid and a liquid more than a solid. If a reaction makes more gas the entropy goes up."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-tech-en",
+  "text": "Endothermic processes such as dissolving NH4NO3 are spontaneous when ΔS is large enough. S = k ln W, where W is the number of microstates. The dispersed macrostate is the most probable since it has the most microstates. S(gas) > S(liquid) > S(solid). Δn(gas) > 0 gives ΔS > 0."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-jonas-de",
+  "text": "Endotherme Vorgänge können freiwillig ablaufen, z. B. Eis schmilzt bei 20 °C. Die Entropie gibt die Anzahl der Anordnungsmöglichkeiten (Mikrozustände) an. Teilchen verteilen sich, weil die verteilte Anordnung viel wahrscheinlicher ist. Gas > fl. > fest. Wenn Δn(Gas) > 0, dann ist ΔS > 0."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-plain-de",
+  "text": "Eis schmilzt von selbst, obwohl es Wärme aus der Umgebung aufnimmt. Entropie bedeutet, wie viele Möglichkeiten es gibt, Teilchen und Energie anzuordnen. Die Teilchen verteilen sich zufällig, und verteilt ist viel wahrscheinlicher. Beim Verdampfen steigt die Entropie stark. Wenn ein Gas entsteht, nimmt die Entropie zu."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-inverted-de",
+  "text": "Obwohl das Eis Wärme aufnimmt, schmilzt es von selbst. Ein Maß für die Möglichkeiten der Anordnung ist die Entropie. Weil verteilte Anordnungen in der Überzahl sind, verteilen sich die Teilchen. Am größten ist die Entropie im Gas, kleiner in der Flüssigkeit, am kleinsten im Feststoff. Mehr Gasteilchen nach der Reaktion: ΔS positiv."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-effect-first-en",
+  "text": "The entropy goes up when a solid melts. Ice melts by itself, even though it absorbs energy. Gases mix because mixed arrangements are far more likely. Positive ΔS when more gas is produced."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-keywords-en",
+  "text": "entropy ways microstates spread probable gas liquid solid endothermic spontaneous moles gas positive"
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-mis-en",
+  "text": "Only exothermic processes can run by themselves, so the ice must release energy somewhere. Entropy is just how messy things look. The particles spread because they want more room. Gases are messier."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-mis-de",
+  "text": "Nur exotherme Vorgänge laufen von selbst ab, also muss das Eis heimlich Energie abgeben. Entropie ist sichtbare Unordnung. Die Teilchen verteilen sich, weil sie mehr Platz wollen."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-mis-mixed-en",
+  "text": "Particles spread out because spread-out arrangements are more likely, but really they want more room."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-neg-en",
+  "text": "Endothermic processes cannot run by themselves. Entropy has nothing to do with the number of ways. Particles do not spread because of probability. Gas does not have more entropy than a solid. More moles of gas does not make ΔS positive."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-neg-de",
+  "text": "Endotherme Vorgänge können nicht freiwillig ablaufen. Die Entropie hat nichts mit der Zahl der Möglichkeiten zu tun. Teilchen verteilen sich nicht zufällig. Ein Gas hat keine höhere Entropie als ein Feststoff. Mehr Mol Gas machen ΔS nicht positiv."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-eq-de",
+  "text": "ΔS > 0 bei Zunahme der Gasteilchen. S = k · ln W. Endotherme Vorgänge laufen trotzdem spontan ab."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-marie-en",
+  "text": "Things can happen by themselves even if they need heat, like the cold pack. It's about how many ways the bits can be arranged, the more ways the higher the entropy. Spreading out is just much more likely. Gas has the most entropy."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-result-only-en",
+  "text": "Entropy increases. The ice melts. It is spontaneous."
+ },
+ {
+  "unit": 19,
+  "lang": "en",
+  "source": "u19-helper-neg-conc-en",
+  "text": "Although the cold pack takes in energy, it does not run by itself."
+ },
+ {
+  "unit": 19,
+  "lang": "de",
+  "source": "u19-helper-effect2-de",
+  "text": "Das Eis schmilzt von selbst, auch wenn es dabei Wärme aufnimmt."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "Delta G puts the heat and the disorder together. If delta G is negative the reaction can go on its own. Temperature matters because at high temperature the entropy part counts more and can flip the sign. The switch is at the temperature where delta G is zero, which is delta H divided by delta S. A negative delta G doesn't mean the reaction is fast, diamonds turn into graphite but way too slowly."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "The Gibbs energy change, ΔG = ΔH − TΔS, weighs the enthalpy change against the entropy change. A reaction is thermodynamically feasible (exergonic) when ΔG < 0. Because the entropy term is multiplied by T, raising the temperature can change the sign of ΔG for reactions where ΔH and ΔS have the same sign. The crossover is at T = ΔH/ΔS. ΔG gives no information about kinetics: a reaction with ΔG < 0 can still be extremely slow."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Gibbs-Helmholtz: ΔG = ΔH − T·ΔS, also Enthalpie und Entropie zusammen. Ist ΔG < 0, läuft die Rkt. freiwillig ab (exergon). Die Temp. entscheidet bei gleichem Vorzeichen von ΔH und ΔS, ob ΔG negativ wird. Grenztemp.: T = ΔH/ΔS (ΔS in kJ umrechnen). Spontan heißt nicht schnell, ΔG sagt nichts über die Geschwindigkeit."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Bei ΔG kommen Wärme und Unordnung zusammen. Wenn ΔG negativ ist, läuft die Reaktion von selbst ab. Wenn es heißer wird, zählt die Entropie mehr, deshalb kann sich das Vorzeichen umdrehen. Der Wechsel ist bei der Temperatur, bei der ΔG null ist. Freiwillig heißt aber nicht, dass es schnell geht."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG ΔH TΔS entropy enthalpy exergonic temperature crossover kinetics rate"
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "A reaction can only run by itself if it is exothermic. A negative ΔG means the reaction is fast. Temperature does not decide whether a reaction runs."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Nur exotherme Reaktionen laufen freiwillig ab. Ein negatives ΔG bedeutet, dass die Reaktion schnell abläuft. Ob eine Reaktion abläuft, hängt nicht von der Temperatur ab."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG does not combine enthalpy and entropy. A negative ΔG does not mean the reaction can run by itself. Temperature cannot change the sign of ΔG. The switch is not at ΔH/ΔS."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "ΔG verbindet nicht Enthalpie und Entropie. Ein negatives ΔG bedeutet nicht, dass die Reaktion freiwillig abläuft. Die Temperatur kann das Vorzeichen von ΔG nicht umkehren. Der Wechsel liegt nicht bei ΔH/ΔS."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG = 0 at T = ΔH / ΔS."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "If ΔG is positive the reaction can run by itself."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Die freie Enthalpie berücksichtigt die Wärme und die Entropie. Bei hoher Temperatur überwiegt der Entropieterm."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "If ΔH < 0 and ΔS > 0, ΔG is negative at every temperature, so the reaction can run by itself independent of temperature."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "The reaction can run by itself when ΔG is negative."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG = ΔH - TΔS. ΔG<0 -> spontaneous. T decides the sign if ΔH and ΔS have the same sign. T = ΔH/ΔS. Spontaneous ≠ fast."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Freiwillig läuft eine Reaktion ab, wenn ΔG negativ ist."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Erhöht man die Temperatur, wird der Entropieterm größer und ΔG kann negativ werden."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG combines heat and disorder."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "When ΔG is negative the reaction is spontaneous. If ΔG is positive, the reverse reaction can run by itself."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG says whether a reaction can run, not how fast. A negative ΔG means the reaction is fast."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Bei hoher Temperatur überwiegt der Entropieterm. Die Temperatur spielt keine Rolle dafür, ob eine Reaktion abläuft."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG is the enthalpy change minus the temperature times the entropy change, so it balances energy against spreading."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "Nach der Gibbs-Helmholtz-Gleichung gilt ΔG = ΔH − T · ΔS. Bei ΔG = 0 liegt die Grenztemperatur T = ΔH : ΔS."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG is zero for a reaction at equilibrium."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "Even if ΔG is negative, the reaction might be very slow, like diamond turning into graphite."
+ },
+ {
+  "unit": 20,
+  "lang": "de",
+  "source": "u20-helper",
+  "text": "ΔG macht keine Aussage über die Geschwindigkeit einer Reaktion."
+ },
+ {
+  "unit": 20,
+  "lang": "en",
+  "source": "u20-helper",
+  "text": "ΔG = ΔH − TΔS. Only exothermic reactions can run by themselves."
  }
 ]

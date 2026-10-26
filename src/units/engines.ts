@@ -471,7 +471,7 @@ export const ENGINE_U19: UnitEngine = {
 };
 
 // ---------- unit 20: free energy ----------
-export const U20_REACTIONS = ['ice-melt', 'caco3', 'no2-dimer', 'h2o2'];
+export const U20_REACTIONS = ['ice-melt', 'caco3', 'ethene-h2', 'h2o2'];
 export const ENGINE_U20: UnitEngine = {
   explore(ctx, mark) {
     const ui = ctx.energy({ mode: 'gibbs', start: 'ice-melt', reactions: U20_REACTIONS, controls: { temp: true } });
@@ -479,7 +479,7 @@ export const ENGINE_U20: UnitEngine = {
     let reversed = false;
     ui.on('reaction', (id: string) => { current = id; reversed = false; });
     ui.on('temp', () => { if (current === 'h2o2' && !reversed) mark('always'); });
-    ui.on('crossover', (id: string) => { if (id === 'ice-melt') mark('ice'); if (id === 'caco3') mark('lime'); if (id === 'no2-dimer') mark('cold'); });
+    ui.on('crossover', (id: string) => { if (id === 'ice-melt') mark('ice'); if (id === 'caco3') mark('lime'); if (id === 'ethene-h2') mark('cold'); });
     ui.on('reverse', (id: string, on: boolean) => { reversed = on; if (on) { mark('reverse'); if (id === 'h2o2') mark('never'); } });
     return energyEngine(ui);
   },

@@ -34,7 +34,7 @@ const ENGINES: LabEngine[] = [
   { name: { en: 'Energy Landscape: bonds', de: 'Energielandschaft: Bindungen' }, units: [17], open: () => new EnergyLandscapeUI({ mode: 'bonds', start: 'hcl', reactions: [...U17_REACTIONS, 'hf', 'ch4'] }) },
   { name: { en: 'Energy Landscape: Hess cycles', de: 'Energielandschaft: Hess-Kreisprozesse' }, units: [18], open: () => new EnergyLandscapeUI({ mode: 'hess', start: 'c-co', reactions: U18_TARGETS, steps: U18_STEPS }) },
   { name: { en: 'Spreading out (entropy)', de: 'Ausbreitung (Entropie)' }, units: [19], open: () => new ParticleBoxUI({ start: 'Ar', subs: ['Ar', 'H2O'], temp: 20, controls: { spread: true, temp: true, compare: false } }) },
-  { name: { en: 'Energy Landscape: free energy', de: 'Energielandschaft: Freie Enthalpie' }, units: [20], open: () => new EnergyLandscapeUI({ mode: 'gibbs', start: 'caco3', reactions: [...U20_REACTIONS, 'nh3', 'water-boil', 'so2-so3'] }) },
+  { name: { en: 'Energy Landscape: free energy', de: 'Energielandschaft: Freie Enthalpie' }, units: [20], open: () => new EnergyLandscapeUI({ mode: 'gibbs', start: 'caco3', reactions: [...U20_REACTIONS, 'no2-dimer', 'nh3', 'water-boil', 'so2-so3'] }) },
 ];
 
 const COMING: { name: string; units: string; phase: number }[] = [

@@ -37,9 +37,13 @@ import { unit13 } from '../units/u13';
 import { unit14 } from '../units/u14';
 import { unit15 } from '../units/u15';
 import { unit16 } from '../units/u16';
+import { unit17 } from '../units/u17';
+import { unit18 } from '../units/u18';
+import { unit19 } from '../units/u19';
+import { unit20 } from '../units/u20';
 import type { StepCtx, UnitPlayer } from '../units/types';
 
-const PLAYERS: Record<number, UnitPlayer> = { 0: unit0, 1: unit1, 2: unit2, 3: unit3, 4: unit4, 5: unit5, 6: unit6, 7: unit7, 8: unit8, 9: unit9, 10: unit10, 11: unit11, 12: unit12, 13: unit13, 14: unit14, 15: unit15, 16: unit16 };
+const PLAYERS: Record<number, UnitPlayer> = { 0: unit0, 1: unit1, 2: unit2, 3: unit3, 4: unit4, 5: unit5, 6: unit6, 7: unit7, 8: unit8, 9: unit9, 10: unit10, 11: unit11, 12: unit12, 13: unit13, 14: unit14, 15: unit15, 16: unit16, 17: unit17, 18: unit18, 19: unit19, 20: unit20 };
 const STEPS = ['stepWarmup', 'stepPuzzle', 'stepExplore', 'stepPredict', 'stepExamples', 'stepExplain', 'stepWrap'];
 /** Typical minutes per step, for the "minutes left" line. Exploring varies most. */
 const MINUTES = [3, 3, 7, 4, 5, 4, 1];

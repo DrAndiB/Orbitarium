@@ -191,7 +191,7 @@ async def explore(pg):
                 await pg.wait_for_timeout(500)
             await temp(260); await temp(290)                                  # ice across 273 K
             await chip('caco3'); await temp(1000); await temp(1200)           # limestone across 1119 K
-            await chip('no2-dimer'); await temp(330); await temp(300)         # NO2 across 315 K
+            await chip('ethene-h2'); await temp(1200); await temp(1050)     # ethene + H2 across 1129 K
             await chip('h2o2'); await temp(400)                               # runs at every temperature
             await btn('Reverse the reaction', 'Reaktion umkehren', 800)       # never runs
     elif UNIT == 19:
