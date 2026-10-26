@@ -10,15 +10,19 @@
 // − 52.4 = −1411.1; ethane 2(−393.51) + 3(−285.83) + 84.0 = −1560.5; hydrogen −285.8. Route: −1411.1 − 285.8 + 1560.5
 // = −136.4 (all added −3257.4; hydrogen left out +149.4). Ethanol (deeper): c2h5oh-burn −1366.91; 2(−393.5) + 3(−285.8)
 // = −1644.4; −1644.4 + 1366.9 = −277.5 against the table's −277.6 (rounding).
-// Born–Haber cycle for NaCl: lattice energy 787 kJ/mol from ions.ts; first ionisation energy of Na 495.8 (atoms.ts, 496);
-// Cl atoms ½ × 243 = 121.5 (bonds.ts, 122). Atomisation of Na +107, of ½ Cl₂ +122, electron affinity of Cl −349,
-// lattice −787, ΔfH −411: LibreTexts, Ursinus CHEM322, "6.4.02 Born Haber Cycles" (fetched), which also says lattice
-// enthalpies cannot be measured directly. 107 + 496 + 122 − 349 − 787 = −411 against ΔfH(NaCl) −411.2 (thermo.ts).
+// Born–Haber cycle for NaCl, used to FIND the lattice energy, not to check it: the 787 kJ/mol in ions.ts is itself a
+// Born–Haber value (Purdue), so a match with it would prove nothing. Inputs: measured ΔfH(NaCl) −411.2 (thermo.ts,
+// OpenStax Appendix G); first ionisation energy of Na 495.8 (atoms.ts, 496); Cl atoms ½ × 243 = 121.5 (bonds.ts, 122);
+// electron affinity of Cl 349 kJ per mole of atoms (unit03.ts, CRC 348.6); atomisation of Na +107 (LibreTexts, Ursinus
+// CHEM322, "6.4.02 Born Haber Cycles", fetched 2026-10-26: Na +107, Na IE +496, Cl +122, EA −349, lattice −787, ΔfH −411;
+// "It is impossible to measure the enthalpy change", "lattice enthalpies always have to be calculated"). The four known
+// steps: 107 + 122 + 496 − 349 = +376; lattice (formation) = −411.2 − 376 = −787.2, which rounds to the unit 4 value 787.
 // Other sources (fetched): "the combustion of carbon often produces both carbon monoxide and carbon dioxide" (Science
-// Ready, "Hess's Law", scienceready.com.au/pages/hess-law); thermite rail welding, molten steel separated at about
-// 2400 °C (IRFCA, "Thermit (Aluminothermic) Welding Method for Rail Joints", irfca.org/docs/thermit-welding.html);
+// Ready, "Hess's Law", scienceready.com.au/pages/hess-law); thermite rail welding, molten metal separated at about
+// 2400 °C (IRFCA, "Thermit (Aluminothermic) Welding Method for Rail Joints", irfca.org/docs/thermit-welding.html; the
+// reaction gives liquid iron, steel only with the alloying additives in the welding portion);
 // condensing boilers condense the flue-gas vapour and get "around 11 % more thermal energy" from natural gas (Vaillant,
-// "Non-condensing vs condensing technology"); 890.6 / 802.6 = 1.110 from thermo.ts agrees.
+// "Non-condensing vs condensing technology"); 890.6 / 802.6 = 1.110 from thermo.ts agrees: the most there is to gain.
 import type { Bi } from '../i18n';
 import type { ChoiceItem, FlawItem, EstimateItem } from './items';
 import type { Idea } from './unit06';
@@ -48,6 +52,15 @@ const PATH_EN = any(
   /\b(however|whichever way|whatever way|no matter how) (you|it|we) (get there|go|get from)\b/,
   /\bhowever (you|it|we) (get|go|goes|gets)\b.{0,50}\b(same|equal)\b|\b(same|equal)\b.{0,40}\bhowever (you|it|we) (get|go|goes|gets)\b/,
   /\b(does not depend on|doesn't depend on|do not depend on|don't depend on) (the )?(route|path|way|steps)\b/,
+  // Plain wording: "it only matters where you start and where you end up, not how you get there".
+  /\b(only|just)\b.{0,12}\b(matters?|counts?)\b.{0,30}\b(start\w*|begin\w*|beginning|initial|reactants|what you (start|begin) with)\b/,
+  /\b(all that|what|the only thing that) (matters?|counts?)\b.{0,25}\b(start\w*|begin\w*|beginning|initial|reactants|end\w*|final|finish\w*)\b/,
+  /\b(depend\w*|determined|decided|set|fixed)( on| by)? (just |only )?where (you|it|things?|the reaction) (start\w*|begin\w*)\b/,
+  /\bwhere (you|it|things?|the reaction) (start\w*|begin\w*)\b.{0,30}\bwhere (you|it|things?|the reaction) (end\w*|finish\w*|stop\w*|arrive\w*|get to)\b/,
+  /\bnot how (you|it|we|the reaction) (get|gets|got|go|goes|reach\w*|arrive\w*)\b/,
+  /\b(doesn't matter|does not matter|doesn't make a difference|does not make a difference|never mind) (how|which way|what way)\b/,
+  /\b(route|path|way|how you get there)\b.{0,20}\b(doesn't change|does not change|doesn't affect|does not affect|makes no difference to|make no difference to|has no effect on|have no effect on|has no influence on)\b.{0,25}\b(answer|result|total|value|δh|dh|enthalpy|energy|outcome|sum|heat)\b/,
+  /\b(route|path|way|how you get there)\b.{0,20}\b(doesn't matter|does not matter|isn't important|is not important|is irrelevant|are irrelevant)\b/,
 );
 const PATH_DE = any(
   /(hängt|hängen|abhängig|bestimmt)\b.{0,40}\b(nur|lediglich|allein|ausschließlich)\b.{0,40}(anfang\w*|start\w*|ausgang\w*|edukt\w*|beginn\w*)/,
@@ -58,6 +71,15 @@ const PATH_DE = any(
   /(jede\w*|alle\w*|beide\w*|verschiedene\w*|unterschiedliche\w*) (wege?|routen?|reaktionswege?)\b.{0,50}(gleich\w*|dasselbe|derselbe|denselben|demselben|identisch\w*)/,
   /(gleich\w*|dasselbe|derselbe|denselben|identisch\w*)\b.{0,40}(egal|jede\w*|alle\w*|beide\w*) (wege?|routen?|reaktionswege?)/,
   /(hängt nicht vom (reaktions)?weg|hängt nicht von dem (reaktions)?weg|nicht vom (reaktions)?weg abhängig|nicht vom weg ab)/,
+  // Plain wording: "es kommt nur darauf an, wo man anfängt und wo man ankommt; egal, wie man dahin kommt".
+  /\bwo (man|es|die reaktion) (anfängt|startet|beginnt|losgeht)\b/,
+  /kommt (es )?(nur|allein|lediglich|ausschließlich) auf (den |die |das )?(anfang\w*|start\w*|ausgang\w*)/,
+  /(zählt|zählen|entscheidet|entscheiden|ist entscheidend|sind entscheidend) (nur|allein|lediglich|ausschließlich) (der |die |das |den )?(anfang\w*|start\w*|ausgang\w*)/,
+  /nur darauf an,? (wo|womit|was)\b.{0,30}(anfängt|anfang|startet|start|beginnt|losgeht|hat)/,
+  /(egal|gleichgültig|unwichtig),? (wie|auf welchem weg|welchen weg) (man|es|die reaktion) (dahin|dorthin|zum ziel|ans ziel|hin|ankommt|gelangt)/,
+  /(weg|route|zwischenschritt\w*|umweg\w*)\b.{0,25}(spielt|spielen) keine rolle/,
+  /(weg|route|zwischenschritt\w*|umweg\w*)\b.{0,25}(ist|sind) (egal|unwichtig|gleichgültig|irrelevant|nicht wichtig)/,
+  /(weg|route)\b.{0,15}(ändert|verändert|beeinflusst) (nichts am ergebnis|nichts am wert|das ergebnis nicht|den wert nicht)/,
 );
 const PATH_DEPENDENT = {
   en: unless(String.raw`\bnot\b|n't|\bno\b|\bnever\b|\bonly\b|\bjust\b|independen|regardless|whatever|whichever|matter`,
@@ -67,10 +89,13 @@ const PATH_DEPENDENT = {
 };
 
 // Idea 2, reverse: turning a step round flips the sign of its ΔH.
-const REV_EN = /(revers\w*|backwards?|turn\w* (it |them |the \w+ |a \w+ )?(round|around)|flip\w* (the |a |it )?(step|reaction|equation|card)?|opposite direction|other direction|other way( round| around)?|run\w* (it |the \w+ )?(backwards|in reverse)|invert\w*|undo\w*)/;
-const SIGN_EN = /(sign\w*( of (its |the )?(δh|dh|delta h|enthalpy( change)?|value))? (flips?|changes?|switch\w*|swaps?|revers\w*|turns?|is (flipped|changed|reversed|swapped|switched)|becomes (the )?opposite)|(chang|flipp?|switch|swapp?|revers)(e|es|ed|ing|s)? (the |its )?sign|opposite sign|other sign|minus becomes plus|plus becomes minus|negative becomes positive|positive becomes negative|- becomes \+|\+ becomes -|from - to \+|from \+ to -|from negative to positive|from positive to negative|multipl\w* (it |δh )?by -1|times -1|= ?- ?δh|= ?- ?dh|[×x*·] ?\(?-1|exothermic becomes endothermic|endothermic becomes exothermic|(same|equal) (size|value|number|amount|magnitude)\b.{0,25}\b(opposite|other|different) sign)/;
+const REV_EN = /(revers\w*|backwards?|turn\w* (it |them |the \w+ |a \w+ )?(round|around)|flip\w* (the |a |it )?(step|reaction|equation|card)?|opposite direction|other direction|other way( round| around)?|run\w* (it |the \w+ )?(backwards|in reverse)|in reverse|the opposite way|the wrong way round|swap\w* (the )?(reactants|sides)|switch\w* (the )?(reactants|sides)|invert\w*|undo\w*)/;
+const SIGN_EN = /(sign\w*( of (its |the )?(δh|dh|delta h|enthalpy( change)?|value))? (flips?|changes?|switch\w*|swaps?|revers\w*|turns?|is (flipped|changed|reversed|swapped|switched)|becomes (the )?opposite)|(chang|flipp?|switch|swapp?|revers)(e|es|ed|ing|s)? (the |its )?sign|opposite sign|other sign|(the )?minus (becomes|turns into|turns to|changes to|changes into|goes to) (a |the )?plus|(the )?plus (becomes|turns into|turns to|changes to|changes into|goes to) (a |the )?minus|negative (becomes|turns into|turns to|changes to) positive|positive (becomes|turns into|turns to|changes to) negative|- becomes \+|\+ becomes -|from - to \+|from \+ to -|from negative to positive|from positive to negative|multipl\w* (it |δh )?by -1|times -1|= ?- ?δh|= ?- ?dh|[×x*·] ?\(?-1|exothermic becomes endothermic|endothermic becomes exothermic|(same|equal) (size|value|number|amount|magnitude)\b.{0,25}\b(opposite|other|different) sign|takes? in (exactly |just )?(what|the same|as much|the energy) (it |the reaction |the forward \w+ )?(gave|gives|released|releases)( out)?)/;
+// "Reverse a step and the sign of its ΔH flips" is split at "and" by the matcher, so the sign clause may stand alone.
+const SIGN_ONLY_EN = /(\bsigns?( of (its |the )?(δh|dh|delta h|enthalpy( change)?|value|number))? (flips?|changes?|switch\w*|swaps?|revers\w*|turns?|is (flipped|changed|reversed|swapped|switched))\b|\b(chang|flipp?|switch|swapp?|revers)(e|es|ed|ing|s)? (the |its )?sign\b|\bopposite sign\b)/;
+const SIGN_ONLY_DE = /(vorzeichen\w*( von δh| des δh| der reaktionsenthalpie| seines δh| ihres δh)? (wechsel\w*|änder\w*|dreh\w*|kehr\w*|vertausch\w*|umgekehrt|wird umgedreht)|(wechsel\w*|änder\w*|dreht|kehrt|vertauscht|umgedreht)\b.{0,25}vorzeichen|vorzeichenwechsel|vorzeichenumkehr|umgekehrte\w* vorzeichen|entgegengesetzte\w* vorzeichen)/;
 const REV_DE = /(umkehr\w*|umgekehrt\w*|umgedreht\w*|umdreh\w*|rückwärts|rückreaktion\w*|gegenrichtung|gegenreaktion\w*|andere\w* richtung|kehrt? .{0,30}\bum\b|dreht? .{0,30}\bum\b|kehren .{0,30}\bum\b|drehen .{0,30}\bum\b)/;
-const SIGN_DE = /(vorzeichen\w*( von δh| des δh| der reaktionsenthalpie)? (wechsel\w*|änder\w*|dreh\w*|kehr\w*|vertausch\w*|umgekehrt|wird umgedreht)|(wechsel\w*|änder\w*|dreht|kehrt|vertauscht|umgedreht)\b.{0,25}vorzeichen|vorzeichenwechsel|vorzeichenumkehr|anderes vorzeichen|umgekehrte\w* vorzeichen|entgegengesetzte\w* vorzeichen|aus minus wird plus|aus plus wird minus|aus - wird \+|aus \+ wird -|aus negativ wird positiv|aus positiv wird negativ|aus exotherm wird endotherm|aus endotherm wird exotherm|mal ?\(?-1|[·*×] ?\(?-1|gleiche\w* betrag\b.{0,30}(ander\w*|umgekehrt\w*|entgegengesetzt\w*) vorzeichen)/;
+const SIGN_DE = /(vorzeichen\w*( von δh| des δh| der reaktionsenthalpie)? (wechsel\w*|änder\w*|dreh\w*|kehr\w*|vertausch\w*|umgekehrt|wird umgedreht)|(wechsel\w*|änder\w*|dreht|kehrt|vertauscht|umgedreht)\b.{0,25}vorzeichen|vorzeichenwechsel|vorzeichenumkehr|anderes vorzeichen|umgekehrte\w* vorzeichen|entgegengesetzte\w* vorzeichen|aus minus wird plus|aus plus wird minus|aus - wird \+|aus \+ wird -|aus negativ wird positiv|aus positiv wird negativ|aus exotherm wird endotherm|aus endotherm wird exotherm|(plus|minus|positiv|negativ) wird (zu )?(minus|plus|negativ|positiv)|wird aus (minus|plus|negativ|positiv) (plus|minus|positiv|negativ)|mal ?\(?-1|[·*×] ?\(?-1|gleiche\w* betrag\b.{0,30}(ander\w*|umgekehrt\w*|entgegengesetzt\w*) vorzeichen)/;
 const REVERSE_KEEPS = {
   en: unless(String.raw`\bnot\b|n't|\bno\b|\bnever\b|opposite|flips|chang|switch|swap`,
     /(revers\w*|backwards|turn\w* (it |them |the \w+ )?(round|around)|flipped (step|reaction|card))\b.{0,40}\b(keeps? (the |its )?(same )?sign|same sign|sign (stays|remains|is kept|is the same)|(stays|remains) (negative|positive|the same))/),
@@ -82,7 +107,7 @@ const REVERSE_KEEPS = {
 const ELEM_EN = /\b(elements?|o[2₂]|h[2₂]|n[2₂]|cl[2₂]|graphite|oxygen gas)\b/;
 const ZERO_EN = /(\bzero\b|(?<![\d.,])0(?![\d.,]?\d)|no enthalpy of formation|no formation enthalpy|no δfh|no δhf|no δ_fh|nothing)/;
 const ELEM_DE = /(element\w*|o[2₂]|h[2₂]|n[2₂]|cl[2₂]|graphit\w*)/;
-const ZERO_DE = /(\bnull\b|(?<![\d.,])0(?![\d.,]?\d)|keine bildungsenthalpie|keine standardbildungsenthalpie|nicht mitgerechnet|nicht mitgezählt|zählen nicht mit|nichts)/;
+const ZERO_DE = /(\bnull\w*|(?<![\d.,])0(?![\d.,]?\d)|keine bildungsenthalpie|keine standardbildungsenthalpie|nicht mitgerechnet|nicht mitgezählt|zählen nicht mit|nichts)/;
 const ELEMENTS_NONZERO = {
   en: unless(String.raw`\bnot\b|n't|\bno\b|\bnever\b|zero|(?<![\d.,])0(?![\d.,]?\d)`,
     /\b(elements?|o[2₂]|oxygen|h[2₂]|hydrogen)\b.{0,30}\b(has|have|needs?|must|count|counts|gets?|carr(y|ies))\b.{0,25}(enthalp\w* of formation|formation enthalp\w*|δfh|δhf|δ_fh|value|bond energy|bond enthalpy|498)/),
@@ -97,6 +122,9 @@ const PR_EN = any(
   /\bsubtract\w* .{0,40}\breactants?\b.{0,30}\bfrom .{0,30}\bproducts?\b/,
   /\b(take|takes|taking)( away)? .{0,30}\breactants?\b.{0,20}\b(from|away from|off) .{0,30}\bproducts?\b/,
   /\bproducts?\b.{0,40}\b(take away|takes away|less|subtract\w*)\b.{0,40}\breactants?\b/,
+  // Plain wording: "take the formation energy of what you make and take away that of what you started with".
+  /\b(subtract\w*|take|takes|taking|deduct\w*|minus|less)( away| off)?\b.{0,40}\b(reactants?|starting (materials?|substances?|stuff|chemicals?)|what (you|we) (started|start|began|begin) with|what goes in|what you put in|what you had)\b/,
+  /\b(products?|what (you|we) (make|get|end up with)|what comes out|the end|the final)\b.{0,40}\b(minus|take away|takes away|subtract\w*)\b.{0,40}\b(reactants?|start\w*|initial|what (you|we) (started|start|began|begin) with)\b/,
 );
 const PR_DE = any(
   new RegExp(`produkt\\w*.{0,30}${MINUS}.{0,45}(edukt\\w*|ausgangsstoff\\w*)`),
@@ -105,13 +133,16 @@ const PR_DE = any(
   /(von|vom) .{0,20}produkt\w* .{0,20}zieh\w* .{0,30}(edukt\w*|ausgangsstoff\w*).{0,10}\bab\b/,
   /subtrahier\w* .{0,40}(edukt\w*|ausgangsstoff\w*).{0,30}(von|vom) .{0,30}produkt\w*/,
   /produkt\w*.{0,40}(abzüglich|weniger) .{0,40}(edukt\w*|ausgangsstoff\w*)/,
+  // Plain wording: "man zieht die Werte der Ausgangsstoffe ab".
+  /zieh\w* .{0,40}(edukt\w*|ausgangsstoff\w*|was man (am anfang|vorher|zu beginn|am start) (hat|hatte|einsetzt)).{0,25}\bab\b/,
+  /(was (entsteht|herauskommt|rauskommt|man (herstellt|erhält|bekommt))|endstoff\w*).{0,40}(minus|abzüglich|weniger) .{0,40}(edukt\w*|ausgangsstoff\w*|was (man )?(am anfang|vorher|zu beginn|eingesetzt))/,
 );
 
 // Idea 5, unmeasurable: a cycle gives values nobody can measure directly.
-const UNM_EN = /(cannot be measured|can't be measured|can not be measured|cannot measure|can't measure|could not measure|couldn't measure|not be measured|not measure|not directly measur\w*|not measurable|not possible to measure|cannot be determined|can't be determined|cannot directly|can't directly|impossible to measure|impossible to run|impossible to do|impossible to make|hard to measure|difficult to measure|nobody can measure|no one can measure|unmeasurable|measur\w* indirectly|indirect\w*)/;
-const CALC_EN = /(calculat\w*|work\w* out|find\w*|found|\bgets?\b|obtain\w*|deduc\w*|\bvia\b|\bfrom\b|\busing\b|\buse\b|hess|cycles?|routes?|other reactions|steps|add\w* up|combin\w*|born[- ]haber|lattice|carbon monoxide|\bco\b)/;
-const UNM_DE = /(nicht direkt messen|nicht direkt messbar|nicht direkt gemessen|nicht direkt bestimm\w*|nicht direkt ermittel\w*|nicht messbar|nicht messen|nicht gemessen|nicht bestimmbar|nicht sauber|nicht durchführ\w*|unmöglich|schwer (zu )?messen|schwer messbar|kaum messbar|unmessbar|indirekt\w*)/;
-const CALC_DE = /(berechn\w*|ermittel\w*|bestimm\w*|errechn\w*|\büber\b|mithilfe|mit hilfe|hess|kreisprozess\w*|kreislauf\w*|umweg\w*|andere\w* reaktion\w*|teilschritt\w*|schritte\b|zusammensetz\w*|addier\w*|born-haber|gitterenergie|kohlenstoffmonoxid|\bco\b)/;
+const UNM_EN = /(cannot be measured|can't be measured|can not be measured|cannot measure|can't measure|could not measure|couldn't measure|not be measured|not measure|not directly measur\w*|not measurable|not possible to measure|cannot be determined|can't be determined|cannot directly|can't directly|impossible to measure|impossible to run|impossible to do|impossible to make|can't do in a lab|can't do in the lab|can't be done in a lab|can't be done in the lab|can't be done directly|can't do directly|can't run|can't be run|can't be tested|can't test|can't be found directly|couldn't do|hard to measure|difficult to measure|nobody can measure|no one can measure|unmeasurable|measur\w* indirectly|indirect\w*)/;
+const CALC_EN = /(calculat\w*|work\w* out|find\w*|found|useful|\bused?\b|\buses\b|needs?\b|needed|helps?\b|helpful|\blets\b|allows?\b|good for|handy|for (reactions|values|steps|things|cases)|\bgets?\b|obtain\w*|deduc\w*|\bvia\b|\bfrom\b|\busing\b|\buse\b|hess|cycles?|routes?|other reactions|steps|add\w* up|combin\w*|born[- ]haber|lattice|carbon monoxide|\bco\b)/;
+const UNM_DE = /(nicht direkt messen|nicht direkt messbar|nicht direkt gemessen|nicht direkt bestimm\w*|nicht direkt ermittel\w*|nicht messbar|nicht messen|nicht gemessen|nicht bestimmbar|nicht sauber|nicht durchführ\w*|unmöglich|umweg\w*|nur indirekt|nicht im labor|schwer (zu )?messen|schwer messbar|kaum messbar|unmessbar|indirekt\w*)/;
+const CALC_DE = /(berechn\w*|ermittel\w*|bestimm\w*|brauch\w*|nützlich|hilft|verwend\w*|nutzt|benutz\w*|für reaktionen|dafür|errechn\w*|\büber\b|mithilfe|mit hilfe|hess|kreisprozess\w*|kreislauf\w*|umweg\w*|andere\w* reaktion\w*|teilschritt\w*|schritte\b|zusammensetz\w*|addier\w*|born-haber|gitterenergie|kohlenstoffmonoxid|\bco\b)/;
 
 export const UNIT18: UnitContent = {
   n: 18,
@@ -121,11 +152,11 @@ export const UNIT18: UnitContent = {
 
   puzzle: {
     title: b('The reaction nobody can run cleanly', 'Die Reaktion, die sich nicht sauber durchführen lässt'),
-    lead: b('Carbon monoxide, CO, forms when carbon burns in too little oxygen. But carbon never burns to pure CO: some always burns on to carbon dioxide, so a calorimeter (the insulated vessel that measures a reaction\'s heat) measures a mixture of two reactions. Carbon and carbon monoxide can each be burned cleanly to CO₂ in plenty of oxygen, and those two values are known.',
-      'Kohlenstoffmonoxid, CO, entsteht, wenn Kohlenstoff bei Sauerstoffmangel verbrennt. Rein zu CO verbrennt Kohlenstoff aber nie: Ein Teil verbrennt immer weiter zu Kohlenstoffdioxid, also misst ein Kalorimeter (das isolierte Gefäß, das die Wärme einer Reaktion misst) ein Gemisch aus zwei Reaktionen. Kohlenstoff und Kohlenstoffmonoxid lassen sich dagegen mit viel Sauerstoff jeweils sauber zu CO₂ verbrennen, und diese beiden Werte sind bekannt.'),
+    lead: b('Carbon monoxide, CO, forms when carbon burns in too little oxygen. But carbon never burns to pure CO: some always burns on to carbon dioxide, so a calorimeter (the insulated vessel that measures a reaction\'s heat) measures a mixture of two reactions. Carbon and carbon monoxide can each be burned cleanly to CO₂ in plenty of oxygen, and those two values (their enthalpies of combustion, Δ_{c}H) are known.',
+      'Kohlenstoffmonoxid, CO, entsteht, wenn Kohlenstoff bei Sauerstoffmangel verbrennt. Rein zu CO verbrennt Kohlenstoff aber nie: Ein Teil verbrennt immer weiter zu Kohlenstoffdioxid, also misst ein Kalorimeter (das isolierte Gefäß, das die Wärme einer Reaktion misst) ein Gemisch aus zwei Reaktionen. Kohlenstoff und Kohlenstoffmonoxid lassen sich dagegen mit viel Sauerstoff jeweils sauber zu CO₂ verbrennen, und diese beiden Werte (ihre molaren Verbrennungsenthalpien Δ_{c}H) sind bekannt.'),
     data: {
       caption: b('Enthalpy changes at 25 °C (carbon as graphite) in kJ per mole of the reaction as written; a minus sign means energy given out (OpenStax Chemistry 2e, Appendix G).',
-        'Reaktionsenthalpien bei 25 °C (Kohlenstoff als Graphit) in kJ pro Mol Formelumsatz; ein Minuszeichen bedeutet abgegebene Energie (OpenStax Chemistry 2e, Anhang G).'),
+        'Reaktionsenthalpien bei 25 °C (Kohlenstoff als Graphit) in kJ pro Mol, bezogen auf die Reaktionsgleichung, wie sie dasteht; ein Minuszeichen bedeutet abgegebene Energie (OpenStax Chemistry 2e, Anhang G).'),
       head: [b('Reaction', 'Reaktion'), b('Measurable?', 'Messbar?'), b('ΔH in kJ/mol', 'ΔH in kJ/mol')],
       rows: [
         { cells: ['C + O₂ → CO₂', b('yes', 'ja'), '−393.5'] },
@@ -134,8 +165,8 @@ export const UNIT18: UnitContent = {
       ],
       numeric: [2],
     },
-    clash: b('Both measured reactions end at the same place, CO₂. One starts at carbon, the other halfway, at carbon monoxide. What is ΔH for C + ½ O₂ → CO?',
-      'Beide gemessenen Reaktionen enden am selben Ort, bei CO₂. Die eine startet beim Kohlenstoff, die andere auf halbem Weg, beim Kohlenstoffmonoxid. Wie groß ist ΔH für C + ½ O₂ → CO?'),
+    clash: b('Both measured reactions end with the same product, CO₂. One starts at carbon, the other halfway, at carbon monoxide. What is ΔH for C + ½ O₂ → CO?',
+      'Beide gemessenen Reaktionen haben dasselbe Produkt, CO₂. Die eine startet beim Kohlenstoff, die andere auf halbem Weg, beim Kohlenstoffmonoxid. Wie groß ist ΔH für C + ½ O₂ → CO?'),
     question: {
       id: 'u18-puzzle', unit: 18, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'predict',
       concepts: ['u18.path', 'u18.unmeasurable'], targets: ['reverse-keeps-sign', 'path-dependent'],
@@ -154,10 +185,10 @@ export const UNIT18: UnitContent = {
 
   explore: {
     title: b('Routes in the Energy Landscape', 'Wege in der Energielandschaft'),
-    intro: b('The target reaction\'s ΔH starts as "?". Tap step cards to put them on a route; a card can be reversed (its equation turns round and the sign of ΔH flips) or scaled ×2 or ×½ (ΔH scales too). When every substance that is not in the target cancels, the route is complete and the cycle shows both ways. This is [[hess-law|Hess\'s law]]: enthalpy is a state function, so ΔH depends only on the start and the end. "Via the elements" puts the elements at 0 and each compound at its [[enthalpy-of-formation|enthalpy of formation]] Δ_{f}H° (values at 25 °C, which the app treats as the same at other temperatures: a model).',
-      'Das ΔH der Zielreaktion steht zuerst auf „?“. Tippe Schrittkarten an, um sie auf einen Weg zu legen; eine Karte lässt sich umkehren (die Gleichung dreht sich um, das Vorzeichen von ΔH wechselt) oder mit ×2 bzw. ×½ skalieren (ΔH ändert sich mit). Kürzt sich jeder Stoff heraus, der nicht in der Zielreaktion vorkommt, ist der Weg vollständig, und der Energiekreisprozess (kurz Kreisprozess) zeigt beide Wege. Das ist der [[hess-law|Satz von Hess]]: Die Enthalpie ist eine Zustandsgröße, also eine Größe, die nur vom Zustand abhängt, nicht vom Weg dorthin; deshalb hängt ΔH nur von Anfang und Ende ab. „Über die Elemente“ setzt die Elemente auf 0 und jede Verbindung auf ihre [[enthalpy-of-formation|Standardbildungsenthalpie]] Δ_{f}H° (Werte bei 25 °C; die App nimmt sie bei anderen Temperaturen als gleich an: ein Modell).'),
+    intro: b('The target reaction\'s ΔH starts as "?". Tap step cards to put them on a route. A card can be reversed (its equation turns round and the sign of ΔH flips) or scaled ×2 or ×½ (ΔH scales too). When every substance outside the target cancels, the route is complete and the cycle shows both ways. This is [[hess-law|Hess\'s law]]: enthalpy is a state function, so ΔH depends only on the start and the end. "Via the elements" puts the elements at 0 and each compound at its [[enthalpy-of-formation|enthalpy of formation]] Δ_{f}H° (values at 25 °C, which the app treats as the same at other temperatures: a model).',
+      'Das ΔH der Zielreaktion steht zuerst auf „?“. Tippe Schrittkarten an, um sie auf einen Weg zu legen. Eine Karte lässt sich umkehren (die Gleichung dreht sich um, das Vorzeichen von ΔH wechselt) oder mit ×2 bzw. ×½ skalieren (ΔH ändert sich mit). Kürzt sich jeder Stoff heraus, der nicht in der Zielreaktion vorkommt, ist der Weg vollständig, und der Energiekreisprozess (kurz Kreisprozess) zeigt beide Wege. Das ist der [[hess-law|Satz von Hess]]: Die Enthalpie ist eine Zustandsgröße, hängt also nur vom Zustand ab, nicht vom Weg dorthin; deshalb hängt ΔH nur von Anfang und Ende ab. „Über die Elemente“ setzt die Elemente auf 0 und jede Verbindung auf ihre [[enthalpy-of-formation|Standardbildungsenthalpie]] Δ_{f}H° (Werte bei 25 °C; die App nimmt sie bei anderen Temperaturen als gleich an: ein Modell).'),
     tasks: [
-      { id: 'co', key: true, text: b('Build a route for C + ½ O₂ → CO from the burning reactions. Which card has to be turned round?', 'Baue einen Weg für C + ½ O₂ → CO aus den Verbrennungsreaktionen. Welche Karte musst du umdrehen?') },
+      { id: 'co', key: true, text: b('Build a route for C + ½ O₂ → CO from the burning reactions. Which card has to be reversed?', 'Baue einen Weg für C + ½ O₂ → CO aus den Verbrennungsreaktionen. Welche Karte musst du umkehren?') },
       { id: 'flip', key: true, text: b('Reverse a step card. What happens to its equation and to the sign of ΔH?', 'Kehre eine Schrittkarte um. Was passiert mit ihrer Gleichung und mit dem Vorzeichen von ΔH?') },
       { id: 'elements', key: true, text: b('Open "Via the elements" for any reaction. Where do the elements sit, and where do the reactants and the products land?', 'Öffne „Über die Elemente“ für eine beliebige Reaktion. Wo liegen die Elemente, und wo landen Edukte und Produkte?') },
       { id: 'diamond', text: b('Build a route for diamond → graphite.', 'Baue einen Weg für Diamant → Graphit.') },
@@ -166,16 +197,16 @@ export const UNIT18: UnitContent = {
         'Baue Kohlenstoffmonoxid auf einem zweiten Weg, mit der Karte in ganzen Zahlen 2 CO + O₂ → 2 CO₂ statt CO + ½ O₂ → CO₂. Was musst du mit dieser Karte machen, damit der Weg aufgeht?') },
     ],
     notes: {
-      co: b('C + O₂ → CO₂ (−393.5), then CO₂ → CO + ½ O₂ (reversed: +283.0). Written out: ΔH = −393.5 + 283.0 = −110.5 kJ/mol. Answer: forming CO from carbon gives out 110.5 kJ per mole; the reaction is exothermic.',
-        'C + O₂ → CO₂ (−393,5), dann CO₂ → CO + ½ O₂ (umgekehrt: +283,0). Ausgeschrieben: ΔH = −393,5 + 283,0 = −110,5 kJ/mol. Antwort: Bei der Bildung von CO aus Kohlenstoff werden 110,5 kJ pro Mol frei; die Reaktion ist exotherm.'),
+      co: b('C + O₂ → CO₂ (−393.5), then CO₂ → CO + ½ O₂ (reversed: +283.0). ΔH = −393.5 + 283.0 = −110.5 kJ/mol: forming CO from carbon gives out 110.5 kJ per mole, so it is exothermic.',
+        'C + O₂ → CO₂ (−393,5), dann CO₂ → CO + ½ O₂ (umgekehrt: +283,0). ΔH = −393,5 + 283,0 = −110,5 kJ/mol: Bei der Bildung von CO aus Kohlenstoff werden 110,5 kJ pro Mol frei, die Reaktion ist also exotherm.'),
       flip: b('Backwards, a reaction takes in exactly what it gave out forwards: CO + ½ O₂ → CO₂ gives out 283.0 kJ, so CO₂ → CO + ½ O₂ takes in 283.0 kJ, ΔH = +283.0 kJ/mol.',
         'Rückwärts nimmt eine Reaktion genau das auf, was sie vorwärts abgegeben hat: CO + ½ O₂ → CO₂ gibt 283,0 kJ ab, also nimmt CO₂ → CO + ½ O₂ 283,0 kJ auf, ΔH = +283,0 kJ/mol.'),
       elements: b('Elements in their standard state (graphite, O₂, H₂, calcium metal) sit at 0 by definition. Each compound sits at its enthalpy of formation, and Δ_{r}H = sum of Δ_{f}H of the products − sum of Δ_{f}H of the reactants.',
         'Elemente in ihrem Standardzustand (Graphit, O₂, H₂, metallisches Calcium) liegen per Definition bei 0. Jede Verbindung liegt bei ihrer Standardbildungsenthalpie, und Δ_{r}H = Summe der Δ_{f}H der Produkte − Summe der Δ_{f}H der Edukte.'),
-      diamond: b('Diamond burns: −395.4; graphite burns: −393.5. Diamond → CO₂ → graphite: −395.4 + 393.5 = −1.9 kJ/mol. Diamond sits 1.9 kJ/mol above graphite; unit 20 asks why diamonds still last.',
-        'Diamant verbrennt: −395,4; Graphit verbrennt: −393,5. Diamant → CO₂ → Graphit: −395,4 + 393,5 = −1,9 kJ/mol. Diamant liegt 1,9 kJ/mol über Graphit; Einheit 20 fragt, warum Diamanten trotzdem halten.'),
-      limestone: b('Products: −634.9 + (−393.5) = −1028.4 kJ; reactant: −1207.6 kJ. Δ_{r}H = −1028.4 − (−1207.6) = +179.2 kJ/mol: endothermic, so a lime kiln has to be heated strongly.',
-        'Produkte: −634,9 + (−393,5) = −1028,4 kJ; Edukt: −1207,6 kJ. Δ_{r}H = −1028,4 − (−1207,6) = +179,2 kJ/mol: endotherm, deshalb muss ein Kalkofen stark beheizt werden.'),
+      diamond: b('Diamond burns: −395.4; graphite burns: −393.5. Diamond → CO₂ → graphite: −395.4 + 393.5 = −1.9 kJ/mol. Diamond sits 1.9 kJ/mol above graphite; unit 20 asks why it does not simply turn into graphite.',
+        'Diamant verbrennt: −395,4; Graphit verbrennt: −393,5. Diamant → CO₂ → Graphit: −395,4 + 393,5 = −1,9 kJ/mol. Diamant liegt 1,9 kJ/mol über Graphit; Einheit 20 klärt, warum er trotzdem nicht einfach zu Graphit wird.'),
+      limestone: b('Products: −634.9 + (−393.5) = −1028.4 kJ; reactant: −1207.6 kJ (calcite, CRC Handbook; other tables differ by under 1 kJ). Δ_{r}H = −1028.4 − (−1207.6) = +179.2 kJ/mol: endothermic, so a lime kiln has to be heated strongly.',
+        'Produkte: −634,9 + (−393,5) = −1028,4 kJ; Edukt: −1207,6 kJ (Calcit, CRC Handbook; andere Tabellen weichen um weniger als 1 kJ ab). Δ_{r}H = −1028,4 − (−1207,6) = +179,2 kJ/mol: endotherm, deshalb muss ein Kalkofen stark beheizt werden.'),
       double: b('Reversed and halved: 2 CO₂ → 2 CO + O₂ takes in 566.0 kJ, and half of that is +283.0, the same as the other card reversed. Scaling a step scales its ΔH, because ΔH belongs to the equation as written.',
         'Umgekehrt und halbiert: 2 CO₂ → 2 CO + O₂ nimmt 566,0 kJ auf, die Hälfte davon ist +283,0, genauso viel wie die andere Karte umgekehrt. Skaliert man einen Schritt, skaliert sein ΔH mit, denn ΔH gilt für die Gleichung, wie sie dasteht.'),
     },
@@ -189,8 +220,8 @@ export const UNIT18: UnitContent = {
         { text: b('+91.8 kJ/mol', '+91,8 kJ/mol'), correct: true },
         { text: b('−183.6 kJ/mol', '−183,6 kJ/mol') },
       ],
-      explain: b('The equation is turned round, so the sign flips and the size stays: +91.8 kJ/mol. +45.9 would be right for one mole of NH₃ (the equation halved), and −91.8 keeps the old sign.',
-        'Die Gleichung ist umgedreht, also wechselt das Vorzeichen, und der Betrag bleibt: +91,8 kJ/mol. +45,9 wäre richtig für ein Mol NH₃ (die Gleichung halbiert), und −91,8 behält das alte Vorzeichen.'),
+      explain: b('The equation is reversed, so the sign flips and the size stays: +91.8 kJ/mol. +45.9 would be right for one mole of NH₃ (the equation halved), and −91.8 keeps the old sign.',
+        'Die Gleichung ist umgekehrt, also wechselt das Vorzeichen, und der Betrag bleibt: +91,8 kJ/mol. +45,9 wäre richtig für ein Mol NH₃ (die Gleichung halbiert), und −91,8 behält das alte Vorzeichen.'),
     } as ChoiceItem,
   },
 
@@ -199,8 +230,8 @@ export const UNIT18: UnitContent = {
       item: {
         id: 'u18-ethene', unit: 18, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'transfer',
         concepts: ['u18.path', 'u18.reverse'], targets: ['reverse-keeps-sign'],
-        prompt: b('Ethene takes up hydrogen: C₂H₄ + H₂ → C₂H₆. Each of the three substances burns completely (to CO₂ and liquid water): ethene −1411.1, hydrogen −285.8, ethane −1560.5 kJ/mol. What is ΔH for the reaction?',
-          'Ethen nimmt Wasserstoff auf: C₂H₄ + H₂ → C₂H₆. Jeder der drei Stoffe verbrennt vollständig (zu CO₂ und flüssigem Wasser): Ethen −1411,1, Wasserstoff −285,8, Ethan −1560,5 kJ/mol. Wie groß ist ΔH für die Reaktion?'),
+        prompt: b('Ethene takes up hydrogen: C₂H₄ + H₂ → C₂H₆. The three substances burn completely (to CO₂ and liquid water), with enthalpies of combustion Δ_{c}H of ethene −1411.1, hydrogen −285.8 and ethane −1560.5 kJ/mol. What is ΔH for the reaction?',
+          'Ethen nimmt Wasserstoff auf: C₂H₄ + H₂ → C₂H₆. Die drei Stoffe verbrennen vollständig (zu CO₂ und flüssigem Wasser); ihre molaren Verbrennungsenthalpien Δ_{c}H sind für Ethen −1411,1, für Wasserstoff −285,8 und für Ethan −1560,5 kJ/mol. Wie groß ist ΔH für die Reaktion?'),
         options: [
           { text: b('+136.4 kJ/mol', '+136,4 kJ/mol') },
           { text: b('−3257.4 kJ/mol', '−3257,4 kJ/mol'), mis: 'reverse-keeps-sign' },
@@ -226,13 +257,13 @@ export const UNIT18: UnitContent = {
     {
       item: {
         id: 'u18-lime', unit: 18, kind: 'choice', format: 'predict', withConfidence: true, evidence: 'predict',
-        concepts: ['u18.products-reactants', 'u18.formation'], targets: ['reverse-keeps-sign'],
+        concepts: ['u18.products-reactants', 'u18.formation'], targets: ['reactants-added'],
         prompt: b('For lime mortar, quicklime is slaked with water: CaO + H₂O → Ca(OH)₂. Standard enthalpies of formation (kJ/mol): CaO −634.9, H₂O(l) −285.8, Ca(OH)₂ −985.2. What is ΔH?',
           'Für Kalkmörtel wird Branntkalk mit Wasser gelöscht: CaO + H₂O → Ca(OH)₂. Standardbildungsenthalpien (kJ/mol): CaO −634,9, H₂O(l) −285,8, Ca(OH)₂ −985,2. Wie groß ist ΔH?'),
         options: [
           { text: b('+64.5 kJ/mol', '+64,5 kJ/mol') },
           { text: b('−64.5 kJ/mol', '−64,5 kJ/mol'), correct: true },
-          { text: b('−1905.9 kJ/mol', '−1905,9 kJ/mol'), mis: 'reverse-keeps-sign' },
+          { text: b('−1905.9 kJ/mol', '−1905,9 kJ/mol'), mis: 'reactants-added' },
           { text: b('−350.3 kJ/mol', '−350,3 kJ/mol') },
         ],
         explain: b('Δ_{r}H = products − reactants = −985.2 − (−634.9 − 285.8) = −985.2 + 920.7 = −64.5 kJ/mol. +64.5 subtracts the wrong way round, −1905.9 adds the reactants instead of subtracting them, and −350.3 leaves out the water.',
@@ -264,8 +295,8 @@ export const UNIT18: UnitContent = {
       ],
       body: b('In 2 Al + Fe₂O₃ → Al₂O₃ + 2 Fe, aluminium and iron are elements with an enthalpy of formation of zero, so only the two oxides matter. Δ_{r}H = −1676 − (−824.2) = −851.8 kJ/mol. Aluminium oxide sits much further below its elements than iron oxide does, and that gap is what the reaction gives out.',
         'Bei 2 Al + Fe₂O₃ → Al₂O₃ + 2 Fe sind Aluminium und Eisen Elemente mit der Standardbildungsenthalpie null, also kommt es nur auf die beiden Oxide an. Δ_{r}H = −1676 − (−824,2) = −851,8 kJ/mol. Aluminiumoxid liegt viel weiter unter seinen Elementen als Eisenoxid, und genau diesen Unterschied gibt die Reaktion ab.'),
-      soWhat: b('Rail welders use thermite: the molten steel it gives, at about 2400 °C, fills the gap between two rail ends and joins them as it sets.',
-        'Beim Schweißen von Eisenbahnschienen nutzt man die Thermitreaktion: Der flüssige Stahl, der dabei mit etwa 2400 °C entsteht, füllt die Lücke zwischen zwei Schienenenden und verbindet sie beim Erstarren.'),
+      soWhat: b('Rail welders use thermite: the molten iron it gives, at about 2400 °C, fills the gap between two rail ends and joins them as it sets.',
+        'Beim Schweißen von Eisenbahnschienen nutzt man die Thermitreaktion: Das flüssige Eisen, das dabei mit etwa 2400 °C entsteht, füllt die Lücke zwischen zwei Schienenenden und verbindet sie beim Erstarren.'),
     },
     {
       title: b('Methane: vapour or liquid water', 'Methan: Wasserdampf oder flüssiges Wasser'), tag: 'CH4',
@@ -275,23 +306,23 @@ export const UNIT18: UnitContent = {
         { v: '−88.0 kJ', label: b('as 2 mol of water vapour condense (2 × −44.0)', 'beim Kondensieren von 2 mol Wasserdampf (2 · (−44,0))') },
         { v: '−890.6 kJ/mol', label: b('burning methane to liquid water', 'Verbrennung von Methan zu flüssigem Wasser') },
       ],
-      body: b('Burning methane to water vapour and then letting the vapour condense ends at the same place as burning it straight to liquid water, so both routes have the same ΔH: −802.6 + 2 × (−44.0) = −890.6 kJ/mol. Condensing is evaporating reversed, so its ΔH is −44.0 per mole of water, and it comes in twice because 2 H₂O form.',
-        'Methan zu Wasserdampf zu verbrennen und den Dampf dann kondensieren zu lassen, endet am selben Ort wie die Verbrennung direkt zu flüssigem Wasser, also haben beide Wege dasselbe ΔH: −802,6 + 2 · (−44,0) = −890,6 kJ/mol. Kondensieren ist Verdampfen rückwärts, deshalb ist sein ΔH −44,0 pro Mol Wasser, und es kommt zweimal vor, weil 2 H₂O entstehen.'),
-      soWhat: b('Condensing gas boilers cool their exhaust until the water vapour condenses and use that extra heat: 890.6 / 802.6 ≈ 1.11, about 11 % more, the figure boiler makers give for natural gas.',
-        'Gas-Brennwertkessel kühlen ihr Abgas, bis der Wasserdampf kondensiert, und nutzen diese zusätzliche Wärme: 890,6 : 802,6 ≈ 1,11, also etwa 11 % mehr. Diesen Unterschied zwischen Brennwert und Heizwert geben Kesselhersteller für Erdgas an.'),
+      body: b('Burning methane to water vapour and then letting the vapour condense has the same start and the same end as burning it straight to liquid water, so both routes have the same ΔH: −802.6 + 2 × (−44.0) = −890.6 kJ/mol. Condensing is evaporating reversed, so its ΔH is −44.0 per mole of water, and it comes in twice because 2 H₂O form.',
+        'Verbrennt man Methan zu Wasserdampf und lässt den Dampf dann kondensieren, führt das vom selben Anfang zum selben Ende wie die Verbrennung direkt zu flüssigem Wasser, also haben beide Wege dasselbe ΔH: −802,6 + 2 · (−44,0) = −890,6 kJ/mol. Kondensieren ist Verdampfen rückwärts, deshalb ist sein ΔH −44,0 pro Mol Wasser, und es kommt zweimal vor, weil 2 H₂O entstehen.'),
+      soWhat: b('Condensing gas boilers cool their exhaust until the water vapour condenses and use that extra heat: 890.6 / 802.6 ≈ 1.11, so up to about 11 % more, the figure boiler makers give for natural gas (a real boiler recovers part of it).',
+        'Gas-Brennwertkessel kühlen ihr Abgas, bis der Wasserdampf kondensiert, und nutzen diese zusätzliche Wärme: 890,6 : 802,6 ≈ 1,11, also bis zu etwa 11 % mehr (ein echter Kessel nutzt davon einen Teil). Diesen Unterschied zwischen Brennwert und Heizwert geben Kesselhersteller für Erdgas an.'),
     },
     {
       title: b('The step nobody can measure: salt', 'Der Schritt, den niemand messen kann: Kochsalz'), tag: 'NaCl',
       show: { engine: 'lattice', salt: 'NaCl', mode: 'transfer' },
       numbers: [
-        { v: '+725 kJ', label: b('to make gaseous Na and Cl atoms (107 + 122) and remove sodium\'s outer electron (496)', 'um gasförmige Na- und Cl-Atome zu erzeugen (107 + 122) und das Außenelektron des Natriums abzutrennen (496)') },
-        { v: '−349 kJ', label: b('as each chlorine atom gains an electron (electron affinity)', 'wenn jedes Chloratom ein Elektron aufnimmt (Elektronenaffinität)') },
-        { v: '−787 kJ', label: b('as the gaseous ions form the lattice (lattice energy, unit 4)', 'wenn die gasförmigen Ionen das Gitter bilden (Gitterenergie, Einheit 4)') },
+        { v: '−411.2 kJ/mol', label: b('measured enthalpy of formation of NaCl from its elements', 'gemessene Standardbildungsenthalpie von NaCl aus den Elementen') },
+        { v: '+376 kJ', label: b('for the four known steps: 107 + 122 + 496 − 349', 'für die vier bekannten Schritte: 107 + 122 + 496 − 349') },
+        { v: '−787 kJ', label: b('is left for the gaseous ions to form the crystal: the lattice energy (787 kJ/mol in unit 4)', 'bleiben für die Bildung des Kristalls aus den gasförmigen Ionen übrig: die Gitterenergie (787 kJ/mol in Einheit 4)') },
       ],
-      body: b('Some steps cannot be measured at all, yet a cycle still finds them. In the Born–Haber cycle for sodium chloride, the steps add up to 725 − 349 − 787 = −411 kJ/mol, which matches the measured enthalpy of formation, −411.2. No experiment turns a crystal straight into gaseous ions, so the [[lattice-energy|lattice energy]] of 787 kJ/mol in unit 4 comes from running this cycle the other way.',
-        'Manche Schritte lassen sich überhaupt nicht messen, aber ein Kreisprozess findet sie trotzdem. Im Born-Haber-Kreisprozess für Natriumchlorid ergeben die Schritte zusammen 725 − 349 − 787 = −411 kJ/mol, passend zur gemessenen Standardbildungsenthalpie von −411,2. Kein Experiment verwandelt einen Kristall direkt in gasförmige Ionen, deshalb stammt die [[lattice-energy|Gitterenergie]] von 787 kJ/mol aus Einheit 4 aus diesem Kreisprozess, rückwärts gerechnet.'),
-      soWhat: b('In an exam a Born–Haber cycle is a Hess cycle like any other: write every step with its sign, and the unknown is what is left over. Books give the lattice energy with either sign (+787 for breaking the lattice apart, −787 for forming it), so check the direction of the arrow.',
-        'In der Klausur ist ein Born-Haber-Kreisprozess ein Kreisprozess wie jeder andere: Schreib jeden Schritt mit Vorzeichen auf; die Unbekannte ist, was übrig bleibt. Bücher geben die Gitterenergie mit beiden Vorzeichen an (+787 für das Zerlegen des Gitters, −787 für seine Bildung), also prüfe die Pfeilrichtung.'),
+      body: b('No experiment turns a crystal straight into gaseous ions, so the [[lattice-energy|lattice energy]] of salt cannot be measured, but a Born–Haber cycle finds it. The measured enthalpy of formation of NaCl is the sum of five steps: making gaseous atoms (+107 for Na, +122 for Cl), removing sodium\'s outer electron (+496), adding an electron to each chlorine atom (−349 per mole of atoms), and letting the gaseous ions form the crystal. The first four are known and come to +376 kJ, so the fifth is what is left: −411.2 − 376 = −787.2, about −787 kJ/mol.',
+        'Kein Experiment verwandelt einen Kristall direkt in gasförmige Ionen, deshalb lässt sich die [[lattice-energy|Gitterenergie]] von Kochsalz nicht messen, aber ein Born-Haber-Kreisprozess liefert sie. Die gemessene Standardbildungsenthalpie von NaCl ist die Summe von fünf Schritten: gasförmige Atome erzeugen (+107 für Na, +122 für Cl), das Außenelektron des Natriums abtrennen (+496), an jedes Chloratom ein Elektron anlagern (−349 pro Mol Atome) und die gasförmigen Ionen zum Kristall zusammenfügen. Die ersten vier sind bekannt und ergeben +376 kJ, also bleibt für den fünften übrig: −411,2 − 376 = −787,2, etwa −787 kJ/mol.'),
+      soWhat: b('In an exam, write every step with its sign and solve for the one that is left. The 787 kJ/mol in unit 4 comes from a cycle like this one, so the cycle finds it rather than checks it; books give it as −787 for forming the lattice or +787 for pulling it apart.',
+        'Schreib in der Klausur jeden Schritt mit Vorzeichen auf und löse nach dem Schritt auf, der übrig bleibt. Die 787 kJ/mol aus Einheit 4 stammen aus einem solchen Kreisprozess, er liefert sie also, statt sie zu prüfen; Bücher geben sie als −787 für die Bildung des Gitters oder als +787 für sein Zerlegen an.'),
     },
   ],
 
@@ -333,7 +364,7 @@ export const UNIT18: UnitContent = {
       { id: 'path', concept: 'u18.path', idea: b('ΔH depends only on the start and the end, whatever the route', 'ΔH hängt nur von Anfang und Ende ab, egal auf welchem Weg'), contra: PATH_DEPENDENT,
         en: PATH_EN, de: PATH_DE },
       { id: 'reverse', concept: 'u18.reverse', idea: b('Reverse a step and the sign of its ΔH flips', 'Kehrt man einen Schritt um, wechselt das Vorzeichen seines ΔH'), contra: REVERSE_KEEPS,
-        en: together(REV_EN, SIGN_EN), de: together(REV_DE, SIGN_DE) },
+        en: any(together(REV_EN, SIGN_EN), SIGN_ONLY_EN), de: any(together(REV_DE, SIGN_DE), SIGN_ONLY_DE) },
       { id: 'zero', concept: 'u18.formation', idea: b('Elements in their standard state have an enthalpy of formation of zero', 'Elemente im Standardzustand haben die Standardbildungsenthalpie null'), contra: ELEMENTS_NONZERO,
         en: together(ELEM_EN, ZERO_EN, 60), de: together(ELEM_DE, ZERO_DE, 60) },
       { id: 'formation', concept: 'u18.products-reactants', idea: b('Δ_{r}H = sum of Δ_{f}H of the products − sum of Δ_{f}H of the reactants', 'Δ_{r}H = Summe der Δ_{f}H der Produkte − Summe der Δ_{f}H der Edukte'),
@@ -383,6 +414,7 @@ export const UNIT18: UnitContent = {
   misconceptions: [
     { id: 'reverse-keeps-sign', name: b('A reversed step keeps the sign of its ΔH', 'Ein umgekehrter Schritt behält das Vorzeichen') },
     { id: 'path-dependent', name: b('ΔH depends on the route taken', 'ΔH hängt vom Reaktionsweg ab') },
+    { id: 'reactants-added', name: b('Reactants are added to the products instead of subtracted', 'Edukte werden zu den Produkten addiert statt abgezogen') },
     { id: 'elements-nonzero', name: b('Elements such as O₂ have an enthalpy of formation that must be counted', 'Elemente wie O₂ haben eine Bildungsenthalpie, die man mitrechnen muss') },
   ],
 

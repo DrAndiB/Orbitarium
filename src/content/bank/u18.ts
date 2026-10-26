@@ -6,6 +6,8 @@
 // −98.0. Ethane burning: 2(−393.5) + 3(−285.8) + 84.0 = −1560.4 (dH from the table −1560.5); with ethane added −1728.4.
 // Lattice energy from a Born–Haber cycle (unit 18 example 3; LibreTexts, Ursinus CHEM322, "Born Haber Cycles", fetched):
 // lattice enthalpies cannot be measured directly. CO from carbon gives a CO/CO₂ mixture (Science Ready, "Hess's Law").
+// i18s (blast furnace): ΔfH Fe₂O₃ −824.2, CO −110.5 (−110.52), CO₂ −393.5 (−393.51), OpenStax Appendix G:
+// 3(−393.5) = −1180.5; −824.2 + 3(−110.5) = −1155.7; −1180.5 + 1155.7 = −24.8 (unrounded −24.77); both added −2336.2.
 import type { Bi } from '../../i18n';
 import type { Item } from '../items';
 
@@ -99,7 +101,7 @@ export const BANK_U18: Item[] = [
       { text: b('Only the products are doubled, and they give out the energy', 'Nur die Produkte werden verdoppelt, und sie geben die Energie ab') },
     ],
     explain: b('ΔH is given per mole of the reaction as written. Doubling the equation means twice as many moles of every substance react, so twice as many bonds break and form and the energy exchanged doubles; the bonds themselves do not change.',
-      'ΔH gilt pro Mol Formelumsatz der Gleichung, wie sie dasteht. Verdoppelt man die Gleichung, reagieren von jedem Stoff doppelt so viele Mol, also werden doppelt so viele Bindungen gespalten und geknüpft, und die ausgetauschte Energie verdoppelt sich; die Bindungen selbst ändern sich nicht.') },
+      'ΔH gilt pro Mol, bezogen auf die Gleichung, wie sie dasteht. Verdoppelt man die Gleichung, reagieren von jedem Stoff doppelt so viele Mol, also werden doppelt so viele Bindungen gespalten und geknüpft, und die ausgetauschte Energie verdoppelt sich; die Bindungen selbst ändern sich nicht.') },
   { id: 'i18i', unit: 18, kind: 'estimate', format: 'estimate', evidence: 'transfer', concepts: ['u18.scale'],
     prompt: b('Propane burns: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O(l), ΔH = −2220 kJ/mol. A camping stove burns 0.5 mol of propane (22 g). How much energy is given out?',
       'Propan verbrennt: C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O(l), ΔH = −2220 kJ/mol. Ein Campingkocher verbrennt 0,5 mol Propan (22 g). Wie viel Energie wird abgegeben?'),
@@ -141,15 +143,15 @@ export const BANK_U18: Item[] = [
       { text: b('Diamond is harder, and hardness costs energy', 'Diamant ist härter, und Härte kostet Energie') },
     ],
     explain: b('Zero belongs to each element in its standard state, the form that is most stable at 25 °C and 1 bar: for carbon that is graphite. Diamond is another form of the same element and lies 1.9 kJ/mol higher, as the two combustion values show (−395.4 against −393.5).',
-      'Null gilt für jedes Element in seinem Standardzustand, der bei 25 °C und 1 bar stabilsten Form: Bei Kohlenstoff ist das Graphit. Diamant ist eine andere Form desselben Elements und liegt 1,9 kJ/mol höher, wie die beiden Verbrennungswerte zeigen (−395,4 gegenüber −393,5).') },
+      'Null gilt für jedes Element in seinem Standardzustand, der bei 25 °C und 1 bar stabilsten Form: Bei Kohlenstoff ist das Graphit. Diamant ist eine andere Form desselben Elements und liegt 1,9 kJ/mol höher, wie die beiden Verbrennungswerte zeigen (−395,4 im Vergleich zu −393,5).') },
 
   // ---------- u18.products-reactants ----------
-  { id: 'i18m', unit: 18, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u18.products-reactants'], targets: ['reverse-keeps-sign'],
+  { id: 'i18m', unit: 18, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u18.products-reactants'], targets: ['reactants-added'],
     prompt: b('Hydrogen peroxide decomposes: 2 H₂O₂(l) → 2 H₂O(l) + O₂. Standard enthalpies of formation: H₂O₂(l) −187.8, H₂O(l) −285.8 kJ/mol. What is ΔH?',
       'Wasserstoffperoxid zerfällt: 2 H₂O₂(l) → 2 H₂O(l) + O₂. Standardbildungsenthalpien: H₂O₂(l) −187,8, H₂O(l) −285,8 kJ/mol. Wie groß ist ΔH?'),
     options: [
       { text: b('+196.0 kJ/mol', '+196,0 kJ/mol') },
-      { text: b('−947.2 kJ/mol', '−947,2 kJ/mol'), mis: 'reverse-keeps-sign' },
+      { text: b('−947.2 kJ/mol', '−947,2 kJ/mol'), mis: 'reactants-added' },
       { text: b('−196.0 kJ/mol', '−196,0 kJ/mol'), correct: true },
       { text: b('−98.0 kJ/mol', '−98,0 kJ/mol') },
     ],
@@ -170,11 +172,23 @@ export const BANK_U18: Item[] = [
       'Ethan verbrennt: C₂H₆ + 3½ O₂ → 2 CO₂ + 3 H₂O(l). Standardbildungsenthalpien (kJ/mol): C₂H₆ −84,0, CO₂ −393,5, H₂O(l) −285,8. Bestimme ΔH.'),
     min: -2500, max: 2500, step: 1, answer: -1560, tolerance: 4, suffix: ' kJ/mol',
     near: [
-      { value: 1560, tol: 4, note: b('The size is right, the sign is not: it is products minus reactants, and burning gives out energy.', 'Der Betrag stimmt, das Vorzeichen nicht: Es heißt Produkte minus Edukte, und eine Verbrennung gibt Energie ab.') },
+      { value: 1560, tol: 4, note: b('The size is right, the sign is not: it is products minus reactants, and burning gives out energy.', 'Der Betrag stimmt, das Vorzeichen nicht: Es gilt Produkte minus Edukte, und eine Verbrennung gibt Energie ab.') },
       { value: -1728, tol: 4, note: b('Ethane is a reactant: subtract its value instead of adding it.', 'Ethan ist ein Edukt: Zieh seinen Wert ab, statt ihn zu addieren.') },
     ],
     explain: b('Products: 2 × (−393.5) + 3 × (−285.8) = −1644.4; reactants: −84.0 (O₂ counts zero). Δ_{r}H = −1644.4 − (−84.0) = −1560.4 kJ/mol (from unrounded values −1560.5).',
       'Produkte: 2 · (−393,5) + 3 · (−285,8) = −1644,4; Edukte: −84,0 (O₂ hat den Wert null). Δ_{r}H = −1644,4 − (−84,0) = −1560,4 kJ/mol (aus ungerundeten Werten −1560,5).') },
+
+  { id: 'i18s', unit: 18, kind: 'choice', format: 'predict', evidence: 'transfer', withConfidence: true, concepts: ['u18.products-reactants'], targets: ['reactants-added'],
+    prompt: b('In a blast furnace, carbon monoxide takes the oxygen from iron(III) oxide: Fe₂O₃ + 3 CO → 2 Fe + 3 CO₂. Standard enthalpies of formation (kJ/mol): Fe₂O₃ −824.2, CO −110.5, CO₂ −393.5. What is ΔH?',
+      'Im Hochofen entzieht Kohlenstoffmonoxid dem Eisen(III)-oxid den Sauerstoff: Fe₂O₃ + 3 CO → 2 Fe + 3 CO₂. Standardbildungsenthalpien (kJ/mol): Fe₂O₃ −824,2, CO −110,5, CO₂ −393,5. Wie groß ist ΔH?'),
+    options: [
+      { text: b('−2336.2 kJ/mol', '−2336,2 kJ/mol'), mis: 'reactants-added' },
+      { text: b('+24.8 kJ/mol', '+24,8 kJ/mol') },
+      { text: b('−24.8 kJ/mol', '−24,8 kJ/mol'), correct: true },
+      { text: b('−1180.5 kJ/mol', '−1180,5 kJ/mol') },
+    ],
+    explain: b('Products: 3 × (−393.5) = −1180.5 kJ (iron counts zero). Reactants: −824.2 + 3 × (−110.5) = −1155.7 kJ. Δ_{r}H = −1180.5 − (−1155.7) = −24.8 kJ/mol. −2336.2 adds the reactants instead of subtracting them, +24.8 subtracts the wrong way round, and −1180.5 leaves the reactants out.',
+      'Produkte: 3 · (−393,5) = −1180,5 kJ (Eisen hat den Wert null). Edukte: −824,2 + 3 · (−110,5) = −1155,7 kJ. Δ_{r}H = −1180,5 − (−1155,7) = −24,8 kJ/mol. −2336,2 addiert die Edukte, statt sie abzuziehen, +24,8 subtrahiert in der falschen Reihenfolge, und −1180,5 lässt die Edukte weg.') },
 
   // ---------- u18.unmeasurable ----------
   { id: 'i18p', unit: 18, kind: 'choice', format: 'predict', withConfidence: true, concepts: ['u18.unmeasurable'],
