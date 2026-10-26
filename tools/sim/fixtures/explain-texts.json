@@ -1666,5 +1666,359 @@
   "lang": "en",
   "source": "r9-fix",
   "text": "ΔG < 0: spontaneous, ΔG > 0: non-spontaneous."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "ΔH is the same however you get there."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "It only matters where you start and where you end up."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The route doesn't matter, only the start and end."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "It does not matter how you get from the reactants to the products, the total is the same."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Taking a different route makes no difference to the total ΔH."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "ΔH is a state function, so it is independent of the path."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Es kommt nur darauf an, wo man anfängt und wo man ankommt."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Der Weg spielt keine Rolle, nur Anfang und Ende zählen."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Egal, wie man dahin kommt, ΔH bleibt gleich."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Der Reaktionsweg ist egal."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "ΔH ist wegunabhängig (Zustandsgröße)."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "ΔH depends on the route you take."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "A longer route gives out more energy."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Das ΔH hängt vom Reaktionsweg ab."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The route does matter."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "If you turn a step round the plus becomes a minus."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "When you run the reaction backwards the minus turns into a plus."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Reversing a step flips the sign of ΔH."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Reverse the reaction and ΔH changes sign."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Dreht man die Reaktion um, wird aus Minus Plus."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Umkehren: Vorzeichen wechselt."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Bei der Rückreaktion ändert sich das Vorzeichen von ΔH."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "A reversed step keeps the same sign."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Wenn man die Reaktion umkehrt, behält ΔH das Vorzeichen."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You take the products minus the reactants."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Subtract the reactants from the products."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You add up what you make and take away what you started with."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Take the formation energy of the products and subtract the reactants."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Produkte minus Edukte."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Man zieht die Werte der Ausgangsstoffe von denen der Produkte ab."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Man nimmt die Bildungsenthalpien der Produkte und zieht die der Edukte ab."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Add the reactants to the products."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You don't subtract the reactants."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Elements in their standard state count as zero."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Elemente wie O2 haben den Wert null."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Elemente sind der Nullpunkt."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Elements like oxygen have a value that must be counted."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "It lets you work out reactions you can't do in a lab."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You use it for reactions that can't be measured directly."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Man braucht das für Reaktionen, die man nicht direkt messen kann."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Mit Hess kann man Werte berechnen, die man nur auf Umwegen bestimmen kann."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Born-Haber: die Gitterenergie lässt sich nicht direkt messen, aber über den Kreisprozess berechnen."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Everything can be measured directly in a calorimeter."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Reactions can always be measured directly."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Energy, enthalpy, Hess, steps, route, reactants, products, sign, zero, cycle, formation"
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Das ist mir nicht klar. Es geht um Energie und Reaktionen, und man rechnet irgendwas aus."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "ΔH hängt nur von Anfang und Ende ab (Zustandsgröße), nicht vom Weg. Umkehren: Vorzeichen wechselt. Elemente im Standardzustand haben ΔfH = 0. ΔrH = Summe ΔfH Produkte − Summe ΔfH Edukte. Mit einem Kreisprozess kann man ΔH von Reaktionen bestimmen, die man nur auf Umwegen messen kann, z. B. C zu CO."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Enthalpy is a state function, so the enthalpy change between the same initial and final states is independent of the path. That is why you can add the Delta H of individual steps. Reversing a step changes the sign of its Delta H. Standard enthalpies of formation of elements in their standard states are zero by definition, so Delta_rH = sum of Delta_fH(products) - sum of Delta_fH(reactants). Useful for reactions that can't be measured directly, e.g. C to CO, or lattice energies via a Born-Haber cycle."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "You can add up the steps because it only matters where you start and where you end up, not how you get there. If you turn a step round the plus becomes a minus. Elements like oxygen gas count as zero. For a whole reaction you take the energy of formation of what you make and take away that of what you started with. It lets you work out reactions you can't do in a lab."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "ΔH depends on where you start and where you end up, not on the route."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The answer depends only on the start and the end."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Where you start is irrelevant."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Reverse it and the sign flips."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "The sign does not change when you reverse it."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Reverse the step and the sign stays the same."
+ },
+ {
+  "unit": 18,
+  "lang": "de",
+  "source": "r9-fix",
+  "text": "Wenn man Produkte minus Edukte rechnet, bekommt man ΔH."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Hess lets you find ΔH for steps you can't measure directly."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "With a cycle you can get the lattice energy, which nobody can measure directly."
+ },
+ {
+  "unit": 18,
+  "lang": "en",
+  "source": "r9-fix",
+  "text": "Everything is measured directly."
  }
 ]
