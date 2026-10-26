@@ -15,6 +15,7 @@ import { ConductUI } from '../sim/conductUI';
 import { HBondUI } from '../sim/hbondUI';
 import { ZoomLadderUI } from '../sim/zoomLadderUI';
 import { LabBenchUI } from '../sim/labBenchUI';
+import { EnergyLandscapeUI } from '../sim/energyLandscapeUI';
 import { createTable, openTable, tableIcon } from './ptable';
 import { go } from '../router';
 import { onLeave } from './lifecycle';
@@ -110,6 +111,7 @@ function showStep(root: HTMLElement, player: UnitPlayer, step: number) {
     hbond: (opts) => { const ui = new HBondUI(opts); disposers.push(() => ui.dispose()); return ui; },
     ladder: (opts) => { const ui = new ZoomLadderUI(opts); disposers.push(() => ui.dispose()); return ui; },
     bench: (opts) => { const ui = new LabBenchUI(opts); disposers.push(() => ui.dispose()); return ui; },
+    energy: (opts) => { const ui = new EnergyLandscapeUI(opts); disposers.push(() => ui.dispose()); return ui; },
   };
   player.steps[step](body, enable, ctx);
   root.append(ctaWrap);

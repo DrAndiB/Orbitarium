@@ -31,10 +31,17 @@ import type { Term } from './glossary';
  *   - reaction (unit 15): `eq` with `amounts` in mol, one per reactant; `react` runs it until one reactant runs out;
  *     `actual` (grams of the first product) adds the percent yield.
  *   `rung` sets the zoom level shown (default 'grams' for sample, 'particles' for equation and reaction).
+ * - energy (Energy Landscape, units 17, 18, 20): one reaction (REACTIONS or BOND_REACTIONS ids, src/content/thermo.ts)
+ *   as energy levels. `mode` 'bonds' (unit 17): reactants, the separated atoms high above, products; `stage` shows the
+ *   bonds broken, the bonds formed, or both. 'hess' (unit 18): the reaction with its route via `steps` (REACTIONS ids, a
+ *   leading "-" reverses one, a "2*" prefix doubles it) or via the elements (`route: 'elements'`). 'gibbs' (unit 20):
+ *   ΔH, −T·ΔS and ΔG as bars at temperature `temp` (K), with the crossover temperature marked.
  * - bench (Lab Bench, unit 16): `solute` (SOLUTES id); `grams` weighed into a `flask` (mL) and, with `made`, filled to
  *   the mark; `water` instead dissolves the grams in that many mL of water in a beaker (not to a mark);
  *   `dilute` pipettes `pipette` mL of the made solution into a new flask of `flask` mL and fills to the mark;
  *   `sample` pours that many mL off into a beaker; `zoom` opens the particle inset.
+ * - box `spread` (Particle Box, unit 19): `n` particles start in the left half behind a partition; `open` removes it;
+ *   `mixed` starts a second gas in the right half (mixing).
  */
 export type ConductMaterial = 'Cu' | 'NaCl' | 'NaCl-melt' | 'NaCl-aq' | 'sugar-aq' | 'water';
 export type Rung = 'grams' | 'moles' | 'count' | 'particles';
@@ -43,12 +50,15 @@ export type Show =
   | { engine: 'lattice'; salt: string; compare?: string; mode?: 'transfer' | 'shift' | 'heat' | 'neighbours'; temp?: number }
   | { engine: 'bond'; a: string; b: string; order?: 1 | 2 | 3 }
   | { engine: 'conduct'; material: ConductMaterial; on?: boolean; reversed?: boolean }
-  | { engine: 'box'; sub: string; temp?: number; compare?: string; view?: 'plain' | 'clouds' | 'dipoles' | 'hbonds'; dipoleOff?: boolean; mix?: string }
+  | { engine: 'box'; sub: string; temp?: number; compare?: string; view?: 'plain' | 'clouds' | 'dipoles' | 'hbonds'; dipoleOff?: boolean; mix?: string;
+      spread?: { n: number; open?: boolean; mixed?: boolean } }
   | { engine: 'hbond'; a: string; b?: string; swap?: boolean; cluster?: boolean }
   | { engine: 'ladder'; sub?: string; grams?: number; mol?: number; compare?: string; by?: 'mass' | 'moles'; breakdown?: boolean;
       eq?: string; coeffs?: number[]; trap?: boolean; amounts?: number[]; react?: boolean; actual?: number; rung?: Rung }
   | { engine: 'bench'; solute: string; grams?: number; flask?: number; made?: boolean; water?: number;
-      dilute?: { pipette: number; flask: number }; sample?: number; zoom?: boolean };
+      dilute?: { pipette: number; flask: number }; sample?: number; zoom?: boolean }
+  | { engine: 'energy'; reaction: string; mode?: 'bonds' | 'hess' | 'gibbs'; stage?: 'broken' | 'formed' | 'both';
+      steps?: string[]; route?: 'direct' | 'steps' | 'elements'; temp?: number };
 
 /** A small data table for the puzzle. Cells are plain strings (formulas in {{…}} allowed) or bilingual text. */
 export interface DataTable {

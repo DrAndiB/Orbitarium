@@ -14,6 +14,10 @@ import { BANK_U13 } from './bank/u13';
 import { BANK_U14 } from './bank/u14';
 import { BANK_U15 } from './bank/u15';
 import { BANK_U16 } from './bank/u16';
+import { BANK_U17 } from './bank/u17';
+import { BANK_U18 } from './bank/u18';
+import { BANK_U19 } from './bank/u19';
+import { BANK_U20 } from './bank/u20';
 
 // Question bank. Each item names the concepts it exercises; wrong options can name the
 // misconception they reveal. `evidence` says what a correct answer proves on the
@@ -342,6 +346,7 @@ export const BANK: Item[] = [
     explain: b('Three equal pulls spread evenly in a plane add up to zero, just like four equal pulls in a tetrahedron. BF₃ has no dipole.', 'Drei gleiche Bindungsdipole, gleichmäßig in einer Ebene verteilt, ergeben null, genau wie vier gleiche Bindungsdipole im Tetraeder. BF₃ hat kein Dipolmoment.') },
   ...BANK_U7, ...BANK_U8, ...BANK_U9, ...BANK_U10, ...BANK_U11,
   ...BANK_U12, ...BANK_U13, ...BANK_U14, ...BANK_U15, ...BANK_U16,
+  ...BANK_U17, ...BANK_U18, ...BANK_U19, ...BANK_U20,
 ];
 
 export const itemById = (id: string) => BANK.find((i) => i.id === id);

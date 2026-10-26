@@ -9,6 +9,7 @@ import type { ConductUI, ConductUIOptions } from '../sim/conductUI';
 import type { HBondUI, HBondUIOptions } from '../sim/hbondUI';
 import type { ZoomLadderUI, ZoomLadderUIOptions } from '../sim/zoomLadderUI';
 import type { LabBenchUI, LabBenchUIOptions } from '../sim/labBenchUI';
+import type { EnergyLandscapeUI, EnergyLandscapeUIOptions } from '../sim/energyLandscapeUI';
 
 /** Helpers a step gets from the player; anything created through them is disposed when the step changes. */
 export interface StepCtx {
@@ -23,6 +24,7 @@ export interface StepCtx {
   hbond(opts: HBondUIOptions): HBondUI;
   ladder(opts: ZoomLadderUIOptions): ZoomLadderUI;
   bench(opts: LabBenchUIOptions): LabBenchUI;
+  energy(opts: EnergyLandscapeUIOptions): EnergyLandscapeUI;
 }
 export type StepFn = (body: HTMLElement, enable: () => void, ctx: StepCtx) => void;
 export interface UnitPlayer { n: number; title: Bi; steps: StepFn[]; }
