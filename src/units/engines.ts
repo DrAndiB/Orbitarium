@@ -1,4 +1,4 @@
-// Engine wiring for units 1–5 and 7–16: which engine each unit uses, and which engine events tick which explore task.
+// Engine wiring for units 1–5 and 7–20: which engine each unit uses, and which engine events tick which explore task.
 import type { UnitEngine, Engine } from './generic';
 import type { Show } from '../content/unitTypes';
 import type { AtomUI } from '../sim/orbitalsUI';
@@ -9,6 +9,7 @@ import type { ConductUI } from '../sim/conductUI';
 import type { HBondUI } from '../sim/hbondUI';
 import type { ZoomLadderUI } from '../sim/zoomLadderUI';
 import type { LabBenchUI } from '../sim/labBenchUI';
+import type { EnergyLandscapeUI } from '../sim/energyLandscapeUI';
 import type { Rung } from '../content/unitTypes';
 import { equation, molarMass } from '../content/stoich';
 
@@ -401,4 +402,60 @@ export const ENGINE_U16: UnitEngine = {
     const f = firstShow(shows, 'bench');
     return benchEngine(ctx.bench({ start: f?.solute ?? 'CuSO4-5H2O', compact: true }));
   },
+};
+
+// ---------- module 5: the Energy Landscape (units 17, 18, 20) ----------
+const energyEngine = (ui: EnergyLandscapeUI): Engine => ({ el: ui.el, show: (s: Show) => { if (s.engine === 'energy') ui.show(s); } });
+function compactEnergy(ctx: Parameters<UnitEngine['compact']>[0], shows: Show[], mode: 'bonds' | 'hess' | 'gibbs', start: string) {
+  const f = firstShow(shows, 'energy');
+  return energyEngine(ctx.energy({ mode: f?.mode ?? mode, start: f?.reaction ?? start, compact: true }));
+}
+
+// ---------- unit 17: bond energy and enthalpy ----------
+export const U17_REACTIONS = ['hcl', 'h2o', 'nh3', 'ethene'];
+export const ENGINE_U17: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.energy({ mode: 'bonds', start: 'hcl', reactions: U17_REACTIONS, controls: { measured: true } });
+    const compared = new Set<string>();
+    ui.on('broken', (id: string) => { mark('break'); if (id === 'nh3') mark('highest'); });
+    ui.on('formed', (id: string) => { mark('make'); if (id === 'h2o') mark('water'); if (id === 'nh3') mark('ammonia'); });
+    ui.on('measured', (id: string) => { compared.add(id); if (compared.size >= 2) mark('compare'); });
+    return energyEngine(ui);
+  },
+  compact: (ctx, shows) => compactEnergy(ctx, shows, 'bonds', 'hcl'),
+};
+
+// ---------- unit 18: Hess's law ----------
+export const U18_TARGETS = ['c-co', 'diamond-graphite', 'caco3'];
+export const U18_STEPS = ['c-co2', 'co-co2', 'diamond-burn'];
+export const ENGINE_U18: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.energy({ mode: 'hess', start: 'c-co', reactions: U18_TARGETS, steps: U18_STEPS, controls: { elements: true } });
+    ui.on('flip', (_id: string, reversed: boolean) => { if (reversed) mark('flip'); });
+    ui.on('elements', (id: string) => { mark('elements'); if (id === 'caco3') mark('limestone'); });
+    ui.on('route', (target: string, steps: string[], complete: boolean) => {
+      if (!complete) return;
+      if (target === 'c-co') mark('co');
+      if (target === 'diamond-graphite') mark('diamond');
+      if (steps.some((s) => /^-?(2|0\.5)\*/.test(s))) mark('double');
+    });
+    return energyEngine(ui);
+  },
+  compact: (ctx, shows) => compactEnergy(ctx, shows, 'hess', 'c-co'),
+};
+
+// ---------- unit 20: free energy ----------
+export const U20_REACTIONS = ['ice-melt', 'caco3', 'no2-dimer', 'h2o2'];
+export const ENGINE_U20: UnitEngine = {
+  explore(ctx, mark) {
+    const ui = ctx.energy({ mode: 'gibbs', start: 'ice-melt', reactions: U20_REACTIONS, controls: { temp: true } });
+    let current = 'ice-melt';
+    let reversed = false;
+    ui.on('reaction', (id: string) => { current = id; reversed = false; });
+    ui.on('temp', () => { if (current === 'h2o2' && !reversed) mark('always'); });
+    ui.on('crossover', (id: string) => { if (id === 'ice-melt') mark('ice'); if (id === 'caco3') mark('lime'); if (id === 'no2-dimer') mark('cold'); });
+    ui.on('reverse', (id: string, on: boolean) => { reversed = on; if (on) { mark('reverse'); if (id === 'h2o2') mark('never'); } });
+    return energyEngine(ui);
+  },
+  compact: (ctx, shows) => compactEnergy(ctx, shows, 'gibbs', 'ice-melt'),
 };
